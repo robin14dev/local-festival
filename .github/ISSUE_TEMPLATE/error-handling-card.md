@@ -2,7 +2,7 @@
 name: Error Handling Card
 about: Error Handling Card
 title: 에러 간단요약 제목 / 2022-00-00
-labels: ErrorHandling
+labels: ''
 assignees: ''
 
 ---

@@ -1,6 +1,6 @@
 ---
-name: Dev log Card
-about: Dev log Card
+name: Devlog Card
+about: 오늘 작업한 내역을 기록합니다.
 title: "[✍️ DevLog] / 220700_Mon"
 labels: Devlog
 assignees: robin14dev

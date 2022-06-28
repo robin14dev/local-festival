@@ -2,8 +2,8 @@
 name: KPT Reflection Issue Card
 about: KPT Reflection Issue Card
 title: KPT_Reflection_220519_Thu
-labels: Retrospect
-assignees: bonnibel200, code920309, hongsuwon, robin14dev
+labels: ''
+assignees: robin14dev
 
 ---
 
