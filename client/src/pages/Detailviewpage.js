@@ -10,7 +10,7 @@ import ReviewWrite from "../components/ReviewWrite";
 
 const Wrapper = styled.div`
   display: flex;
-  width: 80%;
+  width: 81rem;
   height: 70rem;
   justify-content: space-evenly;
   border-radius: 1rem;
