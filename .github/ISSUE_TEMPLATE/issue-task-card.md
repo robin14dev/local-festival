@@ -1,23 +1,23 @@
 ---
 name: Issue Task Card
-about: Issue Task Card
-title: "[Task] 이슈카드 제목 설정하기"
-labels: ''
+about: 작업할 내역을 계획하고 계속 기록합니다.
+title: "[\U0001F4C2Task]_Field(ex.Client)_taskTitle"
+labels: Task
 assignees: ''
 
 ---
 
 ### ISSUE 
  * Group:  `client`, `server`, `sr`
- * Type: `bug`, `feature`, `delete`
- * Detail: 할일 한줄요약 해주세요! 위에 group과 type은 우측 라벨 태그할 참고사항 입니다. task에 맞는 라벨을 오른쪽에서 설정해주세요!
+ * Type: `bug`, `Feat_Add`, `Feat_Modify`, `Feat_Delete`
+ * Detail: 작업 내역 설명란입니다. (지우시고 작업해주세요)
  
  ### TODO
  1. [ ]  Job1
  2. [ ]  Job2
  3. [ ]  Job3
  
-# 아래는 우측 라벨을 설정할 태그들입니다 참고하셔서 우측에 라벨 태그 설정해주세요!
+### 아래는 우측 라벨을 설정할 태그들입니다 참고하셔서 우측에 라벨 태그 설정해주시고 아래 내역은 삭제해주세요
  ### Estimated time
  Pick one
  
