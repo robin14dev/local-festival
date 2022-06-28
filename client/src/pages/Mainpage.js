@@ -6,7 +6,7 @@ import styled from "styled-components";
 import resetImg from "../assets/reset.png"
 import { IoSyncCircleSharp } from "react-icons/io5";
 const Wrapper = styled.div`
-  width: 90%;
+  width: 81rem;
   height: 44rem;
   
   display: flex;
