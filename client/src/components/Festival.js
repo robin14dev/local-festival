@@ -7,8 +7,8 @@ import Moveloginpick from "./Moveloginpick"
 import HeartButton from "./HeartButton";
 
 const Wrapper = styled.div`
-  width: 22%;
-  height: 23em;
+  width: 18rem;
+  height: 23rem;
   padding: 0.2em;
   margin: 0.5rem;
   border: none;

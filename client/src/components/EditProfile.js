@@ -4,7 +4,6 @@ import styled from "styled-components";
 import axios from "axios";
 
 const ModalContainer = styled.div`
-  /* height: 15rem; */
   text-align: center;
   &>button {
     width: 10rem;

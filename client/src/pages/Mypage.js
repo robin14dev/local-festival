@@ -8,8 +8,19 @@ const Wrapper = styled.div`
   flex-direction: column;
   width: 81rem;
   height: 60rem;
-  /* border: 1px solid black; */
-  /* font-family: "EarlyFontDiary"; */
+ 
+  @media (max-width: 1320px) {
+    width: 95vw;
+    
+  }
+  @media (max-width: 500px) {
+    &>h1{
+      font-size: 1.5rem;
+      text-align: center;
+    }
+    
+  }
+
 `;
 
 const Nav = styled.div`
@@ -23,31 +34,7 @@ const Nav = styled.div`
 
   height: 4rem;
   width: 30rem;
-  /* background-color: red; */
   margin-top: 1rem;
-//  & button {
-//    border: none;
-//    width: 8rem;
-//    /* height: 100%; */
-//    margin-left: 1rem;
-//    background-color: #faa08e;
-//    color: white;
-//    font-size: larger;
-//    font-weight: bold;
-//    border-radius: 0.4rem;
-//    transition: transform 0.2s ease-out;
-//
-//    &:hover {
-//      transform: scale(1.1);
-//      background-color: #f8826b;
-//
-//      & > div,
-//      border {
-//        /* background-color: #88b85c; */
-//        background-color: #f8826b;
-//      }
-//    }
-//  }
 `;
 
 const Mypage = ({ authState,handleAuthState,festivalData, pickItems, togglePick }) => {
@@ -58,11 +45,6 @@ const Mypage = ({ authState,handleAuthState,festivalData, pickItems, togglePick 
     <Wrapper>
       <Nav>
         <EditProfile authState={authState} handleAuthState={handleAuthState} />
-       
-          {/* <button onClick={()=>{navigate("/")}}>
-            메인페이지로 <br></br>돌아가기
-          </button> */}
-       
       </Nav>
       <h1> {nickname}님이 찜하신 축제들 입니다</h1>
       <Picklist

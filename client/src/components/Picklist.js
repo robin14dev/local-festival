@@ -10,13 +10,15 @@ const Wrapper = styled.div`
   
   flex-wrap: wrap;
   justify-content: flex-start;
-  /* margin-left: 5rem;
-  margin-right: 5rem; */
   overflow-y: auto;
   -ms-overflow-style: none; /* for Internet Explorer, Edge */
   scrollbar-width: none; /* for Firefox */
   &::-webkit-scrollbar {
     display: none; /* for Chrome, Safari, and Opera */
+  }
+
+  @media (max-width: 640px) {
+    justify-content: center;
   }
 `;
 const Picklist = ({ festivalData, pickItems, togglePick }) => {

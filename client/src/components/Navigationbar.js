@@ -17,7 +17,15 @@ const ButtonsWrapper = styled.div`
   position: absolute;
   right:5rem;
  
-
+  @media (max-width: 840px) {
+    right: 2rem;
+  }
+  @media (max-width: 600px) {
+    right: 1rem;
+  }
+  @media (max-width: 500px) {
+    right: 0.1rem;
+  }
 `;
 
 const Button = styled.button`

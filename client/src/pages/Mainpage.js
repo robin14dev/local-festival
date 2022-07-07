@@ -8,7 +8,7 @@ import { IoSyncCircleSharp } from "react-icons/io5";
 const Wrapper = styled.div`
   width: 81rem;
   height: 44rem;
-  
+  /* background-color: yellowgreen; */
   display: flex;
   flex-direction: column;
   /* justify-content: space-evenly; */
@@ -17,18 +17,21 @@ const Wrapper = styled.div`
   & > * {
     /* margin: 1rem; */
   }
+  @media (max-width: 673px) {
+  height: 55rem;
+ }
 `;
 
 const FilteredInfo = styled.div`
-width: 90%;
-height: 5rem;
-align-self: flex-start;
+width: 93%;
+height: 10%;
+/* align-self: flex-start; */
 margin-top: 1rem;
 font-size: 1.7rem;
-/* font-weight: bolder; */
+/* background-color: yellow; */
 line-height: 3;
 position: relative;
-left: 3.5rem;
+/* left: 3.5rem; */
 bottom: 1rem;
 display: flex;
 justify-content: space-between;
@@ -53,6 +56,17 @@ font-family: 'SuseongDotum';
 
   }
 }
+@media (max-width: 1210px) {
+  width: 69%;
+ }
+@media (max-width: 1010px) {
+  width: 45%;
+ }
+@media (max-width: 673px) {
+  width: 35%;
+  /* height: 50rem; */
+ }
+ 
 `
 const Mainpage = ({ authState,togglePick, onSearch, filteredData, pickItems, resetCondition }) => {
   

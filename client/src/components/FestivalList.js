@@ -4,9 +4,9 @@ import styled from "styled-components";
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 60rem;
+  height: 60%;
   padding: 0;
-  /* background-color: #f2d29b; */
+  /* background-color : aqua; */
   
   /* padding: 0.5em; */
   border: none;
@@ -22,6 +22,17 @@ const Wrapper = styled.div`
   &::-webkit-scrollbar {
     display: none; /* for Chrome, Safari, and Opera */
   }
+
+  /* @media (max-width: 1000px) {
+    width: 90vw;
+    
+  } */
+  @media (max-width: 1210px) {
+    width: 90vw;
+    
+  }
+
+  
 `;
 
 const FestivalList = ({authState, festivals, pickItems,togglePick }) => {

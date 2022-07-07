@@ -5,7 +5,7 @@ const Wrapper = styled.div`
   background-color: #2f76d3;
   background-color: white;
   margin-top: 2rem;
-  height: 4rem;
+  height: 10%;
   width: 40%;
   display: flex;
   justify-content: space-evenly;
@@ -50,6 +50,11 @@ const Wrapper = styled.div`
   top:3px; */
   transition: 0.05s;
     }
+
+    @media (max-width: 540px) {
+  width: 30%;
+  height: 8%;
+ }
   
 `;
 

@@ -1,7 +1,9 @@
 const models  = require('../../models/users/signin');
 const bcrypt = require("bcrypt");
 const {sign} = require('jsonwebtoken');
-require('dotenv').config
+// require('dotenv').config
+// const dotenv = require("dotenv")
+// dotenv.config();
 
 module.exports= { 
     signin : {

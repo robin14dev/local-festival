@@ -10,31 +10,44 @@ import ReviewWrite from "../components/ReviewWrite";
 
 const Wrapper = styled.div`
   display: flex;
-  width: 81rem;
+  width: 81rem; //큰 화면에서 넓어지는 것 때문에 퍼센트말고 rem으로 고정
   height: 70rem;
   justify-content: space-evenly;
   border-radius: 1rem;
-  /* background-color: #f9fafa; */
-  margin-top: 1rem;
+  margin-top: 3rem;
+  
+  @media (max-width: 1290px) {
+    width: 70rem;
+  }
+
+  @media (max-width :1100px) {
+    width: 60rem;
+  }
+
+  @media (max-width :840px) {
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 94rem;
+    &>div:nth-child(1){
+      margin: 1rem 0;
+    }
+    &>div:nth-child(2){
+      width: 22rem;
+    }
+  }
   
 `;
 
-
-//70 W
-  //5 T
-  //97% T & D
-
 const ImageAndPickbtn = styled.div`
-  margin: 8rem 0 0 1rem;
+  margin-top: 8rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 37%; 
+  width: 22rem; 
   height: 30rem;
   /* border: 1px solid black; */
-  background-color:white;
   box-shadow: 0.1rem 0.1rem 0.5rem gray;
-
   border-radius: 1rem;
   & > * {
     
@@ -58,28 +71,28 @@ const ImageAndPickbtn = styled.div`
     left: 0.5rem;
   }
 
-  & > div {
-    width: 100%;
-    position: relative;
-    left: 1rem;
-  }
+  
 
   
 `;
 const TabAndDesc = styled.div`
-  width: 80%;
+  width: 60%;
   height: 97%;
-  /* background-color: bisque; */
+  /* background-color: #ffd7c4; */
+  /* border: 1px solid black; */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  /* border: 1px solid black; */
   border-radius: 1rem;
   /* padding: 0 1rem; */
-  margin: 1rem;
-  margin-left : 3rem;
+  /* margin: 1rem; */
+  /* margin-left : 3rem; */
   box-shadow: 0.1rem 0.1rem 0.3rem gray;
+
+  @media (max-width: 1100px) {
+    width: 40%;
+  }
 `;
 
 const Tab = styled.div`
@@ -172,17 +185,8 @@ const Detailviewpage = ({pickItems, togglePick, authState}) => {
           
             }}
          / > :  null}
-       
-        
-       
-            {/* <ReviewWrite authState={authState}
-      //   festival_id={festival_id}
-      //  updateReviewList={updateReviewList}
-       
-         />  */}
-      
      
-      </ImageAndPickbtn>
+      </ImageAndPickbtn>  
       <TabAndDesc>
         <Tab>
           {tabArr.map((ele, index) => {

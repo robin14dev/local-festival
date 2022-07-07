@@ -5,7 +5,7 @@ import HeartButton from "./HeartButton";
 import onErrorImage from "../noimage.png"
 import moment from "moment";
 const Wrapper = styled.div`
-    width: 22%;
+    width: 18rem;
   height: 23em;
   padding: 0.2em;
   margin: 0.5rem;

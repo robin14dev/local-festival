@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
-  height: 10rem;
+  height: 15%;
   width: 80%;
   background-color:  #3f6eab;
   color: white;
@@ -36,6 +36,18 @@ const Wrapper = styled.div`
     color: gold;
   }
   }
+
+  @media (max-width: 1210px) {
+  width: 69%;
+ }
+ @media (max-width: 1010px) {
+  width: 45%;
+ }
+@media (max-width: 675px) {
+  width: 23%;
+  margin-top: 1rem;
+  height: 30%;
+ }
 `;
 
 const Month = styled.div`

@@ -11,15 +11,14 @@ import axios from "axios";
 import Signup from "./components/Signup";
 
 const Wrapper = styled.div`
+  width: 100%; //1425px 스크롤바 생김
+  box-sizing: border-box;
+  /* width: 100vw; */
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* height: 100em; */
-  margin: 0;
+  margin: 0 ;
   padding: 0;
-  /* background-color: #f8f9fa; */
-  
-  height: 100%;
 `;
 
 function App() {
