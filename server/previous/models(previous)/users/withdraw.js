@@ -2,9 +2,9 @@ const db = require("../../db/index");
 
 module.exports = {
     withdraw :{
-        get: (username,callback) =>{
+        get: (account,callback) =>{
 
-            const queryString= `select password from users where username = "${username}"`
+            const queryString= `select password from users where account = "${account}"`
 
             db.query(queryString,(error,result)=>{
             
@@ -12,9 +12,9 @@ module.exports = {
 
             })
         },
-        delete:(username,callback) =>{
+        delete:(account,callback) =>{
             
-            const queryString= `DELETE FROM users WHERE username="${username}"`
+            const queryString= `DELETE FROM users WHERE account="${account}"`
 
             db.query(queryString,(error,result)=>{
                 callback(error,result)

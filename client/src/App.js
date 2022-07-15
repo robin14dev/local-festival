@@ -9,7 +9,6 @@ import Detailviewpage from "./pages/Detailviewpage";
 import styled from "styled-components";
 import axios from "axios";
 import Signup from "./components/Signup";
-
 const Wrapper = styled.div`
   width: 100%; //1425px 스크롤바 생김
   box-sizing: border-box;
@@ -24,7 +23,7 @@ const Wrapper = styled.div`
 function App() {
   const [authState, setAuthState] = useState({
     user_id: "",
-    username:"",
+    account:"",
     nickname: "",
     loginStatus: false,
   });
@@ -35,7 +34,7 @@ function App() {
   const dummyData = [
     {
       id: 1,
-      content_id: 2747639,
+      festivalId: 2747639,
       title: "강아지숲 도그페스타(DOG FESTA) 2021",
       image:
         "http://tong.visitkorea.or.kr/cms/resource/37/2747637_image2_1.jpg",
@@ -49,7 +48,7 @@ function App() {
     },
     {
       id: 2,
-      content_id: 2759260,
+      festivalId: 2759260,
       title: "강동청년축제",
       image:
         "http://tong.visitkorea.or.kr/cms/resource/57/2759257_image2_1.png",
@@ -63,7 +62,7 @@ function App() {
     },
     {
       id: 3,
-      content_id: 910544,
+      festivalId: 910544,
       title: "가평씽씽송어축제 2021",
       image:
         "http://tong.visitkorea.or.kr/cms/resource/48/2560348_image2_1.jpg",
@@ -76,7 +75,7 @@ function App() {
     },
     {
       id: 4,
-      content_id: 2628962,
+      festivalId: 2628962,
       title: "강릉국제영화제(GIFF)",
       image:
         "http://tong.visitkorea.or.kr/cms/resource/32/2760232_image2_1.jpg",
@@ -90,7 +89,7 @@ function App() {
     },
     {
       id: 5,
-      content_id: 2713558,
+      festivalId: 2713558,
       title: "강원세계산림엑스포",
       image:
         "http://tong.visitkorea.or.kr/cms/resource/24/2804924_image2_1.jpg",
@@ -104,7 +103,7 @@ function App() {
     },
     {
       id: 6,
-      content_id: 2709958,
+      festivalId: 2709958,
       title: "가산수피아 '봄의 정원'",
       image:
         "http://tong.visitkorea.or.kr/cms/resource/89/2713489_image2_1.jpg",
@@ -118,7 +117,7 @@ function App() {
     },
     {
       id: 7,
-      content_id: 506378,
+      festivalId: 506378,
       title: "강진청자축제",
       image:
         "http://tong.visitkorea.or.kr/cms/resource/16/2689916_image2_1.png",
@@ -132,7 +131,7 @@ function App() {
     },
     {
       id: 8,
-      content_id: 2733528,
+      festivalId: 2733528,
       title: "《MMCA 이건희컬렉션 특별전: 한국미술명작》",
       image:
         "http://tong.visitkorea.or.kr/cms/resource/27/2733527_image2_1.jpg",
@@ -146,7 +145,7 @@ function App() {
     },
     {
       id: 9,
-      content_id: 1806376,
+      festivalId: 1806376,
       title: "강동북페스티벌",
       image:
         "http://tong.visitkorea.or.kr/cms/resource/77/2751077_image2_1.jpg",
@@ -160,7 +159,7 @@ function App() {
     },
     {
       id: 10,
-      content_id: 2746930,
+      festivalId: 2746930,
       title: "감악산 꽃&별 여행",
       image:
         "http://tong.visitkorea.or.kr/cms/resource/26/2746926_image2_1.JPG",
@@ -174,7 +173,7 @@ function App() {
     },
     {
       id: 11,
-      content_id: 2496162,
+      festivalId: 2496162,
       title: "강원그린박람회",
       image:
         "http://tong.visitkorea.or.kr/cms/resource/58/2496158_image2_1.jpg",
@@ -188,7 +187,7 @@ function App() {
     },
     {
       id: 12,
-      content_id: 2819403,
+      festivalId: 2819403,
       title: "강남인테리어디자인위크",
       image:
         "http://tong.visitkorea.or.kr/cms/resource/96/2819396_image2_1.jpg",
@@ -202,7 +201,7 @@ function App() {
     },
     {
       id: 13,
-      content_id: 1307813,
+      festivalId: 1307813,
       title: "강동선사문화축제",
       image:
         "http://tong.visitkorea.or.kr/cms/resource/97/2751097_image2_1.jpg",
@@ -216,7 +215,7 @@ function App() {
     },
     {
       id: 14,
-      content_id: 2704330,
+      festivalId: 2704330,
       title: "가족끼리 빙어체험 2021",
       image:
         "http://tong.visitkorea.or.kr/cms/resource/26/2704326_image2_1.JPG",
@@ -230,7 +229,7 @@ function App() {
     },
     {
       id: 15,
-      content_id: 1774420,
+      festivalId: 1774420,
       title: "강화도 산천어 송어빙어 축제",
       image: "undefined",
       start_date: "20220115",
@@ -243,7 +242,7 @@ function App() {
     },
     {
       id: 16,
-      content_id: 2735376,
+      festivalId: 2735376,
       title: "거리예술 캬라반 ‘봄’",
       image:
         "http://tong.visitkorea.or.kr/cms/resource/90/2816490_image2_1.jpg",
@@ -257,7 +256,7 @@ function App() {
     },
     {
       id: 17,
-      content_id: 2643189,
+      festivalId: 2643189,
       title: "강화 빙어축제",
       image:
         "http://tong.visitkorea.or.kr/cms/resource/84/2643184_image2_1.jpg",
@@ -271,7 +270,7 @@ function App() {
     },
     {
       id: 18,
-      content_id: 2039499,
+      festivalId: 2039499,
       title: "경기건축문화제",
       image:
         "http://tong.visitkorea.or.kr/cms/resource/96/2766896_image2_1.jpg",
@@ -284,7 +283,7 @@ function App() {
     },
     {
       id: 19,
-      content_id: 2490376,
+      festivalId: 2490376,
       title: "겸재문화예술제",
       image:
         "http://tong.visitkorea.or.kr/cms/resource/45/2819745_image2_1.jpg",
@@ -298,7 +297,7 @@ function App() {
     },
     {
       id: 20,
-      content_id: 1250585,
+      festivalId: 1250585,
       title: "경기세계도자비엔날레",
       image:
         "http://tong.visitkorea.or.kr/cms/resource/00/2606300_image2_1.jpg",
@@ -312,13 +311,13 @@ function App() {
     },
   ];
 
-  const loginHandler = ( user_id,username,nickname, loginStatus) => {
+  const loginHandler = ( user_id,account,nickname, loginStatus) => {
     // isLogin ? setIsLogin(false) : setIsLogin(true);
     // console.log(nickname, user_id, loginStatus);
     //* 로그인한 후의 유저정보 상태변경입니다.
     const nextState = {
       user_id: user_id,
-      username:username,
+      account: account,
       nickname: nickname,
       loginStatus: loginStatus,
     };
@@ -326,7 +325,7 @@ function App() {
     //console.log("나 실행???");
 
     //# 유저별 찜한 축제 가져오기
-    axios.get(`http://localhost:4001/pick`
+    axios.get(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`
     , {headers: {
       accesstoken: sessionStorage.getItem("accesstoken"),
     }}
@@ -373,7 +372,7 @@ function App() {
       console.log("removeId what!!!", id);
 
     //*서버에 삭제요청 보내기
-    axios.delete("http://localhost:4001/pick",  {data : {festival_id: id}, headers: {
+    axios.delete(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`,  {data : {festival_id: id}, headers: {
       accesstoken: sessionStorage.getItem("accesstoken"),
     }})
     .then(response => {
@@ -388,7 +387,7 @@ function App() {
       console.log("add new");
       //# 픽해서 서버에 픽한 정보 보내주기
       axios
-        .post("http://localhost:4001/pick", {
+        .post(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`, {
           festival_id: id,
         }, {headers: {
           accesstoken: sessionStorage.getItem("accesstoken"),
@@ -425,7 +424,7 @@ function App() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4001/festivals`
+          `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/festivals`
           // `http://ec2-3-34-91-15.ap-northeast-2.compute.amazonaws.com:4001/festivals`
           // `http://ec2-3-35-218-199.ap-northeast-2.compute.amazonaws.com/festivals`
           // `${process.env.SERVER_ADDRESS}/festivals`,
@@ -433,6 +432,8 @@ function App() {
           // { params: { date: "date?!?!?" } }
         );
         //console.log("서버에서 데이터 어케 받아져오지?", response);
+
+          console.log("client", response);
 
         if (response) {
           setFestivalData(response.data);
@@ -459,25 +460,25 @@ function App() {
     // }
 
     if(sessionStorage.getItem("accesstoken")){
-      axios.get('http://localhost:4001/users', {
+      axios.get(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users`, {
         headers: {
           accesstoken: sessionStorage.getItem("accesstoken"),
         },
       })
       .then(response => {
         //console.log(response.data);
-        const {user_id,username, nickname} = response.data.data
+        const {user_id,account, nickname} = response.data.data
        
         setAuthState({
           user_id :user_id,
-          username:username,
+          account:account,
           nickname : nickname,
           loginStatus : true
   
         })
   
         //* 새로고침시 유저가 픽한 상태도 유지되야 하므로
-        axios.get(`http://localhost:4001/pick`, {headers: {
+        axios.get(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`, {headers: {
         accesstoken: sessionStorage.getItem("accesstoken"),
       }}
       ).then((response) => {

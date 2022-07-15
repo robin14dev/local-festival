@@ -1,24 +1,26 @@
-const dotenv = require("dotenv");
-dotenv.config();
+require('dotenv').config()
 
-const config = {
-  development: {
-    host: "localhost",
-    user: "root",
-    password: process.env.DATABASE_SPRINT_PASSWORD,
-    database: "local_festival",
-    connectTimeout: 60000,
-    dialect : "mysql"
+module.exports = 
+{
+  "development": {
+    "account": "root",
+    "password": process.env.DATABASE_PASSWORD,
+    "database": "local_festival",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
   },
-  // deploy 추가
-  deploy: {
-    host: process.env.DATABASE_RDS_ADDRESS,
-    user: "root",
-    password: process.env.DATABASE_PASSWORD,
-    database: "local_festival",
-    connectTimeout: 60000,
-    dialect : "mysql"
+  "test": {
+    "account": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
   },
-};
-
-module.exports = config;
+  "production": {
+    "account": "root",
+    "password": null,
+    "database": "database_production",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}

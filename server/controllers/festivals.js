@@ -1,15 +1,16 @@
-const models = require("../models/index");
-
+const {Festivals} = require("../models/")
+console.log("what is this",typeof Festivals);
 module.exports = {
-  festivals: {
-    get: (req, res) => {
-      models.festivals.get((error, result) => {
-        if (error) {
-          res.status(500).send("Internal Server Error");
-        } else {
-          res.status(200).json(result);
-        }
-      })
-    },
-  },
-};
+  get : (req, res) => {
+    Festivals.findAll()
+    .then(response => {
+      console.log("what is response",response);
+      res.json(response)
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).send("Internal Server Error")
+    })
+
+  }
+}

@@ -68,7 +68,7 @@ const [listOfReviews, setListOfReviews] = useState([])
   useEffect(()=>{
     //# 특정 축제에 대한 리뷰글들을 불러온다. 
     //* api 수정 특정 글의 리뷰로 전달
-    axios.get(`http://localhost:4001/review/${festival_id}`)
+    axios.get(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/review/${festival_id}`)
     .then(response => {
      // console.log(response.data);
       setListOfReviews(response.data)
@@ -92,7 +92,7 @@ const updateReviewList = ({user_id,nickname,content, rating, createdAt})=>{
 const deleteReview = (id)=>{
   console.log(id);
   axios
-  .delete(`http://localhost:4001/review/${id}`, {
+  .delete(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/review/${id}`, {
     headers: {
       accesstoken: sessionStorage.getItem("accesstoken")
     }

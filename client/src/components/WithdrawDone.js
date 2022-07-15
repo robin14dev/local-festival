@@ -96,7 +96,7 @@ const WithdrawDone = ({ authState,warningMessage ,passwordCheck,openModalHandler
 
   const handleSubmit = () => {
 
-    axios.delete('http://localhost:4001/users' , {data : {passwordCheck: passwordCheck},  headers: { accesstoken: sessionStorage.getItem("accesstoken")}})
+    axios.delete(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users` , {data : {passwordCheck: passwordCheck},  headers: { accesstoken: sessionStorage.getItem("accesstoken")}})
     .then(response => {
       if(response.data.message === "successfully quit") {
         console.log('here');

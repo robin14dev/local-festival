@@ -205,11 +205,11 @@ font-weight: bold;
 
 const Login = ({ loginHandler }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [username, setUsername] = useState("");
+  const [account, setaccount] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleUserName = (e) => {
-    setUsername(e.target.value);
+  const handleaccount = (e) => {
+    setaccount(e.target.value);
   };
   const handlePassword = (e) => {
     setPassword(e.target.value);
@@ -219,8 +219,8 @@ const Login = ({ loginHandler }) => {
     e.preventDefault();
     //# 유효성 검증 후 서버에 회원가입 정보 전송 (주석 해제)
     axios
-      .post("http://localhost:4001/users/signin", {
-        username: username,
+      .post(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users/signin`, {
+        account: account,
         password: password,
       })
       .then((response) => {
@@ -229,15 +229,15 @@ const Login = ({ loginHandler }) => {
           // localStorage.setItem("accessToken", response.data.token);
           sessionStorage.setItem("accesstoken", response.data.data.token);
 
-          const { nickname, user_id, username } = response.data.data;
+          const { nickname, user_id, account } = response.data.data;
           //# 토큰 설정
         //  console.log('ㄴㅓㅁ어와???', response.data.data);
-          loginHandler(user_id, username, nickname, true);
+          loginHandler(user_id, account, nickname, true);
         // }
       })
       .catch((err) => {
         console.log(err.response.data.message);
-       if(err.response.data.message === "Wrong Username And Password Combination") {
+       if(err.response.data.message === "Wrong account And Password Combination") {
         errorMessage.current.textContent = "비밀번호가 일치하지 않습니다"
        
        } else if(err.response.data.message === "User Doesn't Exist"){
@@ -285,10 +285,10 @@ const Login = ({ loginHandler }) => {
                     아이디 &ensp;
                     <input
                       type="text"
-                      value={username}
+                      value={account}
                       required
                       onChange={(e) => {
-                        handleUserName(e);
+                        handleaccount(e);
                       }}
                     />
                     <br />

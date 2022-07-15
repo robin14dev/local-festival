@@ -50,7 +50,7 @@ const FestivalList = ({authState, festivals, pickItems,togglePick }) => {
           <Festival
           authState={authState}
             togglePick={togglePick}
-            key={festival.content_id}
+            key={festival.festivalId}
             festival={festival}
             pickItems={pickItems}
           />

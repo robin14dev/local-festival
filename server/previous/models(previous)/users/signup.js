@@ -4,8 +4,8 @@ module.exports = {
   signup :{
     post: (newUser,callback) =>{
 
-      const {username,password,nickname} = newUser
-      const queryString= `select username from users where username = "${username}"`
+      const {account,password,nickname} = newUser
+      const queryString= `select account from users where account = "${account}"`
 
       db.query(queryString,(error,result)=>{
         
@@ -19,9 +19,9 @@ module.exports = {
           
         } else{
           
-          const queryString="INSERT INTO users (username,password,nickname) VAlUES (?,?,?) "
+          const queryString="INSERT INTO users (account,password,nickname) VAlUES (?,?,?) "
           
-          const params = [username,password,nickname]
+          const params = [account,password,nickname]
           
           db.query(queryString, params, (error, result) => {
             callback(error, result);

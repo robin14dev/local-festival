@@ -2,11 +2,11 @@ const db = require("../../db/index");
 
 module.exports = {
     addpick :{
-        post: ({id,content_id},callback) =>{
+        post: ({id,festivalId},callback) =>{
 
-            const queryString= "INSERT INTO pick (user_id,content_id) VAlUES (?,?)"
+            const queryString= "INSERT INTO pick (user_id,festivalId) VAlUES (?,?)"
 
-            const params = [id,content_id]
+            const params = [id,festivalId]
 
             db.query(queryString,params,(error)=>{
             

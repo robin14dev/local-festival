@@ -66,23 +66,13 @@ request(options, function (error, response, body) {
     let location = info["response"]["body"]["items"]["item"][i]["addr1"];
     let tel = info["response"]["body"]["items"]["item"][i]["tel"];
 
-    // var options2 = {
-    //   method: "GET",
-    //   url: `http://api.visitkorea.or.kr/openapi/service/rest/KorService/detailCommon?serviceKey=stO4X3mcQKt4qoziL2sU1zxc2WkmZ3hmKg6wA6Ofi50vDavjqwvTCBPasarXjMPuRaUXMy0S1ERW8HX6KVOuFQ%3D%3D&numOfRows=10&pageNo=1&MobileOS=ETC&MobileApp=AppTest&contentId=${contentid}&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&_type=json`,
-    //   headers: {},
-    // };
-
-    // request(options2, function (error, response, body) {
-    //   if (error) throw new Error(error);
-    //   let info2 = JSON.parse(body);
-    //   // console.log("🚀 ~ file: index.js ~ line 52 ~ info2", info2)
-    //   let overview = addslashes(info2.response.body.items.item.overview);
-    //   // console.log("🚀 ~ file: index.js ~ line 53 ~ overview", overview)
-    //   let url = addslashes(info2.response.body.items.item.homepage);
-    //   // console.log("🚀 ~ file: index.js ~ line 53 ~ info2.response.body.items.item.homepage", info2.response.body.items.item.homepage)
-
+   
     connection.query(
-      `INSERT INTO festival_api_first (content_id, title, image, start_date, end_date, location, tel) VALUES ("${contentid}", "${title}", "${image}", ${start_date},${end_date},"${location}",'${tel}')`,
+      `INSERT INTO 
+      festival_api_first 
+      (festivalId, title, image, start_date, end_date, location, tel) 
+      VALUES
+       ("${contentid}", "${title}", "${image}", ${start_date},${end_date},"${location}",'${tel}')`,
       (error, rows, fields) => {
         if (error) throw error;
         //console.log("local info is: ", rows);

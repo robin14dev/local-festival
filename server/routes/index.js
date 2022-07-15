@@ -1,11 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const dotenv = require("dotenv")
-dotenv.config();
-const festivalRouter = require("./festivals");
-router.use("/festivals", festivalRouter);
 
+
+const festivalRouter = require("./festivals");
 const usersRouter = require("./users");
+console.log(usersRouter);
+console.log("reee?");
+router.use("/festivals", festivalRouter);
 router.use("/users", usersRouter);
 
 // const pickRouter = require("./pick")

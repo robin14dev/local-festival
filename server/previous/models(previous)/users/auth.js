@@ -1,10 +1,10 @@
 const db = require("../../db/index");
 
 module.exports = {
-    getpick :{
-        get: (id,callback) =>{
+    auth :{
+        get: (account,callback) =>{
 
-            const queryString= `SELECT content_id FROM pick where user_id = ${id}`
+            const queryString= `SELECT * FROM users where account = "${account}"`
 
             db.query(queryString,(error,result)=>{
             

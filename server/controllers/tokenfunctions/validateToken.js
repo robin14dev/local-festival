@@ -2,18 +2,17 @@ require('dotenv').config()
 const {verify} =require('jsonwebtoken')
 
 
-module.exports={
-    validateToken : (req) => {
-        const validateToken = req.headers["accesstoken"]
+module.exports = (req, res) => {
+  const validateToken = req.headers["accesstoken"]
+  console.log(validateToken);
+  if(!validateToken){
+      return null
+  }
 
-        if(!validateToken){
-            return null
-        }
-
-        try{
-            return verify(validateToken, process.env.ACCESS_SECRET)
-        } catch(err){
-            return null
-        }
-    }
+  try{
+      return verify(validateToken, process.env.ACCESS_SECRET)
+  } catch(err){
+      return null
+  }
 }
+ 

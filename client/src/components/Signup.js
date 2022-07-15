@@ -168,7 +168,7 @@ const CancelControl = styled.div`
 
 const Signup = ({ openModalHandlerLogin }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [username, setUsername] = useState("");
+  const [account, setaccount] = useState("");
   const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
@@ -178,7 +178,7 @@ const Signup = ({ openModalHandlerLogin }) => {
   // const errorMessage = useRef()
   // errorMessage.textContent = 'aaa'
   const handleUserId = (e) => {
-    setUsername(e.target.value);
+    setaccount(e.target.value);
   };
   const handleNickname = (e) => {
     setNickname(e.target.value);
@@ -204,8 +204,8 @@ const Signup = ({ openModalHandlerLogin }) => {
     }  else {
       //# 유효성 검증 후 서버에 회원가입 정보 전송 (주석 해제)
       axios
-        .post("http://localhost:4001/users/signup", {
-          username: username,
+        .post(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users/signup`, {
+          account: account,
           password: password,
           nickname: nickname,
         })
@@ -258,7 +258,7 @@ const Signup = ({ openModalHandlerLogin }) => {
                     아이디
                     <input
                       type="text"
-                      value={username}
+                      value={account}
                       required
                       onChange={(e) => {
                         handleUserId(e);

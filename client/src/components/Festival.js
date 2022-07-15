@@ -91,6 +91,8 @@ justify-content: flex-end;
 
 
 const Festival = ({ authState, festival, togglePick, pickItems }) => {
+  // console.log("Festival component", festival);
+  const {festivalId, title, imageUrl, startDate, endDate} = festival
   const [like, setLike] = useState(false)
   let navigate = useNavigate();
   const onErrorImg = (e) => {
@@ -107,7 +109,7 @@ const Festival = ({ authState, festival, togglePick, pickItems }) => {
   }
 
   useEffect(()=>{
-    const isPicked = pickItems.some(ele => ele.festival_id === festival.id)
+    const isPicked = pickItems.some(ele => ele.festival_id === festivalId)
     setLike(isPicked)
     //console.log('hey');
   })
@@ -118,21 +120,20 @@ const Festival = ({ authState, festival, togglePick, pickItems }) => {
     togglePick(id);
     toggleLike()
   };
-  let startDate = festival.start_date;
-  let endDate = festival.end_date;
+  
 
   return (
-    <Wrapper key={festival.id} onClick={()=>{onClickMoveDVP(festival.id)}}>
+    <Wrapper key={festivalId} onClick={()=>{onClickMoveDVP(festival.id)}}>
      
       <img
-        src={festival.image}
-         alt={`${festival.title} : 이미지가 존재하지 않습니다`}
+        src={imageUrl}
+         alt={`${title} : 이미지가 존재하지 않습니다`}
         onError={onErrorImg}
       />
 
       <Description>
         <div className="title">
-          <b>{festival.title}</b>
+          <b>{title}</b>
         </div>
         <div>
           <div >시작일:{moment(startDate, "YYYY.MM.DD").format("YYYY년 MM월 DD일")}</div>
@@ -144,7 +145,7 @@ const Festival = ({ authState, festival, togglePick, pickItems }) => {
           
         {authState.loginStatus ? <HeartButton like={like}
             onClick={(e) => {
-              onClickPick(e, festival.id);
+              onClickPick(e, festivalId);
           
             }}
           >

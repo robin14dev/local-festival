@@ -1,40 +1,33 @@
-const models  = require('../../models/users/signin');
+const {Users} = require("../../models")
 const bcrypt = require("bcrypt");
 const {sign} = require('jsonwebtoken');
-// require('dotenv').config
-// const dotenv = require("dotenv")
-// dotenv.config();
 
-module.exports= { 
-    signin : {
-        post : (req, res) => {
-            const { username, password } = req.body;
-            
-            models.signin.post(username,(error,result) =>{
+module.exports = async (req, res) => {
+//console.log(req.body); // { account: 'a', password: 'a' }
+const {account, password} = req.body
 
-                if(error){
-                    res.status(500).json({message :'Internal Server Error'});
-                } else if(result.length===0){
-                    res.status(409).json({ message: "User Doesn't Exist" })
-                    
-                }
-                else{
-                    const {id, username,nickname } = result[0]
-                    bcrypt.compare(password,result[0].password)
-                        .then(async(match) => {
-                            if(!match){
-                                return res.status(401).json({ message: "Wrong Username And Password Combination" })
-                            }
-        
-                            const accessToken = sign(
-                                {"username":`${username}`, "id": `${id}`},
-                                process.env.ACCESS_SECRET
-                            )
-        
-                            res.json({data : {token : accessToken, user_id:id, username:username, nickname : nickname},message : "login success"})
-                        })
-                }
-            })
-        }
+ let user = await Users.findAll({where : {  account : account }})
+  //console.log('********',user);
+ if(user.length === 0) {
+  return res.status(409).json({message: "User Doesn't Exist" })
+ } else {
+
+   //console.log("userExist--------", user);
+   const {id, account, nickname} = user[0]
+   bcrypt.compare(password, user[0].password)
+   .then(async(match) => {
+    if(!match) {
+      return res.status(401).json({ message: "Wrong account And Password Combination" })
     }
+
+    const accessToken = sign( 
+       {"account":`${account}`, "id": `${id}`},
+    process.env.ACCESS_SECRET
+    )
+    res.json({data : {token : accessToken, user_id:id, account:account, nickname : nickname},message : "login success"})
+
+   })
+ }
+
+
 }

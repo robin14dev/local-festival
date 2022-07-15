@@ -1,25 +1,24 @@
-const models  = require('../../models/users/edit');
-const {validateToken} = require('../../controllers/tokenfunctions/validateToken')
+const {Users} = require('../../models')
+const validateToken = require('../tokenFunctions/validateToken')
 
-module.exports={
-    edit : {
-        put : async(req, res) =>{
-            const accessTokenData = validateToken(req)
-            if(!accessTokenData){
-                return res.status(404).json({data:null , message: 'User not logged in'})
-            }
+module.exports = async (req, res) => {
+  console.log('rerereererererere');
+  const accessTokenData = validateToken(req)
+  if(!accessTokenData){
+      return res.status(404).json({data:null , message: 'User not logged in'})
+  }
 
-            const {nickname} = req.body
-            const {id} = accessTokenData
 
-            models.edit.put({nickname,id},(error)=>{
-                if(error){
-                    res.status(500).json({message :'Internal Server Error'});
-                } else{
-                    res.status(200).json({nickname:nickname, message : "ok, userinfo changed"})
-                }
-            })
+  const {nickname} = req.body
+  const {id, account} = accessTokenData
 
-        }
-    }
+  Users.update({nickname}, {
+    where : {id}
+  })
+  .then(result => {
+    console.log("what is result", result);
+    res.json({data : {user_id : id, account, nickname}})
+  })
+  
+
 }

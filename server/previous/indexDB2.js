@@ -23,13 +23,13 @@ function addslashes(string) {
     return;
   }
 }
-// mysql festival_api_first content_id를 조회해서 console.log로 찍어본다.
-const queryString = `SELECT content_id from festival_api_first`;
+// mysql festival_api_first festivalId를 조회해서 console.log로 찍어본다.
+const queryString = `SELECT festivalId from festival_api_first`;
 connection.query(queryString, (err, result) => {
   result.map((el) => {
     var options = {
       method: "GET",
-      url: `http://api.visitkorea.or.kr/openapi/service/rest/KorService/detailCommon?serviceKey=GF0Lq9LWPlZV7Ga1tMaCqZDhb06lzroW4fwEwQy9BfDy82xa3bPReEfNfTUBi%2Fg4mCd%2FPfHGZu1Djjs4VdP0iQ%3D%3D&numOfRows=10&pageNo=1&MobileOS=ETC&MobileApp=AppTest&contentId=${el.content_id}&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&_type=json`,
+      url: `http://api.visitkorea.or.kr/openapi/service/rest/KorService/detailCommon?serviceKey=GF0Lq9LWPlZV7Ga1tMaCqZDhb06lzroW4fwEwQy9BfDy82xa3bPReEfNfTUBi%2Fg4mCd%2FPfHGZu1Djjs4VdP0iQ%3D%3D&numOfRows=10&pageNo=1&MobileOS=ETC&MobileApp=AppTest&contentId=${el.festivalId}&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&_type=json`,
       headers: {},
     };
     request(options, function (error, response, body) {
@@ -42,7 +42,7 @@ connection.query(queryString, (err, result) => {
         info["response"]["body"]["items"]["item"]["homepage"]
       );
       connection.query(
-        `INSERT INTO festival_api_second (content_id,overview, url) VALUES ("${el.content_id}", "${overview}", "${url}")`,
+        `INSERT INTO festival_api_second (festivalId,overview, url) VALUES ("${el.festivalId}", "${overview}", "${url}")`,
         (error, rows, fields) => {
           if (error) throw error;
         }

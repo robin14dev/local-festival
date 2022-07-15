@@ -2,9 +2,9 @@ const db = require("../../db/index");
 
 module.exports = {
     signin :{
-        post: (username,callback) =>{
+        post: (account,callback) =>{
  
-        const queryString= `select * from users where username = "${username}"`
+        const queryString= `select * from users where account = "${account}"`
 
         db.query(queryString,(error,result)=>{
 

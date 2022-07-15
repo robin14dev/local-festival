@@ -1,33 +1,29 @@
-const models = require('../../models/users/signup');
 const bcrypt = require("bcrypt");
+const {Users} = require("../../models")
 
-module.exports = {
-    signup : { 
-        post : (req, res) => {
-    
-            const {username, password, nickname}=req.body
+module.exports = (req, res) => {
 
-            if(!username||!password||!nickname){ //파라미터 중 하나라도 요청에서 제공되지 않았다면 400 상태코드로 응답을 돌려줘야 합니다
-                return res.status(400).send('Unauthorized user')
-            }
+  const {account, password, nickname} = req.body // { account: 'a', password: 'aaaa', nickname: 'a' }
+  if(!account || !password || !nickname) {
+    return res.status(400).send('Unauthorized user')
+  }
 
-            bcrypt.hash(password,10).then((hash) =>{ // 비밀번호를 해상해서 db로 보내준다.
+  bcrypt.hash(password, 10)
+  .then(hash => {
+    const newUser = {
+      account : account,
+      password : hash,
+      nickname : nickname
+    }
 
-                const newUser = {
-                    username: username,
-                    password: hash,
-                    nickname : nickname
-                };
+    Users.create(newUser)
+    .then( res.send("created"))
 
-                models.signup.post(newUser,(error,result) => {
-                    if(error){
-                        res.status(500).json({message :'Internal Server Error'});
-                    } else if(Array.isArray(result)){
-                        res.status(409).json({message :"User ID is already in use"})
-                    }else{
-                        res.status(201).json({message:'ok'})
-                    }
-                })
-            })
-    }}
+
+  })
+  .catch(err => {
+    console.log(err);
+  })
+ 
+ 
 }

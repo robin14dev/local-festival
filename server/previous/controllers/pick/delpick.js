@@ -11,10 +11,10 @@ module.exports= {
 
             const {id} = accessTokenData
 
-            const {content_id} = req.body
+            const {festivalId} = req.body
 
-            // pick table에 id 와 content_id 데이터 삭제
-            models.delpick.delete({id,content_id},(error)=>{
+            // pick table에 id 와 festivalId 데이터 삭제
+            models.delpick.delete({id,festivalId},(error)=>{
                 if(error){
                     res.status(500).json({message :'Internal Server Error'});
                 } else{

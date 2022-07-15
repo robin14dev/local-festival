@@ -1,34 +1,37 @@
-const models  = require('../../models/users/withdraw');
-const bcrypt = require("bcrypt");
-const {validateToken} = require('../../controllers/tokenfunctions/validateToken')
+const {Users} = require('../../models')
+const bcrypt = require("bcrypt")
+const validateToken = require('../tokenFunctions/validateToken')
 
-module.exports= {
-    withdraw : {
-        delete : async (req,res) => {
-            const accessTokenData = validateToken(req)
+module.exports = async(req, res) => {
+  
+  //console.log(req.body); //{ passwordCheck: 'ccccxxx' }
+  console.log(validateToken);
+  const accessTokenData = validateToken(req)
 
-            if(!accessTokenData){
-                return res.status(404).json({data:null , message: 'User not logged in'})
-            }
+  if(!accessTokenData){
+    return res.status(404).json({data:null , message: 'User not logged in'})
+}
+const {account} = accessTokenData
+const {passwordCheck} = req.body
 
-            const {username} = accessTokenData
-            const {passwordCheck} = req.body
-            //db에서 비밀번호를 찾아온다
+let user = await Users.findOne({where : {account}})
+console.log("@@@@@@@@@@@",user.password);
 
-            models.withdraw.get(username,(error,result)=>{
-                const {password} =result[0]
+const {password} = user
 
-                bcrypt.compare(passwordCheck,password).then(async(match) =>{
-                    if(!match){
-                        res.status(409).json({message :"Wrong Username And Password Combination"})
-                    } else{
-                        // db에서 username과 같은 열삭제
-                        models.withdraw.delete(username,()=>{
-                            res.status(200).json({message : "successfully quit"})
-                        })      
-                    }
-                })
-            })
-        }
-    }
+bcrypt.compare(passwordCheck, password)
+.then(async(match) => {
+  if(!match) {
+    res.status(409).json({message :"Wrong account And Password Combination"})
+  } else {
+    Users.destroy({
+      where : {account : account}
+    })
+    .then(()=>{
+      res.status(200).json({message : "successfully quit"})
+    })
+  }
+})
+
+
 }

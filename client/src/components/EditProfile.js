@@ -118,7 +118,7 @@ if(inputhere.current.value === "") {
   document.querySelector('.errorMessage').textContent = "최소 한 글자 이상의 단어를 적어주세요"
  
 }  else {
-    axios.put('http://localhost:4001/users', {nickname},  {headers: { accesstoken: sessionStorage.getItem("accesstoken")}})
+    axios.put(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users`, {nickname},  {headers: { accesstoken: sessionStorage.getItem("accesstoken")}})
     .then(response => {
 
       const nextNickname = response.data.nickname
