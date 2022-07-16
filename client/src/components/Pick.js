@@ -88,7 +88,7 @@ const Pick = ({ item, togglePick, pickItems }) => {
   const [like, setLike] = useState(false)
 
   let navigate = useNavigate();
-  const { id, title, image, start_date, end_date } = item;
+  const { festivalId, title, imageUrl, startDate, endDate } = item;
   const onClickRemove = (event,id) => {
     event.stopPropagation();
     togglePick(id);
@@ -100,31 +100,31 @@ const Pick = ({ item, togglePick, pickItems }) => {
  
   
   useEffect(()=>{
-    const isPicked = pickItems.some(ele => ele.festival_id === id)
+    const isPicked = pickItems.some(ele => ele.festivalId === festivalId)
     setLike(isPicked)
    
   })
 
   const onClickMoveDVP = () => {
-    navigate(`/Detailviewpage/festival_id/${id}`, { state: item });
+    navigate(`/Detailviewpage/festivalId/${festivalId}`, { state: item });
   };
   return (
     <Wrapper onClick={onClickMoveDVP}>
-        <img src={image} alt={title}  onError={onErrorImg} />
+        <img src={imageUrl} alt={title}  onError={onErrorImg} />
       <Description>
        <div className="title">
           <b>{title}</b>
         </div>
         <div>
-          <div >시작일:{moment(start_date, "YYYY.MM.DD").format("YYYY년 MM월 DD일")}</div>
-          <div >종료일:{moment(end_date, "YYYY.MM.DD").format("YYYY년 MM월 DD일")}</div>
+          <div >시작일:{moment(startDate, "YYYY.MM.DD").format("YYYY년 MM월 DD일")}</div>
+          <div >종료일:{moment(endDate, "YYYY.MM.DD").format("YYYY년 MM월 DD일")}</div>
         </div>
      
         </Description>
         <HeartDiv>
         <HeartButton like={like}
             onClick={(event) => {
-              onClickRemove(event, id);
+              onClickRemove(event, festivalId);
           
             }}
           >

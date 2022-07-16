@@ -66,7 +66,7 @@ font-size: large;
 font-weight: bold;
 
 `
-const ReviewWrite = ({updateReviewList,festival_id, authState}) => {
+const ReviewWrite = ({updateReviewList,festivalId, authState}) => {
 
   const [content, setContent] = useState("")
   const [rating, setRating] = useState(null)
@@ -92,7 +92,7 @@ const ReviewWrite = ({updateReviewList,festival_id, authState}) => {
         console.log(errorMessage.current);
                 errorMessage.current.textContent = "내용을 입력해 주세요"
       } else {
-        axios.post(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/review`, {data : {content : content, rating:Number(rating), festival_id:festival_id}},{headers: {
+        axios.post(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/review`, {data : {content : content, rating:Number(rating), festivalId:festivalId}},{headers: {
           accesstoken: sessionStorage.getItem("accesstoken"),
         }})
         .then(response => {

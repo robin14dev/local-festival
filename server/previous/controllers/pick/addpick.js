@@ -13,7 +13,7 @@ module.exports= {
 
             const {festivalId} = req.body
 
-            // pick table에 account 와 festival_id 데이터 삽입
+            // pick table에 account 와 festivalId 데이터 삽입
             models.addpick.post({id,festivalId},(error)=>{
                 if(error){
                     res.status(500).json({message :'Internal Server Error'});

@@ -101,7 +101,7 @@ const Festival = ({ authState, festival, togglePick, pickItems }) => {
  
   const onClickMoveDVP = (id) => {
     //console.log(id);
-    navigate(`/Detailviewpage/festival_id/${id}`, { state: festival });
+    navigate(`/Detailviewpage/festivalId/${id}`, { state: festival });
   };
   const toggleLike =  (event) => {
     // event.stopPropagation();
@@ -109,7 +109,7 @@ const Festival = ({ authState, festival, togglePick, pickItems }) => {
   }
 
   useEffect(()=>{
-    const isPicked = pickItems.some(ele => ele.festival_id === festivalId)
+    const isPicked = pickItems.some(ele => ele.festivalId === festivalId)
     setLike(isPicked)
     //console.log('hey');
   })

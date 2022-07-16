@@ -1,10 +1,11 @@
-const router = require('express').Router();
-const addpick = require('../controllers/pick/addpick')
-const delpick = require('../controllers/pick/delpick')
-const getpick = require('../controllers/pick/getpick')
+const express = require('express')
+const router = express.Router();
+const addPick = require('../controllers/picks/addPick')
+const deletePick = require('../controllers/picks/deletePick')
+const getPick = require('../controllers/picks/getPick')
 
-router.post('/', addpick.addpick.post)
-router.get('/', getpick.getpick.get)
-router.delete('/',delpick.delpick.delete)
+router.get('/', getPick)
+router.post('/', addPick)
+router.delete('/',deletePick)
 
 module.exports = router;

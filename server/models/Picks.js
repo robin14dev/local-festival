@@ -3,7 +3,9 @@ module.exports = (sequelize, DataTypes)=>{
   const Picks = sequelize.define("Picks", {
     id : {
       type : DataTypes.INTEGER,
-      primaryKey : true
+      primaryKey : true,
+      autoIncrement: true,
+
     }
   })
 

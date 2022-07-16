@@ -330,12 +330,12 @@ function App() {
       accesstoken: sessionStorage.getItem("accesstoken"),
     }}
     ).then((response) => {
-     console.log(response.data.data);
-      const pickedFestivalId = response.data.data;
+     
+      const pickedFestivalId = response.data;
       //console.log(pickedFestivalId);
       // const festivalIdArr = pickedFestivalId.map(ele => ele.local_id)
       // const pickedFestivalByUser = festivalData.filter(ele => festivalIdArr.indexOf(ele.id) > -1)
-      //{festival_Id: 4}
+      //{festivalId: 4} 
       setPickItems(pickedFestivalId);
     });
   };
@@ -361,34 +361,32 @@ function App() {
   };
 
   const togglePick = (id) => {
-    // console.log("togglePick", id);
-    // const nextPickItems = pickItems.concat({ itemId: id });
-    // setPickItems(nextPickItems);
-    const found = pickItems.filter((el) => el.festival_id === id)[0];
+    //#1. 픽했는지 아닌지 부터 확인
+    const found = pickItems.filter((el) => el.festivalId === id)[0];
     if (found) {
       console.log("found");
 
-      //# 픽 해제해서 서버에 픽 해제한 정보 보내주기
+    //#2-1. 픽 해제해서 서버에 픽 해제한 정보 보내주기
       console.log("removeId what!!!", id);
 
-    //*서버에 삭제요청 보내기
-    axios.delete(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`,  {data : {festival_id: id}, headers: {
-      accesstoken: sessionStorage.getItem("accesstoken"),
-    }})
-    .then(response => {
-      console.log(response.data.message);
-    })
-    .catch(err => {
-      console.log(err);
-    })
+      //*서버에 삭제요청 보내기
+      axios.delete(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`,  {data : {festivalId: id}, headers: {
+        accesstoken: sessionStorage.getItem("accesstoken"),
+      }})
+      .then(response => {
+        console.log(response.data.message);
+      })
+      .catch(err => {
+        console.log(err);
+      })
 
-      setPickItems(pickItems.filter((el) => el.festival_id !== id));
+        setPickItems(pickItems.filter((el) => el.festivalId !== id));
     } else {
       console.log("add new");
-      //# 픽해서 서버에 픽한 정보 보내주기
+     //#2-2. 픽해서 서버에 픽한 정보 보내주기
       axios
         .post(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`, {
-          festival_id: id,
+          festivalId: id,
         }, {headers: {
           accesstoken: sessionStorage.getItem("accesstoken"),
         }})
@@ -402,7 +400,7 @@ function App() {
       setPickItems([
         ...pickItems,
         {
-          festival_id: id,
+          festivalId: id,
         },
       ]);
     }
@@ -483,11 +481,11 @@ function App() {
       }}
       ).then((response) => {
         //console.log(response.data.data);
-        const pickedFestivalId = response.data.data;
+        const pickedFestivalId = response.data;
         //console.log(pickedFestivalId);
         // const festivalIdArr = pickedFestivalId.map(ele => ele.local_id)
         // const pickedFestivalByUser = festivalData.filter(ele => festivalIdArr.indexOf(ele.id) > -1)
-        //{festival_Id: 4}
+        //{festivalId: 4}
         setPickItems(pickedFestivalId);
       });
     
@@ -537,7 +535,7 @@ function App() {
         ></Route>
         <Route
           exact
-          path="/Detailviewpage/festival_id/:id"
+          path="/Detailviewpage/festivalId/:id"
           element={<Detailviewpage  
             pickItems={pickItems} 
             togglePick={togglePick} 

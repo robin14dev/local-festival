@@ -157,7 +157,7 @@ const Detailviewpage = ({pickItems, togglePick, authState}) => {
   ];
 
   useEffect(()=>{
-    const isPicked = pickItems.some(ele => ele.festival_id === id)
+    const isPicked = pickItems.some(ele => ele.festivalId === id)
     setLike(isPicked)
   })
   const toggleLike =  (event) => {

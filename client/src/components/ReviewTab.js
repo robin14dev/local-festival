@@ -18,7 +18,7 @@ const Wrapper = styled.div`
 `;
 
 const ReviewTab = ({festivalInfo, authState}) => {
-const festival_id = festivalInfo.id
+const festivalId = festivalInfo.id
 
 const dummydata = [
   {nickname : 'mong',
@@ -57,7 +57,7 @@ const [listOfReviews, setListOfReviews] = useState([])
 //* listOfReviews
 // {content: "'소록소록 로운 비나리 소록소록 다솜.',", createdAt: "20…}
 // id :1
-// festival_id : 3
+// festivalId : 3
 // user_id : "bbb1234"
 // nickname :"유동혁"
 // content : "'소록소록 로운 비나리 소록소록 다솜.',"
@@ -68,7 +68,7 @@ const [listOfReviews, setListOfReviews] = useState([])
   useEffect(()=>{
     //# 특정 축제에 대한 리뷰글들을 불러온다. 
     //* api 수정 특정 글의 리뷰로 전달
-    axios.get(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/review/${festival_id}`)
+    axios.get(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/review/${festivalId}`)
     .then(response => {
      // console.log(response.data);
       setListOfReviews(response.data)
@@ -121,10 +121,10 @@ const deleteReview = (id)=>{
     <Wrapper>
       <ReviewList authState={authState} 
       listOfReviews={listOfReviews} 
-      festival_id={festival_id}
+      festivalId={festivalId}
       deleteReview={deleteReview} />
       <ReviewWrite authState={authState}
-        festival_id={festival_id}
+        festivalId={festivalId}
        updateReviewList={updateReviewList}
        
          />

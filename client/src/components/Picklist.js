@@ -25,17 +25,19 @@ const Picklist = ({ festivalData, pickItems, togglePick }) => {
   if (festivalData === null) {
     return <div>데이터를 받아오는 중</div>;
   } else {
+   // console.log(pickItems);
     const renderedItems = festivalData.filter(
-      (ele) => pickItems.map((el) => el.festival_id).indexOf(ele.id) > -1
+      (ele) => pickItems.map((el) => el.festivalId).indexOf(ele.festivalId) > -1
     );
+    console.log('renderedItems',renderedItems);
     return (
       <>
         {pickItems.length === 0 ? (
           <h1 style={{position:"absolute", left:"35rem",top:"25rem"}}>현재 찜하신 축제가 없습니다</h1>
         ) : (
           <Wrapper>
-            {renderedItems.map((item, idx) => {
-              return <Pick key={idx} item={item} pickItems={pickItems} togglePick={togglePick} />;
+            {renderedItems.map((ele) => {
+              return <Pick key={ele.festivalId} item={ele} pickItems={pickItems} togglePick={togglePick} />;
             })}
           </Wrapper>
         )}

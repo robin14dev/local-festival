@@ -112,7 +112,7 @@ const ratingToStar = (rating) => {
 //* listOfReviews
 // {content: "'소록소록 로운 비나리 소록소록 다솜.',", createdAt: "20…}
 // id :1
-// festival_id : 3
+// festivalId : 3
 // user_id : "bbb1234"
 // nickname :"유동혁"
 // content : "'소록소록 로운 비나리 소록소록 다솜.',"
