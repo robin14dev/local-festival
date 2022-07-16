@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     type : DataTypes.TEXT,
   }, 
   homepageUrl : {
-    type : DataTypes.STRING,
+    type : DataTypes.TEXT,
   }
 
  }, {

@@ -4,7 +4,6 @@ module.exports = {
   get : (req, res) => {
     Festivals.findAll()
     .then(response => {
-      console.log("what is response",response);
       res.json(response)
     })
     .catch(err => {
