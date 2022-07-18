@@ -28,13 +28,13 @@ const Wrapper = styled.div`
 const DescTab = ({ festivalInfo }) => {
   // 탭메뉴의 상태가 detail(상세정보)이면 특정 행사정보 렌더링
   //             review면 review 컴포넌트 렌더링
-  const { location, overview, tel, title, url, start_date, end_date } =
+  const { location, overview, tel, title, homepageUrl, startDate, endDate } =
     festivalInfo;
 
    
   let parsedUrl = "";
-  if (url !== "undefined") {
-    parsedUrl = url.split(" ")[1].slice(5).replace(/"/g, "");
+  if (homepageUrl !== "undefined") {
+    parsedUrl = homepageUrl.split(" ")[1].slice(5).replace(/"/g, "");
   } else {
     parsedUrl = null;
   }
@@ -47,7 +47,7 @@ const DescTab = ({ festivalInfo }) => {
       <p>{overview}</p>
       <h2>축제 기간</h2>
       <hr></hr>
-      {moment(start_date, "YYYY.MM.DD").format("YYYY년 MM월 DD일")} ~ {moment(end_date, "YYYY.MM.DD").format("YYYY년 MM월 DD일")}
+      {moment(startDate, "YYYY.MM.DD").format("YYYY년 MM월 DD일")} ~ {moment(endDate, "YYYY.MM.DD").format("YYYY년 MM월 DD일")}
       <h2>Location</h2>
       <hr></hr>
       {location}

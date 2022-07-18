@@ -4,7 +4,7 @@ module.exports = {
     addpick :{
         post: ({id,festivalId},callback) =>{
 
-            const queryString= "INSERT INTO pick (user_id,festivalId) VAlUES (?,?)"
+            const queryString= "INSERT INTO pick (userId,festivalId) VAlUES (?,?)"
 
             const params = [id,festivalId]
 

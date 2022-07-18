@@ -9,7 +9,6 @@ module.exports = async (req, res) => {
      return res.status(404).json({data:null , message: 'User not logged in'})
  }
 
- console.log(accessTokenData); //{ account: 'cccc', id: '1', iat: 1657956823 }
 const {id} = accessTokenData
 let result =  await Picks.findAll({
   attributes : ['festivalId'],

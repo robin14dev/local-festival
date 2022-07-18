@@ -41,6 +41,7 @@ module.exports = (sequelize, DataTypes) => {
 Festivals.associate = models => {
   Festivals.hasMany(models.Picks, {foreignKey : "festivalId", sourceKey : "festivalId"})
   Festivals.hasMany(models.Reviews, {foreignKey : "festivalId", sourceKey : "festivalId"})
+  
 }
 
  return Festivals

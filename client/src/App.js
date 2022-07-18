@@ -22,7 +22,7 @@ const Wrapper = styled.div`
 
 function App() {
   const [authState, setAuthState] = useState({
-    user_id: "",
+    userId: "",
     account:"",
     nickname: "",
     loginStatus: false,
@@ -311,12 +311,12 @@ function App() {
     },
   ];
 
-  const loginHandler = ( user_id,account,nickname, loginStatus) => {
+  const loginHandler = ( userId,account,nickname, loginStatus) => {
     // isLogin ? setIsLogin(false) : setIsLogin(true);
-    // console.log(nickname, user_id, loginStatus);
+    // console.log(nickname, userId, loginStatus);
     //* 로그인한 후의 유저정보 상태변경입니다.
     const nextState = {
-      user_id: user_id,
+      userId: userId,
       account: account,
       nickname: nickname,
       loginStatus: loginStatus,
@@ -326,11 +326,10 @@ function App() {
 
     //# 유저별 찜한 축제 가져오기
     axios.get(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`
-    , {headers: {
+    ,{headers: {
       accesstoken: sessionStorage.getItem("accesstoken"),
     }}
-    ).then((response) => {
-     
+    ).then((response) => { 
       const pickedFestivalId = response.data;
       //console.log(pickedFestivalId);
       // const festivalIdArr = pickedFestivalId.map(ele => ele.local_id)
@@ -465,10 +464,10 @@ function App() {
       })
       .then(response => {
         //console.log(response.data);
-        const {user_id,account, nickname} = response.data.data
+        const {userId,account, nickname} = response.data.data
        
         setAuthState({
-          user_id :user_id,
+          userId :userId,
           account:account,
           nickname : nickname,
           loginStatus : true

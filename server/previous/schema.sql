@@ -31,10 +31,10 @@ CREATE TABLE IF NOT EXISTS `pick` (
 ALTER TABLE festival_api_first
 ADD UNIQUE (festivalId);
 ALTER TABLE pick
-ADD user_id int;
+ADD userId int;
 ALTER TABLE pick
 ADD festivalId int;
 ALTER TABLE pick
-ADD FOREIGN KEY (user_id) REFERENCES users (id);
+ADD FOREIGN KEY (userId) REFERENCES users (id);
 ALTER TABLE pick
 ADD FOREIGN KEY (festivalId) REFERENCES festival_api_first (festivalId);

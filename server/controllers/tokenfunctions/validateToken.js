@@ -3,8 +3,9 @@ const {verify} =require('jsonwebtoken')
 
 
 module.exports = (req, res) => {
+    
   const validateToken = req.headers["accesstoken"]
-  console.log(validateToken);
+  //console.log(validateToken);
   if(!validateToken){
       return null
   }

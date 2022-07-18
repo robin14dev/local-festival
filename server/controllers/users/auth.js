@@ -12,5 +12,5 @@ module.exports = async(req, res) => {
 
   let user = await Users.findOne({where : {account}})
   const {id,  nickname} = user
-  res.json({data : {user_id : id, account : account, nickname : nickname}})
+  res.json({data : {userId : id, account : account, nickname : nickname}})
 }

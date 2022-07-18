@@ -24,7 +24,7 @@ const {account, password} = req.body
        {"account":`${account}`, "id": `${id}`},
     process.env.ACCESS_SECRET
     )
-    res.json({data : {token : accessToken, user_id:id, account:account, nickname : nickname},message : "login success"})
+    res.json({data : {token : accessToken, userId:id, account:account, nickname : nickname},message : "login success"})
 
    })
  }

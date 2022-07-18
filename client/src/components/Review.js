@@ -75,8 +75,6 @@ border-radius: 0.5rem;
     background-color:  #05c299;
     color: white;
   }
-  
-
 `
 
 
@@ -84,16 +82,15 @@ border-radius: 0.5rem;
 const Review = ({review, authState , deleteReview}) => {
  const[deleteClicked, setDeleteClicked] = useState(false)
 
- console.log(review);
 
- const {rating, content, createdAt} = review
+ const {rating, content, createdAt, User, festivalId, id} = review
  const modalHandler = ()=>{
   setDeleteClicked(!deleteClicked)
  }
 
-const onClickDelete = (id)=>{
+const onClickDelete = (reviewId, festivalId)=>{
   // setDeleteClicked(!deleteClicked)
-  deleteReview(id)
+  deleteReview(reviewId, festivalId)
 }
 const ratingToStar = (rating) => {
 
@@ -113,7 +110,7 @@ const ratingToStar = (rating) => {
 // {content: "'소록소록 로운 비나리 소록소록 다솜.',", createdAt: "20…}
 // id :1
 // festivalId : 3
-// user_id : "bbb1234"
+// userId : "bbb1234"
 // nickname :"유동혁"
 // content : "'소록소록 로운 비나리 소록소록 다솜.',"
 // rating:4
@@ -126,9 +123,9 @@ const ratingToStar = (rating) => {
     <Wrapper>
       {deleteClicked ?  <Modal><h3>리뷰를 정말 삭제하시겠습니까?</h3>
         <div><button onClick={modalHandler}>취소하기</button>
-        <button onClick={()=>onClickDelete(review.id)}>삭제하기</button>
+        <button onClick={()=>onClickDelete(id,festivalId)}>삭제하기</button>
         </div>
-      </Modal>: <><Header> <span> <span style={{color:"#1564a9", fontWeight:"bold", fontStyle:"italic"}}>{review.nickname}</span>&nbsp;&nbsp;{ratingToStar(rating)}</span> {review.user_id === authState.user_id &&  <span><Button onClick={modalHandler}><FaTrashAlt size={15} /></Button></span>} </Header>
+      </Modal>: <><Header> <span> <span style={{color:"#1564a9", fontWeight:"bold", fontStyle:"italic"}}>{User.nickname}</span>&nbsp;&nbsp;{ratingToStar(rating)}</span> {Number(review.userId) === Number(authState.userId) &&  <span><Button onClick={modalHandler}><FaTrashAlt size={15} /></Button></span>} </Header>
       <ul>
         <p>{content}</p>
         <li>{createdAt} </li>

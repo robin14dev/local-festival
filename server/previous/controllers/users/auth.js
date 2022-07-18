@@ -19,7 +19,7 @@ module.exports= {
                     res.status(500).json({message :'Internal Server Error'});
                 } else{
                     const {id,account,nickname} =result[0]
-                    res.json({data : {user_id:id, account:account, nickname : nickname}})
+                    res.json({data : {userId:id, account:account, nickname : nickname}})
                     
                 }
             })

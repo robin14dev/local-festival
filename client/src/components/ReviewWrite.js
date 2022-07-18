@@ -95,18 +95,27 @@ const ReviewWrite = ({updateReviewList,festivalId, authState}) => {
         axios.post(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/review`, {data : {content : content, rating:Number(rating), festivalId:festivalId}},{headers: {
           accesstoken: sessionStorage.getItem("accesstoken"),
         }})
-        .then(response => {
-        
+        .then((response) => {
+        console.log('axios 보낸다음에 일시적으로 update하기 !! response???', response);
+
+        const {content, createdAt, festivalId, id, rating, updatedAt, userId} = response.data
         //#작성한 리뷰 ReviewList에 올려지도록 하기 
-        updateReviewList({user_id : authState.user_id, nickname: authState.nickname, content : content, rating : rating, createdAt:(new Date()).toLocaleString()})
+        const newReview = {
+          userId,
+          content,
+          rating,
+          createdAt,
+          updatedAt,
+          festivalId,
+          id,
+          User : {
+            nickname : authState.nickname
+          }
+        }
+        // updateReviewList({userId : authState.userId, nickname: authState.nickname, content : content, rating : rating, createdAt:(new Date()).toLocaleString()})
+        updateReviewList(newReview)
         setContent("")
         setRating(null)
-        // window.scrollTo({
-        //   top: 0, 
-        //   behavior: 'smooth'
-        //   /* you can also use 'auto' behaviour
-        //      in place of 'smooth' */
-        // });
         })
         .catch(err => {
           console.log(err);

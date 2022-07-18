@@ -145,8 +145,9 @@ const Detailviewpage = ({pickItems, togglePick, authState}) => {
   const [like, setLike] = useState(false)
 
   const { state } = useLocation();
+  console.log('what si state',state);
 
-  const { image, title, id } = state;
+  const { imageUrl, title, festivalId } = state;
   const onErrorImg = (e) => {
     e.target.src = onErrorImage
   }
@@ -157,7 +158,7 @@ const Detailviewpage = ({pickItems, togglePick, authState}) => {
   ];
 
   useEffect(()=>{
-    const isPicked = pickItems.some(ele => ele.festivalId === id)
+    const isPicked = pickItems.some(ele => ele.festivalId === festivalId)
     setLike(isPicked)
   })
   const toggleLike =  (event) => {
@@ -174,14 +175,14 @@ const Detailviewpage = ({pickItems, togglePick, authState}) => {
   return (
     <Wrapper>
       <ImageAndPickbtn>
-        <img src={image} 
+        <img src={imageUrl} 
         alt={`${title} : 이미지가 존재하지 않습니다.`}
         onError={onErrorImg}
         ></img>
 
         {authState.loginStatus ? <HeartButton  like={like}
             onClick={(event) => {
-              onClickPick(event, id);
+              onClickPick(event, festivalId);
           
             }}
          / > :  null}

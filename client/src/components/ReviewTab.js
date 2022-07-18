@@ -18,81 +18,56 @@ const Wrapper = styled.div`
 `;
 
 const ReviewTab = ({festivalInfo, authState}) => {
-const festivalId = festivalInfo.id
+const {festivalId} = festivalInfo
 
-const dummydata = [
-  {nickname : 'mong',
-content : 'aaa',
-rating : '333'},
-{nickname : 'mong',
-content : 'aaa',
-rating : '333'},
-{nickname : 'mong',
-content : 'aaa',
-rating : '333'},
-{nickname : 'mong',
-content : 'aaa',
-rating : '333'},
-{nickname : 'mong',
-content : 'aaa',
-rating : '333'},
-{nickname : 'mong',
-content : 'aaa',
-rating : '333'},
-{nickname : 'mong',
-content : 'aaa',
-rating : '333'},
-{nickname : 'mong',
-content : 'aaa',
-rating : '333'},
-{nickname : 'mong',
-content : 'aaa',
-rating : '333'},
-{nickname : 'mong',
-content : 'aaa',
-rating : '333'},
-]
+
 const [listOfReviews, setListOfReviews] = useState([])
 
 //* listOfReviews
 // {content: "'소록소록 로운 비나리 소록소록 다솜.',", createdAt: "20…}
 // id :1
 // festivalId : 3
-// user_id : "bbb1234"
+// userId : "bbb1234"
 // nickname :"유동혁"
 // content : "'소록소록 로운 비나리 소록소록 다솜.',"
 // rating:4
 // createdAt: "2022-06-14T01:44:00.000Z"
 // updatedAt: "2022-06-14T01:44:00.000Z"
 
+
+
   useEffect(()=>{
     //# 특정 축제에 대한 리뷰글들을 불러온다. 
     //* api 수정 특정 글의 리뷰로 전달
-    axios.get(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/review/${festivalId}`)
+    console.log('review tab here------------');
+    axios.get(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/review/${festivalId}`,
+    {headers: {
+      accesstoken: sessionStorage.getItem("accesstoken"),
+    }})
     .then(response => {
-     // console.log(response.data);
+      console.log(response.data);
       setListOfReviews(response.data)
       //console.log('reviewtab 클릭시 서버에서 리뷰리스트를 받아옵니다.');
     })
     .catch(err => {
-     // console.log(err);
+      console.log(err);
      // console.log('받아오는게 없어서 dummydata로 대체합니다.');
-      setListOfReviews(dummydata)
+     
     })
   },[])
 
-const updateReviewList = ({user_id,nickname,content, rating, createdAt})=>{
-  console.log(content, rating, nickname, "reviewTab!!");
+const updateReviewList = (newReview)=>{
+  console.log( "상끌 성공!!!!");
 
-  const nextReviewLists = [...listOfReviews, {user_id, nickname, content, rating, createdAt}]
+  const nextReviewLists = [...listOfReviews, newReview]
 
   setListOfReviews(nextReviewLists)
 }
 
-const deleteReview = (id)=>{
-  console.log(id);
+const deleteReview = (reviewId,festivalId)=>{
+ 
   axios
-  .delete(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/review/${id}`, {
+  .delete(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/review/${festivalId}/${reviewId}`, {
     headers: {
       accesstoken: sessionStorage.getItem("accesstoken")
     }
@@ -100,7 +75,9 @@ const deleteReview = (id)=>{
   .then((response) => {
     console.log(response.data.message);
     if(response.data.message === "ok") {
-      const nextReviewLists = listOfReviews.filter(review => review.id !== id)
+      console.log('before', listOfReviews);
+      const nextReviewLists = listOfReviews.filter(review => Number(review.id) !== Number(reviewId))
+      console.log('after', nextReviewLists);
       setListOfReviews(nextReviewLists)
     } else {
 

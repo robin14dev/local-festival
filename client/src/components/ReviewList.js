@@ -30,7 +30,7 @@ const ReviewList = ({listOfReviews, authState, deleteReview}) => {
 // {content: "'소록소록 로운 비나리 소록소록 다솜.',", createdAt: "20…}
 // id :1
 // festivalId : 3
-// user_id : "bbb1234"
+// userId : "bbb1234"
 // nickname :"유동혁"
 // content : "'소록소록 로운 비나리 소록소록 다솜.',"
 // rating:4

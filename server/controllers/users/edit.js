@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
   })
   .then(result => {
     console.log("what is result", result);
-    res.json({data : {user_id : id, account, nickname}})
+    res.json({data : {userId : id, account, nickname}})
   })
   
 

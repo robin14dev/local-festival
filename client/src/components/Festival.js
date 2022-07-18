@@ -123,7 +123,7 @@ const Festival = ({ authState, festival, togglePick, pickItems }) => {
   
 
   return (
-    <Wrapper key={festivalId} onClick={()=>{onClickMoveDVP(festival.id)}}>
+    <Wrapper key={festivalId} onClick={()=>{onClickMoveDVP(festivalId)}}>
      
       <img
         src={imageUrl}

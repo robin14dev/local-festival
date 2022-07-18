@@ -24,13 +24,13 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: true, // createAt & updateAt 활성화
     paranoid: true, // timestamps 가 활성화 되어야 사용 가능 > deleteAt 옵션 on
   });
-  console.log("what is typeof Users in Users.js", typeof Users);
+  // console.log("what is typeof Users in Users.js", typeof Users);
 
   Users.associate = models => {
     /**
-     * Users안에 있는 "id값"을 "user_id라는 컬럼 이름"으로 UserInfo모델에 새로운 컬럼으로 추가한다.
+     * Users안에 있는 "id값"을 "userId라는 컬럼 이름"으로 UserInfo모델에 새로운 컬럼으로 추가한다.
      */
-    // Users.hasOne(models.UserInfo, {foreignKey: "user_id", sourceKey: 'id'});
+    // Users.hasOne(models.UserInfo, {foreignKey: "userId", sourceKey: 'id'});
     // Users.belongsTo(models.CompanyInformation, {foreignKey: "company_id", sourceKey: "id"});
     Users.hasMany(models.Picks, {foreignKey : "userId", sourceKey:"id"})
     Users.hasMany(models.Reviews, {foreignKey : "userId", sourceKey:"id"})

@@ -229,10 +229,10 @@ const Login = ({ loginHandler }) => {
           // localStorage.setItem("accessToken", response.data.token);
           sessionStorage.setItem("accesstoken", response.data.data.token);
 
-          const { nickname, user_id, account } = response.data.data;
+          const { nickname, userId, account } = response.data.data;
           //# 토큰 설정
         //  console.log('ㄴㅓㅁ어와???', response.data.data);
-          loginHandler(user_id, account, nickname, true);
+          loginHandler(userId, account, nickname, true);
         // }
       })
       .catch((err) => {
