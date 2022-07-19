@@ -8,55 +8,48 @@ import HeartButton from "./HeartButton";
 
 const Wrapper = styled.div`
   width: 18rem;
-  height: 23rem;
-  padding: 0.2em;
+  height: 22rem;
+  /* padding: 0.2em; */
   margin: 0.5rem;
   border: none;
   display: flex;
   flex-direction: column;
-  /* box-shadow: 0.1rem 0.1rem 0.2rem  gray; */
+  background-color: #f2eeee; 
   transition: transform 0.3s ease-out;
-  /* font-family: "EarlyFontDiary"; */
-
+  box-shadow: 1px 1.5px 2px gray;
+  border-radius: 0 0 4px 4px;
   &:hover {
+    background-color: #2f76d3;
     .title>b {
       color: white;
     }
     transform: scale(1.1);
     & > div:nth-child(2) {
-      background-color: #2f76d3;
       color: white;
     }
-    
-    
-    
   }
 
 
   & > img {
     object-fit: fill;
     width: 100%;
-    height: 70%;
+    height: 15rem;
     border-radius: 3.5px 3.5px 0 0;
-    box-shadow: 1px 0  2px gray; 
+    /* box-shadow: 1px 0  2px gray;  */
   }
 `;
 
 const Description = styled.div`
-  text-align: start;
-  height: 7rem;
-  padding: 1rem 1px;
+  height: 5rem;
+  padding: 1rem 1px 0 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  /* box-shadow: 1px 1.5px 2px gray;
+  background-color: #f2eeee; */
   
-  color: black;
-  box-shadow: 1px 1.5px 2px gray;
-  background-color: #f2eeee;
-  border-radius: 0 0 4px 4px;
   & > div {
     width: 80%;
-    text-align: start;
     padding-left:0.5rem;
     overflow: hidden;
     white-space: nowrap;
@@ -79,12 +72,12 @@ const Description = styled.div`
 const HeartDiv = styled.div`
 display: flex;
 justify-content: flex-end;
+padding-right: 0.5rem;
+/* background-color: red; */
 & > img {
   width: 1.5rem;
   height: 1.5rem;
-  position: relative;
-  right: 0.8rem;
-  bottom: 2.2rem;
+ 
 }
 `
 
@@ -121,6 +114,11 @@ const Festival = ({ authState, festival, togglePick, pickItems }) => {
     togglePick(id);
     toggleLike()
   };
+
+  const onClickGuest = (e) => {
+    e.stopPropagation();
+    alert('guest!!!')
+  }
   
 
   return (
@@ -151,7 +149,7 @@ const Festival = ({ authState, festival, togglePick, pickItems }) => {
             }}
           >
           
-          </HeartButton> : null}
+          </HeartButton> : <Moveloginpick></Moveloginpick>}
         </HeartDiv>
         
       

@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { AiFillStar } from "react-icons/ai";
 import { FaTrashAlt } from "react-icons/fa";
+import moment from "moment";
+
+
 const Wrapper = styled.div`
   width: 98%;
   height:10rem;
@@ -80,7 +83,9 @@ border-radius: 0.5rem;
 
 
 const Review = ({review, authState , deleteReview}) => {
+  console.log(review)
  const[deleteClicked, setDeleteClicked] = useState(false)
+ 
 
 
  const {rating, content, createdAt, User, festivalId, id} = review
@@ -128,7 +133,7 @@ const ratingToStar = (rating) => {
       </Modal>: <><Header> <span> <span style={{color:"#1564a9", fontWeight:"bold", fontStyle:"italic"}}>{User.nickname}</span>&nbsp;&nbsp;{ratingToStar(rating)}</span> {Number(review.userId) === Number(authState.userId) &&  <span><Button onClick={modalHandler}><FaTrashAlt size={15} /></Button></span>} </Header>
       <ul>
         <p>{content}</p>
-        <li>{createdAt} </li>
+        <li>{moment(createdAt).format("YYYY년 MM월 DD일 HH:mm")} </li>
       </ul></>}
      
     </Wrapper>

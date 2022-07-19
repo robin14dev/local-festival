@@ -4,6 +4,7 @@ import styled from "styled-components";
 const Wrapper = styled.div`
   height: 15%;
   width: 80%;
+  margin-top: 1.5rem;
   background-color:  #3f6eab;
   color: white;
   display: flex;
@@ -13,8 +14,6 @@ const Wrapper = styled.div`
   font-family: 'GangwonEdu_OTFBoldA';
   flex-direction: column;
   justify-content: center;
-  position: relative; 
-  bottom: 1rem;
   box-shadow: 0.1rem 0.1rem 0.2rem  gray;
 
   &  button {
