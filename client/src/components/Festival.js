@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import onErrorImage from "../noimage.png"
+import onErrorImage from "../assets/noimage.png"
 import Moveloginpick from "./Moveloginpick"
 import HeartButton from "./HeartButton";
 
@@ -95,8 +95,9 @@ const Festival = ({ authState, festival, togglePick, pickItems }) => {
   const {festivalId, title, imageUrl, startDate, endDate} = festival
   const [like, setLike] = useState(false)
   let navigate = useNavigate();
+
   const onErrorImg = (e) => {
-    e.target.src = onErrorImage
+    e.target.src = onErrorImage;
   }
  
   const onClickMoveDVP = (id) => {
@@ -126,9 +127,9 @@ const Festival = ({ authState, festival, togglePick, pickItems }) => {
     <Wrapper key={festivalId} onClick={()=>{onClickMoveDVP(festivalId)}}>
      
       <img
-        src={imageUrl}
+        src={imageUrl || onErrorImage}
          alt={`${title} : 이미지가 존재하지 않습니다`}
-        onError={onErrorImg}
+        onError={(e)=> onErrorImg(e)}
       />
 
       <Description>

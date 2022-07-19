@@ -12,10 +12,10 @@ module.exports = (sequelize, DataTypes) => {
     type : DataTypes.STRING,
   }, 
   startDate : {
-    type : DataTypes.STRING,
+    type : DataTypes.INTEGER,
   }, 
   endDate : {
-    type : DataTypes.STRING,
+    type : DataTypes.INTEGER,
   }, 
   location : {
     type : DataTypes.STRING,

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import HeartButton from "./HeartButton";
-import onErrorImage from "../noimage.png"
+import onErrorImage from "../assets/noimage.png"
 import moment from "moment";
 const Wrapper = styled.div`
     width: 18rem;
@@ -110,7 +110,7 @@ const Pick = ({ item, togglePick, pickItems }) => {
   };
   return (
     <Wrapper onClick={onClickMoveDVP}>
-        <img src={imageUrl} alt={title}  onError={onErrorImg} />
+        <img src={imageUrl || onErrorImage} alt={title}  onError={onErrorImg} />
       <Description>
        <div className="title">
           <b>{title}</b>

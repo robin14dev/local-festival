@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import ReviewTab from "../components/ReviewTab";
 import HeartButton from"../components/HeartButton"
-import onErrorImage from "../noimage.png"
+import onErrorImage from "../assets/noimage.png"
 import ReviewWrite from "../components/ReviewWrite";
 
 const Wrapper = styled.div`
@@ -175,7 +175,7 @@ const Detailviewpage = ({pickItems, togglePick, authState}) => {
   return (
     <Wrapper>
       <ImageAndPickbtn>
-        <img src={imageUrl} 
+        <img src={imageUrl || onErrorImage} 
         alt={`${title} : 이미지가 존재하지 않습니다.`}
         onError={onErrorImg}
         ></img>

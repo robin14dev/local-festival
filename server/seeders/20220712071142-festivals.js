@@ -48,7 +48,7 @@ module.exports = {
       //#2 api1으로 공공데이터 목록 받아오기 (한번요청)) total count : 1060 
 
       let result= [];
-      let api1 = await axios.get(`http://api.visitkorea.or.kr/openapi/service/rest/KorService/searchFestival?ServiceKey=${process.env.API_KEY}&eventStartDate=20170101&arrange=A&listYN=Y&numOfRows=50&MobileOS=ETC&MobileApp=AppTesting&_type=json`)
+      let api1 = await axios.get(`http://api.visitkorea.or.kr/openapi/service/rest/KorService/searchFestival?ServiceKey=${process.env.API_KEY}&eventStartDate=20170101&arrange=A&listYN=Y&numOfRows=200&MobileOS=ETC&MobileApp=AppTesting&_type=json`)
       let festivalList = api1.data.response.body.items.item
       console.log('api1 받아온 데이터 개수 : ',festivalList.length);
       //#3 받아온 1060개 배열 돌기
@@ -59,7 +59,7 @@ module.exports = {
           if(festivalIdObj.hasOwnProperty(contentid)) continue;
       //#4-2 없으면 obj 만들어서 추가하기 
           let api2 = await axios.get(`http://api.visitkorea.or.kr/openapi/service/rest/KorService/detailCommon?ServiceKey=${process.env.API_KEY}&contentId=${ele.contentid}&defaultYN=Y&overviewYN=Y&MobileOS=ETC&MobileApp=AppTesting&_type=json`)
-          console.log(`contentid : ${ele.contentid},  detailCommon`,api2);
+          //console.log(`contentid : ${ele.contentid},  detailCommon`,api2);
           const overviewAndUrl = api2.data.response.body.items.item
           const {homepage, overview} = overviewAndUrl
           const obj = {}
@@ -86,7 +86,7 @@ module.exports = {
         }
    
   
-        console.log('최종 결과??',result);
+        console.log('최종 결과??',result.length);
       //#5 for문 종료 후, bulkInsert하기 
       await queryInterface.bulkInsert('Festivals', result,{})
     } catch (error) { 
