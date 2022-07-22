@@ -9,13 +9,14 @@ import Detailviewpage from "./pages/Detailviewpage";
 import styled from "styled-components";
 import axios from "axios";
 import Signup from "./components/Signup";
+import AccountSetting from "./pages/AccountSetting";
 const Wrapper = styled.div`
   width: 100%; //1425px 스크롤바 생김
   box-sizing: border-box;
   /* width: 100vw; */
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; */
   margin: 0 ;
   padding: 0;
 `;
@@ -31,6 +32,17 @@ function App() {
   const [festivalData, setFestivalData] = useState(null);
   const [pickItems, setPickItems] = useState([]);
   const [filteredData, setFilteredData] = useState(festivalData);
+
+  const infiniteScroll = (addData) => {
+    //console.log('addData', addData);
+    console.log('here');
+    console.log(festivalData, addData);
+    let addToData = festivalData.concat(addData)
+    console.log('new state',addToData);
+    //alert('here')
+    setFestivalData(addToData)
+    setFilteredData(addToData)
+  }
  
   const loginHandler = ( userId,account,nickname, loginStatus) => {
     // isLogin ? setIsLogin(false) : setIsLogin(true);
@@ -127,11 +139,8 @@ function App() {
   };
  
   const handleAuthState = (nickname)=>{
-    console.log(nickname);
     const nextAuthState = authState
-    console.log(nextAuthState);
     nextAuthState.nickname = nickname
-    console.log(nextAuthState);
     setAuthState(nextAuthState)
    
   }
@@ -142,12 +151,9 @@ function App() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/festivals`
-          // `http://ec2-3-34-91-15.ap-northeast-2.compute.amazonaws.com:4001/festivals`
-          // `http://ec2-3-35-218-199.ap-northeast-2.compute.amazonaws.com/festivals`
-          // `${process.env.SERVER_ADDRESS}/festivals`,
-          //* local test용 `${process.env.SERVER_ADDRESS || `http://localhost:4001`}/festivals`,
-          // { params: { date: "date?!?!?" } }
+          `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/festivals`,
+          {params: {limit: 10}}, 
+         
         );
         //console.log("서버에서 데이터 어케 받아져오지?", response);
 
@@ -170,13 +176,7 @@ function App() {
       }
     };
     fetchData();
-    // loginHandler()
-
-    // if(window.sessionStorage.accesstoken
-    //   ){
-    //    setAuthState(authState)
-    // }
-
+    
     if(sessionStorage.getItem("accesstoken")){
       axios.get(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users`, {
         headers: {
@@ -237,6 +237,7 @@ function App() {
               filteredData={filteredData}
               pickItems={pickItems}
               resetCondition={resetCondition}
+              infiniteScroll={infiniteScroll}
             />
           }
         ></Route>
@@ -262,6 +263,15 @@ function App() {
             authState={authState}
             />}
         ></Route>
+        <Route
+        exact
+        path="/AccountSetting"
+        element = {
+          <AccountSetting handleAuthState={handleAuthState} authState={authState}/>
+        }
+        >
+          
+        </Route>
         <Route exact path="/Signup" element={<Signup />}></Route>
       </Routes>
       <Footer />

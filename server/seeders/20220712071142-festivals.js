@@ -48,7 +48,7 @@ module.exports = {
       //#2 api1으로 공공데이터 목록 받아오기 (한번요청)) total count : 1060 
 
       let result= [];
-      let api1 = await axios.get(`http://api.visitkorea.or.kr/openapi/service/rest/KorService/searchFestival?ServiceKey=${process.env.API_KEY}&eventStartDate=20170101&arrange=A&listYN=Y&numOfRows=200&MobileOS=ETC&MobileApp=AppTesting&_type=json`)
+      let api1 = await axios.get(`http://api.visitkorea.or.kr/openapi/service/rest/KorService/searchFestival?ServiceKey=${process.env.API_KEY}&eventStartDate=20170101&arrange=A&listYN=Y&numOfRows=700&MobileOS=ETC&MobileApp=AppTesting&_type=json`)
       let festivalList = api1.data.response.body.items.item
       console.log('api1 받아온 데이터 개수 : ',festivalList.length);
       //#3 받아온 1060개 배열 돌기

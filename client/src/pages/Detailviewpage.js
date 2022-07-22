@@ -14,7 +14,7 @@ const Wrapper = styled.div`
   height: 70rem;
   justify-content: space-evenly;
   border-radius: 1rem;
-  margin-top: 3rem;
+  margin: 3rem auto;
   
   @media (max-width: 1290px) {
     width: 70rem;

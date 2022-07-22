@@ -5,6 +5,11 @@ const { Op } = require("sequelize");
 
 module.exports = {
   get : (req, res) => {
+    // 받을 변수 : offset
+    console.log(req.query); //{ offset: '10' }
+    let {limit, offset} = req.query
+
+    if(!offset) offset = 0; 
      function today(){
           let now = new Date()
           let year = now.getFullYear().toString();
@@ -19,16 +24,19 @@ module.exports = {
     let date = today()
 
     Festivals.findAll({
-      where : {endDate : {[Op.gte] : date},
-               startDate : {[Op.lte] : date}
+      // where : {endDate : {[Op.gte] : date},
+      //          startDate : {[Op.lte] : date}
+      //   },
+        limit : Number(limit),
+        offset : Number(offset)
 
-        }
     })
     //종료날짜가 오늘 이상인 것들만
     //시작날짜가 오늘 이하인 것들만 
   
   
     .then(response => {
+      console.log(response.length);
       res.json(response)
     })
     .catch(err => {

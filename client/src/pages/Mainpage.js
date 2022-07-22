@@ -6,7 +6,8 @@ import styled from "styled-components";
 import resetImg from "../assets/reset.png"
 import { IoSyncCircleSharp } from "react-icons/io5";
 const Wrapper = styled.div`
-  width: 81rem;
+  /* width: 81rem; */
+  width : 100vw;
   height: 44rem;
   /* background-color: yellowgreen; */
   display: flex;
@@ -68,7 +69,7 @@ font-family: 'SuseongDotum';
  }
  
 `
-const Mainpage = ({ authState,togglePick, onSearch, filteredData, pickItems, resetCondition }) => {
+const Mainpage = ({ infiniteScroll,authState,togglePick, onSearch, filteredData, pickItems, resetCondition }) => {
   
 
   return (
@@ -80,7 +81,7 @@ const Mainpage = ({ authState,togglePick, onSearch, filteredData, pickItems, res
        <IoSyncCircleSharp size={45} color={" #2f76d3"} onClick={resetCondition} />
 
         </FilteredInfo>
-      <FestivalList  authState={authState} togglePick={togglePick} festivals={filteredData} pickItems={pickItems} />
+      <FestivalList infiniteScroll={infiniteScroll}  authState={authState} togglePick={togglePick} festivals={filteredData} pickItems={pickItems} />
       <Hashtag onSearch={onSearch}/>
     </Wrapper>
   );

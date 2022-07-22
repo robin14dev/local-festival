@@ -101,7 +101,7 @@ const Logout = ({ loginHandler }) => {
   const onClickLogoutBtn = () => {
     //# 클라이언트에서 토큰 지우기
     // localStorage.removeItem("accessToken");
-    loginHandler("", "", false);
+    loginHandler("", "", "",false);
     navigate("/");
     window.sessionStorage.clear()
   };

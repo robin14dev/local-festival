@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Login from "./Login";
 import Logout from "./Logout";
 import {useNavigate } from "react-router-dom";
@@ -10,8 +10,6 @@ import styled from "styled-components";
 const ButtonsWrapper = styled.div`
   display: flex;
   /* align-items: center; */
-  
-  /* background-color: blue; */
   /* width: 20rem; */
   height: 100%;
   position: absolute;
@@ -38,9 +36,63 @@ border:none;
    cursor:pointer;
    color: #6cf7a6;
 `
+const ItemsWrapper = styled.div`
+position: absolute;
+top: 4rem;
+left : -2.5rem;
+width: 8rem;
+box-shadow: 1px 1.5px 2px gray;
+background-color: white;
+border-radius: 0.2rem;
+overflow: hidden;
+&  li {
+  list-style: none;
+  line-height: 2.5rem;
+  text-align: left;
+  text-align:left;
+  padding-left: 0.5rem;
+  cursor: pointer;
+  /* border : 0.01px solid #dbd8d8; */
 
 
+  &:hover {
+    background-color:whitesmoke  ;
+  }
+  &:active {
+    background-color: white;
+  }
+}
+`
+// 로그아웃 모달 없애고 그냥 바로 로그아웃 되도록 하기
 const Navigationbar = ({ authState, loginHandler }) => {
+
+  const [isOpen, setIsOpen] = useState(false)
+  const NavItems = () => {
+    const onClickLogout = () => {
+      //# 클라이언트에서 토큰 지우기
+      // localStorage.removeItem("accessToken");
+      loginHandler("", "", "",false);
+      navigate("/");
+      window.sessionStorage.clear()
+      setIsOpen(false)
+    };
+
+    const onClickMyPage = () => {
+      navigate("/MyPage")
+    }
+    const onClickAccount = () => {
+      navigate("/AccountSetting")
+    }
+    return (
+     <ItemsWrapper>
+       <ul>
+        <li onClick={onClickAccount}>계정</li>
+        <li onClick={onClickMyPage} >위시리스트</li>
+        <li onClick={onClickLogout}>로그아웃</li>
+        </ul>
+     </ItemsWrapper>
+    )
+  }
 
   let navigate = useNavigate()
 
@@ -54,13 +106,18 @@ const Navigationbar = ({ authState, loginHandler }) => {
   return (  
     <> 
       {authState.loginStatus ? (
-        <ButtonsWrapper>
-          <Button>
-            <RiAccountCircleFill onClick={onClickMoveMypage} size={45}/>
-          </Button>
-          <Logout loginHandler={loginHandler} />
-        </ButtonsWrapper>
-      ) : (
+        isOpen ? (<ButtonsWrapper onMouseEnter={()=>{setIsOpen(true)}} onMouseLeave={()=>{setIsOpen(false)}}>
+                <NavItems />
+                  <Button>
+                    <RiAccountCircleFill  size={45}/>
+                  </Button>
+                </ButtonsWrapper> 
+                 ) : ( <ButtonsWrapper onMouseEnter={()=>{setIsOpen(true)}} onMouseLeave={()=>{setIsOpen(false)}}>
+                                      <Button>
+                                        <RiAccountCircleFill size={45}/>
+                                      </Button>        
+                                     </ButtonsWrapper>)
+        ) : (
         <ButtonsWrapper>
           <Login loginHandler={loginHandler} />
         </ButtonsWrapper>

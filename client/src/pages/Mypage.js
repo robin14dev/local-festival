@@ -8,6 +8,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   width: 81rem;
   height: 60rem;
+  margin: 5rem;
  
   @media (max-width: 1320px) {
     width: 95vw;
@@ -43,9 +44,9 @@ const Mypage = ({ authState,handleAuthState,festivalData, pickItems, togglePick 
   
   return (
     <Wrapper>
-      <Nav>
+      {/* <Nav>
         <EditProfile authState={authState} handleAuthState={handleAuthState} />
-      </Nav>
+      </Nav> */}
       <h1> {nickname}님이 찜하신 축제들 입니다</h1>
       <Picklist
         togglePick={togglePick}
