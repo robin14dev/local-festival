@@ -15,9 +15,7 @@ const Wrapper = styled.div`
   /* justify-content: space-evenly; */
   align-items: center;
 
-  & > * {
-    /* margin: 1rem; */
-  }
+  
   @media (max-width: 673px) {
   height: 55rem;
  }
@@ -74,13 +72,11 @@ const Mainpage = ({ infiniteScroll,authState,togglePick, onSearch, filteredData,
 
   return (
     <Wrapper>
-      <Search onSearch={onSearch} />
-      <FilteredInfo>
+      {/* <Search onSearch={onSearch} /> */}
+      {/* <FilteredInfo>
        <div>{!!filteredData && <span style={{color:"red"}}>{filteredData.length}</span>}개의 축제가 진행중입니다</div> 
-       {/* <img onClick={resetCondition} src={resetImg}></img> */}
        <IoSyncCircleSharp size={45} color={" #2f76d3"} onClick={resetCondition} />
-
-        </FilteredInfo>
+        </FilteredInfo> */}
       <FestivalList infiniteScroll={infiniteScroll}  authState={authState} togglePick={togglePick} festivals={filteredData} pickItems={pickItems} />
       <Hashtag onSearch={onSearch}/>
     </Wrapper>

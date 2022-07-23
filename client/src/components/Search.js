@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { IoSearchCircleSharp } from "react-icons/io5";
 const Wrapper = styled.div`
-  background-color: #2f76d3;
   background-color: white;
-  margin-top: 2rem;
-  height: 10%;
-  width: 40%;
+  margin: 0.5rem 0;
+  /* margin-right: 8rem; */
+  height: 60%;
+  width: 23%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  box-shadow: 0.1rem 0.1rem 0.2rem 0.1rem  gray;
+  box-shadow: 0.01rem 0.01rem 0.2rem 0.01rem  gray;
   border-radius: 1.8rem;
   & > * {
     margin: 1rem 0;
@@ -19,8 +19,8 @@ const Wrapper = styled.div`
     width: 80%;
     height: 60%;
     border: none;
-    font-size: large;
-    font-weight: bold;
+    font-size: 1rem;
+    /* font-weight: bold; */
     border-radius: 0.2rem;
     padding-left: 0.5rem;
     margin-left: 0.5rem;
@@ -28,8 +28,9 @@ const Wrapper = styled.div`
     
   }
   & > button {
-    /* width: 10%;
-    height: 60%; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border: none;
     background: none;
     font-size: large;
@@ -80,7 +81,7 @@ const Search = ({ onSearch }) => {
   return (
     <Wrapper>
       <input onKeyPress={onKeyPress} onChange={onChangeHandler} placeholder="축제를 검색해주세요!" />
-      <button onClick={onClickSearch}><IoSearchCircleSharp  size={50}/></button>
+      <button onClick={onClickSearch}><IoSearchCircleSharp  size={40}/></button>
     </Wrapper>
   );
 };

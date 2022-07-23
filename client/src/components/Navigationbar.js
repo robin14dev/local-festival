@@ -9,11 +9,8 @@ import styled from "styled-components";
 
 const ButtonsWrapper = styled.div`
   display: flex;
-  /* align-items: center; */
-  /* width: 20rem; */
   height: 100%;
-  position: absolute;
-  right:5rem;
+  margin: 0 3rem;
  
   @media (max-width: 840px) {
     right: 2rem;
@@ -34,12 +31,13 @@ border:none;
   padding:0; 
   overflow:visible;
    cursor:pointer;
-   color: #6cf7a6;
+   color: #41c8adbe;
 `
 const ItemsWrapper = styled.div`
 position: absolute;
 top: 4rem;
-left : -2.5rem;
+right : 1rem;
+z-index: 3;
 width: 8rem;
 box-shadow: 1px 1.5px 2px gray;
 background-color: white;
@@ -78,7 +76,7 @@ const Navigationbar = ({ authState, loginHandler }) => {
     };
 
     const onClickMyPage = () => {
-      navigate("/MyPage")
+      navigate("/MyPick ")
     }
     const onClickAccount = () => {
       navigate("/AccountSetting")

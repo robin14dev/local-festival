@@ -14,10 +14,11 @@ const Wrapper = styled.div`
   border: none;
   display: flex;
   flex-direction: column;
-  background-color: #f2eeee; 
+  background-color: #f6f5f5bb; 
   transition: transform 0.3s ease-out;
   box-shadow: 1px 1.5px 2px gray;
-  border-radius: 0 0 4px 4px;
+  border-radius:  0.5rem;
+  overflow: hidden;
   &:hover {
     background-color: #2f76d3;
     .title>b {
@@ -34,7 +35,7 @@ const Wrapper = styled.div`
     object-fit: fill;
     width: 100%;
     height: 15rem;
-    border-radius: 3.5px 3.5px 0 0;
+    /* border-radius: 3.5px 3.5px 0 0; */
     /* box-shadow: 1px 0  2px gray;  */
   }
 `;

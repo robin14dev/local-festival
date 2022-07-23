@@ -1,7 +1,6 @@
 import React from "react";
 import Picklist from "../components/Picklist";
 import styled from "styled-components";
-import EditProfile from "../components/EditProfile";
 
 const Wrapper = styled.div`
   display: flex;
@@ -24,29 +23,12 @@ const Wrapper = styled.div`
 
 `;
 
-const Nav = styled.div`
-  /* border: 1px solid black; */
-  align-self: flex-end;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  
-  /* justify-content: flex-end; */
-
-  height: 4rem;
-  width: 30rem;
-  margin-top: 1rem;
-`;
-
-const Mypage = ({ authState,handleAuthState,festivalData, pickItems, togglePick }) => {
+const MyPick = ({ authState,handleAuthState,festivalData, pickItems, togglePick }) => {
   const {nickname} = authState
 
   
   return (
     <Wrapper>
-      {/* <Nav>
-        <EditProfile authState={authState} handleAuthState={handleAuthState} />
-      </Nav> */}
       <h1> {nickname}님이 찜하신 축제들 입니다</h1>
       <Picklist
         togglePick={togglePick}
@@ -57,4 +39,4 @@ const Mypage = ({ authState,handleAuthState,festivalData, pickItems, togglePick 
   );
 };
 
-export default Mypage;
+export default MyPick;

@@ -12,8 +12,8 @@ const ModalContainer = styled.div`
     /* width: 20%; */
     height: 100%;
     border: none;
-    background-color: #1564a9;
-    color: white;
+    /* background-color: #1564a9; */
+    color: #1564a9;
     font-weight: bolder;
     font-size: larger;
     transition: all 0.3s ease-in;

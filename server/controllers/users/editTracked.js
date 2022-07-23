@@ -12,9 +12,10 @@ module.exports = async(req, res) => {
       return res.status(404).json({data:null , message: 'User not logged in'})
   }
 
-    const {id, account} = accessTokenData
+    const {id} = accessTokenData
 
-  let result =  await Users.findOne({attributes : ['updatedAt']}, {where : id})
+  let result =  await Users.findOne({attributes : ['updatedAt'],
+                                     where : {id} })
   res.json({updatedAt : result.updatedAt})
     
   } catch (error) {

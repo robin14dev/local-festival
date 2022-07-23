@@ -5,8 +5,10 @@ import styled, { css } from "styled-components";
 const Wrapper = styled.div`
   width: 100%;
   height: 6rem;
+  position: fixed;
+  bottom: 0;
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
   background-color: #f1f3f5;
   color: black;
   margin-top: 2rem;
@@ -15,12 +17,10 @@ const Wrapper = styled.div`
   & > img {
     width: 5rem;
     height: 5rem;
-    /* margin: 1rem;
-    margin-left: 9%; */
+    margin-left: 1rem;
   }
   & > div {
-    /* margin-right: 9%;
-    margin-top: 6rem; */
+    margin: 3.5rem 0 0 0.5rem;
     
   }
 `;
