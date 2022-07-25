@@ -21,6 +21,8 @@ let result = await Picks.destroy({
   }
 })
 
+res.json({message : 'delete success'})
+
 console.log(result);
 
 }

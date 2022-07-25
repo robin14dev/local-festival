@@ -28,7 +28,6 @@ function App() {
     nickname: "",
     loginStatus: false,
   });
-  // const [isLogin, setIsLogin] = useState(false);
   const [festivalData, setFestivalData] = useState(null);
   const [pickItems, setPickItems] = useState([]);
   const [filteredData, setFilteredData] = useState(festivalData);
@@ -196,18 +195,18 @@ function App() {
         })
   
         //* 새로고침시 유저가 픽한 상태도 유지되야 하므로
-        axios.get(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`, {headers: {
-        accesstoken: sessionStorage.getItem("accesstoken"),
-      }}
-      ).then((response) => {
-        //console.log(response.data.data);
-        const pickedFestivalId = response.data;
-        //console.log(pickedFestivalId);
-        // const festivalIdArr = pickedFestivalId.map(ele => ele.local_id)
-        // const pickedFestivalByUser = festivalData.filter(ele => festivalIdArr.indexOf(ele.id) > -1)
-        //{festivalId: 4}
-        setPickItems(pickedFestivalId);
-      });
+      //   axios.get(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`, {headers: {
+      //   accesstoken: sessionStorage.getItem("accesstoken"),
+      // }}
+      // ).then((response) => {
+      //   //console.log(response.data.data);
+      //   const pickedFestivalId = response.data;
+      //   //console.log(pickedFestivalId);
+      //   // const festivalIdArr = pickedFestivalId.map(ele => ele.local_id)
+      //   // const pickedFestivalByUser = festivalData.filter(ele => festivalIdArr.indexOf(ele.id) > -1)
+      //   //{festivalId: 4}
+      //   setPickItems(pickedFestivalId);
+      // });
     
         
       })

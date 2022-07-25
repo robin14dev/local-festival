@@ -85,7 +85,6 @@ padding-right: 0.5rem;
 
 
 const Festival = ({ authState, festival, togglePick, pickItems }) => {
-  // console.log("Festival component", festival);
   const {festivalId, title, imageUrl, startDate, endDate} = festival
   const [like, setLike] = useState(false)
   let navigate = useNavigate();

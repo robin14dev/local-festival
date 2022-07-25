@@ -72,11 +72,6 @@ const Mainpage = ({ infiniteScroll,authState,togglePick, onSearch, filteredData,
 
   return (
     <Wrapper>
-      {/* <Search onSearch={onSearch} /> */}
-      {/* <FilteredInfo>
-       <div>{!!filteredData && <span style={{color:"red"}}>{filteredData.length}</span>}개의 축제가 진행중입니다</div> 
-       <IoSyncCircleSharp size={45} color={" #2f76d3"} onClick={resetCondition} />
-        </FilteredInfo> */}
       <FestivalList infiniteScroll={infiniteScroll}  authState={authState} togglePick={togglePick} festivals={filteredData} pickItems={pickItems} />
       <Hashtag onSearch={onSearch}/>
     </Wrapper>

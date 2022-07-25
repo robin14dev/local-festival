@@ -84,14 +84,14 @@ justify-content: flex-end;
 }
 `
 
-const Pick = ({ item, togglePick, pickItems }) => {
-  const [like, setLike] = useState(false)
+const Pick = ({ item, deletePickTest }) => {
+  const [like, setLike] = useState(true)
 
   let navigate = useNavigate();
   const { festivalId, title, imageUrl, startDate, endDate } = item;
   const onClickRemove = (event,id) => {
     event.stopPropagation();
-    togglePick(id);
+    deletePickTest(id);
 
   };
   const onErrorImg = (e) => {
@@ -99,11 +99,11 @@ const Pick = ({ item, togglePick, pickItems }) => {
   }
  
   
-  useEffect(()=>{
-    const isPicked = pickItems.some(ele => ele.festivalId === festivalId)
-    setLike(isPicked)
+  // useEffect(()=>{
+  //   const isPicked = pickItems.some(ele => ele.festivalId === festivalId)
+  //   setLike(isPicked)
    
-  })
+  // })
 
   const onClickMoveDVP = () => {
     navigate(`/Detailviewpage/festivalId/${festivalId}`, { state: item });
