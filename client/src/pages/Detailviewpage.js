@@ -165,10 +165,9 @@ const Detailviewpage = ({pickItems, togglePick, authState}) => {
     // event.stopPropagation();
     setLike(!like)
   }
-  const onClickPick = (event, id) => {
+  const onClickPick = (event, festival) => {
     event.stopPropagation();
-    console.log("pick_id!!!!!!!!!!", id);
-    togglePick(id);
+    togglePick(festival);
     toggleLike()
   };
 
@@ -182,7 +181,7 @@ const Detailviewpage = ({pickItems, togglePick, authState}) => {
 
         {authState.loginStatus ? <HeartButton  like={like}
             onClick={(event) => {
-              onClickPick(event, festivalId);
+              onClickPick(event, state);
           
             }}
          / > :  null}

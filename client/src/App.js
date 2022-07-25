@@ -34,7 +34,7 @@ function App() {
 
   const infiniteScroll = (addData) => {
     //console.log('addData', addData);
-    console.log('here');
+    // console.log('here');
     console.log(festivalData, addData);
     let addToData = festivalData.concat(addData)
     console.log('new state',addToData);
@@ -91,17 +91,19 @@ function App() {
     setFilteredData(festivalData);
   };
 
-  const togglePick = (id) => {
+  const togglePick = (newPick) => {
     //#1. 픽했는지 아닌지 부터 확인
-    const found = pickItems.filter((el) => el.festivalId === id)[0];
-    if (found) {
+    console.log('festival', newPick);
+    const found = pickItems.filter((el) => el.festivalId === newPick.festivalId);
+    console.log('wht is found', found);
+    if (found.length !== 0) { // 이미 찜목록에 있으면 해제를 시켜줘야됨
       console.log("found");
 
     //#2-1. 픽 해제해서 서버에 픽 해제한 정보 보내주기
-      console.log("removeId what!!!", id);
+      console.log("removeId what!!!", newPick);
 
       //*서버에 삭제요청 보내기
-      axios.delete(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`,  {data : {festivalId: id}, headers: {
+      axios.delete(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`,  {data : {festivalId: newPick.festivalId}, headers: {
         accesstoken: sessionStorage.getItem("accesstoken"),
       }})
       .then(response => {
@@ -111,13 +113,13 @@ function App() {
         console.log(err);
       })
 
-        setPickItems(pickItems.filter((el) => el.festivalId !== id));
+        setPickItems(pickItems.filter((el) => el.festivalId !== newPick.festivalId));
     } else {
       console.log("add new");
      //#2-2. 픽해서 서버에 픽한 정보 보내주기
       axios
         .post(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`, {
-          festivalId: id,
+          festivalId: newPick.festivalId,
         }, {headers: {
           accesstoken: sessionStorage.getItem("accesstoken"),
         }})
@@ -130,9 +132,7 @@ function App() {
 
       setPickItems([
         ...pickItems,
-        {
-          festivalId: id,
-        },
+        newPick
       ]);
     }
   };
@@ -195,18 +195,18 @@ function App() {
         })
   
         //* 새로고침시 유저가 픽한 상태도 유지되야 하므로
-      //   axios.get(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`, {headers: {
-      //   accesstoken: sessionStorage.getItem("accesstoken"),
-      // }}
-      // ).then((response) => {
-      //   //console.log(response.data.data);
-      //   const pickedFestivalId = response.data;
-      //   //console.log(pickedFestivalId);
-      //   // const festivalIdArr = pickedFestivalId.map(ele => ele.local_id)
-      //   // const pickedFestivalByUser = festivalData.filter(ele => festivalIdArr.indexOf(ele.id) > -1)
-      //   //{festivalId: 4}
-      //   setPickItems(pickedFestivalId);
-      // });
+        axios.get(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`, {headers: {
+        accesstoken: sessionStorage.getItem("accesstoken"),
+      }}
+      ).then((response) => {
+        //console.log(response.data.data);
+        const pickedFestival = response.data;
+        //console.log(pickedFestivalId);
+        // const festivalIdArr = pickedFestivalId.map(ele => ele.local_id)
+        // const pickedFestivalByUser = festivalData.filter(ele => festivalIdArr.indexOf(ele.id) > -1)
+        //{festivalId: 4}
+        setPickItems(pickedFestival);
+      });
     
         
       })

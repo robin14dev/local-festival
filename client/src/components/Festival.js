@@ -9,7 +9,6 @@ import HeartButton from "./HeartButton";
 const Wrapper = styled.div`
   width: 18rem;
   height: 22rem;
-  /* padding: 0.2em; */
   margin: 0.5rem;
   border: none;
   display: flex;
@@ -29,7 +28,6 @@ const Wrapper = styled.div`
       color: white;
     }
   }
-
 
   & > img {
     object-fit: fill;
@@ -111,7 +109,7 @@ const Festival = ({ authState, festival, togglePick, pickItems }) => {
   const onClickPick = (event, id) => {
     event.stopPropagation();
     console.log("pick_id!!!!!!!!!!", id);
-    togglePick(id);
+    togglePick(festival);
     toggleLike()
   };
 
@@ -144,7 +142,7 @@ const Festival = ({ authState, festival, togglePick, pickItems }) => {
           
         {authState.loginStatus ? <HeartButton like={like}
             onClick={(e) => {
-              onClickPick(e, festivalId);
+              onClickPick(e, festival);
           
             }}
           >

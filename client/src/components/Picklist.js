@@ -21,7 +21,7 @@ const Wrapper = styled.div`
     justify-content: center;
   }
 `;
-const Picklist = ({ pickItems, deletePickTest }) => {
+const Picklist = ({ pickItems, togglePick }) => {
   if (pickItems === null) {
     return <div>데이터를 받아오는 중</div>;
   } else {
@@ -33,8 +33,8 @@ const Picklist = ({ pickItems, deletePickTest }) => {
           <h1 style={{position:"absolute", left:"35rem",top:"25rem"}}>현재 찜하신 축제가 없습니다</h1>
         ) : (
           <Wrapper>
-            {pickItems.map((ele) => {
-              return <Pick key={ele.festivalId} item={ele} pickItems={pickItems}  deletePickTest={deletePickTest} />;
+            {pickItems.map((pick) => {
+              return <Pick key={pick.festivalId} festival={pick} pickItems={pickItems}  togglePick={togglePick}  />;
             })}
           </Wrapper>
         )}

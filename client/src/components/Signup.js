@@ -3,39 +3,10 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 const ModalContainer = styled.div`
-  /* height: 15rem; */
-
-  text-align: center;
-  & > button {
-    outline: none;
-    border: none;
-    border-radius: 4px;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    margin-top: 15px;
-    /* margin-left: 32px; */
-    margin-bottom: 15px;
-
-    /* 크기 */
-    height: 2rem;
-    width: 15rem;
-    font-size: 1rem;
-
-    /* 색상 */
-    background-color: #1564a9;
-    transition: transform 0.2s ease-out;
-    &:hover {
-      transform: scale(1.1);
-   
-    }
-    &:active {
-      color: #6cf7a6;
-     
-    }
-  }
+ &  button {
+  font-size: 1rem;
+ }
+ 
 `;
 
 const ModalBackdrop = styled.div`
@@ -52,119 +23,77 @@ const ModalBackdrop = styled.div`
 `;
 
 const ModalView = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 30rem;
+  height: 35rem;
   border-radius: 10px;
   background-color:white;
-  box-sizing: border-box;
   padding: 1rem;
-  width: 30rem;
-  height: 55vh;
+  
   & > h1 {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+  font-size: 3rem;
+  cursor: pointer;
+  font-style: italic;
+  font-family: 'HS-Regular';
+  color: #1564a9;
+  margin-bottom: 0.5rem;
   }
-`;
-const SignupViewInputs = styled.div`
-  display: flex;
 
-  flex-direction: column;
-
-  /* display: relative; */
-
-  & > label > input {
-    margin: 5px;
-    width: 15rem;
-    height: 30px;
-  }
-`;
-
-const SignUpButton = styled.div`
-  display: flex;
-  justify-content: center;
-  & > input {
-    /* 공통 스타일 */
-    outline: none;
-    border: none;
-    border-radius: 4px;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    margin-top: 15px;
-    /* margin-left: 32px; */
-    margin-bottom: 15px;
-
-    /* 크기 */
-    height: 2rem;
-    width: 15rem;
-    font-size: 1rem;
-
-    /* 색상 */
-    background-color: #05c299;;
-    transition: transform 0.2s ease-out;
-    &:hover {
-      transition: transform 0.2s ease-out;
-      transform: translateY(-10%);
-    }
-    &:active {
-      color: #6cf7a6;
-
+  & > div:nth-child(3) {
+    & > button {
+      margin-left: 1.2rem;
+      color: #1564a9;
+      font-weight: bold;
+      font-size: 1rem;
     }
   }
+`;
+const SignupView = styled.div`
+  width: 80%;
+  margin: 0.5rem 0;
 `;
 const InputsInColumn = styled.div`
   display: flex;
-
-  justify-content: center;
-  margin: 0 auto;
-  width: 23rem;
-  height: 13rem;
   flex-direction: column;
-
-  /* display: relative; */
   & > label {
-    float: left;
-    text-align: left;
-    line-height: 2.8rem;
-    font-weight: bp;
+    align-self: flex-start;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
   }
-  & > label > input {
-    margin: 5px;
-    width: 15rem;
-    height: 30px;
-    float: right;
+
+  & > input {
+    height: 2.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid lightgray;
+    border-radius: 0.3rem;
+
   }
+ 
 `;
-const CancelControl = styled.div`
-  display: relative;
-  button {
-    /* 공통 스타일 */
-    outline: none;
-    border: none;
+
+const SignUpButton = styled.button`
     border-radius: 4px;
+    margin: 0.5rem 0 ;
     color: white;
     font-weight: bold;
     cursor: pointer;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    margin-top: 0.5rem;
-
-    /* 크기 */
-    height: 2rem;
-    width: 6.5rem;
+    height: 3rem;
+    width: 100%;
     font-size: 1rem;
-
+    transition: all 0.2s ease-out;
     background-color: #1564a9;
-    transition: transform 0.2s ease-out;
-    &:hover {
-      transition: transform 0.2s ease-out;
-      transform: translateY(-10%);
-    }
+
+    
+    
     &:active {
       color: #6cf7a6;
     }
-  }
+ 
 `;
+
+
 
 const Signup = ({ openModalHandlerLogin }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -192,8 +121,7 @@ const Signup = ({ openModalHandlerLogin }) => {
     setPasswordCheck(e.target.value);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     if (password !== passwordCheck) {
       console.log("password Not Match");
       // errorMessage.textContent = 'eeorr'
@@ -231,7 +159,7 @@ const Signup = ({ openModalHandlerLogin }) => {
   };
   return (
     <ModalContainer>
-      <button onClick={openModalHandler}>회원가입 하기</button>
+      <button onClick={openModalHandler}>회원가입</button>
       {isOpen ? (
         <ModalBackdrop
           onClick={() => {
@@ -244,19 +172,16 @@ const Signup = ({ openModalHandlerLogin }) => {
               e.stopPropagation();
             }}
           >
-            <h1>회원가입 하기</h1>
-            <SignupViewInputs>
+            <h1>LoCo</h1>
+            <SignupView>
               {/* <ErrorMessage ref={errorMessage} ></ErrorMessage> */}
               <div className="errorMessage" style={{ color: "Red" }}></div>
-              <form
-                onSubmit={(e) => {
-                  handleSubmit(e);
-                }}
-              >
                 <InputsInColumn>
-                  <label>
-                    아이디
+                  <label htmlFor="account">
+                    이메일 주소
+                    </label>
                     <input
+                      id="account"
                       type="text"
                       value={account}
                       required
@@ -264,11 +189,11 @@ const Signup = ({ openModalHandlerLogin }) => {
                         handleUserId(e);
                       }}
                     />
-                    <br />
-                  </label>
-                  <label>
+                  
+                  <label htmlFor="nickname">
                     닉네임
-                    <input
+                    </label>
+                    <input id="nickname"
                       type="text"
                       value={nickname}
                       required
@@ -276,12 +201,12 @@ const Signup = ({ openModalHandlerLogin }) => {
                         handleNickname(e);
                       }}
                     />
-                    <br />
-                  </label>
+                  
 
-                  <label>
+                  <label htmlFor="password">
                     비밀번호
-                    <input
+                    </label>
+                    <input id="password"
                       type="password"
                       value={password}
                       required
@@ -289,11 +214,11 @@ const Signup = ({ openModalHandlerLogin }) => {
                         handlePassword(e);
                       }}
                     />
-                    <br />
-                  </label>
-                  <label>
+                   
+                  <label htmlFor="passwordCheck">
                     비밀번호 확인
-                    <input
+                    </label>
+                    <input id="passwordCheck"
                       type="password"
                       value={passwordCheck}
                       required
@@ -301,27 +226,12 @@ const Signup = ({ openModalHandlerLogin }) => {
                         handlePasswordCheck(e);
                       }}
                     />
-                    <br />
-                  </label>
+                  
                 </InputsInColumn>
-
-                <SignUpButton>
-                  <input type="submit" value="회원가입" />
-                </SignUpButton>
-              </form>
-            </SignupViewInputs>
-            <div className="Signup-view-buttons">
-              <CancelControl>
-                <button
-                  className="close-btn"
-                  onClick={() => {
-                    openModalHandler();
-                    openModalHandlerLogin();
-                  }}
-                >
-                  취소하기
-                </button>
-              </CancelControl>
+                <SignUpButton onClick={handleSubmit}>회원가입</SignUpButton>  
+            </SignupView>
+            <div>
+              이미 계정이 있으신가요? <button onClick={openModalHandler}>로그인</button>
             </div>
           </ModalView>
         </ModalBackdrop>

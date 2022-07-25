@@ -4,62 +4,51 @@ import styled from "styled-components";
 import HeartButton from "./HeartButton";
 import onErrorImage from "../assets/noimage.png"
 import moment from "moment";
+
+
+
 const Wrapper = styled.div`
-    width: 18rem;
-  height: 23em;
-  padding: 0.2em;
+  width: 18rem;
+  height: 22rem;
   margin: 0.5rem;
   border: none;
   display: flex;
   flex-direction: column;
-  /* box-shadow: 0.1rem 0.1rem 0.2rem  gray; */
+  background-color: #f6f5f5bb; 
   transition: transform 0.3s ease-out;
-  /* font-family: "EarlyFontDiary"; */
-  
-
+  box-shadow: 1px 1.5px 2px gray;
+  border-radius:  0.5rem;
+  overflow: hidden;
   &:hover {
+    background-color: #2f76d3;
     .title>b {
-      color:#6cf7a6; 
+      color: white;
     }
     transform: scale(1.1);
     & > div:nth-child(2) {
-      background-color: #1a6cb4;
       color: white;
     }
-
-    svg {
-      color: white;
-    }
-    
-    
-    
   }
-
-
   & > img {
     object-fit: fill;
     width: 100%;
-    height: 70%;
-    border-radius: 3.5px 3.5px 0 0;
-    box-shadow: 1px 0  2px gray; 
+    height: 15rem;
+    /* border-radius: 3.5px 3.5px 0 0; */
+    /* box-shadow: 1px 0  2px gray;  */
   }
 `;
 
 const Description = styled.div`
-  text-align: start;
-  height: 7rem;
-  padding: 1rem 1px;
+  height: 5rem;
+  padding: 1rem 1px 0 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  /* box-shadow: 1px 1.5px 2px gray;
+  background-color: #f2eeee; */
   
-  color: black;
-  box-shadow: 1px 1.5px 2px gray;
-  background-color: #f2eeee;
-  border-radius: 0 0 4px 4px;
   & > div {
     width: 80%;
-    text-align: start;
     padding-left:0.5rem;
     overflow: hidden;
     white-space: nowrap;
@@ -70,28 +59,35 @@ const Description = styled.div`
       font-size :large;
      
     }
+
+    
   }
-`
+
+  
+
+  
+`;
+
 const HeartDiv = styled.div`
 display: flex;
 justify-content: flex-end;
+padding-right: 0.5rem;
+/* background-color: red; */
 & > img {
   width: 1.5rem;
   height: 1.5rem;
-  position: relative;
-  right: 0.8rem;
-  bottom: 2.2rem;
+ 
 }
 `
 
-const Pick = ({ item, deletePickTest }) => {
+const Pick = ({ festival, togglePick }) => {
   const [like, setLike] = useState(true)
 
   let navigate = useNavigate();
-  const { festivalId, title, imageUrl, startDate, endDate } = item;
-  const onClickRemove = (event,id) => {
+  const { festivalId, title, imageUrl, startDate, endDate } = festival;
+  const onClickRemove = (event,festival) => {
     event.stopPropagation();
-    deletePickTest(id);
+    togglePick(festival);
 
   };
   const onErrorImg = (e) => {
@@ -106,7 +102,7 @@ const Pick = ({ item, deletePickTest }) => {
   // })
 
   const onClickMoveDVP = () => {
-    navigate(`/Detailviewpage/festivalId/${festivalId}`, { state: item });
+    navigate(`/Detailviewpage/festivalId/${festivalId}`, { state: festival });
   };
   return (
     <Wrapper onClick={onClickMoveDVP}>
@@ -124,7 +120,7 @@ const Pick = ({ item, deletePickTest }) => {
         <HeartDiv>
         <HeartButton like={like}
             onClick={(event) => {
-              onClickRemove(event, festivalId);
+              onClickRemove(event, festival);
           
             }}
           >

@@ -4,6 +4,8 @@ import Signup from "./Signup";
 import styled from "styled-components";
 import axios from "axios";
 import { RiAccountCircleFill } from "react-icons/ri";
+import { AiFillLock } from "react-icons/ai";
+
 const ModalContainer = styled.div`
  
   height: 100%;
@@ -12,7 +14,6 @@ const ModalContainer = styled.div`
     /* width: 20%; */
     height: 100%;
     border: none;
-    /* background-color: #1564a9; */
     color: #1564a9;
     font-weight: bolder;
     font-size: larger;
@@ -42,65 +43,93 @@ const ModalBackdrop = styled.div`
 const ModalView = styled.div`
   border-radius: 10px;
   background-color: white;
-  box-sizing: border-box;
   padding: 1rem;
   width: 30rem;
   height: 55vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   & > h1 {
-    /* margin-top: 1rem;
-    margin-bottom: 1rem; */
+    font-size: 3rem;
+  cursor: pointer;
+  font-style: italic;
+  font-family: 'HS-Regular';
+  color: #1564a9;
+  }
+
+  & > div:nth-child(4) {
+    /* background-color: #ef8d8d; */
+    display: flex;
+    width: 20rem;
+    justify-content: space-between;
+    align-items: center;
+    height: 3rem;
+   &  > *  {
+    font-size: 1rem;
+   }
+    & > button {
+      border-right: 1px solid lightgray;
+      padding: 0 2rem;
+    }
+    & >div {
+      margin-right: 3rem;
+    }
   }
 `;
+
 const LoginControl = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* border: 1px solid black; */
-  height: 8em;
+  /* background-color: yellowgreen; */
 `;
 
 const InputsInColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  /* display: relative; */
-  & > label > input {
-    margin: 5px;
-    width: 15rem;
-    height: 30px;
+
+  width: 20rem;
+  /* background-color: yellow; */
+  & > div {
+    display: flex;
+    justify-content: space-between;
+    /* height: 2rem; */
+    margin : 0.5rem 0;
+    font-size: 3rem;
+    align-items: center;
+   
+
+    & > input {
+      width: 100%;
+      height: 3rem;
+      font-size: 35%;
+      padding-left: 1rem;
+      border : 1px solid lightgray;
+      border-radius: 0.3rem;
+    }
   }
+ 
 `;
 
-const LoginButton = styled.div`
-  display: flex;
-  & > input {
-    /* 공통 스타일 */
-    outline: none;
-    border: none;
+
+const LoginButton = styled.button`
+ 
     border-radius: 4px;
+    margin: 0.5rem 0 ;
     color: white;
     font-weight: bold;
     cursor: pointer;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    margin-top: 15px;
-    margin-left: 32px;
-    margin-bottom: 15px;
-
-    /* 크기 */
-    height: 2rem;
-    width: 15rem;
+    height: 3rem;
+    width: 100%;
     font-size: 1rem;
-    transition: transform 0.2s ease-out;
-    /* 색상 */
+    transition: all 0.2s ease-out;
     background-color: #1564a9;
-    &:hover {
-      transform: scale(1.1);
+
     
-    }
+    
     &:active {
       color: #6cf7a6;
     }
-  }
+  
 `;
 
 const GoogleLoginControl = styled.div`
@@ -215,8 +244,8 @@ const Login = ({ loginHandler }) => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = () => {
+   
     //# 유효성 검증 후 서버에 회원가입 정보 전송 (주석 해제)
     axios
       .post(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users/signin`, {
@@ -271,58 +300,23 @@ const Login = ({ loginHandler }) => {
               e.stopPropagation();
             }}
           >
-            <h1>로그인</h1>
-           
-              <ErrorMessage ref={errorMessage}></ErrorMessage>
+            <h1>LoCo</h1> 
+            <ErrorMessage ref={errorMessage}></ErrorMessage>
             <LoginControl>
-              <form
-                onSubmit={(e) => {
-                  handleSubmit(e);
-                }}
-              >
                 <InputsInColumn>
-                  <label style={{fontWeight:"bold"}}>
-                    아이디 &ensp;
-                    <input
-                      type="text"
-                      value={account}
-                      required
-                      onChange={(e) => {
-                        handleaccount(e);
-                      }}
-                    />
-                    <br />
-                  </label>
-                  <label  style={{fontWeight:"bold"}}>
-                    비밀번호
-                    <input
-                      type="password"
-                      value={password}
-                      required
-                      onChange={(e) => {
-                        handlePassword(e);
-                      }}
-                    />
-                    <br />
-                  </label>
+                  <div>
+                      <input id="account" type="text" value={account} required placeholder="이메일" onChange={(e) => {handleaccount(e)}}/>
+                  </div>
+                  <div>
+                      <input id="password" type="text" value={password} required placeholder="비밀번호" onChange={(e) => {handlePassword(e)}}/>
+                  </div>
                 </InputsInColumn>
-                <LoginButton>
-                  <input type="submit" value="로그인하기" />
-                </LoginButton>
-              </form>
+                <LoginButton onClick={handleSubmit}>로그인</LoginButton>
             </LoginControl>
-            <Signup openModalHandlerLogin={openModalHandlerLogin} />
-            <GoogleLoginControl>
-              <button>Sigin in with Google</button>
-            </GoogleLoginControl>
-            <KakaoLoginControl>
-              <button>Login with Kakao</button>
-            </KakaoLoginControl>
-            <CancelControl>
-              <button className="close-btn" onClick={openModalHandler}>
-                취소하기
-              </button>
-            </CancelControl>
+            <div>
+              <button>비밀번호 재설정</button>
+              <Signup openModalHandlerLogin={openModalHandlerLogin} />
+            </div>
           </ModalView>
         </ModalBackdrop>
       ) : null}
