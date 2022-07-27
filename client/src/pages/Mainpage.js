@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import FestivalList from "../components/FestivalList";
 import Hashtag from "../components/Hashtag";
 import Search from "../components/Search";
@@ -6,75 +6,69 @@ import styled from "styled-components";
 import resetImg from "../assets/reset.png"
 import { IoSyncCircleSharp } from "react-icons/io5";
 const Wrapper = styled.div`
-  /* width: 81rem; */
+  margin: 0 auto  5rem auto; // ㅇㅒ로 해결!!!
   width : 100vw;
-  height: 44rem;
-  /* background-color: yellowgreen; */
+  height: auto;
   display: flex;
   flex-direction: column;
-  /* justify-content: space-evenly; */
   align-items: center;
-
-  
+  /* background-color: yellowgreen; */
   @media (max-width: 673px) {
-  height: 55rem;
+  /* height: 55rem; */
  }
 `;
 
-const FilteredInfo = styled.div`
-width: 93%;
-height: 10%;
-/* align-self: flex-start; */
-margin-top: 1rem;
-font-size: 1.7rem;
-/* background-color: yellow; */
-line-height: 3;
-position: relative;
-/* left: 3.5rem; */
-bottom: 1rem;
+const SearchAndTag = styled.div`
+
+width: 100vw;
+background-color: white ;
+height: 4rem;
 display: flex;
-justify-content: space-between;
-font-family: 'SuseongDotum';
-
-
-&>svg{
-  width: 2.8rem;
-  height: 2.8rem;
-  position: relative;
-  top: 0.8rem;
-  &:hover{
-     transition: all 1s ease-in-out;
-    transform: rotate(-45deg);
-
-  }
-  &:active   {
-    
-  transform: rotate(180deg);
-  transition: 0.1s;   
-
-
-  }
-}
-@media (max-width: 1210px) {
-  width: 69%;
- }
-@media (max-width: 1010px) {
-  width: 45%;
- }
-@media (max-width: 673px) {
-  width: 35%;
-  /* height: 50rem; */
- }
- 
+flex-direction: column;
+align-items: center;
+position: fixed;
+top: 5rem;
+z-index: 1;
+padding: 1rem;
+/* border: 3px solid green; */
 `
-const Mainpage = ({ infiniteScroll,authState,togglePick, onSearch, filteredData, pickItems, resetCondition }) => {
-  
 
+
+const Mainpage = ({ infiniteScroll,authState,togglePick, onSearch, filteredData, pickItems, resetCondition }) => {
+
+  // const pageEnd = useRef(null);
+
+  // const loadFestivals = () => {
+  //   alert('hdddi')
+  // }
+
+  // useEffect(()=>{
+  //   const observer = new IntersectionObserver((entries) => {
+    
+  //     if(entries[0].isIntersecting) {
+  //       loadFestivals()
+  //     }
+      
+    
+  //   }, {threshold : 1})
+  
+  //   observer.observe(pageEnd.current)
+  // }, [])
+
+  
+  
+ 
   return (
+    
     <Wrapper>
-      <FestivalList infiniteScroll={infiniteScroll}  authState={authState} togglePick={togglePick} festivals={filteredData} pickItems={pickItems} />
-      <Hashtag onSearch={onSearch}/>
+       <SearchAndTag>
+         <Search onSearch={onSearch} />
+         <Hashtag onSearch={onSearch}/>
+       </SearchAndTag>
+      <FestivalList   authState={authState} togglePick={togglePick} festivals={filteredData} pickItems={pickItems} />
+       <h1>scroll more</h1>
     </Wrapper>
+     
   );
 };
 

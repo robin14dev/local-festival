@@ -14,12 +14,13 @@ const ModalContainer = styled.div`
     /* width: 20%; */
     height: 100%;
     border: none;
-    color: #1564a9;
+    color: white;
     font-weight: bolder;
     font-size: larger;
     transition: all 0.3s ease-in;
    & > *:hover {
-    color: #6cf7a6;
+    color: #eff622;
+
     transition: all 0.2s ease-out;
       cursor: pointer; ;
    }

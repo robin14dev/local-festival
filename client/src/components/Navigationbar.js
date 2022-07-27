@@ -11,6 +11,7 @@ const ButtonsWrapper = styled.div`
   display: flex;
   height: 100%;
   margin: 0 3rem;
+  z-index: 30;
  
   @media (max-width: 840px) {
     right: 2rem;
@@ -31,18 +32,19 @@ border:none;
   padding:0; 
   overflow:visible;
    cursor:pointer;
-   color: #41c8adbe;
+   color:white;
 `
 const ItemsWrapper = styled.div`
 position: absolute;
 top: 4rem;
 right : 1rem;
-z-index: 3;
 width: 8rem;
 box-shadow: 1px 1.5px 2px gray;
 background-color: white;
 border-radius: 0.2rem;
 overflow: hidden;
+z-index: 31;
+
 &  li {
   list-style: none;
   line-height: 2.5rem;
@@ -50,11 +52,14 @@ overflow: hidden;
   text-align:left;
   padding-left: 0.5rem;
   cursor: pointer;
+
   /* border : 0.01px solid #dbd8d8; */
 
 
   &:hover {
     background-color:whitesmoke  ;
+    z-index: 30;
+    
   }
   &:active {
     background-color: white;

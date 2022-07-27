@@ -13,10 +13,8 @@ import AccountSetting from "./pages/AccountSetting";
 const Wrapper = styled.div`
   width: 100%; //1425px 스크롤바 생김
   box-sizing: border-box;
-  /* width: 100vw; */
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
   margin: 0 ;
   padding: 0;
 `;
@@ -143,6 +141,8 @@ function App() {
     setAuthState(nextAuthState)
    
   }
+
+  
  
 
   useEffect(() => {

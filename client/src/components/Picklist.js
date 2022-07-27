@@ -4,10 +4,9 @@ import styled from "styled-components";
 
 const Wrapper = styled.div`
   display: flex;
-    /* border: 3px solid yellowgreen; */
-  width: 100%;
+  /* width: 76rem; */
   height: 100%;
-  
+  /* background-color: yellow; */
   flex-wrap: wrap;
   justify-content: flex-start;
   overflow-y: auto;

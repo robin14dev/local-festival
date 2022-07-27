@@ -19,11 +19,11 @@ const Wrapper = styled.div`
   border-radius:  0.5rem;
   overflow: hidden;
   &:hover {
-    background-color: #2f76d3;
+    background-color: #4295fbff;
     .title>b {
       color: white;
     }
-    transform: scale(1.1);
+    transform: scale(1.03);
     & > div:nth-child(2) {
       color: white;
     }

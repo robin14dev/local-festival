@@ -9,12 +9,15 @@ import onErrorImage from "../assets/noimage.png"
 import ReviewWrite from "../components/ReviewWrite";
 
 const Wrapper = styled.div`
+  margin: 10rem auto;
   display: flex;
   width: 81rem; //큰 화면에서 넓어지는 것 때문에 퍼센트말고 rem으로 고정
-  height: 70rem;
+  /* height: 70rem; */
+  height: auto;
+  overflow: visible;
   justify-content: space-evenly;
   border-radius: 1rem;
-  margin: 3rem auto;
+  /* margin: 3rem auto; */
   
   @media (max-width: 1290px) {
     width: 70rem;

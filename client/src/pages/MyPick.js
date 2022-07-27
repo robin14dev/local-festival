@@ -3,11 +3,12 @@ import Picklist from "../components/Picklist";
 import styled from "styled-components";
 import axios from "axios";
 const Wrapper = styled.div`
+  width: 76rem;
+  /* height: 60rem; */
   display: flex;
   flex-direction: column;
-  width: 81rem;
-  height: 60rem;
-  margin: 5rem;
+  align-items: flex-start;
+  margin: 8rem 5rem;
  
   @media (max-width: 1320px) {
     width: 95vw;

@@ -4,8 +4,9 @@ import axios from 'axios'
 import moment from "moment";
 
 const Wrapper = styled.div`
-margin: 5rem;
+margin: 8rem 5rem;
 height : 55vh;
+/* background-color: yellow; */
 `
 
 const List = styled.div`

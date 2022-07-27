@@ -2,55 +2,64 @@ import React from "react";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
-  height: 15%;
-  width: 80%;
-  margin-top: 1.5rem;
-  background-color:  #3f6eab;
-  color: white;
+  height: 3rem;
+    width: 100vw;
+    /* box-shadow: 0 1px 2px 0  lightgray; */
+  background-color: white;
+    position: fixed;
+    top: 9rem;
   display: flex;
-  padding: 1rem;
-  border-radius: 0.4rem;
+  justify-content: center;
+  
+
   font-family: 'HS-Regular';
   font-family: 'GangwonEdu_OTFBoldA';
-  flex-direction: column;
-  justify-content: center;
-  box-shadow: 0.1rem 0.1rem 0.2rem  gray;
+  font-family: 'NanumSquareRound';
+  font-weight: bold;
+
+  
+    /* box-shadow: 0.1rem 1rem 0.2rem  gray; */
 
   &  button {
-    border: none;
-    background: none;
-	color: inherit;
-	padding: 0;
-	font: inherit;
-	cursor: pointer;
-	outline: inherit;
-  margin-left: 1rem;
-  font-size: 1.5rem;
-  /* font-style: italic; */
+	
+    /* border: 1px solid black; */
+    width: max-content;
+    height: max-content;
+    padding: 0.1rem 0.5rem;
+    color:#214197;
+    border-radius: 1rem;
+    box-shadow: 0 0.1rem 0.1rem 0.01rem lightgray;
+	  font: inherit;
+    margin-left: 1rem;
+    font-size: 1rem;
+    background-color: white;
+    transition: all 0.1s ease-in;
 
   &:hover{
-    color: gold;
+    background-color: #4968bd ;
+
+    color: white;
   }
   &:visited{
-    color: gold;
+   color: #4968bd;
+    
   }
   }
 
   @media (max-width: 1210px) {
-  width: 69%;
+  width: 100vw;
  }
  @media (max-width: 1010px) {
-  width: 45%;
+  width: 100vw;
  }
 @media (max-width: 675px) {
-  width: 23%;
+  width: 100vw;
   margin-top: 1rem;
-  height: 30%;
+  /* height: 30%; */
  }
 `;
 
 const Month = styled.div`
-margin-bottom: 1rem;
 
 `
 
@@ -58,6 +67,7 @@ const Location = styled.div`
 `
 
 const Hashtag = ({ onSearch }) => {
+
   const onClickMonth = (e)=>{
     
     const monthTags = e.target.parentNode.children
@@ -114,19 +124,17 @@ const onClickLocation = (e) => {
   e.target.style.color = "gold"
 
 }
-const tagsArr = {months : Array(12).fill().map((v,i)=>i+1),
-                  locations : ['서울','경기','강원','충청','전라','경상','제주']
+const tagsArr = {months : Array(2).fill().map((v,i)=>i+1),
+                  locations : ['서울','경기','강원','경상','제주']
                 }
 
                 
   return (
     <Wrapper >
-      <Month >
+     
         {tagsArr.months.map((month) => <button key={month} onClick={onClickMonth}>#{month}월</button>)}
-      </Month>
-      <Location>
-        {tagsArr.locations.map(location => <button key={location} onClick={onClickLocation}>#{location}</button>)}       
-      </Location>
+        {tagsArr.locations.map(location => <button key={location} onClick={onClickLocation}>#{location}</button>)}    
+     
     </Wrapper>
   );
 };

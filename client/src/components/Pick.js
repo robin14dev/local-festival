@@ -24,7 +24,7 @@ const Wrapper = styled.div`
     .title>b {
       color: white;
     }
-    transform: scale(1.1);
+    transform: scale(1.03);
     & > div:nth-child(2) {
       color: white;
     }
