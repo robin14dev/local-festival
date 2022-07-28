@@ -4,11 +4,13 @@ import styled from "styled-components";
 
 const Wrapper = styled.div`
   width: 97%;
-  height: 43rem;
+  margin: 1rem 0;
+  /* height: 43rem; */
   border-radius: 0.5rem;
   padding-top: 0;
   display: flex;
   flex-direction: column-reverse;
+  overflow-y: hidden;
  
   /* flex-wrap:nowrap; */
   overflow-y: scroll;

@@ -24,11 +24,11 @@ module.exports = {
     let date = today()
 
     Festivals.findAll({
-      // where : {endDate : {[Op.gte] : date},
-      //          startDate : {[Op.lte] : date}
-      //   },
-        limit : Number(limit),
-        offset : Number(offset)
+      where : {endDate : {[Op.gte] : date},
+               startDate : {[Op.lte] : date}
+        },
+        // limit : Number(limit),
+        // offset : Number(offset)
 
     })
     //종료날짜가 오늘 이상인 것들만

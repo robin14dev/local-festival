@@ -35,26 +35,6 @@ padding: 1rem;
 
 
 const Mainpage = ({ infiniteScroll,authState,togglePick, onSearch, filteredData, pickItems, resetCondition }) => {
-
-  // const pageEnd = useRef(null);
-
-  // const loadFestivals = () => {
-  //   alert('hdddi')
-  // }
-
-  // useEffect(()=>{
-  //   const observer = new IntersectionObserver((entries) => {
-    
-  //     if(entries[0].isIntersecting) {
-  //       loadFestivals()
-  //     }
-      
-    
-  //   }, {threshold : 1})
-  
-  //   observer.observe(pageEnd.current)
-  // }, [])
-
   
   
  
@@ -66,7 +46,6 @@ const Mainpage = ({ infiniteScroll,authState,togglePick, onSearch, filteredData,
          <Hashtag onSearch={onSearch}/>
        </SearchAndTag>
       <FestivalList   authState={authState} togglePick={togglePick} festivals={filteredData} pickItems={pickItems} />
-       <h1>scroll more</h1>
     </Wrapper>
      
   );

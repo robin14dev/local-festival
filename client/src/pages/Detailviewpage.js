@@ -43,7 +43,7 @@ const Wrapper = styled.div`
 `;
 
 const ImageAndPickbtn = styled.div`
-  margin-top: 8rem;
+  margin-top: 5rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -80,9 +80,7 @@ const ImageAndPickbtn = styled.div`
 `;
 const TabAndDesc = styled.div`
   width: 60%;
-  height: 97%;
-  /* background-color: #ffd7c4; */
-  /* border: 1px solid black; */
+ 
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

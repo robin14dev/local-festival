@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import Festival from "./Festival";
 import styled from "styled-components";
 import axios from "axios";
@@ -26,8 +26,29 @@ const Wrapper = styled.div`
 
 const FestivalList = ({authState, festivals, pickItems,togglePick }) => {
 
- // console.log(festivals);
+  const [dataOffset, setDataOffset] = useState(0)
+
+
+  // console.log(pageEnd);
+  useEffect(()=>{
+    console.log('hi : 2');
+  console.log(pageEnd.current);
+}, [])
+
+const pageEnd = useRef();
+
+  
+
+  //    const observer = new IntersectionObserver((entries)=>{
+  //   console.log(entries);
+  //    })
+  // observer.observe(pageEnd.current)
+
+  
+
+ 
   if (!festivals) {
+    console.log('no festival : 1');
     return (
       <div>
         <h1>축제 정보가 업스무니다</h1>
@@ -46,6 +67,7 @@ const FestivalList = ({authState, festivals, pickItems,togglePick }) => {
             pickItems={pickItems}
           />
         ))}
+          <div ref={pageEnd}>scroll more</div>
       </Wrapper>      
        
 

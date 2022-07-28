@@ -30,16 +30,16 @@ function App() {
   const [pickItems, setPickItems] = useState([]);
   const [filteredData, setFilteredData] = useState(festivalData);
 
-  const infiniteScroll = (addData) => {
-    //console.log('addData', addData);
-    // console.log('here');
-    console.log(festivalData, addData);
-    let addToData = festivalData.concat(addData)
-    console.log('new state',addToData);
-    //alert('here')
-    setFestivalData(addToData)
-    setFilteredData(addToData)
-  }
+  // const infiniteScroll = (addData) => {
+  //   //console.log('addData', addData);
+  //   // console.log('here');
+  //   console.log(festivalData, addData);
+  //   let addToData = festivalData.concat(addData)
+  //   console.log('new state',addToData);
+  //   //alert('here')
+  //   setFestivalData(addToData)
+  //   setFilteredData(addToData)
+  // }
  
   const loginHandler = ( userId,account,nickname, loginStatus) => {
     // isLogin ? setIsLogin(false) : setIsLogin(true);
@@ -69,15 +69,21 @@ function App() {
     });
   };
   const onSearch = (searchText) => {
+
+    //에러 : 경상도라고 치면 안나옴 => 경상남도, 경상북도 다 나오게
+    // 6월 
+    // 서울시,인천시,부산시,광주시,대전시,울산시,대구시 => '시' 빼기
+    // 경상도, 전라도, 충청도 => '도' 빼기
+    // * 추후 수정 : 무한스크롤 구현 이후, 렌더링 되기전의 축제들을 검색했을때도 나와야 하므로 이때는 db에서 조회해야됨.
+    // * 스크롤 하면서 넘어온 정보들 안에 원하는 검색결과가 있으면 클라이언트에서 보내주고, 없으면 db에 요청
+
     console.log(searchText);
     // setCondition(searchText);
     const filteredFestival = festivalData.filter(
       (festival) =>
         festival.location.includes(searchText) ||
         festival.title.includes(searchText) ||
-        festival.location.includes(searchText) ||
-        (Number(festival.start_date) <= Number(searchText) &&
-          Number(festival.end_date) >= Number(searchText))
+        festival.location.includes(searchText)
     );
 
     setFilteredData(filteredFestival);
@@ -146,7 +152,7 @@ function App() {
  
 
   useEffect(() => {
-    // console.log("계속 작동하니???");
+   
     const fetchData = async () => {
       try {
         const response = await axios.get(
@@ -154,10 +160,6 @@ function App() {
           {params: {limit: 10}}, 
          
         );
-        //console.log("서버에서 데이터 어케 받아져오지?", response);
-
-          console.log("client", response);
-
         if (response) {
           setFestivalData(response.data);
           setFilteredData(response.data);
@@ -236,7 +238,7 @@ function App() {
               filteredData={filteredData}
               pickItems={pickItems}
               resetCondition={resetCondition}
-              infiniteScroll={infiniteScroll}
+              // infiniteScroll={infiniteScroll}
             />
           }
         ></Route>

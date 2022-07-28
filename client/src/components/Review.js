@@ -9,20 +9,43 @@ const Wrapper = styled.div`
   width: 98%;
   height:10rem;
   margin-bottom: 1rem;
-  box-shadow: 0.1rem 0.1rem 0.2rem  gray;
+  box-shadow: 0.1rem 0.1rem 0.3rem  #9a9999  ;
 
   background-color: #fbfbfb;
   border-radius: 0.5rem;
   margin: 0.4rem;
-  padding: 0.3rem;
-  /* overflow: hidden; */
+  padding: 0.8rem 0.5rem;
+  overflow: scroll;
   /* text-overflow: ellipsis; */
 `;
 
 const Header = styled.div`
 display: flex;
 justify-content: space-between;
+padding: 0.3rem;
+/* background-color: yellow; */
 
+`
+
+const Info = styled.div`
+/* background-color: aqua; */
+display: flex;
+/* align-items: center; */
+
+& > div {
+  margin: 0 0.3rem 0 0;
+}
+`
+
+const Date = styled.div`
+color: gray;
+letter-spacing: -0.08rem;
+line-height: 1rem;
+`
+
+const Body = styled.div`
+/* background-color: yellow; */
+margin: 0.3rem 0.1rem;
 `
 
 const Button = styled.button`
@@ -33,7 +56,7 @@ box-shadow:none;
  border-radius:0;
   padding:0; 
   overflow:visible; 
-  cursor:pointer
+  cursor:pointer;
 `
 const Modal = styled.div`
 background-color: none;
@@ -97,31 +120,19 @@ const onClickDelete = (reviewId, festivalId)=>{
   // setDeleteClicked(!deleteClicked)
   deleteReview(reviewId, festivalId)
 }
-const ratingToStar = (rating) => {
-
-  //#폐급하드코딩,..,.
- const starArr = [<AiFillStar color="#ffd900" />, 
- <><AiFillStar color="#ffd900"/><AiFillStar color="#ffd900" /></>,
- <><AiFillStar color="#ffd900" /><AiFillStar color="#ffd900" /><AiFillStar color="#ffd900"/></>,
- <><AiFillStar  color="#ffd900"/><AiFillStar  color="#ffd900"/><AiFillStar color="#ffd900"/><AiFillStar color="#ffd900"/></>,
- <><AiFillStar  color="#ffd900"/><AiFillStar  color="#ffd900"/><AiFillStar  color="#ffd900"/><AiFillStar color="#ffd900" /><AiFillStar color="#ffd900" /></>
- ]
-  return <>
-  {starArr[rating-1]}
-  </> 
+const showRating = (rating) => {
+ const ratingArr = [1,2,3,4,5]
+ return ratingArr.map(ele => { // 리턴을 두번 해줘야됨 !!!
+          const ratingValue = ele
+          return (
+            <AiFillStar 
+            size={18}
+            color={ratingValue<= rating? "#1564a9" :"#c6c6c6" } 
+              />
+          )
+ 
+ })
 }
-
-//* listOfReviews
-// {content: "'소록소록 로운 비나리 소록소록 다솜.',", createdAt: "20…}
-// id :1
-// festivalId : 3
-// userId : "bbb1234"
-// nickname :"유동혁"
-// content : "'소록소록 로운 비나리 소록소록 다솜.',"
-// rating:4
-// createdAt: "2022-06-14T01:44:00.000Z"
-// updatedAt: "2022-06-14T01:44:00.000Z"
-
 
   return (
     
@@ -130,11 +141,23 @@ const ratingToStar = (rating) => {
         <div><button onClick={modalHandler}>취소하기</button>
         <button onClick={()=>onClickDelete(id,festivalId)}>삭제하기</button>
         </div>
-      </Modal>: <><Header> <span> <span style={{color:"#1564a9", fontWeight:"bold", fontStyle:"italic"}}>{User.nickname}</span>&nbsp;&nbsp;{ratingToStar(rating)}</span> {Number(review.userId) === Number(authState.userId) &&  <span><Button onClick={modalHandler}><FaTrashAlt size={15} /></Button></span>} </Header>
-      <ul>
+      </Modal>: 
+        <>
+        <Header> 
+          <Info>
+         
+              <div>{showRating(rating)}</div>
+              <div style={{color:"gray", lineHeight:"1rem", fontWeight:"700", marginLeft:"0.2rem"}}> {User.nickname}</div>
+              <Date>{moment(createdAt).format("YYYY-MM-DD")}</Date>
+             
+          
+          </Info>
+       {Number(review.userId) === Number(authState.userId) &&  <span><Button onClick={modalHandler}><FaTrashAlt size={15} /></Button></span>} 
+       </Header>
+      <Body>
         <p>{content}</p>
-        <li>{moment(createdAt).format("YYYY년 MM월 DD일 HH:mm")} </li>
-      </ul></>}
+       
+      </Body></>}
      
     </Wrapper>
     

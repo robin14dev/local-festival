@@ -19,7 +19,7 @@ const Wrapper = styled.div`
   border-radius:  0.5rem;
   overflow: hidden;
   &:hover {
-    background-color: #4295fbff;
+    background-color: #4968bd;
     .title>b {
       color: white;
     }

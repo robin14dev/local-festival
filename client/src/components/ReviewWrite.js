@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   border-radius: 0.5rem;
   overflow-y: auto;
   padding: 0.5rem;
-  margin: 0.5rem;
+  margin: 1rem;
     box-shadow: 0.1rem 0.1rem 0.3rem  gray;
 ;
 `;
@@ -33,16 +33,15 @@ display: flex;
 justify-content: space-between;
 `
 const Button = styled.button`
-/* margin: 1rem; */
 
-background-color: #1161c9;
-color: white;
-	border: none;
+  background-color: #1161c9;
+  color: white;
+  width: 4rem;
   height: 2.5rem;
   border-radius: 0.3rem;
   font-weight: bold;
   font-size: 1rem;
-	padding: 0.5rem;
+	/* padding: 0.5rem; */
 
 	cursor: pointer;
 	outline: inherit;
@@ -57,10 +56,12 @@ color: white;
 `
 
 const ErrorMessage = styled.div`
-width: 10rem;
+width: 60%;
 color: red;
-position: relative;
-left: 9rem;
+/* position: relative; */
+/* left: 9rem; */
+/* background-color: yellow; */
+text-align: right;
 line-height: 2.4;
 font-size: large;
 font-weight: bold;
@@ -79,9 +80,16 @@ const ReviewWrite = ({updateReviewList,festivalId, authState}) => {
   }
 
   const handleRating = (rating)=>{
-    console.log('상끌 rating', rating);
+    // 올려와진 값으로 setRating
     setRating(rating)
   }
+
+  const nowShowErrMsg = () => {
+    errorMessage.current.textContent = "";
+
+  }
+
+  // ReviewWrite : handleRating > <Rating howmany={rating} handleRating={handleRating} />
 
   const handleSubmit = () => {
 
@@ -114,8 +122,10 @@ const ReviewWrite = ({updateReviewList,festivalId, authState}) => {
         }
         // updateReviewList({userId : authState.userId, nickname: authState.nickname, content : content, rating : rating, createdAt:(new Date()).toLocaleString()})
         updateReviewList(newReview)
+        setRating(0)
         setContent("")
-        setRating(null)
+        errorMessage.current.textContent = "";
+        // window.scrollTo({top:0, behavior:'smooth'})
         })
         .catch(err => {
           console.log(err);
@@ -128,9 +138,9 @@ const ReviewWrite = ({updateReviewList,festivalId, authState}) => {
     <Wrapper>
       <h2>리뷰</h2>
      
-        <Textarea value={content} onChange={handleContent} placeholder="후기를 남겨주세요."></Textarea>
+        <Textarea onMouseDown={nowShowErrMsg} value={content} onChange={handleContent} placeholder="후기를 남겨주세요."></Textarea>
         <Controllers>
-          <Rating howmany={rating} handleRating={handleRating} />
+          <Rating nowShowErrMsg={nowShowErrMsg} initial={rating} handleRating={handleRating} />
           <ErrorMessage ref={errorMessage} />
          <Button onClick={handleSubmit}>올리기</Button>
         </Controllers>
