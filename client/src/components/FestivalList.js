@@ -1,7 +1,6 @@
-import React, {useEffect, useRef, useState} from "react";
-import Festival from "./Festival";
-import styled from "styled-components";
-import axios from "axios";
+import React, { useEffect, useRef } from 'react';
+import Festival from './Festival';
+import styled from 'styled-components';
 
 const Wrapper = styled.div`
   width: 76rem;
@@ -10,7 +9,6 @@ const Wrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
- 
 
   /* @media (max-width: 1000px) {
     width: 90vw;
@@ -18,35 +16,22 @@ const Wrapper = styled.div`
   } */
   @media (max-width: 1210px) {
     width: 90vw;
-    
   }
-
-  
 `;
 
-const FestivalList = ({authState, festivals, pickItems,togglePick }) => {
-
-  const [dataOffset, setDataOffset] = useState(0)
-
-
-  // console.log(pageEnd);
-  useEffect(()=>{
+const FestivalList = ({ festivals, pickItems, togglePick }) => {
+  useEffect(() => {
     console.log('hi : 2');
-  console.log(pageEnd.current);
-}, [])
+    console.log(pageEnd.current);
+  }, []);
 
-const pageEnd = useRef();
-
-  
+  const pageEnd = useRef();
 
   //    const observer = new IntersectionObserver((entries)=>{
   //   console.log(entries);
   //    })
   // observer.observe(pageEnd.current)
 
-  
-
- 
   if (!festivals) {
     console.log('no festival : 1');
     return (
@@ -56,21 +41,17 @@ const pageEnd = useRef();
     );
   } else {
     return (
-      
       <Wrapper>
         {festivals.map((festival) => (
           <Festival
-          authState={authState}
             togglePick={togglePick}
             key={festival.festivalId}
             festival={festival}
             pickItems={pickItems}
           />
         ))}
-          <div ref={pageEnd}>scroll more</div>
-      </Wrapper>      
-       
-
+        <div ref={pageEnd}>scroll more</div>
+      </Wrapper>
     );
   }
 };

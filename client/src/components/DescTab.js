@@ -1,18 +1,18 @@
-import React from "react";
-import styled from "styled-components";
-import moment from "moment";
+import React from 'react';
+import styled from 'styled-components';
+import moment from 'moment';
 
 const Wrapper = styled.div`
   height: 100%;
   width: 100%;
   overflow-y: auto;
-  border: 1px 0 0 0  solid black;
+  border: 1px 0 0 0 solid black;
   /* margin: 1rem; */
   border-radius: 0 0 1rem 1rem;
   /* background-color: #d8e4f0c8; */
   padding: 1rem;
 
-  & h2{
+  & h2 {
     margin-top: 4rem;
   }
 
@@ -31,10 +31,9 @@ const DescTab = ({ festivalInfo }) => {
   const { location, overview, tel, title, homepageUrl, startDate, endDate } =
     festivalInfo;
 
-   
-  let parsedUrl = "";
-  if (homepageUrl !== "undefined") {
-    parsedUrl = homepageUrl.split(" ")[1].slice(5).replace(/"/g, "");
+  let parsedUrl = '';
+  if (homepageUrl !== 'undefined') {
+    parsedUrl = homepageUrl.split(' ')[1].slice(5).replace(/"/g, '');
   } else {
     parsedUrl = null;
   }
@@ -44,17 +43,17 @@ const DescTab = ({ festivalInfo }) => {
       <hr></hr>
       <h2>개요 </h2>
       <hr></hr>
-      <p>{overview}</p>
+      <p style={{ wordBreak: 'keep-all', textIndent: '0.5rem' }}>{overview}</p>
       <h2>축제 기간</h2>
       <hr></hr>
-      {moment(startDate, "YYYY.MM.DD").format("YYYY년 MM월 DD일")} ~ {moment(endDate, "YYYY.MM.DD").format("YYYY년 MM월 DD일")}
+      {moment(startDate, 'YYYY.MM.DD').format('YYYY년 MM월 DD일')} ~{' '}
+      {moment(endDate, 'YYYY.MM.DD').format('YYYY년 MM월 DD일')}
       <h2>Location</h2>
       <hr></hr>
       {location}
       <h2>문의</h2>
       <hr></hr>
       <a href="tel:{tel}">{tel}</a>
-      
       <h2>홈페이지</h2>
       <hr></hr>
       <a href={parsedUrl} target="_blank" rel="noreferrer">

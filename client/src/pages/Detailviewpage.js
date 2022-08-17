@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react";
-import DescTab from "../components/DescTab";
-import Moveloginpick from "../components/Moveloginpick";
-import { useLocation } from "react-router-dom";
-import styled from "styled-components";
-import ReviewTab from "../components/ReviewTab";
-import HeartButton from"../components/HeartButton"
-import onErrorImage from "../assets/noimage.png"
-import ReviewWrite from "../components/ReviewWrite";
+import React, { useState, useEffect } from 'react';
+import DescTab from '../components/DescTab';
+import { useLocation } from 'react-router-dom';
+import styled from 'styled-components';
+import ReviewTab from '../components/ReviewTab';
+import HeartButton from '../components/HeartButton';
+import onErrorImage from '../assets/noimage.png';
 
 const Wrapper = styled.div`
   margin: 10rem auto;
@@ -18,28 +16,27 @@ const Wrapper = styled.div`
   justify-content: space-evenly;
   border-radius: 1rem;
   /* margin: 3rem auto; */
-  
+
   @media (max-width: 1290px) {
     width: 70rem;
   }
 
-  @media (max-width :1100px) {
+  @media (max-width: 1100px) {
     width: 60rem;
   }
 
-  @media (max-width :840px) {
+  @media (max-width: 840px) {
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     height: 94rem;
-    &>div:nth-child(1){
+    & > div:nth-child(1) {
       margin: 1rem 0;
     }
-    &>div:nth-child(2){
+    & > div:nth-child(2) {
       width: 22rem;
     }
   }
-  
 `;
 
 const ImageAndPickbtn = styled.div`
@@ -47,13 +44,12 @@ const ImageAndPickbtn = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 22rem; 
+  width: 22rem;
   height: 30rem;
   /* border: 1px solid black; */
   box-shadow: 0.1rem 0.1rem 0.5rem gray;
   border-radius: 1rem;
   & > * {
-    
   }
   & > img {
     width: 100%;
@@ -61,26 +57,20 @@ const ImageAndPickbtn = styled.div`
     border-radius: 1rem;
     padding: 0.5rem;
     /* border: 1.5px solid #1564a9; */
-    position:relative;
-   
-    
+    position: relative;
   }
 
-  & > :nth-child(2){
+  & > :nth-child(2) {
     width: 3rem;
     height: 3rem;
     border: none;
     position: relative;
     left: 0.5rem;
   }
-
-  
-
-  
 `;
 const TabAndDesc = styled.div`
   width: 60%;
- 
+
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -107,7 +97,7 @@ const Tab = styled.div`
   justify-items: center;
   align-items: center;
   list-style: none;
-  border-radius: 0.5rem 0.5rem 0 0 ;
+  border-radius: 0.5rem 0.5rem 0 0;
   background-color: aliceblue;
   box-shadow: 0 0 2px 0 gray;
 
@@ -140,61 +130,65 @@ const Tab = styled.div`
   }
 `;
 
-const Detailviewpage = ({pickItems, togglePick, authState}) => {
-  
+const Detailviewpage = ({ pickItems, togglePick, authState }) => {
   const [currentTab, setCurrentTab] = useState(0);
-  const [like, setLike] = useState(false)
+  const [like, setLike] = useState(false);
 
   const { state } = useLocation();
-  console.log('what si state',state);
+  console.log('what si state', state);
 
   const { imageUrl, title, festivalId } = state;
   const onErrorImg = (e) => {
-    e.target.src = onErrorImage
-  }
-  
+    e.target.src = onErrorImage;
+  };
+
   const tabArr = [
-    { name: "상세정보", content: <DescTab festivalInfo={state} /> },
-    { name: "리뷰", content: <ReviewTab authState={authState} festivalInfo={state} /> },
+    { name: '상세정보', content: <DescTab festivalInfo={state} /> },
+    {
+      name: '리뷰',
+      content: <ReviewTab authState={authState} festivalInfo={state} />,
+    },
   ];
 
-  useEffect(()=>{
-    const isPicked = pickItems.some(ele => ele.festivalId === festivalId)
-    setLike(isPicked)
-  })
-  const toggleLike =  (event) => {
+  useEffect(() => {
+    const isPicked = pickItems.some((ele) => ele.festivalId === festivalId);
+    setLike(isPicked);
+  }, [festivalId, pickItems]);
+  const toggleLike = (event) => {
     // event.stopPropagation();
-    setLike(!like)
-  }
+    setLike(!like);
+  };
   const onClickPick = (event, festival) => {
     event.stopPropagation();
     togglePick(festival);
-    toggleLike()
+    toggleLike();
   };
 
   return (
     <Wrapper>
       <ImageAndPickbtn>
-        <img src={imageUrl || onErrorImage} 
-        alt={`${title} : 이미지가 존재하지 않습니다.`}
-        onError={onErrorImg}
+        <img
+          src={imageUrl || onErrorImage}
+          alt={`${title} : 이미지가 존재하지 않습니다.`}
+          onError={onErrorImg}
         ></img>
 
-        {authState.loginStatus ? <HeartButton  like={like}
+        {authState.loginStatus ? (
+          <HeartButton
+            like={like}
             onClick={(event) => {
               onClickPick(event, state);
-          
             }}
-         / > :  null}
-     
-      </ImageAndPickbtn>  
+          />
+        ) : null}
+      </ImageAndPickbtn>
       <TabAndDesc>
         <Tab>
           {tabArr.map((ele, index) => {
             return (
               <div
                 key={index}
-                className={currentTab === index ? "submenu focused" : "submenu"}
+                className={currentTab === index ? 'submenu focused' : 'submenu'}
                 onClick={() => setCurrentTab(index)}
               >
                 {ele.name}
