@@ -11,6 +11,7 @@ import axios from 'axios';
 import Signup from './components/Signup';
 import AccountSetting from './pages/AccountSetting';
 import { UserContext } from './contexts/userContext';
+import '../src/styles/common.scss';
 const Wrapper = styled.div`
   width: 100%; //1425px 스크롤바 생김
   box-sizing: border-box;

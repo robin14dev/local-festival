@@ -1,13 +1,12 @@
-import React from "react";
-import { useState, useRef } from "react";
-import Signup from "./Signup";
-import styled from "styled-components";
-import axios from "axios";
-import { RiAccountCircleFill } from "react-icons/ri";
-import { AiFillLock } from "react-icons/ai";
+import React from 'react';
+import { useState, useRef } from 'react';
+import Signup from './Signup';
+import styled from 'styled-components';
+import axios from 'axios';
+import { RiAccountCircleFill } from 'react-icons/ri';
+import { AiFillLock } from 'react-icons/ai';
 
 const ModalContainer = styled.div`
- 
   height: 100%;
 
   & > button {
@@ -18,13 +17,12 @@ const ModalContainer = styled.div`
     font-weight: bolder;
     font-size: larger;
     transition: all 0.3s ease-in;
-   & > *:hover {
-    color: #eff622;
+    & > *:hover {
+      color: #60ff53;
 
-    transition: all 0.2s ease-out;
-      cursor: pointer; ;
-   }
-   
+      transition: all 0.2s ease-out;
+      cursor: pointer;
+    }
   }
 `;
 
@@ -53,10 +51,10 @@ const ModalView = styled.div`
 
   & > h1 {
     font-size: 3rem;
-  cursor: pointer;
-  font-style: italic;
-  font-family: 'HS-Regular';
-  color: #1564a9;
+    cursor: pointer;
+    font-style: italic;
+    font-family: 'HS-Regular';
+    color: #4363ff;
   }
 
   & > div:nth-child(4) {
@@ -66,14 +64,14 @@ const ModalView = styled.div`
     justify-content: space-between;
     align-items: center;
     height: 3rem;
-   &  > *  {
-    font-size: 1rem;
-   }
+    & > * {
+      font-size: 1rem;
+    }
     & > button {
       border-right: 1px solid lightgray;
       padding: 0 2rem;
     }
-    & >div {
+    & > div {
       margin-right: 3rem;
     }
   }
@@ -83,54 +81,44 @@ const LoginControl = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* background-color: yellowgreen; */
 `;
 
 const InputsInColumn = styled.div`
-
   width: 20rem;
-  /* background-color: yellow; */
   & > div {
     display: flex;
     justify-content: space-between;
     /* height: 2rem; */
-    margin : 0.5rem 0;
+    margin: 0.5rem 0;
     font-size: 3rem;
     align-items: center;
-   
 
     & > input {
       width: 100%;
       height: 3rem;
       font-size: 35%;
       padding-left: 1rem;
-      border : 1px solid lightgray;
+      border: 1px solid lightgray;
       border-radius: 0.3rem;
     }
   }
- 
 `;
 
-
 const LoginButton = styled.button`
- 
-    border-radius: 4px;
-    margin: 0.5rem 0 ;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    height: 3rem;
-    width: 100%;
-    font-size: 1rem;
-    transition: all 0.2s ease-out;
-    background-color: #1564a9;
+  border-radius: 4px;
+  margin: 0.5rem 0;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  height: 3rem;
+  width: 100%;
+  font-size: 1rem;
+  transition: all 0.2s ease-out;
+  background-color: var(--primaryBlue);
 
-    
-    
-    &:active {
-      color: #6cf7a6;
-    }
-  
+  &:active {
+    color: var(--primaryGreen);
+  }
 `;
 
 const GoogleLoginControl = styled.div`
@@ -156,8 +144,8 @@ const GoogleLoginControl = styled.div`
     /* 색상 */
     background: #4285f4;
     transition: transform 0.2s ease-out;
-        &:hover {
-    transform: scale(1.1);;
+    &:hover {
+      transform: scale(1.1);
     }
     &:active {
       background: #2366d2;
@@ -187,8 +175,8 @@ const KakaoLoginControl = styled.div`
     /* 색상 */
     background: #fee500;
     transition: transform 0.2s ease-out;
-        &:hover {
-    transform: scale(1.1);
+    &:hover {
+      transform: scale(1.1);
     }
     &:active {
       background: #ccb801;
@@ -218,25 +206,24 @@ const CancelControl = styled.div`
     /* 색상 */
     background-color: #1564a9;
     transition: transform 0.2s ease-out;
-        &:hover {
-    transform: scale(1.1);
-   
-   
+    &:hover {
+      transform: scale(1.1);
     }
     &:active {
-      color: #6cf7a6;    }
+      color: #6cf7a6;
+    }
   }
 `;
 
 const ErrorMessage = styled.div`
-color: red;
-font-weight: bold;
-`
+  color: red;
+  font-weight: bold;
+`;
 
 const Login = ({ loginHandler }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [account, setaccount] = useState("");
-  const [password, setPassword] = useState("");
+  const [account, setaccount] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleaccount = (e) => {
     setaccount(e.target.value);
@@ -246,7 +233,6 @@ const Login = ({ loginHandler }) => {
   };
 
   const handleSubmit = () => {
-   
     //# 유효성 검증 후 서버에 회원가입 정보 전송 (주석 해제)
     axios
       .post(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users/signin`, {
@@ -254,27 +240,27 @@ const Login = ({ loginHandler }) => {
         password: password,
       })
       .then((response) => {
-      
-          //# 토큰과 유저정보를 받아온다.
-          // localStorage.setItem("accessToken", response.data.token);
-          sessionStorage.setItem("accesstoken", response.data.data.token);
+        //# 토큰과 유저정보를 받아온다.
+        // localStorage.setItem("accessToken", response.data.token);
+        sessionStorage.setItem('accesstoken', response.data.data.token);
 
-          const { nickname, userId, account } = response.data.data;
-          //# 토큰 설정
+        const { nickname, userId, account } = response.data.data;
+        //# 토큰 설정
         //  console.log('ㄴㅓㅁ어와???', response.data.data);
-          loginHandler(userId, account, nickname, true);
+        loginHandler(userId, account, nickname, true);
         // }
       })
       .catch((err) => {
         console.log(err.response.data.message);
-       if(err.response.data.message === "Wrong account And Password Combination") {
-        errorMessage.current.textContent = "비밀번호가 일치하지 않습니다"
-       
-       } else if(err.response.data.message === "User Doesn't Exist"){
-        errorMessage.current.textContent = "사용자가 존재하지 않습니다"
-       } else {
-        console.log('그밖에에러');
-       }
+        if (
+          err.response.data.message === 'Wrong account And Password Combination'
+        ) {
+          errorMessage.current.textContent = '비밀번호가 일치하지 않습니다';
+        } else if (err.response.data.message === "User Doesn't Exist") {
+          errorMessage.current.textContent = '사용자가 존재하지 않습니다';
+        } else {
+          console.log('그밖에에러');
+        }
       });
 
     // }
@@ -285,15 +271,17 @@ const Login = ({ loginHandler }) => {
   };
 
   const openModalHandlerLogin = () => {
-    console.log("here!!!!");
+    console.log('here!!!!');
     setIsOpen(!isOpen);
   };
 
-  const errorMessage = useRef()
+  const errorMessage = useRef();
 
   return (
     <ModalContainer>
-      <button onClick={openModalHandler}><RiAccountCircleFill size={45}/></button>
+      <button onClick={openModalHandler}>
+        <RiAccountCircleFill size={45} />
+      </button>
       {isOpen ? (
         <ModalBackdrop onClick={openModalHandler}>
           <ModalView
@@ -301,18 +289,36 @@ const Login = ({ loginHandler }) => {
               e.stopPropagation();
             }}
           >
-            <h1>LoCo</h1> 
+            <h1>LoCo</h1>
             <ErrorMessage ref={errorMessage}></ErrorMessage>
             <LoginControl>
-                <InputsInColumn>
-                  <div>
-                      <input id="account" type="text" value={account} required placeholder="이메일" onChange={(e) => {handleaccount(e)}}/>
-                  </div>
-                  <div>
-                      <input id="password" type="text" value={password} required placeholder="비밀번호" onChange={(e) => {handlePassword(e)}}/>
-                  </div>
-                </InputsInColumn>
-                <LoginButton onClick={handleSubmit}>로그인</LoginButton>
+              <InputsInColumn>
+                <div>
+                  <input
+                    id="account"
+                    type="text"
+                    value={account}
+                    required
+                    placeholder="이메일"
+                    onChange={(e) => {
+                      handleaccount(e);
+                    }}
+                  />
+                </div>
+                <div>
+                  <input
+                    id="password"
+                    type="text"
+                    value={password}
+                    required
+                    placeholder="비밀번호"
+                    onChange={(e) => {
+                      handlePassword(e);
+                    }}
+                  />
+                </div>
+              </InputsInColumn>
+              <LoginButton onClick={handleSubmit}>로그인</LoginButton>
             </LoginControl>
             <div>
               <button>비밀번호 재설정</button>

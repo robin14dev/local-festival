@@ -1,11 +1,9 @@
-import React, {useEffect, useState} from "react";
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import HeartButton from "./HeartButton";
-import onErrorImage from "../assets/noimage.png"
-import moment from "moment";
-
-
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import HeartButton from './HeartButton';
+import onErrorImage from '../assets/noimage.png';
+import moment from 'moment';
 
 const Wrapper = styled.div`
   width: 18rem;
@@ -14,14 +12,14 @@ const Wrapper = styled.div`
   border: none;
   display: flex;
   flex-direction: column;
-  background-color: #f6f5f5bb; 
+  background-color: #f6f5f5bb;
   transition: transform 0.3s ease-out;
   box-shadow: 1px 1.5px 2px gray;
-  border-radius:  0.5rem;
+  border-radius: 0.5rem;
   overflow: hidden;
   &:hover {
-    background-color: #4968bd;
-    .title>b {
+    background-color: var(--primaryBlue);
+    .title > b {
       color: white;
     }
     transform: scale(1.03);
@@ -46,59 +44,49 @@ const Description = styled.div`
   align-items: flex-start;
   /* box-shadow: 1px 1.5px 2px gray;
   background-color: #f2eeee; */
-  
+
   & > div {
     width: 80%;
-    padding-left:0.5rem;
+    padding-left: 0.5rem;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    
-    & > b{
+
+    & > b {
       color: #073c6a;
-      font-size :large;
-     
+      font-size: large;
     }
-
-    
   }
-
-  
-
-  
 `;
 
 const HeartDiv = styled.div`
-display: flex;
-justify-content: flex-end;
-padding-right: 0.5rem;
-/* background-color: red; */
-& > img {
-  width: 1.5rem;
-  height: 1.5rem;
- 
-}
-`
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 0.5rem;
+  /* background-color: red; */
+  & > img {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+`;
 
 const Pick = ({ festival, togglePick }) => {
-  const [like, setLike] = useState(true)
+  const [like, setLike] = useState(true);
 
   let navigate = useNavigate();
   const { festivalId, title, imageUrl, startDate, endDate } = festival;
-  const onClickRemove = (event,festival) => {
+  const onClickRemove = (event, festival) => {
     event.stopPropagation();
     togglePick(festival);
-
   };
   const onErrorImg = (e) => {
-    e.target.src = onErrorImage
-  }
- 
-  
+    e.target.src = onErrorImage;
+  };
+
   // useEffect(()=>{
   //   const isPicked = pickItems.some(ele => ele.festivalId === festivalId)
   //   setLike(isPicked)
-   
+
   // })
 
   const onClickMoveDVP = () => {
@@ -106,27 +94,28 @@ const Pick = ({ festival, togglePick }) => {
   };
   return (
     <Wrapper onClick={onClickMoveDVP}>
-        <img src={imageUrl || onErrorImage} alt={title}  onError={onErrorImg} />
+      <img src={imageUrl || onErrorImage} alt={title} onError={onErrorImg} />
       <Description>
-       <div className="title">
+        <div className="title">
           <b>{title}</b>
         </div>
         <div>
-          <div >시작일:{moment(startDate, "YYYY.MM.DD").format("YYYY년 MM월 DD일")}</div>
-          <div >종료일:{moment(endDate, "YYYY.MM.DD").format("YYYY년 MM월 DD일")}</div>
+          <div>
+            시작일:{moment(startDate, 'YYYY.MM.DD').format('YYYY년 MM월 DD일')}
+          </div>
+          <div>
+            종료일:{moment(endDate, 'YYYY.MM.DD').format('YYYY년 MM월 DD일')}
+          </div>
         </div>
-     
-        </Description>
-        <HeartDiv>
-        <HeartButton like={like}
-            onClick={(event) => {
-              onClickRemove(event, festival);
-          
-            }}
-          >
-          
-          </HeartButton>
-        </HeartDiv>
+      </Description>
+      <HeartDiv>
+        <HeartButton
+          like={like}
+          onClick={(event) => {
+            onClickRemove(event, festival);
+          }}
+        ></HeartButton>
+      </HeartDiv>
     </Wrapper>
   );
 };

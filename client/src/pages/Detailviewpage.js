@@ -119,7 +119,7 @@ const Tab = styled.div`
   }
 
   .focused {
-    background-color: #1564a9;
+    background-color: var(--primaryBlue);
 
     color: rgba(255, 255, 255, 1);
     transition: 0.3s;

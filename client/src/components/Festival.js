@@ -19,9 +19,9 @@ const Wrapper = styled.div`
   border-radius: 0.5rem;
   overflow: hidden;
   &:hover {
-    background-color: #4968bd;
+    background-color: var(--primaryBlue);
     .title > b {
-      color: white;
+      color: var(--primaryGreen);
     }
     transform: scale(1.03);
     & > div:nth-child(2) {
@@ -55,7 +55,7 @@ const Description = styled.div`
     text-overflow: ellipsis;
 
     & > b {
-      color: #073c6a;
+      color: rgb(40 60 253);
       font-size: large;
     }
   }
