@@ -6,7 +6,7 @@ const Wrapper = styled.div`
   height: 100%;
   width: 100%;
   overflow-y: auto;
-  border: 1px 0 0 0 solid black;
+  /* border: 1px 0 0 0 solid black; */
   /* margin: 1rem; */
   border-radius: 0 0 1rem 1rem;
   /* background-color: #d8e4f0c8; */

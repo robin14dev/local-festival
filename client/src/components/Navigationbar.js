@@ -1,18 +1,17 @@
-import React, { useState } from "react";
-import Login from "./Login";
-import Logout from "./Logout";
-import {useNavigate } from "react-router-dom";
-import { RiAccountCircleFill } from "react-icons/ri";
-import styled from "styled-components";
-
-
+import React, { useState } from 'react';
+import Login from './Login';
+import Logout from './Logout';
+import { useNavigate } from 'react-router-dom';
+import { RiAccountCircleFill } from 'react-icons/ri';
+import styled from 'styled-components';
 
 const ButtonsWrapper = styled.div`
   display: flex;
   height: 100%;
   margin: 0 3rem;
   z-index: 30;
- 
+  /* background-color: red; */
+
   @media (max-width: 840px) {
     right: 2rem;
   }
@@ -25,102 +24,114 @@ const ButtonsWrapper = styled.div`
 `;
 
 const Button = styled.button`
-background: inherit ; 
-border:none;
- box-shadow:none;
-  border-radius:0; 
-  padding:0; 
-  overflow:visible;
-   cursor:pointer;
-   color:white;
-`
-const ItemsWrapper = styled.div`
-position: absolute;
-top: 4rem;
-right : 1rem;
-width: 8rem;
-box-shadow: 1px 1.5px 2px gray;
-background-color: white;
-border-radius: 0.2rem;
-overflow: hidden;
-z-index: 31;
-
-&  li {
-  list-style: none;
-  line-height: 2.5rem;
-  text-align: left;
-  text-align:left;
-  padding-left: 0.5rem;
+  background: inherit;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+  overflow: visible;
   cursor: pointer;
+  color: white;
+`;
+const ItemsWrapper = styled.div`
+  position: absolute;
+  top: 4rem;
+  right: 1rem;
+  width: 8rem;
+  box-shadow: 1px 1.5px 2px gray;
+  background-color: white;
+  border-radius: 0.2rem;
+  overflow: hidden;
+  z-index: 31;
 
-  /* border : 0.01px solid #dbd8d8; */
+  & li {
+    list-style: none;
+    line-height: 2.5rem;
+    text-align: left;
+    text-align: left;
+    padding-left: 0.5rem;
+    cursor: pointer;
 
+    /* border : 0.01px solid #dbd8d8; */
 
-  &:hover {
-    background-color:whitesmoke  ;
-    z-index: 30;
-    
+    &:hover {
+      background-color: whitesmoke;
+      z-index: 30;
+    }
+    &:active {
+      background-color: white;
+    }
   }
-  &:active {
-    background-color: white;
-  }
-}
-`
+`;
 // 로그아웃 모달 없애고 그냥 바로 로그아웃 되도록 하기
 const Navigationbar = ({ authState, loginHandler }) => {
-
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
   const NavItems = () => {
     const onClickLogout = () => {
       //# 클라이언트에서 토큰 지우기
       // localStorage.removeItem("accessToken");
-      loginHandler("", "", "",false);
-      navigate("/");
-      window.sessionStorage.clear()
-      setIsOpen(false)
+      loginHandler('', '', '', false);
+      navigate('/');
+      window.sessionStorage.clear();
+      setIsOpen(false);
     };
 
     const onClickMyPage = () => {
-      navigate("/MyPick ")
-    }
+      navigate('/MyPick ');
+    };
     const onClickAccount = () => {
-      navigate("/AccountSetting")
-    }
+      navigate('/AccountSetting');
+    };
     return (
-     <ItemsWrapper>
-       <ul>
-        <li onClick={onClickAccount}>계정</li>
-        <li onClick={onClickMyPage} >위시리스트</li>
-        <li onClick={onClickLogout}>로그아웃</li>
+      <ItemsWrapper>
+        <ul>
+          <li onClick={onClickAccount}>계정</li>
+          <li onClick={onClickMyPage}>위시리스트</li>
+          <li onClick={onClickLogout}>로그아웃</li>
         </ul>
-     </ItemsWrapper>
-    )
-  }
+      </ItemsWrapper>
+    );
+  };
 
-  let navigate = useNavigate()
+  let navigate = useNavigate();
 
-  const onClickMoveMypage = ()=>{
-    navigate("/MyPage")
-  }
-  
-
+  const onClickMoveMypage = () => {
+    navigate('/MyPage');
+  };
 
   // console.log(isLogin);
-  return (  
-    <> 
+  return (
+    <>
       {authState.loginStatus ? (
-        isOpen ? (<ButtonsWrapper onMouseEnter={()=>{setIsOpen(true)}} onMouseLeave={()=>{setIsOpen(false)}}>
-                <NavItems />
-                  <Button>
-                    <RiAccountCircleFill  size={45}/>
-                  </Button>
-                </ButtonsWrapper> 
-                 ) : ( <ButtonsWrapper onMouseEnter={()=>{setIsOpen(true)}} onMouseLeave={()=>{setIsOpen(false)}}>
-                                      <Button>
-                                        <RiAccountCircleFill size={45}/>
-                                      </Button>        
-                                     </ButtonsWrapper>)
+        isOpen ? (
+          <ButtonsWrapper
+            onMouseEnter={() => {
+              setIsOpen(true);
+            }}
+            onMouseLeave={() => {
+              setIsOpen(false);
+            }}
+          >
+            <NavItems />
+            <Button>
+              <RiAccountCircleFill size={45} />
+            </Button>
+          </ButtonsWrapper>
         ) : (
+          <ButtonsWrapper
+            onMouseEnter={() => {
+              setIsOpen(true);
+            }}
+            onMouseLeave={() => {
+              setIsOpen(false);
+            }}
+          >
+            <Button>
+              <RiAccountCircleFill size={45} />
+            </Button>
+          </ButtonsWrapper>
+        )
+      ) : (
         <ButtonsWrapper>
           <Login loginHandler={loginHandler} />
         </ButtonsWrapper>

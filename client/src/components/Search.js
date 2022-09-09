@@ -49,7 +49,7 @@ const Wrapper = styled.div`
     font-weight: bold;
     border-radius: 0.2rem;
     & > * {
-      color: var(--primaryBlue);
+      color: ${(props) => props.theme.color.primaryBlue};
     }
   }
 

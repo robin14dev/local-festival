@@ -8,9 +8,7 @@ const Wrapper = styled.div`
   height: 5rem;
   width: 100vw;
   align-items: center;
-  background-color: #4295fbff;
-  background-color: #4968bd;
-  background-color: var(--primaryBlue);
+  background-color: ${(props) => props.theme.color.primaryBlue};
   border-bottom: 1px solid lightgray;
   position: fixed;
   top: 0;
@@ -21,7 +19,7 @@ const Wrapper = styled.div`
     cursor: pointer;
     font-style: italic;
     font-family: 'HS-Regular';
-    color: var(--primaryGreen);
+    color: ${(props) => props.theme.color.primaryGreen};
     margin: 0 3rem;
   }
 `;

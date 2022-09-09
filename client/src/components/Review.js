@@ -117,8 +117,11 @@ const Review = ({ review, authState, deleteReview }) => {
       const ratingValue = ele;
       return (
         <AiFillStar
+          className="starr"
+          key={ele}
           size={18}
-          color={ratingValue <= rating ? 'var(--primaryBlue)' : '#c6c6c6'}
+          ele={ele}
+          color={ratingValue <= rating ? `var(--primaryBlue)` : '#c6c6c6'}
         />
       );
     });

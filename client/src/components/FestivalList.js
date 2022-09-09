@@ -27,11 +27,6 @@ const FestivalList = ({ festivals, pickItems, togglePick }) => {
 
   const pageEnd = useRef();
 
-  //    const observer = new IntersectionObserver((entries)=>{
-  //   console.log(entries);
-  //    })
-  // observer.observe(pageEnd.current)
-
   if (!festivals) {
     console.log('no festival : 1');
     return (

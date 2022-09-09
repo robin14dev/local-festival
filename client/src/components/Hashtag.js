@@ -19,11 +19,10 @@ const Wrapper = styled.div`
   /* box-shadow: 0.1rem 1rem 0.2rem  gray; */
 
   & button {
-    /* border: 1px solid black; */
     width: max-content;
     height: max-content;
     padding: 0.1rem 0.5rem;
-    color: var(--primaryBlue);
+    color: 'red';
     border-radius: 1rem;
     box-shadow: 0 0.1rem 0.1rem 0.01rem lightgray;
     font: inherit;
@@ -33,9 +32,9 @@ const Wrapper = styled.div`
     transition: all 0.1s ease-in;
 
     &:hover {
-      background-color: var(--primaryBlue);
+      background-color: 'red';
 
-      color: white;
+      color: 'red';
     }
     &:visited {
       color: #4968bd;
@@ -75,9 +74,7 @@ const Hashtag = ({ onSearch }) => {
         LocationTags[i].style.color = 'white';
       }
     }
-    // console.log(e.target.parentNode.children);
-    // console.log(e.target.parentNode.children[0].style.color);
-    // console.log(e.target.textContent.slice(1));
+
     const month = e.target.textContent.slice(1, -1);
     if (month.length === 1) {
       onSearch(`20220${month}00`);

@@ -18,7 +18,7 @@ const Wrapper = styled.div`
   border-radius: 0.5rem;
   overflow: hidden;
   &:hover {
-    background-color: var(--primaryBlue);
+    background-color: ${(props) => props.theme.color.primaryBlue};
     .title > b {
       color: white;
     }

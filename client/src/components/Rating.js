@@ -5,7 +5,6 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   width: 10rem;
   height: 2.5rem;
-  /* margin: 1rem; */
   padding: 0.5rem;
   border-radius: 0.5rem;
   background-color: white;
@@ -26,7 +25,6 @@ const Wrapper = styled.div`
 `;
 
 const Rating = ({ handleRating, initial, nowShowErrMsg }) => {
-  console.log('what is initial', initial);
   const [rating, setRating] = useState(initial);
   const [hover, setHover] = useState(null);
   const onClickRating = (rating) => {
@@ -40,6 +38,7 @@ const Rating = ({ handleRating, initial, nowShowErrMsg }) => {
   useEffect(() => {
     setRating(initial);
   });
+
   return (
     <Wrapper>
       {[1, 2, 3, 4, 5].map((ele) => {
@@ -53,6 +52,7 @@ const Rating = ({ handleRating, initial, nowShowErrMsg }) => {
               value={ratingValue}
               onClick={(e) => onClickRating(e.target.value)}
             />
+
             <AiFillStar
               className="star" // 각각 ratingValue : 1 2 3 4 5
               color={
@@ -60,6 +60,9 @@ const Rating = ({ handleRating, initial, nowShowErrMsg }) => {
                   ? 'var(--primaryBlue)'
                   : '#cdd9f6'
               }
+              // ele={ele}
+              // hover={hover}
+              // rating={rating}
               //2. 각각의 ratingValue가 갖다댄값 hover보다 크면 회색
               //3 클릭햇을 때 rating값이 생기므로 hover가 null이어도 고정 더 큰값을 하면 일단 hover값이 있으니 rating까지 가지않고 hover에서 끊김
               size={100}

@@ -11,6 +11,8 @@ import axios from 'axios';
 import Signup from './components/Signup';
 import AccountSetting from './pages/AccountSetting';
 import { UserContext } from './contexts/userContext';
+import { ThemeProvider } from 'styled-components';
+import theme from './styles/theme';
 import '../src/styles/common.scss';
 const Wrapper = styled.div`
   width: 100%; //1425px 스크롤바 생김
@@ -219,63 +221,65 @@ function App() {
   }, []);
 
   return (
-    <UserContext.Provider value={{ authState, setAuthState }}>
-      <Wrapper>
-        <Header loginHandler={loginHandler} authState={authState} />
-        <Routes>
-          <Route
-            exact
-            path="/"
-            element={
-              <Mainpage
-                togglePick={togglePick}
-                onSearch={onSearch}
-                filteredData={filteredData}
-                pickItems={pickItems}
-                resetCondition={resetCondition}
-                // infiniteScroll={infiniteScroll}
-              />
-            }
-          ></Route>
-          <Route
-            exact
-            path="/MyPick"
-            element={
-              <MyPick
-                authState={authState}
-                handleAuthState={handleAuthState}
-                festivalData={festivalData}
-                pickItems={pickItems}
-                togglePick={togglePick}
-              />
-            }
-          ></Route>
-          <Route
-            exact
-            path="/Detailviewpage/festivalId/:id"
-            element={
-              <Detailviewpage
-                pickItems={pickItems}
-                togglePick={togglePick}
-                authState={authState}
-              />
-            }
-          ></Route>
-          <Route
-            exact
-            path="/AccountSetting"
-            element={
-              <AccountSetting
-                handleAuthState={handleAuthState}
-                authState={authState}
-              />
-            }
-          ></Route>
-          <Route exact path="/Signup" element={<Signup />}></Route>
-        </Routes>
-        <Footer />
-      </Wrapper>
-    </UserContext.Provider>
+    <ThemeProvider theme={theme}>
+      <UserContext.Provider value={{ authState, setAuthState }}>
+        <Wrapper>
+          <Header loginHandler={loginHandler} authState={authState} />
+          <Routes>
+            <Route
+              exact
+              path="/"
+              element={
+                <Mainpage
+                  togglePick={togglePick}
+                  onSearch={onSearch}
+                  filteredData={filteredData}
+                  pickItems={pickItems}
+                  resetCondition={resetCondition}
+                  // infiniteScroll={infiniteScroll}
+                />
+              }
+            ></Route>
+            <Route
+              exact
+              path="/MyPick"
+              element={
+                <MyPick
+                  authState={authState}
+                  handleAuthState={handleAuthState}
+                  festivalData={festivalData}
+                  pickItems={pickItems}
+                  togglePick={togglePick}
+                />
+              }
+            ></Route>
+            <Route
+              exact
+              path="/Detailviewpage/festivalId/:id"
+              element={
+                <Detailviewpage
+                  pickItems={pickItems}
+                  togglePick={togglePick}
+                  authState={authState}
+                />
+              }
+            ></Route>
+            <Route
+              exact
+              path="/AccountSetting"
+              element={
+                <AccountSetting
+                  handleAuthState={handleAuthState}
+                  authState={authState}
+                />
+              }
+            ></Route>
+            <Route exact path="/Signup" element={<Signup />}></Route>
+          </Routes>
+          <Footer />
+        </Wrapper>
+      </UserContext.Provider>
+    </ThemeProvider>
   );
 }
 

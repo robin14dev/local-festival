@@ -119,7 +119,7 @@ const Tab = styled.div`
   }
 
   .focused {
-    background-color: var(--primaryBlue);
+    background-color: ${(props) => props.theme.color.primaryBlue};
 
     color: rgba(255, 255, 255, 1);
     transition: 0.3s;
@@ -170,7 +170,7 @@ const Detailviewpage = ({ pickItems, togglePick, authState }) => {
         <img
           src={imageUrl || onErrorImage}
           alt={`${title} : 이미지가 존재하지 않습니다.`}
-          onError={onErrorImg}
+          // onError={onErrorImg}
         ></img>
 
         {authState.loginStatus ? (

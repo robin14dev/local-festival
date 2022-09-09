@@ -30,7 +30,7 @@ const Controllers = styled.div`
   justify-content: space-between;
 `;
 const Button = styled.button`
-  background-color: var(--primaryBlue);
+  background-color: ${(props) => props.theme.color.primaryBlue};
   color: white;
   width: 4rem;
   height: 2.5rem;

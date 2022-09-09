@@ -36,14 +36,14 @@ const ModalView = styled.div`
     cursor: pointer;
     font-style: italic;
     font-family: 'HS-Regular';
-    color: var(--primaryBlue);
+    color: ${(props) => props.theme.color.primaryBlue};
     margin-bottom: 0.5rem;
   }
 
   & > div:nth-child(3) {
     & > button {
       margin-left: 1.2rem;
-      color: var(--primaryBlue);
+      color: ${(props) => props.theme.color.primaryBlue};
       font-weight: bold;
       font-size: 1rem;
     }
@@ -80,10 +80,10 @@ const SignUpButton = styled.button`
   width: 100%;
   font-size: 1rem;
   transition: all 0.2s ease-out;
-  background-color: var(--primaryBlue);
+  background-color: ${(props) => props.theme.color.primaryBlue};
 
   &:active {
-    color: var(--primaryGreen);
+    color: ${(props) => props.theme.color.primaryGreen};
   }
 `;
 

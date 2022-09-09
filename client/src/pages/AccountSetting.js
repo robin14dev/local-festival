@@ -47,7 +47,7 @@ const Modal = styled.div`
   transition: all 2s ease-out;
 
   & > button {
-    background-color: var(--primaryBlue);
+    background-color: ${(props) => props.theme.color.primaryBlue};
     color: white;
     height: 2rem;
     border-radius: 0.3rem;

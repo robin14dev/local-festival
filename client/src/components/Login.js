@@ -114,10 +114,10 @@ const LoginButton = styled.button`
   width: 100%;
   font-size: 1rem;
   transition: all 0.2s ease-out;
-  background-color: var(--primaryBlue);
+  background-color: ${(props) => props.theme.color.primaryBlue};
 
   &:active {
-    color: var(--primaryGreen);
+    color: ${(props) => props.theme.color.primaryGreen};
   }
 `;
 
@@ -242,6 +242,7 @@ const Login = ({ loginHandler }) => {
       .then((response) => {
         //# 토큰과 유저정보를 받아온다.
         // localStorage.setItem("accessToken", response.data.token);
+        console.log(response.data.data.token);
         sessionStorage.setItem('accesstoken', response.data.data.token);
 
         const { nickname, userId, account } = response.data.data;
