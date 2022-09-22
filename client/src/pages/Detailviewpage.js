@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import DescTab from '../components/DescTab';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import ReviewTab from '../components/ReviewTab';
 import HeartButton from '../components/HeartButton';
 import onErrorImage from '../assets/noimage.png';
-
+import { ModalContext } from '../contexts/modalContext';
 const Wrapper = styled.div`
   margin: 10rem auto;
   display: flex;
@@ -131,6 +131,8 @@ const Tab = styled.div`
 `;
 
 const Detailviewpage = ({ pickItems, togglePick, authState }) => {
+  const { openLoginModal, setLoginModal } = useContext(ModalContext);
+
   const [currentTab, setCurrentTab] = useState(0);
   const [like, setLike] = useState(false);
 
@@ -176,11 +178,18 @@ const Detailviewpage = ({ pickItems, togglePick, authState }) => {
         {authState.loginStatus ? (
           <HeartButton
             like={like}
-            onClick={(event) => {
-              onClickPick(event, state);
+            onClick={(e) => {
+              onClickPick(e, state);
             }}
           />
-        ) : null}
+        ) : (
+          <HeartButton
+            like={false}
+            onClick={() => {
+              setLoginModal(true);
+            }}
+          />
+        )}
       </ImageAndPickbtn>
       <TabAndDesc>
         <Tab>

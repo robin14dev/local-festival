@@ -32,6 +32,10 @@ const Button = styled.button`
   overflow: visible;
   cursor: pointer;
   color: white;
+
+  &:hover {
+    color: var(--primaryGreen);
+  }
 `;
 const ItemsWrapper = styled.div`
   position: absolute;
@@ -64,7 +68,12 @@ const ItemsWrapper = styled.div`
   }
 `;
 // 로그아웃 모달 없애고 그냥 바로 로그아웃 되도록 하기
-const Navigationbar = ({ authState, loginHandler }) => {
+const Navigationbar = ({
+  authState,
+  loginHandler,
+  setLoginModal,
+  setSignupModal,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const NavItems = () => {
     const onClickLogout = () => {
@@ -103,37 +112,28 @@ const Navigationbar = ({ authState, loginHandler }) => {
   return (
     <>
       {authState.loginStatus ? (
-        isOpen ? (
-          <ButtonsWrapper
-            onMouseEnter={() => {
-              setIsOpen(true);
-            }}
-            onMouseLeave={() => {
-              setIsOpen(false);
-            }}
-          >
-            <NavItems />
-            <Button>
-              <RiAccountCircleFill size={45} />
-            </Button>
-          </ButtonsWrapper>
-        ) : (
-          <ButtonsWrapper
-            onMouseEnter={() => {
-              setIsOpen(true);
-            }}
-            onMouseLeave={() => {
-              setIsOpen(false);
-            }}
-          >
-            <Button>
-              <RiAccountCircleFill size={45} />
-            </Button>
-          </ButtonsWrapper>
-        )
+        <ButtonsWrapper
+          onMouseEnter={() => {
+            setIsOpen(true);
+          }}
+          onMouseLeave={() => {
+            setIsOpen(false);
+          }}
+        >
+          {isOpen && <NavItems />}
+          <Button>
+            <RiAccountCircleFill size={45} />
+          </Button>
+        </ButtonsWrapper>
       ) : (
         <ButtonsWrapper>
-          <Login loginHandler={loginHandler} />
+          <Button
+            onClick={() => {
+              setLoginModal(true);
+            }}
+          >
+            <RiAccountCircleFill size={45} />
+          </Button>
         </ButtonsWrapper>
       )}
     </>

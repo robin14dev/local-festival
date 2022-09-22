@@ -48,7 +48,7 @@ const DescTab = ({ festivalInfo }) => {
       <hr></hr>
       {moment(startDate, 'YYYY.MM.DD').format('YYYY년 MM월 DD일')} ~{' '}
       {moment(endDate, 'YYYY.MM.DD').format('YYYY년 MM월 DD일')}
-      <h2>Location</h2>
+      <h2>위치</h2>
       <hr></hr>
       {location}
       <h2>문의</h2>

@@ -9,11 +9,15 @@ import Detailviewpage from './pages/Detailviewpage';
 import styled from 'styled-components';
 import axios from 'axios';
 import Signup from './components/Signup';
+import SignupModal from './components/SignupModal';
+import Login from './components/Login';
 import AccountSetting from './pages/AccountSetting';
 import { UserContext } from './contexts/userContext';
+import { ModalContext } from './contexts/modalContext';
 import { ThemeProvider } from 'styled-components';
 import theme from './styles/theme';
 import '../src/styles/common.scss';
+import LoginModal from './components/LoginModal';
 const Wrapper = styled.div`
   width: 100%; //1425px 스크롤바 생김
   box-sizing: border-box;
@@ -33,10 +37,10 @@ function App() {
   const [festivalData, setFestivalData] = useState(null);
   const [pickItems, setPickItems] = useState([]);
   const [filteredData, setFilteredData] = useState(festivalData);
+  const [openLoginModal, setLoginModal] = useState(false);
+  const [openSignupModal, setSignupModal] = useState(false);
 
   const loginHandler = (userId, account, nickname, loginStatus) => {
-    // isLogin ? setIsLogin(false) : setIsLogin(true);
-    // console.log(nickname, userId, loginStatus);
     //* 로그인한 후의 유저정보 상태변경입니다.
     const nextState = {
       userId: userId,
@@ -45,8 +49,6 @@ function App() {
       loginStatus: loginStatus,
     };
     setAuthState(nextState);
-    //console.log("나 실행???");
-
     //# 유저별 찜한 축제 가져오기
     axios
       .get(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`, {
@@ -56,10 +58,6 @@ function App() {
       })
       .then((response) => {
         const pickedFestivalId = response.data;
-        //console.log(pickedFestivalId);
-        // const festivalIdArr = pickedFestivalId.map(ele => ele.local_id)
-        // const pickedFestivalByUser = festivalData.filter(ele => festivalIdArr.indexOf(ele.id) > -1)
-        //{festivalId: 4}
         setPickItems(pickedFestivalId);
       });
   };
@@ -222,63 +220,83 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <UserContext.Provider value={{ authState, setAuthState }}>
-        <Wrapper>
-          <Header loginHandler={loginHandler} authState={authState} />
-          <Routes>
-            <Route
-              exact
-              path="/"
-              element={
-                <Mainpage
-                  togglePick={togglePick}
-                  onSearch={onSearch}
-                  filteredData={filteredData}
-                  pickItems={pickItems}
-                  resetCondition={resetCondition}
-                  // infiniteScroll={infiniteScroll}
-                />
-              }
-            ></Route>
-            <Route
-              exact
-              path="/MyPick"
-              element={
-                <MyPick
-                  authState={authState}
-                  handleAuthState={handleAuthState}
-                  festivalData={festivalData}
-                  pickItems={pickItems}
-                  togglePick={togglePick}
-                />
-              }
-            ></Route>
-            <Route
-              exact
-              path="/Detailviewpage/festivalId/:id"
-              element={
-                <Detailviewpage
-                  pickItems={pickItems}
-                  togglePick={togglePick}
-                  authState={authState}
-                />
-              }
-            ></Route>
-            <Route
-              exact
-              path="/AccountSetting"
-              element={
-                <AccountSetting
-                  handleAuthState={handleAuthState}
-                  authState={authState}
-                />
-              }
-            ></Route>
-            <Route exact path="/Signup" element={<Signup />}></Route>
-          </Routes>
-          <Footer />
-        </Wrapper>
-      </UserContext.Provider>
+      <ModalContext.Provider value={{ openLoginModal, setLoginModal }}>
+        <UserContext.Provider value={{ authState, setAuthState }}>
+          <Wrapper>
+            {openLoginModal && (
+              <LoginModal
+                loginHandler={loginHandler}
+                setLoginModal={setLoginModal}
+                setSignupModal={setSignupModal}
+              />
+            )}
+            {openSignupModal && (
+              <SignupModal
+                setSignupModal={setSignupModal}
+                setLoginModal={setLoginModal}
+              />
+            )}
+            <Header
+              loginHandler={loginHandler}
+              authState={authState}
+              setLoginModal={setLoginModal}
+              setSignupModal={setSignupModal}
+            />
+            <Routes>
+              <Route
+                exact
+                path="/"
+                element={
+                  <Mainpage
+                    togglePick={togglePick}
+                    onSearch={onSearch}
+                    filteredData={filteredData}
+                    pickItems={pickItems}
+                    resetCondition={resetCondition}
+                    // infiniteScroll={infiniteScroll}
+                  />
+                }
+              ></Route>
+              <Route
+                exact
+                path="/MyPick"
+                element={
+                  <MyPick
+                    authState={authState}
+                    handleAuthState={handleAuthState}
+                    festivalData={festivalData}
+                    pickItems={pickItems}
+                    togglePick={togglePick}
+                  />
+                }
+              ></Route>
+              <Route
+                exact
+                path="/Detailviewpage/festivalId/:id"
+                element={
+                  <Detailviewpage
+                    pickItems={pickItems}
+                    togglePick={togglePick}
+                    authState={authState}
+                  />
+                }
+              ></Route>
+              <Route
+                exact
+                path="/AccountSetting"
+                element={
+                  <AccountSetting
+                    handleAuthState={handleAuthState}
+                    authState={authState}
+                  />
+                }
+              ></Route>
+              <Route exact path="/Signup" element={<Signup />}></Route>
+            </Routes>
+            <Footer />
+          </Wrapper>
+        </UserContext.Provider>
+      </ModalContext.Provider>
     </ThemeProvider>
   );
 }

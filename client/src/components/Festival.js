@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import onErrorImage from '../assets/noimage.png';
 import HeartButton from './HeartButton';
 import { UserContext } from '../contexts/userContext';
+import { ModalContext } from '../contexts/modalContext';
 
 const Wrapper = styled.div`
   width: 18rem;
@@ -74,6 +75,7 @@ const HeartDiv = styled.div`
 
 const Festival = ({ festival, togglePick, pickItems }) => {
   const { authState } = useContext(UserContext);
+  const { openLoginModal, setLoginModal } = useContext(ModalContext);
   const { festivalId, title, imageUrl, startDate, endDate } = festival;
   const [like, setLike] = useState(false);
   let navigate = useNavigate();
@@ -140,7 +142,15 @@ const Festival = ({ festival, togglePick, pickItems }) => {
               onClickPick(e, festival);
             }}
           ></HeartButton>
-        ) : null}
+        ) : (
+          <HeartButton
+            like={false}
+            onClick={(e) => {
+              e.stopPropagation();
+              setLoginModal(true);
+            }}
+          ></HeartButton>
+        )}
       </HeartDiv>
     </Wrapper>
   );

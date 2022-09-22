@@ -24,14 +24,19 @@ const Wrapper = styled.div`
   }
 `;
 
-const Header = ({ authState, loginHandler }) => {
+const Header = ({ authState, loginHandler, setLoginModal, setSignupModal }) => {
   const onClickReload = () => {
     window.location.replace('/');
   };
   return (
     <Wrapper>
       <h1 onClick={onClickReload}>LoCo</h1>
-      <Navigationbar loginHandler={loginHandler} authState={authState} />
+      <Navigationbar
+        setLoginModal={setLoginModal}
+        setSignupModal={setSignupModal}
+        loginHandler={loginHandler}
+        authState={authState}
+      />
     </Wrapper>
   );
 };
