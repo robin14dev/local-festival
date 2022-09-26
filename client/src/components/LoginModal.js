@@ -1,17 +1,20 @@
 import axios from 'axios';
 import React from 'react';
+import { useCallback } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
 const ModalBackdrop = styled.div`
+  z-index: 10;
   position: fixed;
   left: 0;
   top: 0;
   width: 100%;
   height: 100vh;
-  z-index: 10;
   background: rgba(0, 0, 0, 0.4);
 `;
 const ModalContainer = styled.div`
+  z-index: 100;
+  position: fixed;
   width: 400px;
   height: 460px;
   display: flex;
@@ -21,9 +24,6 @@ const ModalContainer = styled.div`
   background: #fff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
   border-radius: 10px;
-  position: relative;
-  z-index: 100;
-  position: fixed;
   margin-top: -256px;
   margin-left: -200px;
   left: 50%;
@@ -90,50 +90,52 @@ const ModalContainer = styled.div`
   }
 `;
 const LoginModal = ({ setLoginModal, loginHandler, setSignupModal }) => {
-  const [form, setForm] = useState({ account: '', password: '' });
-  const { account, password } = form;
-  const handleUserInfo = (e) => {
-    const nextForm = {
-      ...form,
+  const [userInfo, setUserInfo] = useState({ account: '', password: '' });
+  const { account, password } = userInfo;
+
+  const handleUserInfo = useCallback((e) => {
+    setUserInfo((prevInfo) => ({
+      ...prevInfo,
       [e.target.name]: e.target.value,
-    };
+    }));
+  }, []);
 
-    setForm(nextForm);
-  };
+  const handleSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      axios
+        .post(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users/signin`, {
+          account,
+          password,
+        })
+        .then((response) => {
+          //# 토큰과 유저정보를 받아온다.
+          sessionStorage.setItem('accesstoken', response.data.data.token);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    axios
-      .post(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users/signin`, {
-        account,
-        password,
-      })
-      .then((response) => {
-        //# 토큰과 유저정보를 받아온다.
-        sessionStorage.setItem('accesstoken', response.data.data.token);
+          const { nickname, userId, account } = response.data.data;
+          //# 토큰 설정
 
-        const { nickname, userId, account } = response.data.data;
-        //# 토큰 설정
-
-        loginHandler(userId, account, nickname, true);
-        // }
-      })
-      .catch((err) => {
-        console.log(err.response.data.message);
-        // if (
-        //   err.response.data.message === 'Wrong account And Password Combination'
-        // ) {
-        //   errorMessage.current.textContent = '비밀번호가 일치하지 않습니다';
-        // } else if (err.response.data.message === "User Doesn't Exist") {
-        //   errorMessage.current.textContent = '사용자가 존재하지 않습니다';
-        // } else {
-        //   console.log('그밖에에러');
-        // }
-      })
-      .finally(() => {
-        modalClose();
-      });
-  };
+          loginHandler(userId, account, nickname, true);
+          // }
+        })
+        .catch((err) => {
+          console.log(err.response.data.message);
+          // if (
+          //   err.response.data.message === 'Wrong account And Password Combination'
+          // ) {
+          //   errorMessage.current.textContent = '비밀번호가 일치하지 않습니다';
+          // } else if (err.response.data.message === "User Doesn't Exist") {
+          //   errorMessage.current.textContent = '사용자가 존재하지 않습니다';
+          // } else {
+          //   console.log('그밖에에러');
+          // }
+        })
+        .finally(() => {
+          modalClose();
+        });
+    },
+    [account, password]
+  );
   const modalClose = () => {
     setLoginModal(false);
   };

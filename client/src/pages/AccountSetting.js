@@ -2,7 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import moment from 'moment';
-
+import Withdraw from '../components/Withdraw';
+import WithdrawDone from '../components/WithdrawDone';
+import { useCallback } from 'react';
 const Wrapper = styled.div`
   margin: 8rem 5rem;
   height: 55vh;
@@ -42,11 +44,16 @@ const Button = styled.div`
     text-decoration: underline;
   }
 `;
-const Modal = styled.div`
+const Accordion = styled.div`
   line-height: 1.5rem;
   transition: all 2s ease-out;
-
-  & > button {
+  input {
+    height: 2rem;
+    border-radius: 0.3rem;
+    border: 1px solid gray;
+    padding-left: 0.5rem;
+  }
+  button {
     background-color: ${(props) => props.theme.color.primaryBlue};
     color: white;
     height: 2rem;
@@ -54,26 +61,8 @@ const Modal = styled.div`
     padding: 0 1rem;
     font-weight: 550;
   }
-
-  & > input {
-    height: 2rem;
-    border-radius: 0.3rem;
-    border: 1px solid gray;
-    padding-left: 0.5rem;
-  }
-
-  /* @keyframes slide {
-  from {
-    transform: translateY(-1%);
-  }
-  to {
-    transform: translateY(0%);
-  }
-}
-
-animation: slide 0.5s; */
 `;
-const Nickname = styled(Modal)`
+const Nickname = styled(Accordion)`
   & > div:nth-child(1) {
     margin: 0.5rem 0;
   }
@@ -87,7 +76,7 @@ const Nickname = styled(Modal)`
   }
 `;
 
-const Password = styled(Modal)`
+const Password = styled(Accordion)`
   margin-top: 0.5rem;
 
   & > input {
@@ -119,6 +108,8 @@ export default function AccountSetting({ authState, handleAuthState }) {
     newPassword: '',
     passwordCheck: '',
   });
+  const [openWithdrawModal, setWithdrawModal] = useState(false);
+  const [finishWithdrawModal, setFinishModal] = useState(false);
 
   //로직
   // 닫혀있으면 false
@@ -126,8 +117,6 @@ export default function AccountSetting({ authState, handleAuthState }) {
   // 열려있는 특정 부분 다시 클릭했을 때 true를 false로 바꿔주기
 
   const [updatedAt, setUpdatedAt] = useState('');
-
-  const { newPassword, passwordCheck } = pwdForm;
 
   const inputhere = useRef();
   const errMessagePwd = useRef();
@@ -185,15 +174,14 @@ export default function AccountSetting({ authState, handleAuthState }) {
     }
   };
 
-  const onChangeHandler = (e) => {
-    const nextForm = {
-      ...pwdForm,
-      [e.target.id]: e.target.value,
-    };
-    setPwdForm(nextForm);
-    console.log(pwdForm);
-  };
-  const onClickPwd = () => {
+  const onChangeHandler = useCallback((e) => {
+    setPwdForm((prevForm) => ({
+      ...prevForm,
+      [e.target.name]: e.target.value,
+    }));
+  }, []);
+  const submitPwd = useCallback(() => {
+    const { newPassword, passwordCheck } = pwdForm;
     if (newPassword !== passwordCheck) {
       errMessagePwd.current.textContent =
         '새로 입력한 비밀번호가 서로 일치하지 않습니다.';
@@ -225,84 +213,109 @@ export default function AccountSetting({ authState, handleAuthState }) {
 
       //기존 비밀번호가 일치하지 않을 때
     }
-  };
+  }, [pwdForm]);
   return (
-    <Wrapper>
-      <h1>계정</h1>
+    <>
+      {openWithdrawModal && (
+        <Withdraw
+          setFinishModal={setFinishModal}
+          setWithdrawModal={setWithdrawModal}
+        />
+      )}
+      {finishWithdrawModal && <WithdrawDone setFinishModal={setFinishModal} />}
+      <Wrapper>
+        <h1>계정</h1>
 
-      <List>
-        <Info>
-          <Heading>
-            <h4>닉네임</h4>
-            <Button>
-              <button name="nickname" onClick={openModalHandler}>
-                수정
-              </button>
-            </Button>
-          </Heading>
+        <List>
+          <Info>
+            <Heading>
+              <h4>닉네임</h4>
+              <Button>
+                <button name="nickname" onClick={openModalHandler}>
+                  수정
+                </button>
+              </Button>
+            </Heading>
 
-          {isOpen.nickname ? (
-            <Nickname>
-              <div>변경할 닉네임을 입력해 주세요</div>
-              <input
-                ref={inputhere}
-                onChange={nicknameHandler}
-                placeholder={authState.nickname}
-              ></input>
-              <button onClick={profileHandler}>수정하기</button>
-            </Nickname>
-          ) : (
-            <div style={{ color: 'gray' }}>{authState.nickname}</div>
-          )}
-        </Info>
+            {isOpen.nickname ? (
+              <Nickname>
+                <div>변경할 닉네임을 입력해 주세요</div>
+                <input
+                  ref={inputhere}
+                  onChange={nicknameHandler}
+                  placeholder={authState.nickname}
+                ></input>
+                <button onClick={profileHandler}>수정하기</button>
+              </Nickname>
+            ) : (
+              <div style={{ color: 'gray' }}>{authState.nickname}</div>
+            )}
+          </Info>
 
-        <Info>
-          <Heading>
-            <h4>비밀번호</h4>
-            <Button>
-              <button name="password" onClick={openModalHandler}>
-                수정
-              </button>
-            </Button>
-          </Heading>
+          <Info>
+            <Heading>
+              <h4>비밀번호</h4>
+              <Button>
+                <button name="password" onClick={openModalHandler}>
+                  수정
+                </button>
+              </Button>
+            </Heading>
 
-          {isOpen.password ? (
-            <Password>
-              <label htmlFor="currentPassword">현재 비밀번호</label>
-              <br></br>
-              <input
-                type={'password'}
-                onChange={onChangeHandler}
-                id="currentPassword"
-              ></input>
-              <br></br>
-              <label htmlFor="newPassword">새 비밀번호</label>
-              <br></br>
-              <input
-                type={'password'}
-                onChange={onChangeHandler}
-                id="newPassword"
-              ></input>
-              <br></br>
-              <label htmlFor="passwordCheck">비밀번호 확인</label>
-              <br></br>
-              <input
-                type={'password'}
-                onChange={onChangeHandler}
-                id="passwordCheck"
-              ></input>
-              <br></br>
-              <button onClick={onClickPwd}>비밀번호 변경</button>
-              <span ref={errMessagePwd}></span>
-            </Password>
-          ) : (
-            <div style={{ color: 'gray' }}>
-              최종수정일 :{' '}
-              {moment(updatedAt).format('YYYY년 MM월 DD일 HH시 mm분')}
-            </div>
-          )}
-        </Info>
-      </List>
-    </Wrapper>
+            {isOpen.password ? (
+              <Password>
+                <form onSubmit={submitPwd}>
+                  <label htmlFor="currentPassword">현재 비밀번호</label>
+                  <br></br>
+                  <input
+                    type={'password'}
+                    onChange={onChangeHandler}
+                    name="currentPassword"
+                  ></input>
+                  <br></br>
+                  <label htmlFor="newPassword">새 비밀번호</label>
+                  <br></br>
+                  <input
+                    type={'password'}
+                    onChange={onChangeHandler}
+                    name="newPassword"
+                  ></input>
+                  <br></br>
+                  <label htmlFor="passwordCheck">비밀번호 확인</label>
+                  <br></br>
+                  <input
+                    type={'password'}
+                    onChange={onChangeHandler}
+                    name="passwordCheck"
+                  ></input>
+                  <br></br>
+                  <button type="submit">비밀번호 변경</button>
+                </form>
+                <span ref={errMessagePwd}></span>
+              </Password>
+            ) : (
+              <div style={{ color: 'gray' }}>
+                최종수정일 :{' '}
+                {moment(updatedAt).format('YYYY년 MM월 DD일 HH시 mm분')}
+              </div>
+            )}
+          </Info>
+          <Info>
+            <Heading>
+              <h4>계정 삭제</h4>
+              <Button>
+                <button
+                  onClick={() => {
+                    setWithdrawModal(true);
+                  }}
+                >
+                  삭제
+                </button>
+              </Button>
+            </Heading>
+          </Info>
+        </List>
+      </Wrapper>
+    </>
   );
 }

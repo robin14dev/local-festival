@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useCallback } from 'react';
 import styled from 'styled-components';
 
 const ModalBackdrop = styled.div`
@@ -91,45 +92,47 @@ const SignupModal = ({ setSignupModal, setLoginModal }) => {
 
   const { account, nickname, password, passwordCheck } = userInfo;
 
-  const handleUserInfo = (e) => {
-    const nextUserInfo = {
-      ...userInfo,
+  const handleUserInfo = useCallback((e) => {
+    setUserInfo((prevInfo) => ({
+      ...prevInfo,
       [e.target.name]: e.target.value,
-    };
-    setUserInfo(nextUserInfo);
-  };
+    }));
+  }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (password !== passwordCheck) {
-      console.log('password Not Match');
+  const handleSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (password !== passwordCheck) {
+        console.log('password Not Match');
 
-      document.body.querySelector('.errorMessage').textContent =
-        '비밀번호가 일치하지 않습니다';
-      document.body.querySelector('.errorMessage').style.fontWeight = 'bold';
-    } else {
-      //# 유효성 검증 후 서버에 회원가입 정보 전송 (주석 해제)
-      axios
-        .post(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users/signup`, {
-          account,
-          password,
-          nickname,
-        })
-        .then((response) => {
-          console.log(response.data.message);
-          setSignupModal(false);
-          setLoginModal(true);
-        })
-        .catch((err) => {
-          if (err.response.status === 409) {
-            document.body.querySelector('.errorMessage').textContent =
-              '이미 가입된 아이디 입니다.';
-            document.body.querySelector('.errorMessage').style.fontWeight =
-              'bold';
-          }
-        });
-    }
-  };
+        document.body.querySelector('.errorMessage').textContent =
+          '비밀번호가 일치하지 않습니다';
+        document.body.querySelector('.errorMessage').style.fontWeight = 'bold';
+      } else {
+        //# 유효성 검증 후 서버에 회원가입 정보 전송 (주석 해제)
+        axios
+          .post(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users/signup`, {
+            account,
+            password,
+            nickname,
+          })
+          .then((response) => {
+            console.log(response.data.message);
+            setSignupModal(false);
+            setLoginModal(true);
+          })
+          .catch((err) => {
+            if (err.response.status === 409) {
+              document.body.querySelector('.errorMessage').textContent =
+                '이미 가입된 아이디 입니다.';
+              document.body.querySelector('.errorMessage').style.fontWeight =
+                'bold';
+            }
+          });
+      }
+    },
+    [password, passwordCheck, account, nickname]
+  );
 
   return (
     <>

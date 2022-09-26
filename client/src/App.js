@@ -8,9 +8,7 @@ import './App.css';
 import Detailviewpage from './pages/Detailviewpage';
 import styled from 'styled-components';
 import axios from 'axios';
-import Signup from './components/Signup';
 import SignupModal from './components/SignupModal';
-import Login from './components/Login';
 import AccountSetting from './pages/AccountSetting';
 import { UserContext } from './contexts/userContext';
 import { ModalContext } from './contexts/modalContext';
@@ -18,6 +16,7 @@ import { ThemeProvider } from 'styled-components';
 import theme from './styles/theme';
 import '../src/styles/common.scss';
 import LoginModal from './components/LoginModal';
+import Withdraw from './components/Withdraw';
 const Wrapper = styled.div`
   width: 100%; //1425px 스크롤바 생김
   box-sizing: border-box;
@@ -39,6 +38,7 @@ function App() {
   const [filteredData, setFilteredData] = useState(festivalData);
   const [openLoginModal, setLoginModal] = useState(false);
   const [openSignupModal, setSignupModal] = useState(false);
+  // const [openWithdrawModal, setWithdrawModal] = useState(false);
 
   const loginHandler = (userId, account, nickname, loginStatus) => {
     //* 로그인한 후의 유저정보 상태변경입니다.
@@ -236,6 +236,9 @@ function App() {
                 setLoginModal={setLoginModal}
               />
             )}
+            {/* {openWithdrawModal && (
+              <Withdraw setWithdrawModal={setWithdrawModal} />
+            )} */}
             <Header
               loginHandler={loginHandler}
               authState={authState}
@@ -288,10 +291,10 @@ function App() {
                   <AccountSetting
                     handleAuthState={handleAuthState}
                     authState={authState}
+                    // setWithdrawModal={setWithdrawModal}
                   />
                 }
               ></Route>
-              <Route exact path="/Signup" element={<Signup />}></Route>
             </Routes>
             <Footer />
           </Wrapper>
