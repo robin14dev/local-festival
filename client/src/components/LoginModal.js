@@ -39,24 +39,34 @@ const ModalContainer = styled.div`
   }
 
   form {
+    /* background: yellow; */
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: 2rem 0;
-    & input {
+    input {
       border-radius: 6px;
       border: 1.8px solid #9d9d9d;
       padding: 0.5rem;
-      margin-bottom: 1rem;
       width: 20rem;
       height: 3rem;
       &::placeholder {
         opacity: 0.5;
       }
     }
-    & button {
+    div {
+      min-height: 1rem;
+      color: red;
+      font-size: 0.8rem;
+      align-self: flex-start;
+      margin-left: 3rem;
+      margin-bottom: 1rem;
+      padding-top: 0.2rem;
+    }
+    button {
       width: 20rem;
       height: 3rem;
+      margin-top: 1rem;
       color: #fff;
       font-weight: bold;
       background: #4363ff;
@@ -92,8 +102,15 @@ const ModalContainer = styled.div`
 const LoginModal = ({ setLoginModal, loginHandler, setSignupModal }) => {
   const [userInfo, setUserInfo] = useState({ account: '', password: '' });
   const { account, password } = userInfo;
+  const [errMessage, setErrMessage] = useState('');
+
+  const errMessages = [
+    '사용자가 존재하지 않습니다',
+    '비밀번호가 일치하지 않습니다',
+  ];
 
   const handleUserInfo = useCallback((e) => {
+    if (e.target.value.length > 0) setErrMessage('');
     setUserInfo((prevInfo) => ({
       ...prevInfo,
       [e.target.name]: e.target.value,
@@ -117,21 +134,22 @@ const LoginModal = ({ setLoginModal, loginHandler, setSignupModal }) => {
 
           loginHandler(userId, account, nickname, true);
           // }
+          modalClose();
         })
         .catch((err) => {
           console.log(err.response.data.message);
-          // if (
-          //   err.response.data.message === 'Wrong account And Password Combination'
-          // ) {
-          //   errorMessage.current.textContent = '비밀번호가 일치하지 않습니다';
-          // } else if (err.response.data.message === "User Doesn't Exist") {
-          //   errorMessage.current.textContent = '사용자가 존재하지 않습니다';
-          // } else {
-          //   console.log('그밖에에러');
-          // }
-        })
-        .finally(() => {
-          modalClose();
+          if (
+            err.response.data.message ===
+            'Wrong account And Password Combination'
+          ) {
+            // errorMessage.current.textContent = '비밀번호가 일치하지 않습니다';
+            setErrMessage(errMessages[1]);
+          } else if (err.response.data.message === "User Doesn't Exist") {
+            // errorMessage.current.textContent = '사용자가 존재하지 않습니다';
+            setErrMessage(errMessages[0]);
+          } else {
+            console.log('그밖에에러');
+          }
         });
     },
     [account, password]
@@ -151,14 +169,20 @@ const LoginModal = ({ setLoginModal, loginHandler, setSignupModal }) => {
             onChange={handleUserInfo}
             type="text"
             value={account}
+            required
           ></input>
+          <div>{errMessage === '사용자가 존재하지 않습니다' && errMessage}</div>
           <input
             name="password"
             placeholder="비밀번호를 입력해 주세요"
             onChange={handleUserInfo}
             type="password"
             value={password}
+            required
           ></input>
+          <div>
+            {errMessage === '비밀번호가 일치하지 않습니다' && errMessage}
+          </div>
           <button type="submit">로그인</button>
         </form>
         <div>
