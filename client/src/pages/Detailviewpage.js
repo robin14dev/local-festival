@@ -6,6 +6,7 @@ import ReviewTab from '../components/ReviewTab';
 import HeartButton from '../components/HeartButton';
 import onErrorImage from '../assets/noimage.png';
 import { ModalContext } from '../contexts/modalContext';
+import { Helmet } from 'react-helmet';
 const Wrapper = styled.div`
   margin: 10rem auto;
   display: flex;
@@ -61,11 +62,12 @@ const ImageAndPickbtn = styled.div`
   }
 
   & > :nth-child(2) {
-    width: 3rem;
-    height: 3rem;
+    width: auto;
+    height: 2.8rem;
     border: none;
     position: relative;
     left: 0.5rem;
+    /* background: red; */
   }
 `;
 const TabAndDesc = styled.div`
@@ -131,7 +133,7 @@ const Tab = styled.div`
 `;
 
 const Detailviewpage = ({ pickItems, togglePick, authState }) => {
-  const { openLoginModal, setLoginModal } = useContext(ModalContext);
+  const { setLoginModal } = useContext(ModalContext);
 
   const [currentTab, setCurrentTab] = useState(0);
   const [like, setLike] = useState(false);
@@ -168,6 +170,9 @@ const Detailviewpage = ({ pickItems, togglePick, authState }) => {
 
   return (
     <Wrapper>
+      <Helmet>
+        <title>{title} - LOCO</title>
+      </Helmet>
       <ImageAndPickbtn>
         <img
           src={imageUrl || onErrorImage}
