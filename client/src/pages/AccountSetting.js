@@ -5,6 +5,7 @@ import moment from 'moment';
 import Withdraw from '../components/Withdraw';
 import WithdrawDone from '../components/WithdrawDone';
 import { useCallback } from 'react';
+import { Helmet } from 'react-helmet';
 const Wrapper = styled.div`
   margin: 8rem 5rem;
   height: 55vh;
@@ -224,6 +225,9 @@ export default function AccountSetting({ authState, handleAuthState }) {
       )}
       {finishWithdrawModal && <WithdrawDone setFinishModal={setFinishModal} />}
       <Wrapper>
+        <Helmet>
+          <title>계정 관리 - LOCO</title>
+        </Helmet>
         <h1>계정</h1>
 
         <List>

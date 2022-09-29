@@ -66,9 +66,8 @@ const HeartDiv = styled.div`
   display: flex;
   justify-content: flex-end;
   padding-right: 0.5rem;
-  /* background-color: red; */
   & > img {
-    width: 1.5rem;
+    width: auto;
     height: 1.5rem;
   }
 `;

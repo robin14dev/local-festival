@@ -17,6 +17,7 @@ import theme from './styles/theme';
 import '../src/styles/common.scss';
 import LoginModal from './components/LoginModal';
 import Withdraw from './components/Withdraw';
+import { Helmet } from 'react-helmet';
 const Wrapper = styled.div`
   width: 100%; //1425px 스크롤바 생김
   box-sizing: border-box;
@@ -223,6 +224,9 @@ function App() {
       <ModalContext.Provider value={{ openLoginModal, setLoginModal }}>
         <UserContext.Provider value={{ authState, setAuthState }}>
           <Wrapper>
+            <Helmet>
+              <title>이번주엔 어디로 가볼까? - LOCO</title>
+            </Helmet>
             {openLoginModal && (
               <LoginModal
                 loginHandler={loginHandler}
@@ -237,8 +241,8 @@ function App() {
               />
             )}
             {/* {openWithdrawModal && (
-              <Withdraw setWithdrawModal={setWithdrawModal} />
-            )} */}
+                <Withdraw setWithdrawModal={setWithdrawModal} />
+              )} */}
             <Header
               loginHandler={loginHandler}
               authState={authState}
