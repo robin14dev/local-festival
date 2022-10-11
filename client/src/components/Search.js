@@ -1,34 +1,25 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { IoSearchCircleSharp } from 'react-icons/io5';
+import SearchImage from '../assets/search-mobile.png';
 
-const Background = styled.div`
-  width: 100vw;
-  background: linear-gradient(to bottom, blue 50%, white 50%);
-  display: flex;
-  justify-content: center;
-  /* height: rem; */
-  position: fixed;
-  top: 4rem;
-  z-index: 0;
-`;
 const Wrapper = styled.div`
-  background-color: white;
-  margin: 0.5rem 0;
-  height: 3rem;
-  width: 40%;
+  width: 476px;
+
+  background: white;
+  margin-top: 0.5rem;
+  height: 43px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   box-shadow: 0 0.1rem 0.3rem 0.01rem lightgray;
 
   border-radius: 0.7rem;
-  background: white;
   position: fixed;
   top: 5rem;
 
-  & > input {
-    width: 80%;
+  input {
+    width: 100%;
     height: 60%;
     border: none;
     font-size: 1rem;
@@ -39,23 +30,37 @@ const Wrapper = styled.div`
     margin-left: 0.5rem;
     background: white;
   }
-  & > button {
+  button {
     display: flex;
     justify-content: center;
     align-items: center;
     border: none;
-    background: none;
+    background-image: none;
     font-size: large;
     font-weight: bold;
     border-radius: 0.2rem;
-    & > * {
-      color: ${(props) => props.theme.color.primaryBlue};
+
+    img {
+      height: 50%;
+      width: 50%;
     }
   }
 
-  @media (max-width: 540px) {
-    width: 30%;
-    height: 8%;
+  @media (max-width: 475px) {
+    width: 320px;
+    border-radius: 9px;
+    height: 43px;
+    box-shadow: none;
+
+    input::placeholder {
+      font-style: normal;
+      font-weight: 500;
+      font-size: 13px;
+      line-height: 16px;
+      /* identical to box height */
+
+      color: #978d8d;
+    }
   }
 `;
 
@@ -82,7 +87,7 @@ const Search = ({ onSearch }) => {
         placeholder="축제를 검색해주세요!"
       />
       <button onClick={onClickSearch}>
-        <IoSearchCircleSharp size={40} />
+        <img src={SearchImage} alt="search"></img>
       </button>
     </Wrapper>
   );

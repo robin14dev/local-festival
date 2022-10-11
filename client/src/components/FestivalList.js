@@ -8,12 +8,9 @@ const Wrapper = styled.div`
   /* background-color: #ffff0062; */
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: center;
+  /* align-items: center; */
 
-  /* @media (max-width: 1000px) {
-    width: 90vw;
-    
-  } */
   @media (max-width: 1210px) {
     width: 90vw;
   }

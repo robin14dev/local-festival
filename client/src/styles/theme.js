@@ -24,8 +24,13 @@ const calcRem = (size) => `${size / 16}rem`;
 const color = {
   primaryBlue: 'rgb(64 82 255)',
   primaryGreen: '#60ff53',
+  autumnOrange: '#FF9A62',
 };
 
-const theme = { color };
+const usingColor = {
+  mainColor: color['autumnOrange'],
+};
+
+const theme = { color, usingColor };
 
 export default theme;

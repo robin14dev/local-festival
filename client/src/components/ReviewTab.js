@@ -1,21 +1,61 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import ReviewList from './ReviewList';
 import ReviewWrite from './ReviewWrite';
 import axios from 'axios';
+import ReviewItem from './ReviewItem';
 const Wrapper = styled.div`
   width: 100%;
-  /* height: 100%; */
-  /* background-color: #d8e4f0c8; */
-  overflow: hidden; // 안해주면 줄어들음
+  padding-bottom: 5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+
+  .totalRating {
+    margin-top: 43px;
+    margin-bottom: 37px;
+    font-weight: 400;
+    font-size: 20px;
+
+    @media (max-width: 485px) {
+      display: none;
+    }
+  }
+
+  h2 {
+    align-self: flex-start;
+    padding-left: 1rem;
+    padding-bottom: 7px;
+
+    span {
+      font-weight: 300;
+      font-size: 26px;
+      line-height: 24px;
+
+      color: #ff9a62;
+    }
+    @media (max-width: 485px) {
+      /* padding: 0; */
+    }
+  }
 `;
 
-const ReviewTab = ({ festivalInfo, authState }) => {
-  const { festivalId } = festivalInfo;
+const ReviewList = styled.section`
+  margin: 1rem 0;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column-reverse;
+
+  overflow-y: scroll;
+  -ms-overflow-style: none; /* for Internet Explorer, Edge */
+  scrollbar-width: none; /* for Firefox */
+  &::-webkit-scrollbar {
+    display: none; /* for Chrome, Safari, and Opera */
+  }
+`;
+
+const ReviewTab = ({ festival, authState }) => {
+  const { festivalId } = festival;
 
   const [listOfReviews, setListOfReviews] = useState([]);
 
@@ -91,17 +131,31 @@ const ReviewTab = ({ festivalInfo, authState }) => {
 
   return (
     <Wrapper>
+      <div className="totalRating">총 별점 : 8.7</div>
+      <h2>
+        후기<span> 87</span>
+      </h2>
       <ReviewWrite
         authState={authState}
         festivalId={festivalId}
         updateReviewList={updateReviewList}
       />
-      <ReviewList
-        authState={authState}
-        listOfReviews={listOfReviews}
-        festivalId={festivalId}
-        deleteReview={deleteReview}
-      />
+      <ReviewList>
+        {!listOfReviews.length ? (
+          <>리뷰가 등록되어있지 않습니다.</>
+        ) : (
+          <>
+            {listOfReviews.map((review) => (
+              <ReviewItem
+                key={review.id}
+                deleteReview={deleteReview}
+                authState={authState}
+                review={review}
+              />
+            ))}
+          </>
+        )}
+      </ReviewList>
     </Wrapper>
   );
 };

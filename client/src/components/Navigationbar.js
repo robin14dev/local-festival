@@ -9,7 +9,6 @@ const ButtonsWrapper = styled.div`
   height: 100%;
   margin: 0 3rem;
   z-index: 30;
-  /* background-color: red; */
 
   @media (max-width: 840px) {
     right: 2rem;
@@ -19,6 +18,10 @@ const ButtonsWrapper = styled.div`
   }
   @media (max-width: 500px) {
     right: 0.1rem;
+  }
+
+  @media (max-width: 475px) {
+    display: none;
   }
 `;
 
@@ -103,11 +106,6 @@ const Navigationbar = ({
 
   let navigate = useNavigate();
 
-  const onClickMoveMypage = () => {
-    navigate('/MyPage');
-  };
-
-  // console.log(isLogin);
   return (
     <>
       {authState.loginStatus ? (
