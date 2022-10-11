@@ -52,6 +52,9 @@ const Wrapper = styled.div`
     margin-top: 1rem;
     /* height: 30%; */
   }
+  @media (max-width: 475px) {
+    display: none;
+  }
 `;
 
 const Month = styled.div``;

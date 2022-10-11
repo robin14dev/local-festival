@@ -6,87 +6,99 @@ import onErrorImage from '../assets/noimage.png';
 import HeartButton from './HeartButton';
 import { UserContext } from '../contexts/userContext';
 import { ModalContext } from '../contexts/modalContext';
+import HeartImg from '../assets/heart.png';
+import EmptyHeartImg from '../assets/empty-heart.png';
 
 const Wrapper = styled.div`
-  width: 18rem;
-  height: 22rem;
-  margin: 0.5rem;
-  border: none;
+  width: 272px;
+  height: auto;
   display: flex;
   flex-direction: column;
-  background-color: #f6f5f5bb;
-  transition: transform 0.3s ease-out;
-  box-shadow: 1px 1.5px 2px gray;
-  border-radius: 0.5rem;
-  overflow: hidden;
-  &:hover {
-    background-color: ${(props) => props.theme.color.primaryBlue};
-    .title > b {
-      color: ${(props) => props.theme.color.primaryGreen};
-    }
-    transform: scale(1.03);
-    & > div:nth-child(2) {
-      color: white;
-    }
-  }
-
+  margin: 1rem;
+  cursor: pointer;
   & > img {
-    object-fit: fill;
     width: 100%;
-    height: 15rem;
-    /* border-radius: 3.5px 3.5px 0 0; */
-    /* box-shadow: 1px 0  2px gray;  */
+    height: 270px;
+    border-radius: 10px;
+    object-fit: fill;
   }
-`;
+  section {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 0.5rem;
 
-const Description = styled.div`
-  height: 5rem;
-  padding: 1rem 1px 0 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  /* box-shadow: 1px 1.5px 2px gray;
-  background-color: #f2eeee; */
+    h1 {
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 17px;
+      margin: 0.4rem 0 0.18rem 0;
+    }
 
-  & > div {
-    width: 80%;
-    padding-left: 0.5rem;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    li {
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 17px;
+      color: #797979;
+    }
 
-    & > b {
-      color: rgb(40 60 253);
-      font-size: large;
+    h1,
+    li {
+      white-space: nowrap;
+      overflow: hidden;
+      width: 11rem;
+      text-overflow: ellipsis;
     }
   }
-`;
 
-const HeartDiv = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  padding-right: 0.5rem;
-  & > img {
-    width: auto;
+  button > img {
     height: 1.5rem;
+    width: auto;
+  }
+
+  transition: transform 0.3s ease-out;
+
+  &:hover {
+    transform: scale(1.03);
+  }
+
+  @media (max-width: 485px) {
+    margin: 0.5rem 0;
+    width: 357px;
+    height: 409px;
+
+    &:hover {
+      transform: none;
+    }
+
+    & > img {
+      height: 340px;
+    }
+    section {
+      h1,
+      li {
+        width: 100%;
+      }
+    }
   }
 `;
 
 const Festival = ({ festival, togglePick, pickItems }) => {
   const { authState } = useContext(UserContext);
-  const { openLoginModal, setLoginModal } = useContext(ModalContext);
-  const { festivalId, title, imageUrl, startDate, endDate } = festival;
+  const { setLoginModal } = useContext(ModalContext);
+  const { festivalId, title, imageUrl, startDate, endDate, location } =
+    festival;
   const [like, setLike] = useState(false);
+  console.log(festivalId);
   let navigate = useNavigate();
 
   const onErrorImg = (e) => {
     e.target.src = onErrorImage;
   };
 
-  const onClickMoveDVP = (id) => {
-    navigate(`/Detailviewpage/festivalId/${id}`, { state: festival });
+  const onClickMoveDVP = (festivalId) => {
+    navigate(`/Detail/${festivalId}`);
   };
-  const toggleLike = (event) => {
+  const toggleLike = () => {
     setLike(!like);
   };
 
@@ -95,17 +107,11 @@ const Festival = ({ festival, togglePick, pickItems }) => {
     setLike(isPicked);
   }, [pickItems, festivalId]);
 
-  const onClickPick = (event, id) => {
+  const onClickPick = (event, festival) => {
     event.stopPropagation();
-    console.log('pick_id!!!!!!!!!!', id);
     togglePick(festival);
     toggleLike();
   };
-
-  // const onClickGuest = (e) => {
-  //   e.stopPropagation();
-  //   alert('guest!!!');
-  // };
 
   return (
     <Wrapper
@@ -120,37 +126,30 @@ const Festival = ({ festival, togglePick, pickItems }) => {
         onError={(e) => onErrorImg(e)}
       />
 
-      <Description>
-        <div className="title">
-          <b>{title}</b>
-        </div>
+      <section>
         <div>
-          <div>
-            시작일:{moment(startDate, 'YYYY.MM.DD').format('YYYY년 MM월 DD일')}
-          </div>
-          <div>
-            종료일:{moment(endDate, 'YYYY.MM.DD').format('YYYY년 MM월 DD일')}
-          </div>
+          <h1>{title}</h1>
+          <ul>
+            <li>{location}</li>
+            <li>
+              {moment(startDate, 'YYYY.MM.DD').format('YYYY.MM.DD')} ~{' '}
+              {moment(endDate, 'YYYY.MM.DD').format('YYYY.MM.DD')}
+            </li>
+          </ul>
         </div>
-      </Description>
-      <HeartDiv>
-        {authState.loginStatus ? (
-          <HeartButton
-            like={like}
-            onClick={(e) => {
+        <button
+          onClick={(e) => {
+            if (authState.loginStatus) {
               onClickPick(e, festival);
-            }}
-          ></HeartButton>
-        ) : (
-          <HeartButton
-            like={false}
-            onClick={(e) => {
+            } else {
               e.stopPropagation();
               setLoginModal(true);
-            }}
-          ></HeartButton>
-        )}
-      </HeartDiv>
+            }
+          }}
+        >
+          <img alt="heart" src={like ? HeartImg : EmptyHeartImg} />
+        </button>
+      </section>
     </Wrapper>
   );
 };

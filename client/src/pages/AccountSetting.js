@@ -6,23 +6,52 @@ import Withdraw from '../components/Withdraw';
 import WithdrawDone from '../components/WithdrawDone';
 import { useCallback } from 'react';
 import { Helmet } from 'react-helmet';
+import EditImg from '../assets/edit-mobile.png';
+import DeleteImg from '../assets/delete-mobile.png';
 const Wrapper = styled.div`
   margin: 8rem 5rem;
   height: 55vh;
-  /* background-color: yellow; */
+  /* background-color: yellowgreen; */
+
+  & > span {
+    display: none;
+  }
+
+  @media (max-width: 485px) {
+    margin: 8rem 0;
+
+    & > h1 {
+      padding-left: 1rem;
+    }
+
+    & > span {
+      display: inline-block;
+      margin: 1rem;
+      text-decoration: underline;
+    }
+  } ;
 `;
 
 const List = styled.div`
   margin-left: 0.5rem;
+
+  @media (max-width: 485px) {
+    margin: 0;
+  }
 `;
 
 const Info = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  width: 50%;
-  border-bottom: 1px solid lightgray;
+  width: 100%;
+  border-bottom: 1px solid #f2ebeb;
   padding-bottom: 2rem;
+
+  @media (max-width: 485px) {
+    padding: 0 1rem;
+    min-height: 101px;
+  } ;
 `;
 
 const Heading = styled.div`
@@ -44,30 +73,43 @@ const Button = styled.div`
   & > button {
     text-decoration: underline;
   }
+
+  img {
+    width: 22px;
+    height: auto;
+  }
 `;
 const Accordion = styled.div`
   line-height: 1.5rem;
   transition: all 2s ease-out;
+  margin-bottom: 1rem;
   input {
     height: 2rem;
     border-radius: 0.3rem;
-    border: 1px solid gray;
+    border: 1px solid #d1cece;
     padding-left: 0.5rem;
   }
   button {
-    background-color: ${(props) => props.theme.color.primaryBlue};
+    background-color: ${(props) => props.theme.usingColor.mainColor};
     color: white;
     height: 2rem;
     border-radius: 0.3rem;
     padding: 0 1rem;
     font-weight: 550;
   }
+
+  label {
+    color: #7a7777;
+  }
 `;
 const Nickname = styled(Accordion)`
-  & > div:nth-child(1) {
-    margin: 0.5rem 0;
-  }
+  /* label {
+    margin: 1.5rem 0rem;
+  } */
 
+  label {
+    margin-bottom: 1rem;
+  }
   & button {
     margin-left: 1rem;
 
@@ -162,9 +204,6 @@ export default function AccountSetting({ authState, handleAuthState }) {
 
   const openModalHandler = (e) => {
     if (isOpen[e.target.name] === false) {
-      //const keyName = e.target.name
-
-      //isOpen[e.target.name] = true
       const nextIsOpen = { ...isOpen, [e.target.name]: true };
       e.target.textContent = '취소';
       setIsOpen(nextIsOpen);
@@ -236,18 +275,20 @@ export default function AccountSetting({ authState, handleAuthState }) {
               <h4>닉네임</h4>
               <Button>
                 <button name="nickname" onClick={openModalHandler}>
-                  수정
+                  <img name="nickname" src={EditImg} alt="수정" />
                 </button>
               </Button>
             </Heading>
 
             {isOpen.nickname ? (
               <Nickname>
-                <div>변경할 닉네임을 입력해 주세요</div>
+                <label htmlFor="nickname">변경할 닉네임을 입력해 주세요</label>
+                <br></br>
                 <input
                   ref={inputhere}
                   onChange={nicknameHandler}
                   placeholder={authState.nickname}
+                  name="nickname"
                 ></input>
                 <button onClick={profileHandler}>수정하기</button>
               </Nickname>
@@ -261,7 +302,7 @@ export default function AccountSetting({ authState, handleAuthState }) {
               <h4>비밀번호</h4>
               <Button>
                 <button name="password" onClick={openModalHandler}>
-                  수정
+                  <img name="password" src={EditImg} alt="수정" />
                 </button>
               </Button>
             </Heading>
@@ -313,12 +354,13 @@ export default function AccountSetting({ authState, handleAuthState }) {
                     setWithdrawModal(true);
                   }}
                 >
-                  삭제
+                  <img src={DeleteImg} alt="삭제" />
                 </button>
               </Button>
             </Heading>
           </Info>
         </List>
+        <span>로그아웃</span>
       </Wrapper>
     </>
   );

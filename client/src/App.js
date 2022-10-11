@@ -20,6 +20,7 @@ import Withdraw from './components/Withdraw';
 import { Helmet } from 'react-helmet';
 const Wrapper = styled.div`
   width: 100%; //1425px 스크롤바 생김
+  height: auto;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -248,6 +249,7 @@ function App() {
               authState={authState}
               setLoginModal={setLoginModal}
               setSignupModal={setSignupModal}
+              togglePick={togglePick}
             />
             <Routes>
               <Route
@@ -279,7 +281,7 @@ function App() {
               ></Route>
               <Route
                 exact
-                path="/Detailviewpage/festivalId/:id"
+                path="/Detail/:festivalId/*"
                 element={
                   <Detailviewpage
                     pickItems={pickItems}

@@ -3,19 +3,26 @@ import styled from 'styled-components';
 import { AiFillStar } from 'react-icons/ai';
 import { FaTrashAlt } from 'react-icons/fa';
 import moment from 'moment';
+import profileImg from '../assets/profile.png';
 
 const Wrapper = styled.div`
-  width: 98%;
-  height: 10rem;
-  margin-bottom: 1rem;
-  box-shadow: 0.1rem 0.1rem 0.3rem #9a9999;
-
-  background-color: #fbfbfb;
-  border-radius: 0.5rem;
+  width: 915px;
+  min-height: 199px;
+  border-bottom: 1px solid #d9d9d9;
+  padding-bottom: 1rem;
+  /* border-radius: 0.5rem;
   margin: 0.4rem;
-  padding: 0.8rem 0.5rem;
-  overflow: scroll;
-  /* text-overflow: ellipsis; */
+  padding: 0.8rem 0.5rem; */
+  /* overflow: scroll; */ /* text-overflow: ellipsis; */
+  & + & {
+    margin-bottom: 1rem;
+  }
+  @media (max-width: 485px) {
+    max-width: 380px;
+    height: 199px;
+    border: 1px solid #d9d9d9;
+    border-radius: 7px;
+  }
 `;
 
 const Header = styled.div`
@@ -23,25 +30,58 @@ const Header = styled.div`
   justify-content: space-between;
   padding: 0.3rem;
   /* background-color: yellow; */
+
+  @media (max-width: 485px) {
+    & .setting {
+      padding-top: 3px;
+      padding-left: 0;
+    }
+  }
 `;
 
 const Info = styled.div`
   display: flex;
 
-  & > div {
-    margin: 0 0.3rem 0 0;
+  img {
+    width: 49.13px;
+    height: 48px;
+    margin-right: 6px;
+  }
+  .nicknameAndDate {
+    ul {
+      /* background-color: yellow; */
+      padding: 0;
+      li {
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 17px;
+        color: #797979;
+      }
+
+      li:nth-child(1) {
+        font-weight: 600;
+        font-size: 18px;
+        line-height: 22px;
+        /* identical to box height */
+        padding-top: 4px;
+        color: #000000;
+      }
+    }
+  }
+
+  .rating {
+    padding-left: 1rem;
+    @media (max-width: 485px) {
+      padding-top: 3px;
+      padding-left: 0;
+    }
   }
 `;
 
-const Date = styled.div`
-  color: gray;
-  letter-spacing: -0.08rem;
-  line-height: 1rem;
-`;
-
 const Body = styled.div`
-  /* background-color: yellow; */
-  margin: 0.3rem 0.1rem;
+  /* background-color: green; */
+  padding-top: 22px;
+  padding-left: 16px;
 `;
 
 const Button = styled.button`
@@ -70,7 +110,6 @@ const Modal = styled.div`
     top: 1.5rem;
   }
   & button {
-    background-color: aqua;
     margin: 1rem;
     width: 6rem;
     height: 2rem;
@@ -78,7 +117,10 @@ const Modal = styled.div`
     font-size: 1rem;
     font-weight: bold;
     transition: all 0.2s;
-
+    background-color: white;
+    color: #ff9a62;
+    line-height: 26px;
+    border: 1px solid #d9d9d9;
     &:hover {
       transform: translateY(-0.1rem);
     }
@@ -88,19 +130,17 @@ const Modal = styled.div`
   }
 
   & button:nth-child(1) {
-    background-color: #1564a9;
-
+    background: #ff9a62;
+    border: none;
     color: white;
   }
   & button:nth-child(2) {
-    background-color: #05c299;
-    color: white;
   }
 `;
 
 const Review = ({ review, authState, deleteReview }) => {
   const [deleteClicked, setDeleteClicked] = useState(false);
-
+  console.log(review, authState);
   const { rating, content, createdAt, User, festivalId, id } = review;
   const modalHandler = () => {
     setDeleteClicked(!deleteClicked);
@@ -121,7 +161,7 @@ const Review = ({ review, authState, deleteReview }) => {
           key={ele}
           size={18}
           ele={ele}
-          color={ratingValue <= rating ? `var(--primaryBlue)` : '#c6c6c6'}
+          color={ratingValue <= rating ? `var(--mainColor)` : '#c6c6c6'}
         />
       );
     });
@@ -143,22 +183,17 @@ const Review = ({ review, authState, deleteReview }) => {
         <>
           <Header>
             <Info>
-              <div>{showRating(rating)}</div>
-              <div
-                style={{
-                  color: 'gray',
-                  lineHeight: '1rem',
-                  fontWeight: '700',
-                  marginLeft: '0.2rem',
-                }}
-              >
-                {' '}
-                {User.nickname}
+              <img src={profileImg} alt="프로필사진" />
+              <div className="nicknameAndDate">
+                <ul>
+                  <li>{User.nickname}</li>
+                  <li>{moment(createdAt).format('YYYY-MM-DD')}</li>
+                </ul>
               </div>
-              <Date>{moment(createdAt).format('YYYY-MM-DD')}</Date>
+              <div className="rating">{showRating(rating)}</div>
             </Info>
             {Number(review.userId) === Number(authState.userId) && (
-              <span>
+              <span className="setting">
                 <Button onClick={modalHandler}>
                   <FaTrashAlt size={15} />
                 </Button>

@@ -2,42 +2,55 @@ import axios from 'axios';
 import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import Rating from './Rating';
+import cameraImg from '../assets/camera.png';
 
 const Wrapper = styled.div`
-  width: 96%;
-  height: 14rem;
+  width: 915px;
+  height: auto;
 
-  border-radius: 0.5rem;
-  overflow-y: auto;
-  padding: 0.5rem;
-  margin: 1rem;
-  box-shadow: 0.1rem 0.1rem 0.3rem gray; ;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+
+  @media (max-width: 485px) {
+    max-width: 400px;
+    margin: 0 1rem;
+  }
 `;
 
 const Textarea = styled.textarea`
   width: 100%;
-  height: 6rem;
+  height: 131px;
   border: none;
   resize: none;
-  margin-top: 1rem;
-  border-radius: 0.3rem;
+  /* background: yellow; */
+  border-radius: 8px 8px 0 0;
   padding: 1rem;
-  background-color: #efefefcf;
 `;
 const Controllers = styled.div`
-  margin-top: 1rem;
+  height: 57px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  border-top: 1px solid #d9d9d9;
+  border-radius: 0px 0px 8px 8px;
+  /* background-color: yellow; */
 `;
 const Button = styled.button`
-  background-color: ${(props) => props.theme.color.primaryBlue};
+  background: ${(props) => (props.photo ? 'white' : '#ff9a62')};
+  border: ${(props) => (props.photo ? '1px solid #D9D9D9' : 'none')};
+  border-radius: 4px;
   color: white;
-  width: 4rem;
-  height: 2.5rem;
-  border-radius: 0.3rem;
+  width: 72.07px;
+  height: 33px;
+
   font-weight: bold;
   font-size: 1rem;
-  /* padding: 0.5rem; */
+
+  img {
+    height: 24px;
+    margin-top: 4px;
+  }
 
   cursor: pointer;
   outline: inherit;
@@ -46,8 +59,14 @@ const Button = styled.button`
     transition: transform 0.2s ease-out;
     transform: translateY(-5%);
   }
-  &:active {
-    color: #6cf7a6;
+
+  & + & {
+    margin-left: 1rem;
+  }
+
+  @media (max-width: 485px) {
+    /* width: 81px; */
+    font-size: 0.8rem;
   }
 `;
 
@@ -61,6 +80,11 @@ const ErrorMessage = styled.div`
   line-height: 2.4;
   font-size: large;
   font-weight: bold;
+  padding-right: 1rem;
+
+  @media screen and (max-width: 485px) {
+    font-size: 12px;
+  }
 `;
 const ReviewWrite = ({ updateReviewList, festivalId, authState }) => {
   const [content, setContent] = useState('');
@@ -150,8 +174,6 @@ const ReviewWrite = ({ updateReviewList, festivalId, authState }) => {
   };
   return (
     <Wrapper>
-      <h2>리뷰</h2>
-
       <Textarea
         onMouseDown={nowShowErrMsg}
         value={content}
@@ -165,6 +187,9 @@ const ReviewWrite = ({ updateReviewList, festivalId, authState }) => {
           handleRating={handleRating}
         />
         <ErrorMessage ref={errorMessage} />
+        <Button photo>
+          <img src={cameraImg} alt="사진올리기"></img>
+        </Button>
         <Button onClick={handleSubmit}>올리기</Button>
       </Controllers>
     </Wrapper>
