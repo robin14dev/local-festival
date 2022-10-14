@@ -35,7 +35,7 @@ const ModalContainer = styled.div`
     cursor: pointer;
     font-style: italic;
     font-family: 'HS-Regular';
-    color: #4363ff;
+    color: ${(props) => props.theme.color.autumnOrange};
   }
 
   form {
@@ -46,7 +46,7 @@ const ModalContainer = styled.div`
     margin: 2rem 0;
     input {
       border-radius: 6px;
-      border: 1.8px solid #9d9d9d;
+      border: 1.8px solid #b1aeae;
       padding: 0.5rem;
       width: 20rem;
       height: 3rem;
@@ -69,13 +69,13 @@ const ModalContainer = styled.div`
       margin-top: 1rem;
       color: #fff;
       font-weight: bold;
-      background: #4363ff;
+      background: ${(props) => props.theme.color.autumnOrange};
       border-radius: 6px;
       cursor: pointer;
 
-      &:hover {
+      /* &:hover {
         background: #3d5dff;
-      }
+      } */
     }
   }
 

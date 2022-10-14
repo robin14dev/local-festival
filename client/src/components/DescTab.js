@@ -48,13 +48,6 @@ const Wrapper = styled.div`
   }
 `;
 
-const MobileWrapper = styled.section`
-  width: 100%;
-  @media (min-width: 485px) {
-    display: none;
-  }
-`;
-
 const DescTab = ({ festival }) => {
   // 탭메뉴의 상태가 detail(상세정보)이면 특정 행사정보 렌더링
   //             review면 review 컴포넌트 렌더링
@@ -98,30 +91,6 @@ const DescTab = ({ festival }) => {
           </a>
         </h3>
       </Wrapper>
-      {/* <MobileWrapper>
-        <h1>상세정보</h1>
-        <p>{overview}</p>
-        <ul>
-          <li>
-            위치 : <span>{location}</span>
-          </li>
-          <li>
-            축제기간 :{' '}
-            <span>
-              {' '}
-              {moment(startDate, 'YYYY.MM.DD').format(
-                'YYYY년 MM월 DD일'
-              )} ~ {moment(endDate, 'YYYY.MM.DD').format('YYYY년 MM월 DD일')}
-            </span>
-          </li>
-          <li>
-            문의 : <span>{tel}</span>
-          </li>
-          <li>
-            홈페이지 : <span>링크</span>
-          </li>
-        </ul>
-      </MobileWrapper> */}
     </>
   );
 };

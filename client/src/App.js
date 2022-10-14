@@ -253,7 +253,6 @@ function App() {
             />
             <Routes>
               <Route
-                exact
                 path="/"
                 element={
                   <Mainpage
@@ -267,7 +266,6 @@ function App() {
                 }
               ></Route>
               <Route
-                exact
                 path="/MyPick"
                 element={
                   <MyPick
@@ -280,7 +278,6 @@ function App() {
                 }
               ></Route>
               <Route
-                exact
                 path="/Detail/:festivalId/*"
                 element={
                   <Detailviewpage
@@ -291,10 +288,10 @@ function App() {
                 }
               ></Route>
               <Route
-                exact
                 path="/AccountSetting"
                 element={
                   <AccountSetting
+                    loginHandler={loginHandler}
                     handleAuthState={handleAuthState}
                     authState={authState}
                     // setWithdrawModal={setWithdrawModal}
@@ -302,7 +299,7 @@ function App() {
                 }
               ></Route>
             </Routes>
-            <Footer />
+            <Footer authState={authState} setLoginModal={setLoginModal} />
           </Wrapper>
         </UserContext.Provider>
       </ModalContext.Provider>

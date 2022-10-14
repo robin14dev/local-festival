@@ -8,6 +8,7 @@ import { useCallback } from 'react';
 import { Helmet } from 'react-helmet';
 import EditImg from '../assets/edit-mobile.png';
 import DeleteImg from '../assets/delete-mobile.png';
+import { useNavigate } from 'react-router-dom';
 const Wrapper = styled.div`
   margin: 8rem 5rem;
   height: 55vh;
@@ -140,7 +141,11 @@ const Password = styled(Accordion)`
   }
 `;
 
-export default function AccountSetting({ authState, handleAuthState }) {
+export default function AccountSetting({
+  authState,
+  handleAuthState,
+  loginHandler,
+}) {
   const [isOpen, setIsOpen] = useState({
     nickname: false,
     password: false,
@@ -254,6 +259,12 @@ export default function AccountSetting({ authState, handleAuthState }) {
       //기존 비밀번호가 일치하지 않을 때
     }
   }, [pwdForm]);
+
+  const onClickLogout = useCallback(() => {
+    loginHandler('', '', '', false);
+    window.location.replace('/');
+    window.sessionStorage.clear();
+  }, []);
   return (
     <>
       {openWithdrawModal && (
@@ -360,7 +371,7 @@ export default function AccountSetting({ authState, handleAuthState }) {
             </Heading>
           </Info>
         </List>
-        <span>로그아웃</span>
+        <span onClick={onClickLogout}>로그아웃</span>
       </Wrapper>
     </>
   );

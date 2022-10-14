@@ -35,9 +35,9 @@ const Button = styled.button`
   cursor: pointer;
   color: white;
 
-  &:hover {
+  /* &:hover {
     color: var(--primaryGreen);
-  }
+  } */
 `;
 const ItemsWrapper = styled.div`
   position: absolute;
@@ -48,7 +48,7 @@ const ItemsWrapper = styled.div`
   background-color: white;
   border-radius: 0.2rem;
   overflow: hidden;
-  z-index: 31;
+  z-index: 100;
 
   & li {
     list-style: none;
@@ -62,7 +62,7 @@ const ItemsWrapper = styled.div`
 
     &:hover {
       background-color: whitesmoke;
-      z-index: 30;
+      /* z-index: 100; */
     }
     &:active {
       background-color: white;
@@ -82,7 +82,8 @@ const Navigationbar = ({
       //# 클라이언트에서 토큰 지우기
       // localStorage.removeItem("accessToken");
       loginHandler('', '', '', false);
-      navigate('/');
+      window.location.replace('/');
+
       window.sessionStorage.clear();
       setIsOpen(false);
     };

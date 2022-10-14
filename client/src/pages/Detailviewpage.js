@@ -2,17 +2,14 @@ import React, { useState, useEffect, useContext } from 'react';
 import moment from 'moment';
 import DescTab from '../components/DescTab';
 import {
-  useLocation,
   Routes,
   Route,
-  Link,
   useParams,
   NavLink,
   useNavigate,
 } from 'react-router-dom';
 import styled from 'styled-components';
 import ReviewTab from '../components/ReviewTab';
-import HeartButton from '../components/HeartButton';
 import onErrorImage from '../assets/noimage.png';
 import { ModalContext } from '../contexts/modalContext';
 import { Helmet } from 'react-helmet';
@@ -203,37 +200,37 @@ const Menu = styled.div`
   }
 `;
 
-const Rating = styled.section`
-  margin-top: 11px;
-  color: #a0a0a0;
-  display: flex;
-  /* background-color: red; */
-  img {
-    height: 18px;
-    margin-right: 0.4rem;
-  }
+// const Rating = styled.section`
+//   margin-top: 11px;
+//   color: #a0a0a0;
+//   display: flex;
+//   /* background-color: red; */
+//   img {
+//     height: 18px;
+//     margin-right: 0.4rem;
+//   }
 
-  span {
-    display: flex;
-    margin-left: 1rem;
-  }
-`;
+//   span {
+//     display: flex;
+//     margin-left: 1rem;
+//   }
+// `;
 
-const Info = styled.section`
-  margin: 1rem;
-  span:nth-child(1) {
-    color: red;
-  }
+// const Info = styled.section`
+//   margin: 1rem;
+//   span:nth-child(1) {
+//     color: red;
+//   }
 
-  span:nth-child(2) {
-    position: absolute;
-    left: 6rem;
-  }
+//   span:nth-child(2) {
+//     position: absolute;
+//     left: 6rem;
+//   }
 
-  div {
-    margin-top: 0.2rem;
-  }
-`;
+//   div {
+//     margin-top: 0.2rem;
+//   }
+// `;
 
 const MobileWrapper = styled.section`
   @media (min-width: 485px) {
@@ -345,13 +342,8 @@ const MobileWrapper = styled.section`
 const Detailviewpage = ({ pickItems, togglePick, authState }) => {
   const { setLoginModal } = useContext(ModalContext);
   const [festival, setFestival] = useState({});
-  const [currentTab, setCurrentTab] = useState(0);
   const [like, setLike] = useState(false);
-  const activeStyle = {
-    color: 'red',
-  };
-  // const { state } = useLocation();
-  // console.log(state);
+
   const {
     imageUrl,
     title,
@@ -365,25 +357,19 @@ const Detailviewpage = ({ pickItems, togglePick, authState }) => {
   } = festival;
   let navigate = useNavigate();
   let params = useParams();
+  // let locationuse = useLocation();
+  // console.log(locationuse);
   console.log('DVP!!', params);
 
-  const onErrorImg = (e) => {
-    e.target.src = onErrorImage;
-  };
+  // const onErrorImg = (e) => {
+  //   e.target.src = onErrorImage;
+  // };
   // let location = useLocation();
   // let regex = /Detailviewpage/;
   // let url = location.pathname;
   // console.log('matches?', url.match(regex));
   // console.log(typeof location.pathname);
   // console.log(!!url.match(regex));
-
-  const tabArr = [
-    { name: '상세정보', content: <DescTab festivalInfo={festival} /> },
-    {
-      name: '리뷰',
-      content: <ReviewTab authState={authState} festivalInfo={festival} />,
-    },
-  ];
 
   useEffect(() => {
     //해당 상세정보 받아와야됨
@@ -409,18 +395,27 @@ const Detailviewpage = ({ pickItems, togglePick, authState }) => {
     toggleLike();
   };
 
+  const tabMenu = [
+    { name: 'info', text: '상세 정보' },
+    { name: 'review', text: '후기' },
+  ];
+
+  const activeStyle = {
+    color: ' #FF9A62',
+    borderBottom: '4px solid #FF9A62',
+  };
+
   return (
     <>
       <Wrapper>
-        {/* <Helmet>
-          <title>{title && title} - LOCO</title>
-        </Helmet> */}
+        <Helmet>
+          <title>{`${title} - LOCO `}</title>
+        </Helmet>
         <div className="imgAndSummary">
           <ImageAndPickbtn>
             <img
               src={imageUrl || onErrorImage}
               alt={`${title} : 이미지가 존재하지 않습니다.`}
-              // onError={onErrorImg}
             ></img>
             <button
               onClick={(e) => {
@@ -450,37 +445,21 @@ const Detailviewpage = ({ pickItems, togglePick, authState }) => {
         </div>
         <Tab>
           <Menu>
-            <NavLink
-              style={({ isActive }) =>
-                isActive
-                  ? {
-                      color: ' #FF9A62',
-                      borderBottom: '4px solid #FF9A62',
-                    }
-                  : {}
-              }
-              to="./"
-            >
-              상세 정보
-            </NavLink>
-            <NavLink
-              style={({ isActive }) =>
-                isActive
-                  ? {
-                      color: ' #FF9A62',
-                      borderBottom: '4px solid #FF9A62',
-                    }
-                  : {}
-              }
-              to="./review"
-            >
-              후기
-            </NavLink>
+            {tabMenu.map((menu) => (
+              <NavLink
+                key={menu.name}
+                end={menu.name === 'info'}
+                to={menu.name === 'info' ? '' : `${menu.name}`}
+                style={({ isActive }) => (isActive ? activeStyle : undefined)}
+              >
+                {menu.text}
+              </NavLink>
+            ))}
           </Menu>
           <Routes>
-            <Route path="/" element={<DescTab festival={festival} />}></Route>
+            <Route index element={<DescTab festival={festival} />}></Route>
             <Route
-              path="/review"
+              path="review"
               element={<ReviewTab festival={festival} authState={authState} />}
             ></Route>
           </Routes>

@@ -5,6 +5,7 @@ import searchImage from '../assets/search-mobile.png';
 import pickImage from '../assets/pick-mobile.png';
 import profileImage from '../assets/profile-mobile.png';
 import { useNavigate } from 'react-router-dom';
+import { useCallback } from 'react';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -61,8 +62,18 @@ const Item = styled.div`
   }
 `;
 
-const Footer = () => {
+const Footer = ({ authState, setLoginModal }) => {
   let navigate = useNavigate();
+  const goPage = useCallback(
+    (path) => {
+      if (authState.loginStatus) {
+        navigate(`/${path}`);
+      } else {
+        setLoginModal(true);
+      }
+    },
+    [authState]
+  );
 
   return (
     <>
@@ -72,15 +83,15 @@ const Footer = () => {
       </Wrapper>
       <WrapperMobile>
         <Item onClick={() => navigate('/')}>
-          <img src={searchImage} alt="search"></img>
+          <img src={searchImage} alt="home"></img>
           <div>둘러보기</div>
         </Item>
-        <Item onClick={() => navigate('/MyPick')}>
-          <img src={pickImage} alt="search"></img>
+        <Item path="MyPick" onClick={() => goPage('MyPick')}>
+          <img src={pickImage} alt="mypick"></img>
           <div>위시리스트</div>
         </Item>
-        <Item onClick={() => navigate('/AccountSetting')}>
-          <img src={profileImage} alt="search"></img>
+        <Item onClick={() => goPage('AccountSetting')}>
+          <img src={profileImage} alt="profile"></img>
           <div>프로필</div>
         </Item>
       </WrapperMobile>
