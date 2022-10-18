@@ -18,6 +18,7 @@ import '../src/styles/common.scss';
 import LoginModal from './components/LoginModal';
 import Withdraw from './components/Withdraw';
 import { Helmet } from 'react-helmet';
+import { useRef } from 'react';
 const Wrapper = styled.div`
   width: 100%; //1425px 스크롤바 생김
   height: auto;
@@ -35,7 +36,7 @@ function App() {
     nickname: '',
     loginStatus: false,
   });
-  const [festivalData, setFestivalData] = useState(null);
+  const [festivalData, setFestivalData] = useState([]);
   const [pickItems, setPickItems] = useState([]);
   const [filteredData, setFilteredData] = useState(festivalData);
   const [openLoginModal, setLoginModal] = useState(false);
@@ -154,70 +155,49 @@ function App() {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/festivals`,
-          { params: { limit: 10 } }
-        );
-        if (response) {
-          setFestivalData(response.data);
-          setFilteredData(response.data);
-        } else {
-          console.log('no fetch data & use dummyData');
-          setFestivalData([]);
-        }
-        // setFestivalData(dummyData);
-      } catch (error) {
-        console.log(error);
-        console.log(
-          'error났을때 client에 저장해놓은 dummydata(20개짜리)로 렌더링합니다'
-        );
-        setFestivalData([]);
-      }
-    };
-    fetchData();
-
-    if (sessionStorage.getItem('accesstoken')) {
-      axios
-        .get(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users`, {
-          headers: {
-            accesstoken: sessionStorage.getItem('accesstoken'),
-          },
-        })
-        .then((response) => {
-          //console.log(response.data);
-          const { userId, account, nickname } = response.data.data;
-
-          setAuthState({
-            userId: userId,
-            account: account,
-            nickname: nickname,
-            loginStatus: true,
-          });
-
-          //* 새로고침시 유저가 픽한 상태도 유지되야 하므로
-          axios
-            .get(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`, {
-              headers: {
-                accesstoken: sessionStorage.getItem('accesstoken'),
-              },
-            })
-            .then((response) => {
-              //console.log(response.data.data);
-              const pickedFestival = response.data;
-              //console.log(pickedFestivalId);
-              // const festivalIdArr = pickedFestivalId.map(ele => ele.local_id)
-              // const pickedFestivalByUser = festivalData.filter(ele => festivalIdArr.indexOf(ele.id) > -1)
-              //{festivalId: 4}
-              setPickItems(pickedFestival);
-            });
-        })
-        .catch((err) => {
-          console.log(err);
-          console.log('에러 발생');
-        });
-    }
+    console.log('hi');
+    // const fetchData = async () => {
+    //   try {
+    //     const response = await axios.get(
+    //       `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/festivals`,
+    //       { params: { limit: 10, offset: 0 } }
+    //     );
+    //     const festivals = response.data;
+    //     setFestivalData(festivals);
+    //     setFilteredData(festivals);
+    //     if (sessionStorage.getItem('accesstoken')) {
+    //       const authData = await axios.get(
+    //         `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users`,
+    //         {
+    //           headers: {
+    //             accesstoken: sessionStorage.getItem('accesstoken'),
+    //           },
+    //         }
+    //       );
+    //       const { userId, account, nickname } = authData.data.data;
+    //       setAuthState({
+    //         userId: userId,
+    //         account: account,
+    //         nickname: nickname,
+    //         loginStatus: true,
+    //       });
+    //       const pickedItems = await axios.get(
+    //         `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`,
+    //         {
+    //           headers: {
+    //             accesstoken: sessionStorage.getItem('accesstoken'),
+    //           },
+    //         }
+    //       );
+    //       setPickItems(pickedItems.data);
+    //       //* 새로고침시 유저가 픽한 상태도 유지되야 하므로
+    //     }
+    //   } catch (error) {
+    //     console.log(error);
+    //     setFestivalData([]);
+    //   }
+    // };
+    // fetchData();
   }, []);
 
   return (
@@ -260,8 +240,12 @@ function App() {
                     onSearch={onSearch}
                     filteredData={filteredData}
                     pickItems={pickItems}
+                    setPickItems={setPickItems}
                     resetCondition={resetCondition}
-                    // infiniteScroll={infiniteScroll}
+                    authState={authState}
+                    setAuthState={setAuthState}
+                    setFestivalData={setFestivalData}
+                    setFilteredData={setFilteredData}
                   />
                 }
               ></Route>

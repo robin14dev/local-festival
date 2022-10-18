@@ -2,7 +2,7 @@ const { Festivals } = require('../models/');
 const { Op } = require('sequelize');
 
 module.exports = {
-  festivals: (req, res) => {
+  festivals: async (req, res) => {
     // 받을 변수 : offset
     console.log(req.query); //{ offset: '10' }
     let { limit, offset } = req.query;
@@ -25,22 +25,17 @@ module.exports = {
 
     let date = today();
 
-    Festivals.findAll({
-      where: { endDate: { [Op.gte]: date }, startDate: { [Op.lte]: date } },
-      // limit : Number(limit),
-      // offset : Number(offset)
-    })
-      //종료날짜가 오늘 이상인 것들만
-      //시작날짜가 오늘 이하인 것들만
-
-      .then((response) => {
-        console.log(response.length);
-        res.json(response);
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(500).send('Internal Server Error');
+    try {
+      let festivals = await Festivals.findAll({
+        where: { endDate: { [Op.gte]: date }, startDate: { [Op.lte]: date } },
+        limit: Number(limit),
+        offset: Number(offset),
       });
+      console.log(festivals);
+      res.json(festivals);
+    } catch (error) {
+      res.status(500).send('Internal Server Error');
+    }
   },
   festival: async (req, res) => {
     console.log('festival!!!');
