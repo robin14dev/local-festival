@@ -198,6 +198,41 @@ function App() {
     //   }
     // };
     // fetchData();
+    const refreshData = async () => {
+      if (sessionStorage.getItem('accesstoken')) {
+        const authData = await axios.get(
+          `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users`,
+          {
+            headers: {
+              accesstoken: sessionStorage.getItem('accesstoken'),
+            },
+          }
+        );
+
+        const { userId, account, nickname } = authData.data.data;
+
+        setAuthState({
+          userId: userId,
+          account: account,
+          nickname: nickname,
+          loginStatus: true,
+        });
+
+        const pickedItems = await axios.get(
+          `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`,
+          {
+            headers: {
+              accesstoken: sessionStorage.getItem('accesstoken'),
+            },
+          }
+        );
+
+        setPickItems(pickedItems.data);
+
+        //* 새로고침시 유저가 픽한 상태도 유지되야 하므로
+      }
+    };
+    refreshData();
   }, []);
 
   return (

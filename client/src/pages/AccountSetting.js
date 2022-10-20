@@ -170,6 +170,7 @@ export default function AccountSetting({
   const errMessagePwd = useRef();
 
   useEffect(() => {
+    console.log('accountSetting!!');
     axios
       .get(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users/edit`, {
         headers: { accesstoken: sessionStorage.getItem('accesstoken') },

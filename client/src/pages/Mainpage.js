@@ -97,9 +97,6 @@ const Mainpage = ({
       console.log(festivals);
 
       setFestivalData((prevData) => [...prevData, ...festivals]);
-      // setFestivalData((prevData) => {
-      //   console.log(prevData);
-      // });
 
       setFilteredData((prevData) => [...prevData, ...festivals]);
 
@@ -109,38 +106,38 @@ const Mainpage = ({
         offset.current += 8;
       }
 
-      if (sessionStorage.getItem('accesstoken')) {
-        const authData = await axios.get(
-          `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users`,
-          {
-            headers: {
-              accesstoken: sessionStorage.getItem('accesstoken'),
-            },
-          }
-        );
+      // if (sessionStorage.getItem('accesstoken')) {
+      //   const authData = await axios.get(
+      //     `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users`,
+      //     {
+      //       headers: {
+      //         accesstoken: sessionStorage.getItem('accesstoken'),
+      //       },
+      //     }
+      //   );
 
-        const { userId, account, nickname } = authData.data.data;
+      //   const { userId, account, nickname } = authData.data.data;
 
-        setAuthState({
-          userId: userId,
-          account: account,
-          nickname: nickname,
-          loginStatus: true,
-        });
+      //   setAuthState({
+      //     userId: userId,
+      //     account: account,
+      //     nickname: nickname,
+      //     loginStatus: true,
+      //   });
 
-        const pickedItems = await axios.get(
-          `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`,
-          {
-            headers: {
-              accesstoken: sessionStorage.getItem('accesstoken'),
-            },
-          }
-        );
+      //   const pickedItems = await axios.get(
+      //     `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`,
+      //     {
+      //       headers: {
+      //         accesstoken: sessionStorage.getItem('accesstoken'),
+      //       },
+      //     }
+      //   );
 
-        setPickItems(pickedItems.data);
+      //   setPickItems(pickedItems.data);
 
-        //* 새로고침시 유저가 픽한 상태도 유지되야 하므로
-      }
+      //   //* 새로고침시 유저가 픽한 상태도 유지되야 하므로
+      // }
       setIsLoading(false);
     } catch (error) {
       console.log(error);

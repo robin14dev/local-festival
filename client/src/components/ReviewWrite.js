@@ -1,5 +1,6 @@
 import axios from 'axios';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
+import { ModalContext } from '../contexts/modalContext';
 import styled from 'styled-components';
 import Rating from './Rating';
 import cameraImg from '../assets/camera.png';
@@ -87,9 +88,10 @@ const ErrorMessage = styled.div`
   }
 `;
 const ReviewWrite = ({ updateReviewList, festivalId, authState }) => {
+  const { setLoginModal } = useContext(ModalContext);
   const [content, setContent] = useState('');
   const [rating, setRating] = useState(null);
-
+  console.log(authState);
   const errorMessage = useRef();
 
   const handleContent = (e) => {
@@ -190,7 +192,17 @@ const ReviewWrite = ({ updateReviewList, festivalId, authState }) => {
         <Button photo>
           <img src={cameraImg} alt="사진올리기"></img>
         </Button>
-        <Button onClick={handleSubmit}>올리기</Button>
+        {authState.loginStatus ? (
+          <Button onClick={handleSubmit}>올리기</Button>
+        ) : (
+          <Button
+            onClick={() => {
+              setLoginModal(true);
+            }}
+          >
+            로그인
+          </Button>
+        )}
       </Controllers>
     </Wrapper>
   );

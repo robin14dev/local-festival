@@ -140,7 +140,7 @@ const Modal = styled.div`
 
 const Review = ({ review, authState, deleteReview }) => {
   const [deleteClicked, setDeleteClicked] = useState(false);
-  console.log(review, authState);
+  // console.log(review, authState);
   const { rating, content, createdAt, User, festivalId, id } = review;
   const modalHandler = () => {
     setDeleteClicked(!deleteClicked);
