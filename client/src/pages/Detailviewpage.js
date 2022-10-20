@@ -353,26 +353,15 @@ const Detailviewpage = ({ pickItems, togglePick, authState }) => {
     endDate,
     overview,
     tel,
-    homepageUrl,
   } = festival;
   let navigate = useNavigate();
   let params = useParams();
-  // let locationuse = useLocation();
-  // console.log(locationuse);
-  console.log('DVP!!', params);
 
-  // const onErrorImg = (e) => {
-  //   e.target.src = onErrorImage;
-  // };
-  // let location = useLocation();
-  // let regex = /Detailviewpage/;
-  // let url = location.pathname;
-  // console.log('matches?', url.match(regex));
-  // console.log(typeof location.pathname);
-  // console.log(!!url.match(regex));
+  console.log('DVP!!, params에 변화가 생겨서 리렌더링된 것 같음', params);
 
   useEffect(() => {
     //해당 상세정보 받아와야됨
+    console.log('DVP useEffect');
     axios
       .get(
         `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/festivals/${params.festivalId}`
@@ -385,7 +374,7 @@ const Detailviewpage = ({ pickItems, togglePick, authState }) => {
     setLike(isPicked);
 
     window.scrollTo(0, 0);
-  }, [festivalId, pickItems]);
+  }, [festivalId, params.festivalId, pickItems]);
   const toggleLike = (event) => {
     setLike(!like);
   };
@@ -397,7 +386,7 @@ const Detailviewpage = ({ pickItems, togglePick, authState }) => {
 
   const tabMenu = [
     { name: 'info', text: '상세 정보' },
-    { name: 'review', text: '후기' },
+    { name: 'reviews?page=1', text: '후기' },
   ];
 
   const activeStyle = {
@@ -459,7 +448,7 @@ const Detailviewpage = ({ pickItems, togglePick, authState }) => {
           <Routes>
             <Route index element={<DescTab festival={festival} />}></Route>
             <Route
-              path="review"
+              path="reviews/*"
               element={<ReviewTab festival={festival} authState={authState} />}
             ></Route>
           </Routes>

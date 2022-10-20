@@ -58,7 +58,7 @@ const Rating = ({ handleRating, initial, nowShowErrMsg }) => {
               color={
                 ratingValue <= (hover || rating)
                   ? 'var(--mainColor)'
-                  : '#cdd9f6'
+                  : 'lightgray'
               }
               // ele={ele}
               // hover={hover}
