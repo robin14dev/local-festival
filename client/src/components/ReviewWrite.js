@@ -91,7 +91,7 @@ const ReviewWrite = ({ updateReviewList, festivalId, authState }) => {
   const { setLoginModal } = useContext(ModalContext);
   const [content, setContent] = useState('');
   const [rating, setRating] = useState(null);
-  console.log(authState);
+  // console.log(authState);
   const errorMessage = useRef();
 
   const handleContent = (e) => {

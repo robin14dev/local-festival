@@ -1,4 +1,4 @@
-const { Festivals } = require('../models/');
+const { Festivals, Users, Reviews, Picks, sequelize } = require('../models/');
 const { Op } = require('sequelize');
 
 module.exports = {
@@ -39,15 +39,65 @@ module.exports = {
   },
   festival: async (req, res) => {
     console.log('festival!!!');
-    console.log(Number(req.params.festivalId));
+    // console.log(Number(req.params.festivalId));
+    console.log(req.query);
+
+    const userId = Number(req.query.userId);
+    const festivalId = Number(req.params.festivalId);
 
     try {
       let festival = await Festivals.findOne({
-        where: { FestivalId: Number(req.params.festivalId) },
+        where: { festivalId },
       });
       console.log('what hte festival', festival);
 
-      res.json(festival);
+      //리뷰개수
+
+      const reviewCount = await Reviews.count({
+        where: {
+          festivalId,
+        },
+      });
+      console.log('reviewCount', reviewCount);
+      //해당 축제 유저가 픽했는지 아닌지
+
+      let isPicked = await Picks.count({
+        where: {
+          [Op.and]: [{ festivalId }, { userId }],
+        },
+      });
+
+      isPicked = isPicked === 1 ? true : false;
+      //별점 평균
+      const sum = await Reviews.sum('rating', { where: { festivalId } });
+      console.log(sum, 'sum');
+      const average = Number((sum / reviewCount).toFixed(1));
+      //좋아요개수
+      console.log(average);
+      const likes = await Picks.count({
+        where: { festivalId },
+      });
+
+      //최고리뷰, 최저리뷰
+      const ratingMin = `select R.id, R.content, R.rating, R.updatedAt, R.festivalId, U.nickname FROM Reviews as R  INNER JOIN Users as U on R.userId = U.id where R.festivalId = ${festivalId} order by  rating asc, updatedAt desc limit 1 ;`;
+      const ratingMax = `select R.id, R.content, R.rating, R.updatedAt, R.festivalId, U.nickname FROM Reviews as R  INNER JOIN Users as U on R.userId = U.id where R.festivalId = ${festivalId} order by rating desc ,updatedAt desc limit 1 ;`;
+
+      let badReview = await sequelize.query(ratingMin, {
+        type: sequelize.QueryTypes.SELECT,
+      });
+
+      let goodReview = await sequelize.query(ratingMax, {
+        type: sequelize.QueryTypes.SELECT,
+      });
+      res.json({
+        festival,
+        likes,
+        average,
+        badReview,
+        goodReview,
+        reviewCount,
+        isPicked,
+      });
     } catch (error) {
       console.log(error);
     }

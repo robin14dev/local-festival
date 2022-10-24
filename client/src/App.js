@@ -41,9 +41,8 @@ function App() {
   const [filteredData, setFilteredData] = useState(festivalData);
   const [openLoginModal, setLoginModal] = useState(false);
   const [openSignupModal, setSignupModal] = useState(false);
-  // const [openWithdrawModal, setWithdrawModal] = useState(false);
 
-  const loginHandler = (userId, account, nickname, loginStatus) => {
+  const loginHandler = async (userId, account, nickname, loginStatus) => {
     //* 로그인한 후의 유저정보 상태변경입니다.
     const nextState = {
       userId: userId,
@@ -53,16 +52,16 @@ function App() {
     };
     setAuthState(nextState);
     //# 유저별 찜한 축제 가져오기
-    axios
-      .get(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`, {
+    let result = await axios.get(
+      `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`,
+      {
         headers: {
           accesstoken: sessionStorage.getItem('accesstoken'),
         },
-      })
-      .then((response) => {
-        const pickedFestivalId = response.data;
-        setPickItems(pickedFestivalId);
-      });
+      }
+    );
+
+    setPickItems(result.data);
   };
   const onSearch = (searchText) => {
     //에러 : 경상도라고 치면 안나옴 => 경상남도, 경상북도 다 나오게
@@ -144,7 +143,7 @@ function App() {
           console.log(err);
         });
 
-      setPickItems([...pickItems, newPick]);
+      setPickItems((prevPick) => [newPick, ...prevPick]);
     }
   };
 
@@ -155,49 +154,6 @@ function App() {
   };
 
   useEffect(() => {
-    console.log('hi');
-    // const fetchData = async () => {
-    //   try {
-    //     const response = await axios.get(
-    //       `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/festivals`,
-    //       { params: { limit: 10, offset: 0 } }
-    //     );
-    //     const festivals = response.data;
-    //     setFestivalData(festivals);
-    //     setFilteredData(festivals);
-    //     if (sessionStorage.getItem('accesstoken')) {
-    //       const authData = await axios.get(
-    //         `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users`,
-    //         {
-    //           headers: {
-    //             accesstoken: sessionStorage.getItem('accesstoken'),
-    //           },
-    //         }
-    //       );
-    //       const { userId, account, nickname } = authData.data.data;
-    //       setAuthState({
-    //         userId: userId,
-    //         account: account,
-    //         nickname: nickname,
-    //         loginStatus: true,
-    //       });
-    //       const pickedItems = await axios.get(
-    //         `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`,
-    //         {
-    //           headers: {
-    //             accesstoken: sessionStorage.getItem('accesstoken'),
-    //           },
-    //         }
-    //       );
-    //       setPickItems(pickedItems.data);
-    //       //* 새로고침시 유저가 픽한 상태도 유지되야 하므로
-    //     }
-    //   } catch (error) {
-    //     console.log(error);
-    //     setFestivalData([]);
-    //   }
-    // };
-    // fetchData();
     const refreshData = async () => {
       if (sessionStorage.getItem('accesstoken')) {
         const authData = await axios.get(

@@ -51,11 +51,11 @@ const Wrapper = styled.div`
 const DescTab = ({ festival }) => {
   // 탭메뉴의 상태가 detail(상세정보)이면 특정 행사정보 렌더링
   //             review면 review 컴포넌트 렌더링
-  console.log('desktab!!!!');
+  // console.log('desktab!!!!');
   let params = useParams();
-  console.log('Desktop!!', params);
+  // console.log('Desktop!!', params);
 
-  console.log(festival);
+  // console.log(festival);
   const { location, overview, tel, title, homepageUrl, startDate, endDate } =
     festival;
 

@@ -138,6 +138,23 @@ const Modal = styled.div`
   }
 `;
 
+export const showRating = (rating, size = 18) => {
+  const ratingArr = [1, 2, 3, 4, 5];
+  return ratingArr.map((ele) => {
+    // 리턴을 두번 해줘야됨 !!!
+    const ratingValue = ele;
+    return (
+      <AiFillStar
+        className="starr"
+        key={ele}
+        size={size}
+        ele={ele}
+        color={ratingValue <= rating ? `var(--mainColor)` : '#c6c6c6'}
+      />
+    );
+  });
+};
+
 const Review = ({ review, authState, deleteReview }) => {
   const [deleteClicked, setDeleteClicked] = useState(false);
   // console.log(review, authState);
@@ -149,22 +166,6 @@ const Review = ({ review, authState, deleteReview }) => {
   const onClickDelete = (reviewId, festivalId) => {
     // setDeleteClicked(!deleteClicked)
     deleteReview(reviewId, festivalId);
-  };
-  const showRating = (rating) => {
-    const ratingArr = [1, 2, 3, 4, 5];
-    return ratingArr.map((ele) => {
-      // 리턴을 두번 해줘야됨 !!!
-      const ratingValue = ele;
-      return (
-        <AiFillStar
-          className="starr"
-          key={ele}
-          size={18}
-          ele={ele}
-          color={ratingValue <= rating ? `var(--mainColor)` : '#c6c6c6'}
-        />
-      );
-    });
   };
 
   return (
