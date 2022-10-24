@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef } from 'react';
 import styled from 'styled-components';
 import ReviewWrite from './ReviewWrite';
 import axios from 'axios';
@@ -7,6 +7,7 @@ import { useCallback } from 'react';
 import { useRef } from 'react';
 import loadImg from '../assets/loading.gif';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { showRating } from './ReviewItem';
 const Wrapper = styled.div`
   width: 100%;
   padding-bottom: 5rem;
@@ -20,6 +21,29 @@ const Wrapper = styled.div`
     margin-bottom: 37px;
     font-weight: 400;
     font-size: 20px;
+    /* background-color: yellowgreen; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    line-height: 1;
+
+    .re {
+      position: relative;
+      /* background-color: yellow; */
+      width: 19%;
+      height: 28px;
+      .star {
+        position: absolute;
+        /* left: 10rem; */
+        margin-right: 1.5rem;
+        width: 150px;
+        overflow: hidden;
+      }
+    }
+    span {
+      /* background-color: red; */
+    }
 
     @media (max-width: 485px) {
       display: none;
@@ -77,12 +101,13 @@ const ReviewTab = ({ festival, authState }) => {
   let navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  console.log(searchParams.get('page'));
+  //console.log(searchParams.get('page'));
 
   const { festivalId } = festival;
   const [reviews, setReviews] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
+  const [average, setAverage] = useState(0);
   let reviewsCount = useRef(0);
   const unit = 5;
   const pageLength = reviewsCount.current
@@ -93,7 +118,7 @@ const ReviewTab = ({ festival, authState }) => {
 
   let offset = (page - 1) * unit;
   let level = page % 5 === 0 ? page / 5 : parseInt(page / 5) + 1;
-  console.log(level);
+  // console.log(level);
   /*
   reviewTab이 렌더링이 되면 url에 있는 page parameter로 해당 page 상태 세팅
   useEffect로 현재 페이지에 맞는 offset넣어서 데이터 불러오기 
@@ -101,7 +126,7 @@ const ReviewTab = ({ festival, authState }) => {
   
   */
   const fetchReviews = useCallback(async () => {
-    console.log('fetchReviews');
+    // console.log('fetchReviews offset', offset);
     setIsLoading(true);
     if (festivalId) {
       try {
@@ -115,8 +140,9 @@ const ReviewTab = ({ festival, authState }) => {
           }
         );
 
-        const { count, rows } = result.data;
+        const { count, rows, average } = result.data;
         setReviews(rows);
+        setAverage(average);
         reviewsCount.current = count;
         setIsLoading(false);
       } catch (error) {
@@ -201,8 +227,10 @@ const ReviewTab = ({ festival, authState }) => {
   useEffect(() => {
     //# 특정 축제에 대한 리뷰글들을 불러온다.
     //* api 수정 특정 글의 리뷰로 전달
-    setPage(Number(searchParams.get('page')));
 
+    Number(searchParams.get('page'))
+      ? setPage(Number(searchParams.get('page')))
+      : setPage(1);
     fetchReviews();
   }, [fetchReviews, searchParams]);
 
@@ -257,10 +285,24 @@ const ReviewTab = ({ festival, authState }) => {
       navigate(`.?page=${navTo}`);
     }
   };
-  console.log(pageLength - level * unit);
   return (
     <Wrapper>
-      <div className="totalRating">총 별점 : 8.7</div>
+      <div className="totalRating">
+        <div className="re">
+          <div className="star"> {showRating(0, 30)}</div>
+          <div
+            className="star"
+            style={{
+              width: `${(average / 5) * 150}px`,
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {showRating(5, 30)}
+          </div>
+        </div>
+        <span>{average}</span>
+      </div>
       <h2>
         후기<span> {reviewsCount.current}</span>
       </h2>

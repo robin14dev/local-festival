@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import moment from 'moment';
 import DescTab from '../components/DescTab';
 import {
@@ -18,23 +18,24 @@ import ShareImg from '../assets/share-mobile.png';
 import HeartImg from '../assets/heart-mobile.png';
 import EmptyHeartImg from '../assets/empty-heart.png';
 import RatingImg from '../assets/rating-mobile.png';
+import loadImg from '../assets/loading.gif';
+import ReviewImg from '../assets/review.svg';
+import { ReactComponent as ReviewIcon } from '../assets/review.svg';
+import { ReactComponent as EmojiGood } from '../assets/emojiGood.svg';
+import { ReactComponent as EmojiBad } from '../assets/emojiBad.svg';
 import axios from 'axios';
+import { showRating } from '../components/ReviewItem';
 
 const Wrapper = styled.div`
-  /* background-color: #8989ed; */
   margin: 0 auto;
   padding: 5rem 248px;
   display: flex;
   flex-direction: column;
-  /* width: 81rem; //큰 화면에서 넓어지는 것 때문에 퍼센트말고 rem으로 고정 */
-  /* height: 70rem; */
   height: auto;
   overflow: visible;
   justify-content: space-evenly;
   border-radius: 1rem;
-  /* margin: 3rem auto; */
-  .imgAndSummary {
-    /* background-color: green; */
+  .figAndSummary {
     display: flex;
     justify-content: space-between;
 
@@ -44,61 +45,73 @@ const Wrapper = styled.div`
     }
   }
 
-  @media (max-width: 485px) {
-    padding: 0;
-  }
-`;
-
-const ImageAndPickbtn = styled.div`
-  margin-top: 5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 378px;
-  height: 495px;
-  /* border: 1px solid black; */
-  /* background: red; */
-  border-radius: 18px;
-  box-shadow: 1px 0px 7px rgb(0 0 0 / 22%);
-  & > img {
-    width: 100%;
-    height: 80%;
-    border-radius: 1rem;
-    padding: 0.5rem;
-    position: relative;
-  }
-
-  & > :nth-child(2) {
-    width: auto;
-    height: 2.8rem;
-    border: none;
-    position: relative;
-    left: 0.5rem;
-    /* background: red; */
-  }
-
-  button > img {
-    width: 36px;
-    height: auto;
-  }
-
-  @media (max-width: 485px) {
-    padding: 0;
-    width: auto;
-    height: 260px;
-    border-radius: 0;
-    box-shadow: none;
-
+  figure {
+    margin-top: 5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 378px;
+    height: 495px;
+    border-radius: 18px;
+    box-shadow: 1px 0px 7px rgb(0 0 0 / 22%);
     & > img {
-      padding: 0;
-      border-radius: 0;
-      object-fit: contain;
-      height: 100%;
+      width: 100%;
+      height: 80%;
+      border-radius: 1rem;
+      padding: 0.5rem;
+      position: relative;
     }
 
-    button {
-      display: none;
+    figcaption {
+      width: 100%;
+      margin-top: 0.2rem;
+      display: flex;
+      justify-content: space-between;
+      /* align-items: center; */
+      padding: 0 1rem;
+      /* background-color: yellow; */
+
+      div {
+        display: flex;
+        align-items: center;
+      }
     }
+    button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.1rem;
+      margin-right: 0.5rem;
+      img,
+      svg {
+        width: 25px;
+        height: auto;
+        margin-right: 0.2rem;
+      }
+    }
+
+    @media (max-width: 485px) {
+      padding: 0;
+      width: auto;
+      height: 260px;
+      border-radius: 0;
+      box-shadow: none;
+
+      & > img {
+        padding: 0;
+        border-radius: 0;
+        object-fit: contain;
+        height: 100%;
+      }
+
+      button {
+        display: none;
+      }
+    }
+  }
+
+  @media (max-width: 485px) {
+    padding: 0;
   }
 `;
 
@@ -124,16 +137,38 @@ const Summary = styled.section`
     color: #a0a0a0;
   }
 
-  div {
+  .review {
+    padding: 0.4rem;
     width: 459px;
-    height: 106px;
+    min-height: 106px;
     border: 1px solid #d9d9d9;
     border-radius: 7px;
-  }
+    .header {
+      /* background-color: yellow; */
+      color: ${(props) => props.theme.usingColor.mainColor};
+      /* font-style: italic; */
+      font-weight: 700;
+      /* padding: 0 0.5rem; */
+      display: flex;
+      align-items: center;
 
+      span {
+        padding-right: 0.5rem;
+        &:nth-child(3) {
+          padding-left: 1rem;
+        }
+      }
+    }
+
+    p {
+      /* background-color: yellowgreen; */
+      /* padding: 0.5rem; */
+    }
+  }
   div + div {
     margin-top: 14px;
   }
+
   @media (max-width: 485px) {
     display: none;
     width: 300px;
@@ -199,38 +234,6 @@ const Menu = styled.div`
     display: none;
   }
 `;
-
-// const Rating = styled.section`
-//   margin-top: 11px;
-//   color: #a0a0a0;
-//   display: flex;
-//   /* background-color: red; */
-//   img {
-//     height: 18px;
-//     margin-right: 0.4rem;
-//   }
-
-//   span {
-//     display: flex;
-//     margin-left: 1rem;
-//   }
-// `;
-
-// const Info = styled.section`
-//   margin: 1rem;
-//   span:nth-child(1) {
-//     color: red;
-//   }
-
-//   span:nth-child(2) {
-//     position: absolute;
-//     left: 6rem;
-//   }
-
-//   div {
-//     margin-top: 0.2rem;
-//   }
-// `;
 
 const MobileWrapper = styled.section`
   @media (min-width: 485px) {
@@ -339,47 +342,96 @@ const MobileWrapper = styled.section`
   padding-bottom: 5rem;
 `;
 
-const Detailviewpage = ({ pickItems, togglePick, authState }) => {
+const Detailviewpage = ({ togglePick, authState }) => {
   const { setLoginModal } = useContext(ModalContext);
-  const [festival, setFestival] = useState({});
   const [like, setLike] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [summary, setSummary] = useState({});
+  const reviewRef = useRef(null);
+  // const [likes, setLikes] = useState(0)
+  /* 
+새로고침시, useEffect로 축제에 대한 정보 불러옴 
 
-  const {
-    imageUrl,
-    title,
-    festivalId,
-    location,
-    startDate,
-    endDate,
-    overview,
-    tel,
-  } = festival;
-  let navigate = useNavigate();
+문제점
+현재 코드에선 찜하기 누르면 pickItems가 App에서 변하게 되고 props가 바뀌게 되니깐 DVP가 다시 렌더링됨
+
+원하는 방향
+일단 찜하기를 누르면 현재 pickItem에 추가
+
+*/
+
   let params = useParams();
-
-  console.log('DVP!!, params에 변화가 생겨서 리렌더링된 것 같음', params);
-
+  let navigate = useNavigate();
   useEffect(() => {
-    //해당 상세정보 받아와야됨
-    console.log('DVP useEffect');
-    axios
-      .get(
-        `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/festivals/${params.festivalId}`
-      )
-      .then((response) => {
-        console.log(response.data);
-        setFestival(response.data);
-      });
-    const isPicked = pickItems.some((ele) => ele.festivalId === festivalId);
-    setLike(isPicked);
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        let result = await axios.get(
+          `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/festivals/${params.festivalId}`,
+          { params: { userId: authState.userId } }
+        );
 
-    window.scrollTo(0, 0);
-  }, [festivalId, params.festivalId, pickItems]);
+        setSummary(result.data);
+        const isPicked = result.data.isPicked;
+
+        //server에서 할수 있지 않을까?
+        /*
+        알고싶은것 로그인한 유저가 특정 축제를 찜했는지 아닌지 
+
+        userId, festivalId
+
+        픽 table중에 festivalId가 140000 이면서 userId = 1인게 있는지
+        있으면 픽한거고 없으면 픽 안한거고
+
+        그러면 이거로 하면 이전거랑 달라지나?
+
+        현재 DVP에서 pickItems가 쓰이는 용도는 찜 여부를 하트로 표시하는 용도로만 쓰임
+
+        pickItems는 mainpage랑 mypage에서도 쓰임
+
+        여기서는 어차피 쓰여야 하니깐 놔두고 
+
+      하트를 누르면 db에다 저장되는로직을 하나 더만드나?
+
+      DVP에는 pickItems 지우고
+      처음에 딱 렌더링될 때 새로운 쿼리로 픽한정보 가져올 수 있음 ㅇㅇ
+      하트 눌렀을 때 togglePick작동하면서 pickItems에 찜 추가해주고 db에도 저장
+      pickItems가 DVP에 없기 때문에 리렌더링 안되지 않을까?
+
+        
+        */
+
+        setLike(isPicked);
+        setIsLoading(false);
+        window.scrollTo(0, 0);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, [params.festivalId, authState.userId]);
+
+  const goToReview = async () => {
+    try {
+      await navigate('reviews?page=1');
+      reviewRef.current?.scrollIntoView({ behavior: 'smooth' });
+    } catch (error) {}
+
+    // console.log(reviewRef.current);
+  };
   const toggleLike = (event) => {
+    setSummary((prevSummary) => {
+      if (like === true) {
+        return { ...prevSummary, likes: prevSummary.likes - 1 };
+      } else {
+        return { ...prevSummary, likes: prevSummary.likes + 1 };
+      }
+    });
     setLike(!like);
   };
-  const onClickPick = (event, festival) => {
-    event.stopPropagation();
+  const onClickPick = (e, festival) => {
+    e.stopPropagation();
+
     togglePick(festival);
     toggleLike();
   };
@@ -394,31 +446,75 @@ const Detailviewpage = ({ pickItems, togglePick, authState }) => {
     borderBottom: '4px solid #FF9A62',
   };
 
+  if (isLoading) {
+    return (
+      <div>
+        <img src={loadImg} alt="loading"></img>로딩중입니다.
+      </div>
+    );
+  }
+
+  if (Object.keys(summary).length === 0) {
+    return null;
+  }
+
+  const {
+    festival: {
+      imageUrl,
+      title,
+      festivalId,
+      location,
+      startDate,
+      endDate,
+      overview,
+      tel,
+    },
+    average,
+    likes,
+    goodReview,
+    badReview,
+    reviewCount,
+  } = summary;
+
   return (
     <>
       <Wrapper>
         <Helmet>
-          <title>{`${title} - LOCO `}</title>
+          <title>{`${summary.festival.title} - LOCO `}</title>
         </Helmet>
-        <div className="imgAndSummary">
-          <ImageAndPickbtn>
+        <div className="figAndSummary">
+          <figure>
             <img
               src={imageUrl || onErrorImage}
               alt={`${title} : 이미지가 존재하지 않습니다.`}
             ></img>
-            <button
-              onClick={(e) => {
-                if (authState.loginStatus) {
-                  onClickPick(e, festival);
-                } else {
-                  e.stopPropagation();
-                  setLoginModal(true);
-                }
-              }}
-            >
-              <img alt="heart" src={like ? HeartImg : EmptyHeartImg} />
-            </button>
-          </ImageAndPickbtn>
+            <figcaption>
+              <button
+                onClick={(e) => {
+                  if (authState.loginStatus) {
+                    onClickPick(e, summary.festival);
+                  } else {
+                    e.stopPropagation();
+                    setLoginModal(true);
+                  }
+                }}
+              >
+                <img alt="heart" src={like ? HeartImg : EmptyHeartImg} />
+                {likes}
+              </button>
+
+              <div>
+                <button onClick={goToReview}>
+                  <img src={RatingImg} alt="전체평점" /> {average}
+                </button>
+                <button onClick={goToReview}>
+                  {/* <img src={ReviewImg} alt="리뷰수" /> {reviewCount} */}
+                  <ReviewIcon width={25} height={25} fill={'#FF9A62'} />
+                  {reviewCount}
+                </button>
+              </div>
+            </figcaption>
+          </figure>
           <Summary>
             <h1>{title}</h1>
             <ul>
@@ -428,12 +524,42 @@ const Detailviewpage = ({ pickItems, togglePick, authState }) => {
                 {moment(endDate, 'YYYY.MM.DD').format('YYYY.MM.DD')}
               </li>
             </ul>
-            <div>베스트리뷰</div>
-            <div>워스트리뷰</div>
+            <div className="review">
+              {goodReview[0] ? (
+                <>
+                  <div className="header">
+                    <span>최고에요</span>
+                    <span>
+                      <EmojiGood width={25} height={25} />
+                    </span>
+                    <span>{showRating(goodReview[0].rating)}</span>
+                  </div>
+                  <p>{goodReview[0].content}</p>
+                </>
+              ) : (
+                '리뷰가 등록되어있지 않습니다'
+              )}
+            </div>
+            <div className="review">
+              {badReview[0] ? (
+                <>
+                  <div className="header">
+                    <span>별로에요</span>
+                    <span>
+                      <EmojiBad width={25} height={25} />
+                    </span>
+                    <span>{showRating(badReview[0].rating)}</span>
+                  </div>
+                  <p>{badReview[0].content}</p>
+                </>
+              ) : (
+                '리뷰가 등록되어있지 않습니다'
+              )}
+            </div>
           </Summary>
         </div>
         <Tab>
-          <Menu>
+          <Menu ref={reviewRef}>
             {tabMenu.map((menu) => (
               <NavLink
                 key={menu.name}
@@ -446,10 +572,15 @@ const Detailviewpage = ({ pickItems, togglePick, authState }) => {
             ))}
           </Menu>
           <Routes>
-            <Route index element={<DescTab festival={festival} />}></Route>
+            <Route
+              index
+              element={<DescTab festival={summary.festival} />}
+            ></Route>
             <Route
               path="reviews/*"
-              element={<ReviewTab festival={festival} authState={authState} />}
+              element={
+                <ReviewTab festival={summary.festival} authState={authState} />
+              }
             ></Route>
           </Routes>
         </Tab>
@@ -465,7 +596,7 @@ const Detailviewpage = ({ pickItems, togglePick, authState }) => {
               <button
                 onClick={(e) => {
                   if (authState.loginStatus) {
-                    onClickPick(e, festival);
+                    onClickPick(e, summary.festival);
                   } else {
                     e.stopPropagation();
                     setLoginModal(true);
@@ -520,7 +651,7 @@ const Detailviewpage = ({ pickItems, togglePick, authState }) => {
           <div className="header">
             <h2>축제 후기</h2>
           </div>
-          <ReviewTab festival={festival} authState={authState} />
+          <ReviewTab festival={summary.festival} authState={authState} />
         </MobileWrapper>
       </Wrapper>
     </>
