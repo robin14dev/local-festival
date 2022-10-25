@@ -63,27 +63,6 @@ function App() {
 
     setPickItems(result.data);
   };
-  const onSearch = (searchText) => {
-    //에러 : 경상도라고 치면 안나옴 => 경상남도, 경상북도 다 나오게
-    // 6월
-    // 서울시,인천시,부산시,광주시,대전시,울산시,대구시 => '시' 빼기
-    // 경상도, 전라도, 충청도 => '도' 빼기
-    // * 추후 수정 : 무한스크롤 구현 이후, 렌더링 되기전의 축제들을 검색했을때도 나와야 하므로 이때는 db에서 조회해야됨.
-    // * 스크롤 하면서 넘어온 정보들 안에 원하는 검색결과가 있으면 클라이언트에서 보내주고, 없으면 db에 요청
-
-    console.log(searchText);
-    // setCondition(searchText);
-    const filteredFestival = festivalData.filter(
-      (festival) =>
-        festival.location.includes(searchText) ||
-        festival.title.includes(searchText) ||
-        festival.location.includes(searchText)
-    );
-
-    setFilteredData(filteredFestival);
-    //alert(`${filteredFestival.length}개의 축제가 진행중입니다.`)
-    // }
-  };
 
   const resetCondition = () => {
     setFilteredData(festivalData);
@@ -228,7 +207,7 @@ function App() {
                 element={
                   <Mainpage
                     togglePick={togglePick}
-                    onSearch={onSearch}
+                    // onSearch={onSearch}
                     filteredData={filteredData}
                     pickItems={pickItems}
                     setPickItems={setPickItems}
@@ -240,6 +219,24 @@ function App() {
                   />
                 }
               ></Route>
+              <Route
+                path=":search"
+                element={
+                  <Mainpage
+                    togglePick={togglePick}
+                    // onSearch={onSearch}
+                    filteredData={filteredData}
+                    pickItems={pickItems}
+                    setPickItems={setPickItems}
+                    resetCondition={resetCondition}
+                    authState={authState}
+                    setAuthState={setAuthState}
+                    setFestivalData={setFestivalData}
+                    setFilteredData={setFilteredData}
+                  />
+                }
+              ></Route>
+
               <Route
                 path="/MyPick"
                 element={

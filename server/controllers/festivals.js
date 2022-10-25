@@ -5,7 +5,7 @@ module.exports = {
   festivals: async (req, res) => {
     // 받을 변수 : offset
     console.log(req.query); //{ offset: '10' }
-    let { limit, offset } = req.query;
+    const { limit, offset, query } = req.query;
 
     if (!offset) offset = 0;
     function today() {
@@ -25,16 +25,57 @@ module.exports = {
 
     let date = today();
 
-    try {
-      let festivals = await Festivals.findAll({
-        where: { endDate: { [Op.gte]: date }, startDate: { [Op.lte]: date } },
-        limit: Number(limit),
-        offset: Number(offset),
-      });
-      console.log(festivals);
-      res.json(festivals);
-    } catch (error) {
-      res.status(500).send('Internal Server Error');
+    if (query) {
+      try {
+        let festivals = await Festivals.findAll({
+          where: {
+            [Op.and]: [
+              { endDate: { [Op.gte]: date }, startDate: { [Op.lte]: date } },
+
+              {
+                [Op.or]: [
+                  {
+                    title: {
+                      [Op.like]: '%' + query + '%',
+                    },
+                  },
+                  {
+                    location: {
+                      [Op.like]: '%' + query + '%',
+                    },
+                  },
+                  {
+                    overview: {
+                      [Op.like]: '%' + query + '%',
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+
+          limit: Number(limit),
+          offset: Number(offset),
+        });
+        console.log('------------------', festivals);
+        return res.json(festivals);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        console.log('계속진행???????????');
+        let festivals = await Festivals.findAll({
+          where: { endDate: { [Op.gte]: date }, startDate: { [Op.lte]: date } },
+
+          limit: Number(limit),
+          offset: Number(offset),
+        });
+        console.log('------------------', festivals);
+        res.json(festivals);
+      } catch (error) {
+        res.status(500).send('Internal Server Error');
+      }
     }
   },
   festival: async (req, res) => {

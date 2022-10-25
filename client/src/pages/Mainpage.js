@@ -9,6 +9,8 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useCallback } from 'react';
 import loadImg from '../assets/loading.gif';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { ReactComponent as NoData } from '../assets/noData.svg';
 const Wrapper = styled.div`
   margin: 0 auto 5rem auto; // ㅇㅒ로 해결!!!
   width: 100%;
@@ -69,9 +71,43 @@ const Loading = styled.div`
   }
 `;
 
+const ErrorMsg = styled.section`
+  width: 40rem;
+  padding-top: 92px;
+  /* border: 1px solid black; */
+  display: flex;
+  justify-content: space-between;
+  & > div {
+    /* background: yellow; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  h1 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 48px;
+
+    color: #6268ff;
+  }
+
+  p {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 29px;
+
+    span {
+      color: #ff9a62;
+    }
+  }
+`;
 const Mainpage = ({
   togglePick,
-  onSearch,
   filteredData,
   pickItems,
   authState,
@@ -80,17 +116,23 @@ const Mainpage = ({
   setFilteredData,
   setPickItems,
 }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const observerTargetEl = useRef(null);
   const [hasNextPage, setHasNextPage] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [query, setQuery] = useState(searchParams.get('query'));
   const offset = useRef(0);
+
+  const navigate = useNavigate();
 
   const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
+      // setQuery(searchParams.get('query'));
+
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/festivals`,
-        { params: { limit: 8, offset: offset.current } }
+        { params: { limit: 8, offset: offset.current, query } }
       );
 
       const festivals = response.data;
@@ -106,36 +148,6 @@ const Mainpage = ({
         offset.current += 8;
       }
 
-      // if (sessionStorage.getItem('accesstoken')) {
-      //   const authData = await axios.get(
-      //     `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users`,
-      //     {
-      //       headers: {
-      //         accesstoken: sessionStorage.getItem('accesstoken'),
-      //       },
-      //     }
-      //   );
-
-      //   const { userId, account, nickname } = authData.data.data;
-
-      //   setAuthState({
-      //     userId: userId,
-      //     account: account,
-      //     nickname: nickname,
-      //     loginStatus: true,
-      //   });
-
-      //   const pickedItems = await axios.get(
-      //     `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`,
-      //     {
-      //       headers: {
-      //         accesstoken: sessionStorage.getItem('accesstoken'),
-      //       },
-      //     }
-      //   );
-
-      //   setPickItems(pickedItems.data);
-
       //   //* 새로고침시 유저가 픽한 상태도 유지되야 하므로
       // }
       setIsLoading(false);
@@ -144,10 +156,33 @@ const Mainpage = ({
 
       setFestivalData([]);
     }
-  }, [offset]);
+  }, [offset, query]);
+
+  /*
+  useEffect로 현재 쿼리가 있다면 해당 쿼리와 offset(0부터 시작)을 보내주기
+  
+  onSearch 버튼을 누르는 것은 setQuery를 해주는 것이 아니라
+  navigate로 url을 바꿔줌 
+  쿼리가 바꼈으니깐 useEffect 실행해서 가져오기 
+  
+  */
+
+  const onSearch = async (searchText) => {
+    console.log('onSearch!!', searchText);
+    try {
+      setSearchParams({ query: '' });
+      offset.current = 0;
+      navigate(`/search?query=${searchText}`);
+      setQuery(searchText);
+      setFilteredData([]);
+      setHasNextPage(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    console.log('main');
+    console.log('useEffect 실행 , query : ', query, hasNextPage);
 
     if (!observerTargetEl.current || !hasNextPage) return;
 
@@ -163,7 +198,7 @@ const Mainpage = ({
     return () => {
       io.disconnect();
     };
-  }, [hasNextPage, fetchData]);
+  }, [hasNextPage, fetchData, query]);
 
   return (
     <Wrapper>
@@ -172,20 +207,27 @@ const Mainpage = ({
         <Hashtag onSearch={onSearch} />
       </SearchAndTag>
       <FestivalList>
-        {!filteredData ? (
-          <div>
-            <h1 style={{ fontSize: '100px' }}>축제 정보가 없습니다</h1>
-          </div>
-        ) : (
-          filteredData.map((festival) => (
-            <Festival
-              togglePick={togglePick}
-              key={festival.festivalId}
-              festival={festival}
-              pickItems={pickItems}
-            />
-          ))
+        {filteredData.length === 0 && (
+          <ErrorMsg>
+            <NoData />
+            <div>
+              <h1>No Result Found</h1>
+              <p>
+                <span>'{query}'</span> 에 대한 <br></br> 축제정보가 존재하지
+                않습니다
+              </p>
+            </div>
+          </ErrorMsg>
         )}
+
+        {filteredData.map((festival) => (
+          <Festival
+            togglePick={togglePick}
+            key={festival.festivalId}
+            festival={festival}
+            pickItems={pickItems}
+          />
+        ))}
       </FestivalList>
       {isLoading ? (
         <Loading>
