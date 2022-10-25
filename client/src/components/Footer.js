@@ -9,7 +9,7 @@ import { useCallback } from 'react';
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 4rem;
+  height: 3rem;
   position: fixed;
   bottom: 0;
   display: flex;
@@ -20,10 +20,14 @@ const Wrapper = styled.div`
   /* margin-top: 2rem; */
   padding: 0.5rem;
   /* box-shadow: 0 -2px 0 1px #f0f1f4; */
-  & > img {
-    width: 4rem;
-    height: 4rem;
+  img {
+    width: 2rem;
+    height: 2rem;
     margin-left: 1rem;
+  }
+  div {
+    padding-left: 1rem;
+    font-size: 0.7rem;
   }
 
   @media (max-width: 485px) {

@@ -88,7 +88,7 @@ const Festival = ({ festival, togglePick, pickItems }) => {
   const { festivalId, title, imageUrl, startDate, endDate, location } =
     festival;
   const [like, setLike] = useState(false);
-  console.log(festivalId);
+  // console.log(festivalId);
   let navigate = useNavigate();
 
   const onErrorImg = (e) => {
