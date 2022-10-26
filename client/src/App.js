@@ -1,13 +1,14 @@
+import './App.css';
 import React, { useEffect, useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import styled from 'styled-components';
+import axios from 'axios';
+import { Helmet } from 'react-helmet';
 import Header from './components/Header';
 import Mainpage from './pages/Mainpage';
 import MyPick from '../src/pages/MyPick';
 import Footer from './components/Footer';
-import { Routes, Route } from 'react-router-dom';
-import './App.css';
 import Detailviewpage from './pages/Detailviewpage';
-import styled from 'styled-components';
-import axios from 'axios';
 import SignupModal from './components/SignupModal';
 import AccountSetting from './pages/AccountSetting';
 import { UserContext } from './contexts/userContext';
@@ -16,9 +17,6 @@ import { ThemeProvider } from 'styled-components';
 import theme from './styles/theme';
 import '../src/styles/common.scss';
 import LoginModal from './components/LoginModal';
-import Withdraw from './components/Withdraw';
-import { Helmet } from 'react-helmet';
-import { useRef } from 'react';
 const Wrapper = styled.div`
   width: 100%; //1425px 스크롤바 생김
   height: auto;
@@ -207,7 +205,6 @@ function App() {
                 element={
                   <Mainpage
                     togglePick={togglePick}
-                    // onSearch={onSearch}
                     filteredData={filteredData}
                     pickItems={pickItems}
                     setPickItems={setPickItems}
@@ -224,7 +221,6 @@ function App() {
                 element={
                   <Mainpage
                     togglePick={togglePick}
-                    // onSearch={onSearch}
                     filteredData={filteredData}
                     pickItems={pickItems}
                     setPickItems={setPickItems}

@@ -25,12 +25,95 @@ module.exports = {
 
     let date = today();
 
+    const tagsArr = [
+      {
+        text: '가을꽃축제',
+        query: ['가을', '꽃', '핑크', '플라워', '국화'],
+      },
+      {
+        text: '불빛축제',
+        query: ['라이팅', '드론', '별빛', '불빛', '달빛'],
+      },
+      {
+        text: '역사탐방',
+        query: ['민속', '수문장', '근현대사', '화성'],
+      },
+      { text: '할로윈축제', query: ['호러', '할로윈'] },
+    ];
+
+    function tagCheck(query) {
+      for (const tag of tagsArr) {
+        if (tag['text'] === query) {
+          return tag['query'];
+        }
+      }
+      return false;
+    }
+
+    let isTag = tagCheck(query);
+    if (isTag) {
+      try {
+        let total = [];
+        for await (const item of isTag) {
+          let festivals = await Festivals.findAll({
+            where: {
+              [Op.and]: [
+                {
+                  endDate: { [Op.gte]: date },
+                  startDate: { [Op.lte]: date },
+                },
+
+                {
+                  [Op.or]: [
+                    {
+                      title: {
+                        [Op.like]: '%' + item + '%',
+                      },
+                    },
+                    {
+                      location: {
+                        [Op.like]: '%' + item + '%',
+                      },
+                    },
+                    {
+                      overview: {
+                        [Op.like]: '%' + item + '%',
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+
+            limit: Number(limit),
+            offset: Number(offset),
+          });
+
+          total = total.concat(festivals);
+        }
+
+        let filtered = total.filter((item, i) => {
+          return (
+            total.findIndex((item2, j) => {
+              return item.festivalId === item2.festivalId;
+            }) === i
+          );
+        });
+        return res.json(filtered);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
     if (query) {
       try {
         let festivals = await Festivals.findAll({
           where: {
             [Op.and]: [
-              { endDate: { [Op.gte]: date }, startDate: { [Op.lte]: date } },
+              {
+                endDate: { [Op.gte]: date },
+                startDate: { [Op.lte]: date },
+              },
 
               {
                 [Op.or]: [
@@ -57,32 +140,29 @@ module.exports = {
           limit: Number(limit),
           offset: Number(offset),
         });
-        console.log('------------------', festivals);
+
         return res.json(festivals);
       } catch (error) {
         console.log(error);
       }
-    } else {
-      try {
-        console.log('계속진행???????????');
-        let festivals = await Festivals.findAll({
-          where: { endDate: { [Op.gte]: date }, startDate: { [Op.lte]: date } },
+    }
 
-          limit: Number(limit),
-          offset: Number(offset),
-        });
-        console.log('------------------', festivals);
-        res.json(festivals);
-      } catch (error) {
-        res.status(500).send('Internal Server Error');
-      }
+    try {
+      let festivals = await Festivals.findAll({
+        where: {
+          endDate: { [Op.gte]: date },
+          startDate: { [Op.lte]: date },
+        },
+
+        limit: Number(limit),
+        offset: Number(offset),
+      });
+      res.json(festivals);
+    } catch (error) {
+      res.status(500).send('Internal Server Error');
     }
   },
   festival: async (req, res) => {
-    console.log('festival!!!');
-    // console.log(Number(req.params.festivalId));
-    console.log(req.query);
-
     const userId = Number(req.query.userId);
     const festivalId = Number(req.params.festivalId);
 
@@ -90,7 +170,6 @@ module.exports = {
       let festival = await Festivals.findOne({
         where: { festivalId },
       });
-      console.log('what hte festival', festival);
 
       //리뷰개수
 
@@ -99,7 +178,6 @@ module.exports = {
           festivalId,
         },
       });
-      console.log('reviewCount', reviewCount);
       //해당 축제 유저가 픽했는지 아닌지
 
       let isPicked = await Picks.count({
@@ -111,10 +189,8 @@ module.exports = {
       isPicked = isPicked === 1 ? true : false;
       //별점 평균
       const sum = await Reviews.sum('rating', { where: { festivalId } });
-      console.log(sum, 'sum');
       const average = Number((sum / reviewCount).toFixed(1));
       //좋아요개수
-      console.log(average);
       const likes = await Picks.count({
         where: { festivalId },
       });

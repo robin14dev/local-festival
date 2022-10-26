@@ -1,5 +1,7 @@
 import React from 'react';
-import styled from 'styled-components';
+import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import styled, { css } from 'styled-components';
 
 const Wrapper = styled.div`
   height: 3rem;
@@ -10,36 +12,6 @@ const Wrapper = styled.div`
   top: 9rem;
   display: flex;
   justify-content: center;
-
-  font-family: 'HS-Regular';
-  font-family: 'GangwonEdu_OTFBoldA';
-  font-family: 'NanumSquareRound';
-  font-weight: bold;
-
-  /* box-shadow: 0.1rem 1rem 0.2rem  gray; */
-
-  & button {
-    width: max-content;
-    height: max-content;
-    padding: 0.1rem 0.5rem;
-    color: 'red';
-    border-radius: 1rem;
-    box-shadow: 0 0.1rem 0.1rem 0.01rem lightgray;
-    font: inherit;
-    margin-left: 1rem;
-    font-size: 1rem;
-    background-color: white;
-    transition: all 0.1s ease-in;
-
-    &:hover {
-      background-color: 'red';
-
-      color: 'red';
-    }
-    &:visited {
-      color: #4968bd;
-    }
-  }
 
   @media (max-width: 1210px) {
     width: 100vw;
@@ -57,76 +29,62 @@ const Wrapper = styled.div`
   }
 `;
 
-const Month = styled.div``;
+const Button = styled.button`
+  width: max-content;
+  height: 38px;
+  padding: 0.1rem 0.5rem;
+  background: #f5f6fa;
+  color: black;
+  border-radius: 9px;
+  margin-left: 1rem;
+  font-size: 1rem;
+  transition: all 0.1s ease-in;
 
-const Location = styled.div``;
+  :hover {
+    background-color: #6268ff;
+    color: white;
+  }
+
+  ${(props) =>
+    props.active &&
+    css`
+      background-color: #6268ff;
+      color: white;
+    `}
+`;
 
 const Hashtag = ({ onSearch }) => {
-  const onClickMonth = (e) => {
-    const monthTags = e.target.parentNode.children;
-    console.log(monthTags);
-    console.log(e.target.parentNode.parentNode.children[1].children);
-    const LocationTags = e.target.parentNode.parentNode.children[1].children;
-    for (let i = 0; i < monthTags.length; i++) {
-      if (monthTags[i].style.color === 'gold') {
-        monthTags[i].style.color = 'white';
-      }
-    }
-    for (let i = 0; i < LocationTags.length; i++) {
-      if (LocationTags[i].style.color === 'gold') {
-        LocationTags[i].style.color = 'white';
-      }
-    }
-
-    const month = e.target.textContent.slice(1, -1);
-    if (month.length === 1) {
-      onSearch(`20220${month}00`);
-    } else {
-      onSearch(`2022${month}00`);
-    }
-
-    e.target.style.color = 'gold';
-  };
-
-  const onClickLocation = (e) => {
-    console.log(e.target.textContent.slice(1));
-    const searchTag = e.target.textContent.slice(1);
-
-    const LocationTags = e.target.parentNode.children;
-    const monthTags = e.target.parentNode.parentNode.children[0].children;
-
-    for (let i = 0; i < LocationTags.length; i++) {
-      if (LocationTags[i].style.color === 'gold') {
-        LocationTags[i].style.color = 'white';
-      }
-    }
-    for (let i = 0; i < monthTags.length; i++) {
-      if (monthTags[i].style.color === 'gold') {
-        monthTags[i].style.color = 'white';
-      }
-    }
-
-    onSearch(searchTag);
-    e.target.style.color = 'gold';
-  };
-  const tagsArr = {
-    months: Array(2)
-      .fill()
-      .map((v, i) => i + 1),
-    locations: ['서울', '경기', '강원', '경상', '제주'],
-  };
-
+  // {name :"flower" ,text :"#가을, 마지막 꽃 축제", query : [""]}
+  const [SearchParams, setSearchParams] = useSearchParams();
+  const [curTag, setCurTag] = useState(SearchParams.get('query'));
+  const tagsArr = [
+    {
+      text: '가을꽃축제',
+    },
+    {
+      text: '불빛축제',
+    },
+    {
+      text: '역사탐방',
+    },
+    { text: '할로윈축제' },
+  ];
+  /* 클릭하면 해당쿼리 보내주기 
+    navlink 말고 다른방법으로 
+  */
   return (
     <Wrapper>
-      {tagsArr.months.map((month) => (
-        <button key={month} onClick={onClickMonth}>
-          #{month}월
-        </button>
-      ))}
-      {tagsArr.locations.map((location) => (
-        <button key={location} onClick={onClickLocation}>
-          #{location}
-        </button>
+      {tagsArr.map((tag) => (
+        <Button
+          active={curTag === tag.text}
+          onClick={() => {
+            onSearch(tag.text);
+            setCurTag(tag.text);
+          }}
+          key={tag.text}
+        >
+          #{tag.text}
+        </Button>
       ))}
     </Wrapper>
   );
