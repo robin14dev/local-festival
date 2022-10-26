@@ -47,11 +47,8 @@ const SearchAndTag = styled.div`
 const FestivalList = styled.section`
   width: 76rem;
   margin-top: 12rem;
-  /* background-color: #ffff0062; */
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  /* align-items: center; */
   padding-bottom: 4rem;
   @media (max-width: 1210px) {
     width: 90vw;
@@ -59,7 +56,6 @@ const FestivalList = styled.section`
 `;
 
 const Loading = styled.div`
-  /* border: 1px solid black; */
   display: flex;
 
   align-items: center;
@@ -67,18 +63,15 @@ const Loading = styled.div`
   color: gray;
   img {
     width: 3rem;
-    /* border: 1px solid black; */
   }
 `;
 
 const ErrorMsg = styled.section`
   width: 40rem;
   padding-top: 92px;
-  /* border: 1px solid black; */
   display: flex;
   justify-content: space-between;
   & > div {
-    /* background: yellow; */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -110,11 +103,9 @@ const Mainpage = ({
   togglePick,
   filteredData,
   pickItems,
-  authState,
-  setAuthState,
+
   setFestivalData,
   setFilteredData,
-  setPickItems,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const observerTargetEl = useRef(null);
@@ -128,15 +119,12 @@ const Mainpage = ({
   const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
-      // setQuery(searchParams.get('query'));
-
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/festivals`,
         { params: { limit: 8, offset: offset.current, query } }
       );
 
       const festivals = response.data;
-      console.log(festivals);
 
       setFestivalData((prevData) => [...prevData, ...festivals]);
 
@@ -164,7 +152,25 @@ const Mainpage = ({
   onSearch 버튼을 누르는 것은 setQuery를 해주는 것이 아니라
   navigate로 url을 바꿔줌 
   쿼리가 바꼈으니깐 useEffect 실행해서 가져오기 
-  
+
+
+  tag쿼리 작동법 멀아프네
+  https://travel.naver.com/domestic/tagContents?tag=드라이브코스&key=tagContents-3v1fnmng9jn
+
+  변하지 않는? 지정되어 있는 자료를 불러오는 거니깐
+
+  방법1)
+  태그를 클릭한다
+  url이 태그명으로 바뀐다.
+  tagContent의 상태가 바뀐다.
+  endpoint가 다른 걸로 보낸다 예상되는 문제 : 기존 searchData작동?
+
+
+  방법2) 가능 이걸로하자
+  태그를 클릭한다
+  query가 태그명으로 바뀐다
+  서버에서 해당쿼리명에 저장된 항목이 태그배열안에 있으면 로직을 실행한다.
+
   */
 
   const onSearch = async (searchText) => {

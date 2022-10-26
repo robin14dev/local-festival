@@ -508,7 +508,6 @@ const Detailviewpage = ({ togglePick, authState }) => {
                   <img src={RatingImg} alt="전체평점" /> {average}
                 </button>
                 <button onClick={goToReview}>
-                  {/* <img src={ReviewImg} alt="리뷰수" /> {reviewCount} */}
                   <ReviewIcon width={25} height={25} fill={'#FF9A62'} />
                   {reviewCount}
                 </button>

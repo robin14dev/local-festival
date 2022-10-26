@@ -23,8 +23,8 @@ const Wrapper = styled.div`
     height: 60%;
     border: none;
     font-size: 1rem;
-    font-family: 'NanumSquareRound';
-    font-weight: bold;
+    /* font-family: 'NanumSquareRound'; */
+    /* font-weight: bold; */
     border-radius: 0.2rem;
     padding-left: 0.5rem;
     margin-left: 0.5rem;
@@ -118,7 +118,7 @@ http://localhost:3000/AccountSetting
       <input
         onKeyPress={onKeyPress}
         onChange={onChangeHandler}
-        placeholder="축제를 검색해주세요!"
+        placeholder="축제를 검색해 주세요"
       />
       <button onClick={onClickSearch}>
         <img src={SearchImage} alt="search"></img>
