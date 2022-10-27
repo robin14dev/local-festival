@@ -2,7 +2,18 @@ server readme.md입니다
 
 서버 시작하기 전
 
-./local-festival/server
+## DB 생성하기
+
+npx sequelize db:create
+
+## 생성한 DB 내에 table 생성하기
+
+node app.js
+
+## 생성한 table에 seed파일 넣기
+
+npx sequelize db:seed:all
+
 환경변수 설치 해주시고 // npm install
 
 mysql (로컬)
