@@ -2,15 +2,16 @@ import React from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import { useParams } from 'react-router-dom';
-import phoneImg from '../assets/phone.png';
-import linkImg from '../assets/link.png';
+
+import { ReactComponent as Instagram } from '../assets/instagram.svg';
+import { ReactComponent as Youtube } from '../assets/youtube.svg';
+import { ReactComponent as Homepage } from '../assets/homepage.svg';
+import { ReactComponent as Phone } from '../assets/phone.svg';
 
 const Wrapper = styled.div`
   height: 100%;
   width: 100%;
   overflow-y: auto;
-  /* border: 1px 0 0 0 solid black; */
-  /* margin: 1rem; */
   border-radius: 0 0 1rem 1rem;
   padding: 1rem;
 
@@ -43,6 +44,34 @@ const Wrapper = styled.div`
     }
   }
 
+  .contact {
+    svg {
+      height: 100%;
+      width: auto;
+      margin-right: 0.5rem;
+    }
+    button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 500;
+      font-size: 1rem;
+
+      color: #878585;
+    }
+    button + button {
+      margin-left: 1rem;
+    }
+
+    .link {
+      display: flex;
+      margin-top: 1.5rem;
+    }
+    div {
+      height: 1.8rem;
+    }
+  }
+
   @media (max-width: 485px) {
     display: none;
   }
@@ -59,12 +88,29 @@ const DescTab = ({ festival }) => {
   const { location, overview, tel, title, homepageUrl, startDate, endDate } =
     festival;
 
-  // let parsedUrl = '';
-  // if (homepageUrl !== 'undefined') {
-  //   parsedUrl = homepageUrl.split(' ')[1].slice(5).replace(/"/g, '');
-  // } else {
-  //   parsedUrl = null;
-  // }
+  console.log(homepageUrl);
+  const urlCollection = {
+    official: '',
+    instagram: '',
+    youtube: '',
+  };
+  if (homepageUrl !== 'undefined') {
+    const regex = {
+      official: /http(s)?:\/\/[a-zA-Z\\d`~!@#$%^&*()-_=+]+/g,
+      instagram: /(https?:\/\/www.instagram.com\/[a-zA-Z0-9]+)/g,
+      youtube: /(https?:\/\/www.youtube.com\/[a-zA-Z0-9]+)/g,
+    };
+
+    urlCollection['official'] = homepageUrl.match(regex.official)[0];
+    if (homepageUrl.match(regex.instagram)) {
+      urlCollection['instagram'] = homepageUrl.match(regex.instagram)[0];
+    }
+    if (homepageUrl.match(regex.youtube)) {
+      urlCollection['youtube'] = homepageUrl.match(regex.youtube)[0];
+    }
+  } else {
+  }
+
   return (
     <>
       <Wrapper>
@@ -75,21 +121,62 @@ const DescTab = ({ festival }) => {
           {moment(endDate, 'YYYY.MM.DD').format('YYYY년 MM월 DD일')}
         </h2>
 
-        <p style={{ wordBreak: 'keep-all', textIndent: '0.5rem' }}>
-          {overview}
+        <p
+          style={{
+            wordBreak: 'keep-all',
+            textIndent: '0.5rem',
+            whiteSpace: 'pre-line',
+          }}
+        >
+          {overview
+            .replace(/<(\/br|br)([^>]*)>/gi, '\n')
+            .replace(/&lt;/gi, '<')
+            .replace(/&gt;/gi, '>')}
+          {/* {overview} */}
         </p>
 
-        <h3>
-          <img src={phoneImg} alt="phoneImg" /> 문의{' '}
-          <a href="tel:{tel}">{tel}</a>
-        </h3>
+        <div className="contact">
+          <div>
+            <button
+              onClick={() => {
+                document.location.href = `tel:${tel}`;
+              }}
+            >
+              <Phone />
+              {tel}
+            </button>
+          </div>
 
-        <h3>
-          <img src={linkImg} alt="linkImg" /> 홈페이지{' '}
-          <a target="_blank" rel="noreferrer">
-            링크
-          </a>
-        </h3>
+          <div className="link">
+            {!!urlCollection.official && (
+              <button
+                onClick={() => {
+                  window.open(urlCollection.official);
+                }}
+              >
+                <Homepage /> 공식 홈페이지
+              </button>
+            )}
+            {!!urlCollection.instagram && (
+              <button
+                onClick={() => {
+                  window.open(urlCollection.instagram);
+                }}
+              >
+                <Instagram /> 인스타그램 계정
+              </button>
+            )}
+            {!!urlCollection.youtube && (
+              <button
+                onClick={() => {
+                  window.open(urlCollection.youtube);
+                }}
+              >
+                <Youtube /> 유튜브 채널
+              </button>
+            )}
+          </div>
+        </div>
       </Wrapper>
     </>
   );
