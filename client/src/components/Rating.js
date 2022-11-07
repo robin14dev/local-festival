@@ -7,8 +7,6 @@ const Wrapper = styled.div`
   height: 2.5rem;
   padding: 0.5rem;
   border-radius: 0.5rem;
-  /* background-color: white;
-  box-shadow: 0 0.1rem 0.2rem 0.05rem lightgray; */
 
   & * {
     width: 20%;

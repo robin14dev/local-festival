@@ -7,7 +7,7 @@ import profileImage from '../assets/profile-mobile.png';
 import { useNavigate } from 'react-router-dom';
 import { useCallback } from 'react';
 
-const Wrapper = styled.div`
+const Wrapper = styled.header`
   width: 100%;
   height: 3rem;
   position: fixed;

@@ -10,10 +10,7 @@ const Wrapper = styled.div`
   min-height: 199px;
   border-bottom: 1px solid #d9d9d9;
   padding-bottom: 1rem;
-  /* border-radius: 0.5rem;
-  margin: 0.4rem;
-  padding: 0.8rem 0.5rem; */
-  /* overflow: scroll; */ /* text-overflow: ellipsis; */
+
   & + & {
     margin-bottom: 1rem;
   }
@@ -29,7 +26,6 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 0.3rem;
-  /* background-color: yellow; */
 
   @media (max-width: 485px) {
     & .setting {
@@ -49,7 +45,6 @@ const Info = styled.div`
   }
   .nicknameAndDate {
     ul {
-      /* background-color: yellow; */
       padding: 0;
       li {
         font-weight: 400;
@@ -62,7 +57,6 @@ const Info = styled.div`
         font-weight: 600;
         font-size: 18px;
         line-height: 22px;
-        /* identical to box height */
         padding-top: 4px;
         color: #000000;
       }
@@ -141,7 +135,6 @@ const Modal = styled.div`
 export const showRating = (rating, size = 18) => {
   const ratingArr = [1, 2, 3, 4, 5];
   return ratingArr.map((ele) => {
-    // 리턴을 두번 해줘야됨 !!!
     const ratingValue = ele;
     return (
       <AiFillStar
@@ -157,14 +150,12 @@ export const showRating = (rating, size = 18) => {
 
 const Review = ({ review, authState, deleteReview }) => {
   const [deleteClicked, setDeleteClicked] = useState(false);
-  // console.log(review, authState);
   const { rating, content, createdAt, User, festivalId, id } = review;
   const modalHandler = () => {
     setDeleteClicked(!deleteClicked);
   };
 
   const onClickDelete = (reviewId, festivalId) => {
-    // setDeleteClicked(!deleteClicked)
     deleteReview(reviewId, festivalId);
   };
 

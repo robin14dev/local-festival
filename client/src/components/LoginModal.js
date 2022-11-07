@@ -39,7 +39,6 @@ const ModalContainer = styled.div`
   }
 
   form {
-    /* background: yellow; */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -72,10 +71,6 @@ const ModalContainer = styled.div`
       background: ${(props) => props.theme.color.autumnOrange};
       border-radius: 6px;
       cursor: pointer;
-
-      /* &:hover {
-        background: #3d5dff;
-      } */
     }
   }
 
@@ -142,10 +137,8 @@ const LoginModal = ({ setLoginModal, loginHandler, setSignupModal }) => {
             err.response.data.message ===
             'Wrong account And Password Combination'
           ) {
-            // errorMessage.current.textContent = '비밀번호가 일치하지 않습니다';
             setErrMessage(errMessages[1]);
           } else if (err.response.data.message === "User Doesn't Exist") {
-            // errorMessage.current.textContent = '사용자가 존재하지 않습니다';
             setErrMessage(errMessages[0]);
           } else {
             console.log('그밖에에러');

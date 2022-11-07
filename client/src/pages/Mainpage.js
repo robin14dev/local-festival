@@ -12,7 +12,7 @@ import loadImg from '../assets/loading.gif';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ReactComponent as NoData } from '../assets/noData.svg';
 const Wrapper = styled.div`
-  margin: 0 auto 5rem auto; // ㅇㅒ로 해결!!!
+  margin: 0 auto 5rem auto;
   width: 100%;
   height: auto;
   display: flex;
@@ -32,8 +32,6 @@ const SearchAndTag = styled.div`
   position: fixed;
   top: 5rem;
   z-index: 1;
-  /* padding: 1rem; */
-  /* border: 3px solid green; */
   background-color: white;
 
   @media (max-width: 475px) {
@@ -146,33 +144,6 @@ const Mainpage = ({
     }
   }, [offset, query]);
 
-  /*
-  useEffect로 현재 쿼리가 있다면 해당 쿼리와 offset(0부터 시작)을 보내주기
-  
-  onSearch 버튼을 누르는 것은 setQuery를 해주는 것이 아니라
-  navigate로 url을 바꿔줌 
-  쿼리가 바꼈으니깐 useEffect 실행해서 가져오기 
-
-
-  tag쿼리 작동법 멀아프네
-  https://travel.naver.com/domestic/tagContents?tag=드라이브코스&key=tagContents-3v1fnmng9jn
-
-  변하지 않는? 지정되어 있는 자료를 불러오는 거니깐
-
-  방법1)
-  태그를 클릭한다
-  url이 태그명으로 바뀐다.
-  tagContent의 상태가 바뀐다.
-  endpoint가 다른 걸로 보낸다 예상되는 문제 : 기존 searchData작동?
-
-
-  방법2) 가능 이걸로하자
-  태그를 클릭한다
-  query가 태그명으로 바뀐다
-  서버에서 해당쿼리명에 저장된 항목이 태그배열안에 있으면 로직을 실행한다.
-
-  */
-
   const onSearch = async (searchText) => {
     console.log('onSearch!!', searchText);
     try {
@@ -188,11 +159,8 @@ const Mainpage = ({
   };
 
   useEffect(() => {
-    console.log('useEffect 실행 , query : ', query, hasNextPage);
-
     if (!observerTargetEl.current || !hasNextPage) return;
 
-    console.log('넘어와');
     const io = new IntersectionObserver((entries, observer) => {
       if (entries[0].isIntersecting) {
         fetchData();

@@ -103,9 +103,8 @@ const Withdraw = ({ setWithdrawModal, setFinishModal }) => {
   }, []);
 
   const handleSubmit = useCallback(
-    (e) => {
+    async (e) => {
       e.preventDefault();
-
       //# 빈값일 때 비밀번호를 입력해 주세요
       if (passwordCheck.length === 0) {
         setIsInvalid(true);
@@ -113,26 +112,22 @@ const Withdraw = ({ setWithdrawModal, setFinishModal }) => {
         return;
       }
 
-      axios
-        .delete(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users`, {
-          data: { passwordCheck: passwordCheck },
-          headers: { accesstoken: sessionStorage.getItem('accesstoken') },
-        })
-        .then((response) => {
-          if (response.data.message === 'successfully quit') {
-            console.log('here');
-          } else {
-            console.log('일치하지 않을 때');
+      try {
+        await axios.delete(
+          `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users`,
+          {
+            data: { passwordCheck: passwordCheck },
+            headers: { accesstoken: sessionStorage.getItem('accesstoken') },
           }
-          setWithdrawModal(false);
-          setFinishModal(true);
-        })
-        .catch((err) => {
-          //# 비밀번호가 일치하지 않을 때
-          console.log(err);
-          setIsInvalid(true);
-          setErrorMessage(errMessageArr[1]);
-        });
+        );
+        setWithdrawModal(false);
+        setFinishModal(true);
+      } catch (err) {
+        //# 비밀번호가 일치하지 않을 때
+        console.log(err);
+        setIsInvalid(true);
+        setErrorMessage(errMessageArr[1]);
+      }
     },
     [passwordCheck]
   );
@@ -144,36 +139,48 @@ const Withdraw = ({ setWithdrawModal, setFinishModal }) => {
           setWithdrawModal(false);
         }}
       />
-      <ModalView
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-      >
-        <h1>비밀번호를 한번 더 입력해 주세요</h1>
+      <ModalView>
+        <div>
+          <h1>비밀번호를 한번 더 입력해 주세요</h1>
+          <form onSubmit={handleSubmit}>
+            <div>
+              <input
+                autoFocus={true}
+                type="password"
+                onChange={handlePasswordCheck}
+                placeholder="비밀번호를 입력해 주세요"
+              ></input>
+              {isInvalid && <div style={{ color: 'Red' }}>{errMessage}</div>}
+            </div>
+            <button type="submit">탈퇴하기</button>
+          </form>
+          <ButtonSection>
+            <button
+              className="close-btn"
+              onClick={() => {
+                setWithdrawModal(false);
+              }}
+            >
+              돌아가기
+            </button>
+          </ButtonSection>
+        </div>
+        <div style={{ display: 'none' }}>
+          <p>
+            <h2>성공적으로 계정 삭제가 완료 되었습니다</h2>
+            <h2>이용해주셔서 감사합니다</h2>
+          </p>
 
-        <form onSubmit={handleSubmit}>
-          <div>
-            <input
-              autoFocus={true}
-              type="password"
-              onChange={handlePasswordCheck}
-              placeholder="비밀번호를 입력해 주세요"
-            ></input>
-            {isInvalid && <div style={{ color: 'Red' }}>{errMessage}</div>}
-          </div>
-          <button type="submit">탈퇴하기</button>
-        </form>
-
-        <ButtonSection>
           <button
             className="close-btn"
             onClick={() => {
-              setWithdrawModal(false);
+              window.sessionStorage.clear();
+              window.location.replace('/');
             }}
           >
-            돌아가기
+            확인
           </button>
-        </ButtonSection>
+        </div>
       </ModalView>
     </>
   );

@@ -48,18 +48,13 @@ const ModalContainer = styled.div`
     }
 
     label {
-      /* align-self: flex-start; */
-      /* margin-bottom: 0.5rem; */
       font-size: 1rem;
-      /* width: 5.625rem; */
-      /* background-color: yellow; */
+
       & + div {
         color: red;
         font-size: 0.8rem;
         word-break: normal;
-        /* width: 220px; */
         padding-left: 1rem;
-        /* background-color: yellowgreen; */
       }
     }
 
@@ -83,10 +78,6 @@ const ModalContainer = styled.div`
       font-size: 1rem;
       transition: all 0.2s ease-out;
       background-color: ${(props) => props.theme.color.autumnOrange};
-
-      /* &:active {
-        color: ${(props) => props.theme.color.primaryGreen};
-      } */
     }
   }
 `;
@@ -115,31 +106,6 @@ const SignupModal = ({ setSignupModal, setLoginModal }) => {
     password: '',
     passwordCheck: '',
   });
-
-  /* 유효성 검사 에러메시지
-  
-  validation = {email : {valiDate::, style : }}
-  
-  이메일 중복 버튼 클릭
-    중복 x => 사용가능한 이메일입니다 초록색 계속 떠있음
-    중복 o => 이미 사용중인 이메일 입니다 빨간색 메시지
-   //* 이메일 유효성 검사 =>  유효하지 않은 이메일 입니다. (handle)
-    input 작성중일 때는 해당 에러, 성공 메시지 뜨지 않게
-  
-  닉네임 중복 버튼 클릭
-  중복 x => 사용가능한 닉네임입니다 초록색 계속 떠있음
-  중복 o => 이미 사용중인 닉네임 입니다 빨간색 메시지
-  //* 닉네임 유효성 검사 => 유효하지 않은 닉네임입니다. (handle)
-  input 작성중일 때는 해당 에러, 성공 메시지 뜨지 않게
-  
-  //* 비밀번호 입력중일 때 에러메시지 (handle)
-  조건 충족하면 사용 가능한 비밀번호 입니다
-         x   빨간에러메시지
-  
-  //* 비밀번호 확인 입력중일 때 에러메시지 (handle)
-  
-  
-  */
 
   const { account, nickname, password, passwordCheck } = userInfo;
 

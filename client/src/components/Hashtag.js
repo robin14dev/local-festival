@@ -6,7 +6,6 @@ import styled, { css } from 'styled-components';
 const Wrapper = styled.div`
   height: 3rem;
   width: 100vw;
-  /* box-shadow: 0 1px 2px 0  lightgray; */
   background-color: white;
   position: fixed;
   top: 9rem;
@@ -54,7 +53,6 @@ const Button = styled.button`
 `;
 
 const Hashtag = ({ onSearch }) => {
-  // {name :"flower" ,text :"#가을, 마지막 꽃 축제", query : [""]}
   const [SearchParams, setSearchParams] = useSearchParams();
   const [curTag, setCurTag] = useState(SearchParams.get('query'));
   const tagsArr = [
@@ -69,9 +67,7 @@ const Hashtag = ({ onSearch }) => {
     },
     { text: '할로윈축제' },
   ];
-  /* 클릭하면 해당쿼리 보내주기 
-    navlink 말고 다른방법으로 
-  */
+
   return (
     <Wrapper>
       {tagsArr.map((tag) => (

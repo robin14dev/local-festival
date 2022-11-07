@@ -1,17 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Navigationbar from './Navigationbar';
 import styled from 'styled-components';
-import { useLocation, useParams } from 'react-router-dom';
 
-const Wrapper = styled.div`
+const Wrapper = styled.header`
   display: flex;
   justify-content: space-between;
   height: 5rem;
   width: 100%;
   align-items: center;
-  /* background-color: ${(props) => props.theme.usingColor.mainColor}; */
   background-color: ${(props) => props.theme.usingColor.mainColor};
-  /* border-bottom: 1px solid lightgray; */
+
   position: fixed;
   top: 0;
   z-index: 2;

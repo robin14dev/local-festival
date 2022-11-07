@@ -1,6 +1,4 @@
 import React from 'react';
-
-import styled from 'styled-components';
 import HeartImg from '../assets/heart.png';
 import EmptyHeartImg from '../assets/empty-heart.png';
 

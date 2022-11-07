@@ -23,6 +23,7 @@ const Wrapper = styled.div`
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+
   margin: 0;
   padding: 0;
 `;

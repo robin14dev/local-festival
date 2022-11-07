@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import { useNavigate } from 'react-router-dom';
 import { RiAccountCircleFill } from 'react-icons/ri';
 import styled from 'styled-components';
@@ -34,10 +33,6 @@ const Button = styled.button`
   overflow: visible;
   cursor: pointer;
   color: white;
-
-  /* &:hover {
-    color: var(--primaryGreen);
-  } */
 `;
 const ItemsWrapper = styled.div`
   position: absolute;
@@ -58,29 +53,19 @@ const ItemsWrapper = styled.div`
     padding-left: 0.5rem;
     cursor: pointer;
 
-    /* border : 0.01px solid #dbd8d8; */
-
     &:hover {
       background-color: whitesmoke;
-      /* z-index: 100; */
     }
     &:active {
       background-color: white;
     }
   }
 `;
-// 로그아웃 모달 없애고 그냥 바로 로그아웃 되도록 하기
-const Navigationbar = ({
-  authState,
-  loginHandler,
-  setLoginModal,
-  setSignupModal,
-}) => {
+const Navigationbar = ({ authState, loginHandler, setLoginModal }) => {
   const [isOpen, setIsOpen] = useState(false);
   const NavItems = () => {
     const onClickLogout = () => {
       //# 클라이언트에서 토큰 지우기
-      // localStorage.removeItem("accessToken");
       loginHandler('', '', '', false);
       window.location.replace('/');
 

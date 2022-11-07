@@ -21,13 +21,10 @@ const Wrapper = styled.div`
 
   p {
     color: gray;
-    /* margin: 1rem 2rem; */
     word-break: keep-all;
   }
 
   @media (max-width: 485px) {
-    /* width: 100vw;
-    height: 100vh; */
     margin-bottom: 3.438rem;
     & > div {
       padding-left: 1rem;
@@ -41,7 +38,6 @@ const Wrapper = styled.div`
 const PickList = styled.section`
   padding-top: 5rem;
   padding-bottom: 5rem;
-  /* margin-left: 1rem; */
   display: flex;
   width: 88%;
   flex-wrap: wrap;

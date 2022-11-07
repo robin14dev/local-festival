@@ -25,10 +25,11 @@ const color = {
   primaryBlue: 'rgb(64 82 255)',
   primaryGreen: '#60ff53',
   autumnOrange: '#FF9A62',
+  primaryPurple: '#6268FF',
 };
 
 const usingColor = {
-  mainColor: color['autumnOrange'],
+  mainColor: color['primaryPurple'],
 };
 
 const theme = { color, usingColor };

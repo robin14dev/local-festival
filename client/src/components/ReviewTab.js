@@ -21,7 +21,6 @@ const Wrapper = styled.div`
     margin-bottom: 37px;
     font-weight: 400;
     font-size: 20px;
-    /* background-color: yellowgreen; */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -30,7 +29,6 @@ const Wrapper = styled.div`
 
     .re {
       position: relative;
-      /* background-color: yellow; */
       width: 19%;
       height: 28px;
       .star {
@@ -40,9 +38,6 @@ const Wrapper = styled.div`
         width: 150px;
         overflow: hidden;
       }
-    }
-    span {
-      /* background-color: red; */
     }
 
     @media (max-width: 485px) {
@@ -62,9 +57,6 @@ const Wrapper = styled.div`
 
       color: #ff9a62;
     }
-    @media (max-width: 485px) {
-      /* padding: 0; */
-    }
   }
 `;
 
@@ -82,7 +74,6 @@ const ReviewList = styled.section`
   }
 
   .pagination {
-    /* background-color: aliceblue; */
     display: flex;
     justify-content: center;
     margin-top: 1rem;
@@ -101,8 +92,6 @@ const ReviewTab = ({ festival, authState }) => {
   let navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  //console.log(searchParams.get('page'));
-
   const { festivalId } = festival;
   const [reviews, setReviews] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -118,15 +107,8 @@ const ReviewTab = ({ festival, authState }) => {
 
   let offset = (page - 1) * unit;
   let level = page % 5 === 0 ? page / 5 : parseInt(page / 5) + 1;
-  // console.log(level);
-  /*
-  reviewTab이 렌더링이 되면 url에 있는 page parameter로 해당 page 상태 세팅
-  useEffect로 현재 페이지에 맞는 offset넣어서 데이터 불러오기 
-  
-  
-  */
+
   const fetchReviews = useCallback(async () => {
-    // console.log('fetchReviews offset', offset);
     setIsLoading(true);
     if (festivalId) {
       try {
@@ -260,11 +242,9 @@ const ReviewTab = ({ festival, authState }) => {
       .then((response) => {
         console.log(response.data.message);
         if (response.data.message === 'ok') {
-          // console.log('before', listOfReviews);
           const nextReviewLists = reviews.filter(
             (review) => Number(review.id) !== Number(reviewId)
           );
-          // console.log('after', nextReviewLists);
           setReviews(nextReviewLists);
         } else {
         }
@@ -275,8 +255,6 @@ const ReviewTab = ({ festival, authState }) => {
   };
 
   const goToPage = (navTo) => {
-    // console.log(pageNum, 'gotoPage');
-
     if (navTo === '<') {
       navigate(`.?page=${page - 1}`);
     } else if (navTo === '>') {
@@ -365,7 +343,6 @@ const ReviewTab = ({ festival, authState }) => {
                       <button
                         style={{
                           color: `${ele === page ? `#FF9A62` : 'black'}`,
-                          // fontSize: `${ele === page ? '2rem' : '1.5rem'}`,
                           fontWeight: `${ele === page ? 'bold' : 'normal'}`,
                         }}
                         onClick={() => goToPage(ele)}
@@ -384,7 +361,6 @@ const ReviewTab = ({ festival, authState }) => {
                     <button
                       style={{
                         color: `${ele === page ? '#FF9A62' : 'black'}`,
-                        // fontSize: `${ele === page ? '2rem' : '1.5rem'}`,
                         fontWeight: `${ele === page ? 'bold' : 'normal'}`,
                       }}
                       onClick={() => goToPage(ele)}
