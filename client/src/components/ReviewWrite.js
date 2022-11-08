@@ -120,7 +120,7 @@ const ReviewWrite = ({ updateReviewList, festivalId, authState }) => {
     } else {
       axios
         .post(
-          `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/review`,
+          `${process.env.REACT_APP_SERVER_URL}/review`,
           {
             data: {
               content: content,

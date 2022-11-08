@@ -8,17 +8,17 @@ import { UserContext } from '../contexts/userContext';
 import { ModalContext } from '../contexts/modalContext';
 import HeartImg from '../assets/heart.png';
 import EmptyHeartImg from '../assets/empty-heart.png';
-
+import '../styles/common.scss';
 const Wrapper = styled.div`
-  width: 272px;
-  height: auto;
+  width: ${(props) => props.theme.calcRem(272)};
+  width: ${({ theme }) => theme.calcRem(272)}; /* 구조분해 */
   display: flex;
   flex-direction: column;
   margin: 1rem;
   cursor: pointer;
   & > img {
     width: 100%;
-    height: 270px;
+    height: ${({ theme }) => theme.calcRem(270)};
     border-radius: 10px;
     object-fit: fill;
   }
@@ -63,15 +63,15 @@ const Wrapper = styled.div`
 
   @media (max-width: 485px) {
     margin: 0.5rem 0;
-    width: 357px;
-    height: 409px;
+    width: ${({ theme }) => theme.calcRem(357)};
+    height: ${({ theme }) => theme.calcRem(409)};
 
     &:hover {
       transform: none;
     }
 
     & > img {
-      height: 340px;
+      height: ${({ theme }) => theme.calcRem(340)};
     }
     section {
       h1,

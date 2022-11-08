@@ -6,9 +6,9 @@ const Wrapper = styled.header`
   display: flex;
   justify-content: space-between;
   height: 5rem;
-  width: 100%;
+  width: 100vw;
   align-items: center;
-  background-color: ${(props) => props.theme.usingColor.mainColor};
+  background-color: var(--mainColor);
 
   position: fixed;
   top: 0;

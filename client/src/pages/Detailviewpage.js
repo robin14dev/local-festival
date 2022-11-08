@@ -19,7 +19,6 @@ import HeartImg from '../assets/heart-mobile.png';
 import EmptyHeartImg from '../assets/empty-heart.png';
 import RatingImg from '../assets/rating-mobile.png';
 import loadImg from '../assets/loading.gif';
-import ReviewImg from '../assets/review.svg';
 import { ReactComponent as ReviewIcon } from '../assets/review.svg';
 import { ReactComponent as EmojiGood } from '../assets/emojiGood.svg';
 import { ReactComponent as EmojiBad } from '../assets/emojiBad.svg';
@@ -31,7 +30,7 @@ const Wrapper = styled.div`
   padding: 5rem 248px;
   display: flex;
   flex-direction: column;
-  height: auto;
+  width: 100vw;
   overflow: visible;
   justify-content: space-evenly;
   border-radius: 1rem;
@@ -144,11 +143,8 @@ const Summary = styled.section`
     border: 1px solid #d9d9d9;
     border-radius: 7px;
     .header {
-      /* background-color: yellow; */
-      color: ${(props) => props.theme.usingColor.mainColor};
-      /* font-style: italic; */
+      color: var(--mainColor);
       font-weight: 700;
-      /* padding: 0 0.5rem; */
       display: flex;
       align-items: center;
 
@@ -158,11 +154,6 @@ const Summary = styled.section`
           padding-left: 1rem;
         }
       }
-    }
-
-    p {
-      /* background-color: yellowgreen; */
-      /* padding: 0.5rem; */
     }
   }
   div + div {
@@ -218,14 +209,6 @@ const Menu = styled.div`
     font-weight: 600;
   }
 
-  /* ul {
-    display: flex;
-    li + li {
-      margin-left: 3rem;
-      border-bottom: 4px solid #ff9a62;
-    }
-  } */
-
   & div.desc {
     text-align: center;
   }
@@ -248,7 +231,7 @@ const MobileWrapper = styled.section`
     top: 0;
     z-index: 20;
     background-color: white;
-    width: 100%;
+    width: 100vw;
     padding: 1rem;
     box-shadow: 0px 1px 4px lightgrey;
     img {
@@ -367,7 +350,7 @@ const Detailviewpage = ({ togglePick, authState }) => {
       try {
         setIsLoading(true);
         let result = await axios.get(
-          `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/festivals/${params.festivalId}`,
+          `${process.env.REACT_APP_SERVER_URL}/festivals/${params.festivalId}`,
           { params: { userId: authState.userId } }
         );
 

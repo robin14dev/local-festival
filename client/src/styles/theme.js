@@ -21,17 +21,6 @@ const calcRem = (size) => `${size / 16}rem`;
 //   xxlarge: calcRem(20),
 // };
 
-const color = {
-  primaryBlue: 'rgb(64 82 255)',
-  primaryGreen: '#60ff53',
-  autumnOrange: '#FF9A62',
-  primaryPurple: '#6268FF',
-};
-
-const usingColor = {
-  mainColor: color['primaryPurple'],
-};
-
-const theme = { color, usingColor };
+const theme = { calcRem };
 
 export default theme;

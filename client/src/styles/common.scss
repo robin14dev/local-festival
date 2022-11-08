@@ -1,7 +1,4 @@
-:root {
-  --primaryBlue: rgb(64 82 255);
-  --primaryGreen: #60ff53;
-  --AutumnTheme:#FF9A62;
-
-  --mainColor : var(--AutumnTheme)
+@function toRem($value) {
+    $remValue: ($value / 16) + rem; 
+    @return $remValue;
 }

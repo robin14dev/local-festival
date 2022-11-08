@@ -113,13 +113,10 @@ const Withdraw = ({ setWithdrawModal, setFinishModal }) => {
       }
 
       try {
-        await axios.delete(
-          `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users`,
-          {
-            data: { passwordCheck: passwordCheck },
-            headers: { accesstoken: sessionStorage.getItem('accesstoken') },
-          }
-        );
+        await axios.delete(`${process.env.REACT_APP_SERVER_URL}/users`, {
+          data: { passwordCheck: passwordCheck },
+          headers: { accesstoken: sessionStorage.getItem('accesstoken') },
+        });
         setWithdrawModal(false);
         setFinishModal(true);
       } catch (err) {

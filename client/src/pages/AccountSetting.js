@@ -91,7 +91,7 @@ const Accordion = styled.div`
     padding-left: 0.5rem;
   }
   button {
-    background-color: ${(props) => props.theme.usingColor.mainColor};
+    background-color: var(--mainColor);
     color: white;
     height: 2rem;
     border-radius: 0.3rem;
@@ -172,7 +172,7 @@ export default function AccountSetting({
   useEffect(() => {
     console.log('accountSetting!!');
     axios
-      .get(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users/edit`, {
+      .get(`${process.env.REACT_APP_SERVER_URL}/users/edit`, {
         headers: { accesstoken: sessionStorage.getItem('accesstoken') },
       })
       .then((response) => {
@@ -192,7 +192,7 @@ export default function AccountSetting({
     } else {
       axios
         .put(
-          `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users/nickname`,
+          `${process.env.REACT_APP_SERVER_URL}/users/nickname`,
           { nickname },
           { headers: { accesstoken: sessionStorage.getItem('accesstoken') } }
         )
@@ -233,11 +233,9 @@ export default function AccountSetting({
         '새로 입력한 비밀번호가 서로 일치하지 않습니다.';
     } else {
       axios
-        .put(
-          `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users/password`,
-          pwdForm,
-          { headers: { accesstoken: sessionStorage.getItem('accesstoken') } }
-        )
+        .put(`${process.env.REACT_APP_SERVER_URL}/users/password`, pwdForm, {
+          headers: { accesstoken: sessionStorage.getItem('accesstoken') },
+        })
         .then((response) => {
           console.log(response);
           const { message, updatedAt } = response.data;

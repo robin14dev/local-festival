@@ -113,7 +113,7 @@ const ReviewTab = ({ festival, authState }) => {
     if (festivalId) {
       try {
         let result = await axios.get(
-          `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/review/${festivalId}`,
+          `${process.env.REACT_APP_SERVER_URL}/review/${festivalId}`,
           {
             headers: {
               accesstoken: sessionStorage.getItem('accesstoken'),
@@ -232,7 +232,7 @@ const ReviewTab = ({ festival, authState }) => {
   const deleteReview = (reviewId, festivalId) => {
     axios
       .delete(
-        `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/review/${festivalId}/${reviewId}`,
+        `${process.env.REACT_APP_SERVER_URL}/review/${festivalId}/${reviewId}`,
         {
           headers: {
             accesstoken: sessionStorage.getItem('accesstoken'),

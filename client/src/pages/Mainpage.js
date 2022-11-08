@@ -35,7 +35,7 @@ const SearchAndTag = styled.div`
   background-color: white;
 
   @media (max-width: 475px) {
-    background-color: ${(props) => props.theme.usingColor.mainColor};
+    background-color: var(--mainColor);
     width: 100%;
     padding: 0;
     /* display: block; */
@@ -118,7 +118,7 @@ const Mainpage = ({
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/festivals`,
+        `${process.env.REACT_APP_SERVER_URL}/festivals`,
         { params: { limit: 8, offset: offset.current, query } }
       );
 

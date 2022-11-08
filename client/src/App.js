@@ -16,6 +16,7 @@ import { ModalContext } from './contexts/modalContext';
 import { ThemeProvider } from 'styled-components';
 import theme from './styles/theme';
 import '../src/styles/common.scss';
+
 import LoginModal from './components/LoginModal';
 const Wrapper = styled.div`
   width: 100%; //1425px 스크롤바 생김
@@ -23,7 +24,6 @@ const Wrapper = styled.div`
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-
   margin: 0;
   padding: 0;
 `;
@@ -51,14 +51,11 @@ function App() {
     };
     setAuthState(nextState);
     //# 유저별 찜한 축제 가져오기
-    let result = await axios.get(
-      `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`,
-      {
-        headers: {
-          accesstoken: sessionStorage.getItem('accesstoken'),
-        },
-      }
-    );
+    let result = await axios.get(`${process.env.REACT_APP_SERVER_URL}/pick`, {
+      headers: {
+        accesstoken: sessionStorage.getItem('accesstoken'),
+      },
+    });
 
     setPickItems(result.data);
   };
@@ -83,7 +80,7 @@ function App() {
 
       //*서버에 삭제요청 보내기
       axios
-        .delete(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`, {
+        .delete(`${process.env.REACT_APP_SERVER_URL}/pick`, {
           data: { festivalId: newPick.festivalId },
           headers: {
             accesstoken: sessionStorage.getItem('accesstoken'),
@@ -104,7 +101,7 @@ function App() {
       //#2-2. 픽해서 서버에 픽한 정보 보내주기
       axios
         .post(
-          `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`,
+          `${process.env.REACT_APP_SERVER_URL}/pick`,
           {
             festivalId: newPick.festivalId,
           },
@@ -135,7 +132,7 @@ function App() {
     const refreshData = async () => {
       if (sessionStorage.getItem('accesstoken')) {
         const authData = await axios.get(
-          `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users`,
+          `${process.env.REACT_APP_SERVER_URL}/users`,
           {
             headers: {
               accesstoken: sessionStorage.getItem('accesstoken'),
@@ -153,7 +150,7 @@ function App() {
         });
 
         const pickedItems = await axios.get(
-          `${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/pick`,
+          `${process.env.REACT_APP_SERVER_URL}/pick`,
           {
             headers: {
               accesstoken: sessionStorage.getItem('accesstoken'),

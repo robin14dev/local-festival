@@ -116,7 +116,7 @@ const LoginModal = ({ setLoginModal, loginHandler, setSignupModal }) => {
     (e) => {
       e.preventDefault();
       axios
-        .post(`${process.env.REACT_APP_SERVER_ADDRESS_LOCAL}/users/signin`, {
+        .post(`${process.env.REACT_APP_SERVER_URL}/users/signin`, {
           account,
           password,
         })
