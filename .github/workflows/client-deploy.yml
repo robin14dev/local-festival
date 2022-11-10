@@ -24,6 +24,8 @@ jobs:
         run: cd client
       - name : check pwd
         run : pwd
+      - name : check list
+        run : ls -al
         
       - name: Cache node modules
         uses: actions/cache@v2
