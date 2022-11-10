@@ -1,10 +1,5 @@
-# This is a basic workflow to help you get started with Actions
-
 name: resume-front-CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: dev
     paths:
@@ -24,6 +19,9 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@master
 
+      - name: console
+        uses: ls -al
+
       - name: Install Dependencies
         run: yarn
 
@@ -31,7 +29,7 @@ jobs:
         run: yarn build
 
       - name: Code Deploy
-        run: aws s3 cp build/ s3:/local-festival-s3/ --recursive --include "*"
+        # run: aws s3 cp build/ s3:/local-festival-s3/ --recursive --include "*"
         run: aws s3 sync ./dist s3://local-festival-s3/ --acl bucket-owner-full-control
         # run: aws s3 sync ./dist s3://2021-cvi-dev/ --acl bucket-owner-full-control # s3 이름 2021-cvi-dev
         env:
