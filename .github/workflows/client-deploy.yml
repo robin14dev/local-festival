@@ -13,14 +13,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./client
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        
-      - name: cd client
-        working-directory: ./client
-        run : ls -al
         
       - name: check list
         run: ls -al
