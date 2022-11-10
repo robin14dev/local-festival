@@ -1,0 +1,17 @@
+# on:
+#   pull_request:
+#     branches: [dev]
+# jobs:
+#   AUTO_DEPLOY:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Run scripts in server
+#         uses: appleboy/ssh-action@master
+#         with:
+#           password: ${{ secrets.PASSWORD }}
+#           host: ${{ secrets.HOST }}
+#           username: ${{ secrets.USER_NAME }}
+#           port: ${{ secrets.PORT }}
+#           script: ${{ secrets.SCRIPT }}
