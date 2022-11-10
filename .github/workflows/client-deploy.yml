@@ -1,46 +1,26 @@
-# name: resume-front-CI
+name: client-deploy
+#on:[push branches:[dev], pull_request branches:[dev]]
 
-# on:
-#   push: # 적용될 액션
-#     branches: dev # 적용될 브랜치
-#     paths:
-#       - 'client/**' # workflow에서 적용될 path
-
-# defaults:
-#   run:
-#     working-directory: ./client # workflow에서 default working directory
-
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest # 인스턴스 OS
-#     steps:
-#       - name: Checkout source code
-#         uses: actions/checkout@v2 # 워크플로에서 액세스할 수 있도록 에서 저장소를 체크아웃
-
-#       - name: Install Dependencies
-#         run: yarn
-
-#       - name: Build
-#         run: yarn build
-
-#       - name: S3 Deploy
-#         run: aws s3 sync ./dist s3://local-festival-s3/ --acl bucket-owner-full-control # s3 이름 2021-cvi-dev
-#         env:
-#           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      -dev
+ 
 
 jobs:
-  release:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      # 소스를 가져옵니다.
       - name: Checkout code
         uses: actions/checkout@v2
+        
       - name: check list
-        uses: ls -al
-
-      # 실행 속도를 빠르게 하기 위해 설치된 Node 모듈을 캐시하도록 설정합니다.
+        run: ls -al
+        
       - name: Cache node modules
         uses: actions/cache@v2
         with:
@@ -49,24 +29,19 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      # Node 14.x를 사용합니다.
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
           node-version: '14.x'
 
-      # 모듈을 설치합니다.
-      - name: Install packages
-        run: npm ci
+#       - name: Install packages
+#         run: npm ci
 
-      # 결과물을 만듭니다.
-      - name: Build
-        run: npm run build
+#       - name: Build
+#         run: npm run build
 
-      # S3에 결과물을 업로드합니다.
-      - name: Deploy
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_DEPLOY_FRONT_ACCESS_KEY }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_DEPLOY_FRONT_SECRET_KEY }}
-        run: |
-          aws s3 sync dist s3://local-festival-s3/
+#       - name: Deploy
+#         env:
+#           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_DEPLOY_FRONT_ACCESS_KEY }}
+#           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_DEPLOY_FRONT_SECRET_KEY }}
+#         run: aws s3 sync dist s3://local-festival-s3/
