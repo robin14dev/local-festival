@@ -20,6 +20,10 @@ jobs:
         
       - name: check list
         run: ls -al
+      - name : cd client
+        run: cd client
+      - name : check pwd
+        run : pwd
         
       - name: Cache node modules
         uses: actions/cache@v2
