@@ -24,4 +24,5 @@ jobs:
           host: ${{ secrets.HOST }}
           username: 'ubuntu'
           key: ${{ secrets.SSH_KEY }}
-          script: 'ls -al'
+          script: |
+            pwd
