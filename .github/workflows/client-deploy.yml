@@ -58,10 +58,12 @@ jobs:
 #               /home/runner/work/local-festival/local-festival/client/build s3://local-festival-s3/
       - name: deploy
       - uses: jakejarvis/s3-sync-action@master
-        with:
+        with:  
           args: --acl public-read --follow-symlinks --delete
         env:
           AWS_S3_BUCKET: 'local-festival-s3'
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           SOURCE_DIR: './client/build'
+
+         
