@@ -24,3 +24,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: 'ubuntu'
           key: ${{ secrets.SSH_KEY }}
+          script : |
+            cd local-festival
+            cd server
+            pwd
