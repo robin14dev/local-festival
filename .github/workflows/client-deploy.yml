@@ -55,5 +55,4 @@ jobs:
            AWS_REGION: ap-northeast-2
         run: aws s3 cp \
               --recursive \
-              --region ap-northeast-2 \
               /home/runner/work/local-festival/local-festival/client/build s3://local-festival-s3/
