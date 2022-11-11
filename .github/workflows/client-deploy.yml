@@ -38,6 +38,11 @@ jobs:
           node-version: '14.x'
       - name: Install packages
         run: npm ci
+      - name: Create env file
+        run: |
+          touch .env
+          echo REACT_APP_SERVER_URL=${{secrets.REACT_APP_SERVER_URL}} >> .env
+          cat .env
 
       - name: Build
         run: npm run build
