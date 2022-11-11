@@ -48,16 +48,9 @@ jobs:
          CI: ""    
       - name: check ls
         run: ls -al
-#       - name: Deploy
-#         env:
-#            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_DEPLOY_FRONT_ACCESS_KEY }}
-#            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_DEPLOY_FRONT_SECRET_KEY }}
-#            AWS_REGION: ap-northeast-2
-#         run: aws s3 cp \
-#               --recursive \
-#               /home/runner/work/local-festival/local-festival/client/build s3://local-festival-s3/
+        
       - name: deploy
-      - uses: jakejarvis/s3-sync-action@master
+        uses: jakejarvis/s3-sync-action@master
         with:  
           args: --acl public-read --follow-symlinks --delete
         env:
