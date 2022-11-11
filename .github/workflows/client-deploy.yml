@@ -44,5 +44,7 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+         CI: ""    
       - name: check ls
         run: ls -al
