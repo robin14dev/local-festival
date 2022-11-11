@@ -35,7 +35,7 @@ const ModalContainer = styled.div`
     cursor: pointer;
     font-style: italic;
     font-family: 'HS-Regular';
-    color: ${(props) => props.theme.color.autumnOrange};
+    color: var(--mainColor);
     margin-bottom: 0.5rem;
   }
   form {
@@ -77,7 +77,7 @@ const ModalContainer = styled.div`
       width: 100%;
       font-size: 1rem;
       transition: all 0.2s ease-out;
-      background-color: ${(props) => props.theme.color.autumnOrange};
+      background-color: var(--mainColor);
     }
   }
 `;
@@ -86,7 +86,7 @@ const LoginSection = styled.div`
   margin-top: 1rem;
   & > button {
     margin-left: 1.2rem;
-    color: ${(props) => props.theme.color.autumnOrange};
+    color: var(--mainColor);
     font-weight: bold;
     font-size: 1rem;
   }

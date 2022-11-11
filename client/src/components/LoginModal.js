@@ -35,7 +35,7 @@ const ModalContainer = styled.div`
     cursor: pointer;
     font-style: italic;
     font-family: 'HS-Regular';
-    color: ${(props) => props.theme.color.autumnOrange};
+    color: var(--mainColor);
   }
 
   form {
@@ -68,7 +68,7 @@ const ModalContainer = styled.div`
       margin-top: 1rem;
       color: #fff;
       font-weight: bold;
-      background: ${(props) => props.theme.color.autumnOrange};
+      background: var(--mainColor);
       border-radius: 6px;
       cursor: pointer;
     }

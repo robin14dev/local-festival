@@ -48,7 +48,7 @@ const ModalView = styled.div`
     button {
       height: 2rem;
       width: 6.5rem;
-      background-color: ${(props) => props.theme.color.primaryBlue};
+      background-color: var(--mainColor);
       color: white;
       border-radius: 4px;
       font-size: 1rem;
@@ -70,7 +70,7 @@ const ButtonSection = styled.div`
   & > button {
     height: 2rem;
     width: 6.5rem;
-    background-color: ${(props) => props.theme.color.primaryBlue};
+    background-color: var(--mainColor);
     color: white;
     border-radius: 4px;
     font-size: 1rem;
