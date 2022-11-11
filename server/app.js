@@ -20,7 +20,7 @@ db.sequelize.sync({ force: false }) // 모델 만든거 동기화 해주기!!
     console.log('데이터베이스 연결 성공');
     app.listen(port, ()=>{
 
-      console.log('서버도 연결 성공');
+      console.log('서버도 연결 성공~~');
     })
 })
 .catch((err) => {  
