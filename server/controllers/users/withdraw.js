@@ -1,6 +1,6 @@
 const { Users } = require('../../models');
 const bcrypt = require('bcrypt');
-const validateToken = require('../tokenFunctions/validateToken');
+const validateToken = require('../token-functions/validateToken');
 
 module.exports = async (req, res) => {
   //console.log(req.body); //{ passwordCheck: 'ccccxxx' }

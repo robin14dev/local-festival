@@ -1,5 +1,5 @@
 const { Users } = require('../../models');
-const validateToken = require('../tokenFunctions/validateToken');
+const validateToken = require('../token-functions/validateToken');
 
 module.exports = async (req, res) => {
   console.log('users/edit');
