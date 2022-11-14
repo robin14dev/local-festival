@@ -28,7 +28,4 @@ jobs:
             cd local-festival
             cd server
             pwd
-            npm install pm2 -g
-            pm2 stop app.js
-            git pull origin dev   
-            pm2 start app.js
+            npm list
