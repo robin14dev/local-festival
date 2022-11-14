@@ -28,5 +28,4 @@ jobs:
             cd local-festival
             cd server
             pwd
-            git pull origin dev
-            npm restart
+            npm -v
