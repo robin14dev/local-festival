@@ -41,3 +41,4 @@ jobs:
             cd server
             pwd
             npm -v
+            node -v
