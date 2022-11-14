@@ -42,3 +42,7 @@ jobs:
             pwd
             npm -v
             node -v
+      - name : version check
+        run : |
+          npm -v
+          node -v
