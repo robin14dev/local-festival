@@ -28,6 +28,6 @@ jobs:
             cd local-festival
             cd server
             pwd
-            git pull origin dev   
             pm2 stop app.js
+            git pull origin dev   
             pm2 start app.js
