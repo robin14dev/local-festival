@@ -39,10 +39,8 @@ jobs:
           script : |
             cd local-festival
             cd server
+            git pull origin dev
             pwd
             npm -v
             node -v
-      - name : version check
-        run : |
-          npm -v
-          node -v
+    
