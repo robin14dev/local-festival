@@ -159,8 +159,6 @@ function App() {
         );
 
         setPickItems(pickedItems.data);
-
-        //* 새로고침시 유저가 픽한 상태도 유지되야 하므로
       }
     };
     refreshData();

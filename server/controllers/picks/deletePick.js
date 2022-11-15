@@ -13,14 +13,24 @@ module.exports = async (req, res) => {
   }
 
   // 특정 userId의 특정 festivalId만 지우기
-  let result = await Picks.destroy({
-    where: {
-      userId: { [Op.eq]: accessTokenData.id },
-      festivalId: { [Op.eq]: festivalId },
-    },
-  });
 
-  res.json({ message: 'delete success' });
+  try {
+    let result = await Picks.destroy({
+      where: {
+        userId: { [Op.eq]: accessTokenData.id },
+        festivalId: { [Op.eq]: festivalId },
+      },
+    });
 
-  console.log(result);
+    if (result === 1) {
+      return res.json({ message: 'delete success' });
+    } else {
+      throw new Error('');
+    }
+
+    console.log(result);
+  } catch (error) {
+    console.log(error);
+    return res.status(503);
+  }
 };

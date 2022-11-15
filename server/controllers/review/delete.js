@@ -10,7 +10,6 @@ module.exports = async (req, res) => {
   if (!accessTokenData) {
     return res.status(404).json({ data: null, message: 'User not logged in' });
   }
-  // { account: 'tttt', id: '3', iat: 1658118869 }
 
   const userId = accessTokenData.id;
 
@@ -21,8 +20,18 @@ module.exports = async (req, res) => {
       id: reviewId,
     },
   });
+  console.log(result);
 
-  res.send({ message: 'ok' });
+  try {
+    if (result === 1) {
+      return res.json({ message: 'delete review success' });
+    } else {
+      return res.status(503).json({ message: 'delete review fail' });
+    }
+  } catch (error) {
+    // throw new Error('delete review fail');
+    return res.json({ message: 'delete review fail' });
+  }
 
   //삭제시 필요 : userId(token에 실려옴), festivalId(얘로 수정)
 };

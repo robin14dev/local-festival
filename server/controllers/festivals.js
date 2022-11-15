@@ -165,6 +165,7 @@ module.exports = {
   festival: async (req, res) => {
     const userId = Number(req.query.userId);
     const festivalId = Number(req.params.festivalId);
+    console.log(req.query);
 
     try {
       let festival = await Festivals.findOne({

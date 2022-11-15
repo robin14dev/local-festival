@@ -8,7 +8,6 @@ import { useCallback } from 'react';
 import { Helmet } from 'react-helmet';
 import EditImg from '../assets/edit-mobile.png';
 import DeleteImg from '../assets/delete-mobile.png';
-import { useNavigate } from 'react-router-dom';
 const Wrapper = styled.div`
   margin: 8rem 5rem;
   height: 55vh;
@@ -158,12 +157,6 @@ export default function AccountSetting({
   });
   const [openWithdrawModal, setWithdrawModal] = useState(false);
   const [finishWithdrawModal, setFinishModal] = useState(false);
-
-  //로직
-  // 닫혀있으면 false
-  // 특정 부분 클릭했을 때 특정부분의 상태값이 false면 그부분만 true로 해주고 setstate, 다른 값들은 여전히 false
-  // 열려있는 특정 부분 다시 클릭했을 때 true를 false로 바꿔주기
-
   const [updatedAt, setUpdatedAt] = useState('');
 
   const inputhere = useRef();

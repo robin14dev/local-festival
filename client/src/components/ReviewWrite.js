@@ -122,11 +122,9 @@ const ReviewWrite = ({ updateReviewList, festivalId, authState }) => {
         .post(
           `${process.env.REACT_APP_SERVER_URL}/review`,
           {
-            data: {
-              content: content,
-              rating: Number(rating),
-              festivalId: festivalId,
-            },
+            content: content,
+            rating: Number(rating),
+            festivalId: festivalId,
           },
           {
             headers: {
