@@ -47,7 +47,6 @@ const FestivalList = styled.section`
   margin-top: 12rem;
   display: flex;
   flex-wrap: wrap;
-  background-color: yellow;
   padding-bottom: 4rem;
   @media (max-width: 1210px) {
     width: 90vw;
