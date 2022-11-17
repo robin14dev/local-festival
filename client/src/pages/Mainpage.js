@@ -47,6 +47,7 @@ const FestivalList = styled.section`
   margin-top: 12rem;
   display: flex;
   flex-wrap: wrap;
+  background-color: yellow;
   padding-bottom: 4rem;
   @media (max-width: 1210px) {
     width: 90vw;
@@ -110,45 +111,43 @@ const Mainpage = ({
   const [hasNextPage, setHasNextPage] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [query, setQuery] = useState(searchParams.get('query'));
-  const offset = useRef(0);
+
+  let offset = +sessionStorage.getItem('offset') || 0;
 
   const navigate = useNavigate();
 
   const fetchData = useCallback(async () => {
     setIsLoading(true);
+
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/festivals`,
-        { params: { limit: 8, offset: offset.current, query } }
+        { params: { limit: 8, offset, query } }
       );
 
       const festivals = response.data;
 
       setFestivalData((prevData) => [...prevData, ...festivals]);
-
       setFilteredData((prevData) => [...prevData, ...festivals]);
-
       setHasNextPage(festivals.length === 8);
 
       if (festivals.length) {
-        offset.current += 8;
+        offset += 8;
+        sessionStorage.setItem('offset', offset);
       }
 
-      //   //* 새로고침시 유저가 픽한 상태도 유지되야 하므로
-      // }
       setIsLoading(false);
     } catch (error) {
       console.log(error);
-
       setFestivalData([]);
     }
   }, [offset, query]);
 
-  const onSearch = async (searchText) => {
-    console.log('onSearch!!', searchText);
+  const onSearch = (searchText) => {
     try {
       setSearchParams({ query: '' });
-      offset.current = 0;
+
+      sessionStorage.removeItem('offset');
       navigate(`/search?query=${searchText}`);
       setQuery(searchText);
       setFilteredData([]);
@@ -160,12 +159,17 @@ const Mainpage = ({
 
   useEffect(() => {
     if (!observerTargetEl.current || !hasNextPage) return;
+    const callback = (entries, observer) => {
+      if (offset === 0) {
+        fetchData();
+        return;
+      }
 
-    const io = new IntersectionObserver((entries, observer) => {
       if (entries[0].isIntersecting) {
         fetchData();
       }
-    });
+    };
+    const io = new IntersectionObserver(callback);
 
     io.observe(observerTargetEl.current);
 

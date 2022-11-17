@@ -30,6 +30,7 @@ const Wrapper = styled.header`
 const Header = ({ authState, loginHandler, setLoginModal, setSignupModal }) => {
   const onClickReload = () => {
     window.location.replace('/');
+    sessionStorage.removeItem('offset');
   };
 
   return (

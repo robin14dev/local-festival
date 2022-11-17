@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { IoSearchCircleSharp } from 'react-icons/io5';
 import SearchImage from '../assets/search-mobile.png';
 
 const Wrapper = styled.div`

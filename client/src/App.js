@@ -20,7 +20,6 @@ import '../src/styles/common.scss';
 import LoginModal from './components/LoginModal';
 const Wrapper = styled.div`
   width: 100%; //1425px 스크롤바 생김
-  height: auto;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -160,6 +159,7 @@ function App() {
 
         setPickItems(pickedItems.data);
       }
+      sessionStorage.getItem('offset') && sessionStorage.removeItem('offset');
     };
     refreshData();
   }, []);
