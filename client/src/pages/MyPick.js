@@ -4,24 +4,17 @@ import { Helmet } from 'react-helmet';
 import Pick from '../components/Pick';
 
 const Wrapper = styled.div`
-  width: 100vw;
-  height: 100vh;
-  margin-top: 5rem;
+  margin: 0 auto 5rem auto;
+  padding-top: 10rem;
+  width: 88%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-
-  & > div {
-    background-color: white;
-    width: 100%;
-    position: fixed;
-    padding: 2rem 0 1rem 6rem;
-    z-index: 1;
-  }
 
   p {
     color: gray;
     word-break: keep-all;
+    margin-top: 5rem;
+    font-size: 2rem;
   }
 
   @media (max-width: 485px) {
@@ -36,18 +29,10 @@ const Wrapper = styled.div`
   }
 `;
 const PickList = styled.section`
-  padding-top: 5rem;
-  padding-bottom: 5rem;
+  width: 100%;
+  margin: 0 auto;
   display: flex;
-  width: 88%;
   flex-wrap: wrap;
-  justify-content: flex-start;
-  overflow-y: auto;
-  -ms-overflow-style: none; /* for Internet Explorer, Edge */
-  scrollbar-width: none; /* for Firefox */
-  &::-webkit-scrollbar {
-    display: none; /* for Chrome, Safari, and Opera */
-  }
 
   @media (max-width: 640px) {
     justify-content: center;
@@ -69,9 +54,7 @@ const MyPick = ({ authState, pickItems, togglePick }) => {
         <title>나의 위시리스트 - LOCO</title>
       </Helmet>
 
-      <div>
-        <h1>위시리스트</h1>
-      </div>
+      <h1>위시리스트</h1>
 
       {pickItems.length === 0 ? (
         <p>

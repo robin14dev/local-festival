@@ -159,6 +159,9 @@ function App() {
 
         setPickItems(pickedItems.data);
       }
+      console.log('App refresh!!');
+      console.log(sessionStorage);
+      window.scrollTo(0, 0);
       sessionStorage.getItem('offset') && sessionStorage.removeItem('offset');
     };
     refreshData();

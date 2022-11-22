@@ -6,11 +6,19 @@ import Rating from './Rating';
 import cameraImg from '../assets/camera.png';
 
 const Wrapper = styled.div`
-  width: 915px;
+  width: 100%;
   height: auto;
 
   border: 1px solid #d9d9d9;
   border-radius: 8px;
+
+  @media screen and (max-width: 1076px) {
+    width: 95%;
+  }
+
+  @media (max-width: 768px) {
+    width: 90%;
+  }
 
   @media (max-width: 485px) {
     max-width: 400px;
@@ -23,7 +31,6 @@ const Textarea = styled.textarea`
   height: 131px;
   border: none;
   resize: none;
-  /* background: yellow; */
   border-radius: 8px 8px 0 0;
   padding: 1rem;
 `;
@@ -34,11 +41,10 @@ const Controllers = styled.div`
   align-items: center;
   padding: 0 1rem;
   border-top: 1px solid #d9d9d9;
-  border-radius: 0px 0px 8px 8px;
-  /* background-color: yellow; */
+  border-radius: 0px 0px 0.5rem 0.5rem;
 `;
 const Button = styled.button`
-  background: ${(props) => (props.photo ? 'white' : '#ff9a62')};
+  background: ${(props) => (props.photo ? 'white' : `var(--primaryPurple)`)};
   border: ${(props) => (props.photo ? '1px solid #D9D9D9' : 'none')};
   border-radius: 4px;
   color: white;

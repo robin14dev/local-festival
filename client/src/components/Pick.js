@@ -6,79 +6,9 @@ import onErrorImage from '../assets/noimage.png';
 import moment from 'moment';
 import HeartImg from '../assets/heart.png';
 import EmptyHeartImg from '../assets/empty-heart.png';
-const Wrapper = styled.div`
-  width: 272px;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  margin: 1rem;
-  cursor: pointer;
-  & > img {
-    width: 100%;
-    height: 270px;
-    border-radius: 10px;
-    object-fit: fill;
-  }
-  section {
-    display: flex;
-    justify-content: space-between;
-    padding: 0 0.5rem;
+import { Wrapper } from '../components/Festival.js';
 
-    h1 {
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 17px;
-      margin: 0.4rem 0 0.18rem 0;
-    }
-
-    li {
-      font-weight: 400;
-      font-size: 14px;
-      line-height: 17px;
-      color: #797979;
-    }
-
-    h1,
-    li {
-      white-space: nowrap;
-      overflow: hidden;
-      width: 11rem;
-      text-overflow: ellipsis;
-    }
-  }
-
-  button > img {
-    height: 1.5rem;
-    width: auto;
-  }
-
-  transition: transform 0.3s ease-out;
-
-  &:hover {
-    transform: scale(1.03);
-  }
-
-  @media (max-width: 485px) {
-    margin: 0.5rem 0;
-    width: 357px;
-    height: 409px;
-
-    &:hover {
-      transform: none;
-    }
-
-    & > img {
-      height: 340px;
-    }
-    section {
-      h1,
-      li {
-        width: 100%;
-      }
-    }
-  }
-`;
-
+const FestivalWrapper = styled(Wrapper)``;
 const Pick = ({ festival, togglePick }) => {
   const [like, setLike] = useState(true);
 
@@ -97,7 +27,7 @@ const Pick = ({ festival, togglePick }) => {
     navigate(`/Detail/${festivalId}`);
   };
   return (
-    <Wrapper onClick={onClickMoveDVP}>
+    <FestivalWrapper onClick={onClickMoveDVP}>
       <img src={imageUrl || onErrorImage} alt={title} onError={onErrorImg} />
       <section>
         <div>
@@ -118,7 +48,7 @@ const Pick = ({ festival, togglePick }) => {
           <img alt="heart" src={like ? HeartImg : EmptyHeartImg} />
         </button>
       </section>
-    </Wrapper>
+    </FestivalWrapper>
   );
 };
 

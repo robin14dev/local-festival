@@ -6,7 +6,7 @@ import moment from 'moment';
 import profileImg from '../assets/profile.png';
 
 const Wrapper = styled.div`
-  width: 915px;
+  width: 100%;
   min-height: 199px;
   border-bottom: 1px solid #d9d9d9;
   padding-bottom: 1rem;
@@ -15,8 +15,8 @@ const Wrapper = styled.div`
     margin-bottom: 1rem;
   }
   @media (max-width: 485px) {
-    max-width: 380px;
-    height: 199px;
+    /* max-width: 380px;
+    height: 199px; */
     border: 1px solid #d9d9d9;
     border-radius: 7px;
   }
@@ -151,6 +151,7 @@ export const showRating = (rating, size = 18) => {
 const Review = ({ review, authState, deleteReview }) => {
   const [deleteClicked, setDeleteClicked] = useState(false);
   const { rating, content, createdAt, User, festivalId, id } = review;
+  console.log(review);
   const modalHandler = () => {
     setDeleteClicked(!deleteClicked);
   };

@@ -23,7 +23,7 @@ module.exports = async (req, res) => {
     // 특정 축제 평균평점
     const reviewSum = await Reviews.sum('rating', { where: { festivalId } });
     const average = Number((reviewSum / count).toFixed(1));
-
+    console.log(rows);
     //최고값을 가진 것 중에서 제일 최신의 축제
 
     res.json({ count, rows, average });

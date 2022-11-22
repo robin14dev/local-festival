@@ -8,7 +8,7 @@ import { ReactComponent as Youtube } from '../assets/youtube.svg';
 import { ReactComponent as Homepage } from '../assets/homepage.svg';
 import { ReactComponent as Phone } from '../assets/phone.svg';
 
-const Wrapper = styled.div`
+const Wrapper = styled.section`
   height: 100%;
   width: 100%;
   overflow-y: auto;
@@ -16,6 +16,7 @@ const Wrapper = styled.div`
   padding: 1rem;
 
   h1 {
+    font-size: 2rem;
     margin-top: 42px;
     margin-bottom: 21px;
   }
@@ -124,7 +125,6 @@ const DescTab = ({ festival }) => {
             .replace(/<(\/br|br)([^>]*)>/gi, '\n')
             .replace(/&lt;/gi, '<')
             .replace(/&gt;/gi, '>')}
-          {/* {overview} */}
         </p>
 
         <div className="contact">

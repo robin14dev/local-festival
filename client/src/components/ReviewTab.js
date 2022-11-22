@@ -17,14 +17,15 @@ const Wrapper = styled.div`
   align-items: center;
 
   .totalRating {
+    width: 100%;
+    padding: 0 40%;
     margin-top: 43px;
     margin-bottom: 37px;
     font-weight: 400;
     font-size: 20px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 100%;
+    justify-content: space-between;
     line-height: 1;
 
     .re {
@@ -33,15 +34,10 @@ const Wrapper = styled.div`
       height: 28px;
       .star {
         position: absolute;
-        /* left: 10rem; */
         margin-right: 1.5rem;
         width: 150px;
         overflow: hidden;
       }
-    }
-
-    @media (max-width: 485px) {
-      display: none;
     }
   }
 
@@ -58,10 +54,33 @@ const Wrapper = styled.div`
       color: #ff9a62;
     }
   }
+
+  @media screen and (max-width: 1076px) {
+    .totalRating {
+      padding: 0 38%;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    .totalRating {
+      padding: 0 34%;
+    }
+  }
+  @media screen and (max-width: 570px) {
+    .totalRating {
+      padding: 0 30%;
+    }
+  }
+
+  @media (max-width: 485px) {
+    .totalRating {
+      display: none;
+    }
+  }
 `;
 
 const ReviewList = styled.section`
-  margin: 1rem 0;
+  width: 100%;
+  margin: 4rem 0;
   border-radius: 0.5rem;
   display: flex;
   flex-direction: column;
@@ -81,7 +100,6 @@ const ReviewList = styled.section`
       width: 2rem;
       height: 2rem;
       margin: 0 0.5rem;
-      /* border: 1px solid black; */
       border-radius: 0.5rem rem;
       font-size: 1.2rem;
     }
@@ -131,6 +149,7 @@ const ReviewTab = ({ festival, authState }) => {
         console.log(error);
       }
     }
+    console.log('reviews', reviews);
   }, [festivalId, offset]);
   /* totalReview : 18
   unit : 5
@@ -332,9 +351,8 @@ const ReviewTab = ({ festival, authState }) => {
                 [1,2,3,4,5]
                 [6,7]
 
-                unit(5)*(level-1) + 1 부터 시작해서 맵핑
+            unit(5)*(level-1) + 1 부터 시작해서 맵핑*/}
 
-              */}
               {pageLength - (level - 1) * unit < 5
                 ? Array(pageLength - (level - 1) * unit)
                     .fill(0)

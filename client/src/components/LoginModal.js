@@ -47,7 +47,7 @@ const ModalContainer = styled.div`
       border-radius: 6px;
       border: 1.8px solid #b1aeae;
       padding: 0.5rem;
-      width: 20rem;
+      width: 80%;
       height: 3rem;
       &::placeholder {
         opacity: 0.5;
@@ -63,7 +63,7 @@ const ModalContainer = styled.div`
       padding-top: 0.2rem;
     }
     button {
-      width: 20rem;
+      width: 80%;
       height: 3rem;
       margin-top: 1rem;
       color: #fff;
@@ -92,6 +92,25 @@ const ModalContainer = styled.div`
 
   p {
     color: red;
+  }
+
+  .modalClose {
+    display: none;
+  }
+
+  @media screen and (max-width: 428px) {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    margin: 0;
+    left: 0;
+    top: 0;
+
+    .modalClose {
+      display: block;
+      margin-top: 2rem;
+      color: gray;
+    }
   }
 `;
 const LoginModal = ({ setLoginModal, loginHandler, setSignupModal }) => {
@@ -189,6 +208,14 @@ const LoginModal = ({ setLoginModal, loginHandler, setSignupModal }) => {
             회원가입
           </button>
         </div>
+        <button
+          className="modalClose"
+          onClick={() => {
+            setLoginModal(false);
+          }}
+        >
+          돌아가기
+        </button>
       </ModalContainer>
     </>
   );

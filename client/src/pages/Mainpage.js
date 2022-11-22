@@ -14,17 +14,17 @@ import { ReactComponent as NoData } from '../assets/noData.svg';
 const Wrapper = styled.div`
   margin: 0 auto 5rem auto;
   width: 100%;
-  height: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: white;
   @media (max-width: 475px) {
     margin: 0;
   }
 `;
 
 const SearchAndTag = styled.div`
-  width: 100%;
+  width: 100vw;
   height: 4rem;
   display: flex;
   flex-direction: column;
@@ -33,17 +33,14 @@ const SearchAndTag = styled.div`
   top: 5rem;
   z-index: 1;
   background-color: white;
-
   @media (max-width: 475px) {
     background-color: var(--mainColor);
-    width: 100%;
     padding: 0;
-    /* display: block; */
   }
 `;
 
 const FestivalList = styled.section`
-  width: 76rem;
+  width: 88%;
   margin-top: 12rem;
   display: flex;
   flex-wrap: wrap;
@@ -110,8 +107,8 @@ const Mainpage = ({
   const [hasNextPage, setHasNextPage] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [query, setQuery] = useState(searchParams.get('query'));
-
   let offset = +sessionStorage.getItem('offset') || 0;
+  console.log('Mainpage offset', offset);
 
   const navigate = useNavigate();
 

@@ -80,6 +80,22 @@ const ModalContainer = styled.div`
       background-color: var(--mainColor);
     }
   }
+
+  .modalClose {
+    display: none;
+  }
+
+  @media screen and (max-width: 428px) {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+
+    .modalClose {
+      display: block;
+      color: gray;
+      margin-top: 1rem;
+    }
+  }
 `;
 
 const LoginSection = styled.div`
@@ -345,6 +361,15 @@ const SignupModal = ({ setSignupModal, setLoginModal }) => {
             로그인
           </button>
         </LoginSection>
+        <button
+          className="modalClose"
+          onClick={() => {
+            setSignupModal(false);
+            setLoginModal(false);
+          }}
+        >
+          돌아가기
+        </button>
       </ModalContainer>
     </>
   );
