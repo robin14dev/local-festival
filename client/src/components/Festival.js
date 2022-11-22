@@ -9,18 +9,16 @@ import { ModalContext } from '../contexts/modalContext';
 import HeartImg from '../assets/heart.png';
 import EmptyHeartImg from '../assets/empty-heart.png';
 import '../styles/common.scss';
-const Wrapper = styled.div`
-  width: ${(props) => props.theme.calcRem(272)};
-  width: ${({ theme }) => theme.calcRem(272)}; /* 구조분해 */
+export const Wrapper = styled.article`
+  width: 25%;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  margin: 1rem;
   cursor: pointer;
   & > img {
-    width: 100%;
-    height: ${({ theme }) => theme.calcRem(270)};
+    max-width: 100%;
+    aspect-ratio: 1/1;
     border-radius: 10px;
-    object-fit: fill;
   }
   section {
     display: flex;
@@ -61,18 +59,23 @@ const Wrapper = styled.div`
     transform: scale(1.03);
   }
 
+  @media screen and (max-width: 1100px) {
+    width: 33%;
+  }
+  @media screen and (max-width: 923px) {
+    width: 50%;
+  }
+  @media screen and (max-width: 521px) {
+    width: 100%;
+  }
   @media (max-width: 485px) {
-    margin: 0.5rem 0;
-    width: ${({ theme }) => theme.calcRem(357)};
-    height: ${({ theme }) => theme.calcRem(409)};
+    /* margin: 0.5rem 0;
+    width: ${({ theme }) => theme.calcRem(357)}; */
 
     &:hover {
       transform: none;
     }
 
-    & > img {
-      height: ${({ theme }) => theme.calcRem(340)};
-    }
     section {
       h1,
       li {
@@ -88,7 +91,6 @@ const Festival = ({ festival, togglePick, pickItems }) => {
   const { festivalId, title, imageUrl, startDate, endDate, location } =
     festival;
   const [like, setLike] = useState(false);
-  // console.log(festivalId);
   let navigate = useNavigate();
 
   const onErrorImg = (e) => {

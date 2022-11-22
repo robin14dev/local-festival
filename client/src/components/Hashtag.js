@@ -20,7 +20,7 @@ const Wrapper = styled.div`
   }
   @media (max-width: 675px) {
     width: 100vw;
-    margin-top: 1rem;
+    /* margin-top: 1rem; */
     /* height: 30%; */
   }
   @media (max-width: 475px) {

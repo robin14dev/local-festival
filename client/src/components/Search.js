@@ -3,11 +3,12 @@ import styled from 'styled-components';
 import SearchImage from '../assets/search-mobile.png';
 
 const Wrapper = styled.div`
-  width: 476px;
-
-  background: white;
-  margin-top: 0.5rem;
+  width: 90%;
+  max-width: 476px;
   height: 43px;
+
+  margin-top: 0.5rem;
+  background: white;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -44,7 +45,7 @@ const Wrapper = styled.div`
   }
 
   @media (max-width: 475px) {
-    width: 320px;
+    /* width: 320px; */
     border-radius: 9px;
     height: 43px;
     box-shadow: none;

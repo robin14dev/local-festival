@@ -11,7 +11,7 @@ import DeleteImg from '../assets/delete-mobile.png';
 const Wrapper = styled.div`
   margin: 8rem 5rem;
   height: 55vh;
-  /* background-color: yellowgreen; */
+  /* background-color: white; */
 
   & > span {
     display: none;

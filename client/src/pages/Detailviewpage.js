@@ -20,45 +20,61 @@ import EmptyHeartImg from '../assets/empty-heart.png';
 import RatingImg from '../assets/rating-mobile.png';
 import loadImg from '../assets/loading.gif';
 import { ReactComponent as ReviewIcon } from '../assets/review.svg';
+import { ReactComponent as RatingIcon } from '../assets/rating.svg';
+import { ReactComponent as LikeIcon } from '../assets/heart-fill.svg';
+
 import { ReactComponent as EmojiGood } from '../assets/emojiGood.svg';
 import { ReactComponent as EmojiBad } from '../assets/emojiBad.svg';
+import { ReactComponent as Instagram } from '../assets/instagram.svg';
+import { ReactComponent as Youtube } from '../assets/youtube.svg';
+import { ReactComponent as Homepage } from '../assets/homepage.svg';
+
 import axios from 'axios';
 import { showRating } from '../components/ReviewItem';
 
-const Wrapper = styled.div`
-  margin: 0 auto;
-  padding: 5rem 248px;
+const Wrapper = styled.section`
+  flex: 1 1 auto;
+  width: 81rem;
+  max-width: 1296px;
+  margin: 5rem auto 0 auto;
+  padding: 0 8rem;
   display: flex;
   flex-direction: column;
-  width: 100vw;
   overflow: visible;
   justify-content: space-evenly;
-  border-radius: 1rem;
+  align-items: center;
+
   .figAndSummary {
+    width: 100%;
     display: flex;
+    flex: 1 1 auto;
     justify-content: space-between;
+    background-color: white;
+    padding: 0 1rem;
 
     @media (max-width: 485px) {
       flex-direction: column;
-      padding: 0;
     }
   }
 
   figure {
+    background-color: white;
+    flex: 1 1 0;
+    width: 378px;
+    max-width: 383px;
     margin-top: 5rem;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    width: 378px;
-    height: 495px;
+
+    aspect-ratio: 383/502;
     border-radius: 18px;
     box-shadow: 1px 0px 7px rgb(0 0 0 / 22%);
     & > img {
-      width: 100%;
-      height: 80%;
+      max-width: 100%;
+      aspect-ratio: 367 / 393;
       border-radius: 1rem;
       padding: 0.5rem;
-      position: relative;
     }
 
     figcaption {
@@ -66,9 +82,7 @@ const Wrapper = styled.div`
       margin-top: 0.2rem;
       display: flex;
       justify-content: space-between;
-      /* align-items: center; */
       padding: 0 1rem;
-      /* background-color: yellow; */
 
       div {
         display: flex;
@@ -109,84 +123,107 @@ const Wrapper = styled.div`
     }
   }
 
-  @media (max-width: 485px) {
-    padding: 0;
-  }
-`;
-
-const Summary = styled.section`
-  /* background-color: yellow; */
-  h1 {
-    font-weight: 700;
-    font-size: 35px;
-    line-height: 42px;
-    margin-bottom: 21px;
-    margin-top: 104px;
-  }
-
-  ul {
-    margin-bottom: 52px;
-  }
-
-  li {
-    font-weight: 500;
-    font-size: 22px;
-    line-height: 27px;
-    max-width: 400px;
-    color: #a0a0a0;
-  }
-
-  .review {
-    padding: 0.4rem;
-    width: 459px;
-    min-height: 106px;
-    border: 1px solid #d9d9d9;
-    border-radius: 7px;
-    .header {
-      color: var(--mainColor);
+  .summary {
+    flex: 1 1 0;
+    max-width: 526px;
+    margin-top: 5rem;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    h1 {
       font-weight: 700;
-      display: flex;
-      align-items: center;
+      font-size: 2rem;
+      line-height: 42px;
+      background-color: paleturquoise;
+    }
 
-      span {
-        padding-right: 0.5rem;
-        &:nth-child(3) {
-          padding-left: 1rem;
+    ul {
+      margin-bottom: 52px;
+    }
+
+    li {
+      font-weight: 500;
+      font-size: 22px;
+      line-height: 27px;
+      max-width: 400px;
+      color: #a0a0a0;
+    }
+
+    .review {
+      background-color: white;
+      flex: 0 1 auto;
+      padding: 0.4rem;
+      /* max-width: 400px; */
+      width: 100%;
+      height: 116px;
+      max-height: 116px;
+      border: 1px solid #d9d9d9;
+      border-radius: 7px;
+      .header {
+        color: var(--mainColor);
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+
+        span {
+          padding-right: 0.5rem;
+          &:nth-child(3) {
+            padding-left: 1rem;
+          }
         }
       }
     }
-  }
-  div + div {
-    margin-top: 14px;
-  }
+    div + div {
+      margin-top: 14px;
+    }
 
-  @media (max-width: 485px) {
-    display: none;
-    width: 300px;
-    & > div {
+    @media (max-width: 485px) {
       display: none;
+      width: 300px;
+      & > div {
+        display: none;
+      }
     }
   }
+
+  @media (max-width: 1296px) {
+    width: 100vw;
+    .figAndSummary {
+      width: 1040px;
+    }
+  }
+  @media (max-width: 1076px) {
+    .figAndSummary {
+      width: 100vw;
+    }
+    .summary {
+      padding-left: 1rem;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
+
 const Tab = styled.div`
-  width: 935px;
-  max-height: 1096px;
+  width: 65rem;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
+
+  @media (max-width: 1076px) {
+    width: 100vw;
+  }
 
   @media (max-width: 485px) {
-    /* width: 100%; */
     display: none;
   }
 `;
 
-const Menu = styled.div`
+const Menu = styled.nav`
   margin-top: 31px;
-  width: 100%;
-  /* height: 72px; */
-  /* background-color: yellow; */
   color: rgba(73, 73, 73, 0.5);
   font-weight: bold;
   font-size: 1.5rem;
@@ -219,8 +256,10 @@ const Menu = styled.div`
 `;
 
 const MobileWrapper = styled.section`
-  @media (min-width: 485px) {
-    display: none;
+  padding-top: 5rem;
+  display: none;
+  @media (max-width: 768px) {
+    display: block;
   }
 
   .nav {
@@ -248,8 +287,13 @@ const MobileWrapper = styled.section`
     }
   }
 
+  & > img {
+    width: 100%;
+    height: 40vh;
+    object-fit: contain;
+  }
+
   .header {
-    /* background-color: yellow; */
     padding-bottom: 4px;
     border-bottom: 1px solid #d9d9d9;
     width: 95%;
@@ -260,7 +304,6 @@ const MobileWrapper = styled.section`
     }
   }
   h1 {
-    /* font-style: normal; */
     font-weight: 700;
     font-size: 22px;
     margin-top: 17px;
@@ -287,9 +330,8 @@ const MobileWrapper = styled.section`
       display: flex;
       align-items: center;
 
-      img {
-        height: 40%;
-        margin-right: 5px;
+      svg {
+        margin-right: 0.5rem;
       }
     }
   }
@@ -305,7 +347,7 @@ const MobileWrapper = styled.section`
     padding: 18px;
   }
 
-  ul {
+  .infoList {
     padding: 17px;
     li {
       font-weight: 700;
@@ -320,6 +362,17 @@ const MobileWrapper = styled.section`
           font-weight: 400;
         }
       }
+
+      button {
+        display: flex;
+        align-items: center;
+        line-height: 1;
+
+        svg {
+          height: 100%;
+          margin-right: 0.3rem;
+        }
+      }
     }
   }
   padding-bottom: 5rem;
@@ -331,17 +384,6 @@ const Detailviewpage = ({ togglePick, authState }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [summary, setSummary] = useState({});
   const reviewRef = useRef(null);
-  // const [likes, setLikes] = useState(0)
-  /* 
-새로고침시, useEffect로 축제에 대한 정보 불러옴 
-
-문제점
-현재 코드에선 찜하기 누르면 pickItems가 App에서 변하게 되고 props가 바뀌게 되니깐 DVP가 다시 렌더링됨
-
-원하는 방향
-일단 찜하기를 누르면 현재 pickItem에 추가
-
-*/
 
   let params = useParams();
   let navigate = useNavigate();
@@ -357,33 +399,6 @@ const Detailviewpage = ({ togglePick, authState }) => {
         setSummary(result.data);
         const isPicked = result.data.isPicked;
 
-        //server에서 할수 있지 않을까?
-        /*
-        알고싶은것 로그인한 유저가 특정 축제를 찜했는지 아닌지 
-
-        userId, festivalId
-
-        픽 table중에 festivalId가 140000 이면서 userId = 1인게 있는지
-        있으면 픽한거고 없으면 픽 안한거고
-
-        그러면 이거로 하면 이전거랑 달라지나?
-
-        현재 DVP에서 pickItems가 쓰이는 용도는 찜 여부를 하트로 표시하는 용도로만 쓰임
-
-        pickItems는 mainpage랑 mypage에서도 쓰임
-
-        여기서는 어차피 쓰여야 하니깐 놔두고 
-
-      하트를 누르면 db에다 저장되는로직을 하나 더만드나?
-
-      DVP에는 pickItems 지우고
-      처음에 딱 렌더링될 때 새로운 쿼리로 픽한정보 가져올 수 있음 ㅇㅇ
-      하트 눌렀을 때 togglePick작동하면서 pickItems에 찜 추가해주고 db에도 저장
-      pickItems가 DVP에 없기 때문에 리렌더링 안되지 않을까?
-
-        
-        */
-
         setLike(isPicked);
         setIsLoading(false);
         window.scrollTo(0, 0);
@@ -394,13 +409,11 @@ const Detailviewpage = ({ togglePick, authState }) => {
     fetchData();
   }, [params.festivalId, authState.userId]);
 
-  const goToReview = async () => {
+  const goToReview = () => {
     try {
-      await navigate('reviews?page=1');
+      navigate('reviews?page=1');
       reviewRef.current?.scrollIntoView({ behavior: 'smooth' });
     } catch (error) {}
-
-    // console.log(reviewRef.current);
   };
   const toggleLike = (event) => {
     setSummary((prevSummary) => {
@@ -425,8 +438,8 @@ const Detailviewpage = ({ togglePick, authState }) => {
   ];
 
   const activeStyle = {
-    color: ' #FF9A62',
-    borderBottom: '4px solid #FF9A62',
+    color: `var(--primaryPurple)`,
+    borderBottom: '4px solid var(--primaryPurple)',
   };
 
   if (isLoading) {
@@ -451,6 +464,7 @@ const Detailviewpage = ({ togglePick, authState }) => {
       endDate,
       overview,
       tel,
+      homepageUrl,
     },
     average,
     likes,
@@ -459,12 +473,35 @@ const Detailviewpage = ({ togglePick, authState }) => {
     reviewCount,
   } = summary;
 
+  const urlCollection = {
+    official: '',
+    instagram: '',
+    youtube: '',
+  };
+  if (!!homepageUrl !== false) {
+    const regex = {
+      official: /http(s)?:\/\/[a-zA-Z\\d`~!@#$%^&*()-_=+]+/g,
+      instagram: /(https?:\/\/www.instagram.com\/[a-zA-Z0-9]+)/g,
+      youtube: /(https?:\/\/www.youtube.com\/[a-zA-Z0-9]+)/g,
+    };
+
+    urlCollection['official'] = homepageUrl.match(regex.official)[0];
+    if (homepageUrl.match(regex.instagram)) {
+      urlCollection['instagram'] = homepageUrl.match(regex.instagram)[0];
+    }
+    if (homepageUrl.match(regex.youtube)) {
+      urlCollection['youtube'] = homepageUrl.match(regex.youtube)[0];
+    }
+  } else {
+  }
+
   return (
     <>
       <Wrapper>
         <Helmet>
           <title>{`${summary.festival.title} - LOCO `}</title>
         </Helmet>
+
         <div className="figAndSummary">
           <figure>
             <img
@@ -497,7 +534,7 @@ const Detailviewpage = ({ togglePick, authState }) => {
               </div>
             </figcaption>
           </figure>
-          <Summary>
+          <section className="summary">
             <h1>{title}</h1>
             <ul>
               <li>{location}</li>
@@ -538,7 +575,7 @@ const Detailviewpage = ({ togglePick, authState }) => {
                 '리뷰가 등록되어있지 않습니다'
               )}
             </div>
-          </Summary>
+          </section>
         </div>
         <Tab>
           <Menu ref={reviewRef}>
@@ -566,76 +603,123 @@ const Detailviewpage = ({ togglePick, authState }) => {
             ></Route>
           </Routes>
         </Tab>
-        <MobileWrapper>
-          <div className="nav">
-            <button onClick={() => navigate(-1)}>
-              <img src={BackImg} alt="뒤로가기"></img>
-            </button>
-            <div>
-              <button>
-                <img src={ShareImg} alt="공유하기"></img>
-              </button>
-              <button
-                onClick={(e) => {
-                  if (authState.loginStatus) {
-                    onClickPick(e, summary.festival);
-                  } else {
-                    e.stopPropagation();
-                    setLoginModal(true);
-                  }
-                }}
-              >
-                <img alt="heart" src={like ? HeartImg : EmptyHeartImg} />
-              </button>
-            </div>
-          </div>
-          <h1>{title}</h1>
-          <h3>{location}</h3>
-          <h3>
-            {moment(startDate, 'YYYY.MM.DD').format('YYYY.MM.DD')} ~
-            {moment(endDate, 'YYYY.MM.DD').format('YYYY.MM.DD')}
-          </h3>
-          <div className="likeINfo">
-            <div>
-              <img src={HeartImg} alt="좋아요 수"></img>
-              200
-            </div>
-            <div>
-              <img src={RatingImg} alt="별점"></img>
-              4.88
-            </div>
-            <div>후기 100개</div>
-          </div>
-          <div className="header">
-            <h2>상세정보</h2>
-          </div>
-
-          <p>{overview}</p>
-          <ul>
-            <li>
-              <div>위치</div> <div>{location}</div>
-            </li>
-            <li>
-              <div>축제 기간</div>
-              <div>
-                {moment(startDate, 'YYYY.MM.DD').format('YYYY.MM.DD')} ~
-                {moment(endDate, 'YYYY.MM.DD').format('YYYY.MM.DD')}
-              </div>
-            </li>
-            <li>
-              <div>문의</div>
-              <div>{tel}</div>
-            </li>
-            <li>
-              <div>홈페이지</div> <div>링크</div>
-            </li>
-          </ul>
-          <div className="header">
-            <h2>축제 후기</h2>
-          </div>
-          <ReviewTab festival={summary.festival} authState={authState} />
-        </MobileWrapper>
       </Wrapper>
+      <MobileWrapper>
+        <div className="nav">
+          <button onClick={() => navigate(-1)}>
+            <img src={BackImg} alt="뒤로가기"></img>
+          </button>
+          <div>
+            <button>
+              <img src={ShareImg} alt="공유하기"></img>
+            </button>
+            <button
+              onClick={(e) => {
+                if (authState.loginStatus) {
+                  onClickPick(e, summary.festival);
+                } else {
+                  e.stopPropagation();
+                  setLoginModal(true);
+                }
+              }}
+            >
+              <img alt="heart" src={like ? HeartImg : EmptyHeartImg} />
+            </button>
+          </div>
+        </div>
+        <img
+          src={imageUrl || onErrorImage}
+          alt={`${title} : 이미지가 존재하지 않습니다.`}
+        ></img>
+        <h1>{title}</h1>
+        <h3>{location}</h3>
+        <h3>
+          {moment(startDate, 'YYYY.MM.DD').format('YYYY.MM.DD')} ~
+          {moment(endDate, 'YYYY.MM.DD').format('YYYY.MM.DD')}
+        </h3>
+        <div className="likeINfo">
+          <div>
+            <LikeIcon width={23} height={23} fill={'#FF9A62'} />
+            {likes}
+          </div>
+          <div>
+            <RatingIcon width={25} height={25} fill={'#FF9A62'} /> {average}
+          </div>
+          <div>
+            <ReviewIcon width={25} height={25} fill={'#FF9A62'} />
+            {reviewCount}
+          </div>
+        </div>
+        <div className="header">
+          <h2>상세정보</h2>
+        </div>
+
+        <p
+          style={{
+            wordBreak: 'keep-all',
+            textIndent: '0.5rem',
+            whiteSpace: 'pre-line',
+          }}
+        >
+          {overview
+            .replace(/<(\/br|br)([^>]*)>/gi, '\n')
+            .replace(/&lt;/gi, '<')
+            .replace(/&gt;/gi, '>')}
+        </p>
+        <ul className="infoList">
+          <li>
+            <div>위치</div> <div>{location}</div>
+          </li>
+          <li>
+            <div>축제 기간</div>
+            <div>
+              {moment(startDate, 'YYYY.MM.DD').format('YYYY.MM.DD')} ~
+              {moment(endDate, 'YYYY.MM.DD').format('YYYY.MM.DD')}
+            </div>
+          </li>
+          <li>
+            <div>문의</div>
+            <div>{tel}</div>
+          </li>
+          <li>
+            <div>홈페이지</div>{' '}
+            <div>
+              {' '}
+              {!!urlCollection.official && (
+                <button
+                  onClick={() => {
+                    window.open(urlCollection.official);
+                  }}
+                >
+                  <Homepage width={24} height={24} /> 공식 홈페이지
+                </button>
+              )}
+              {!!urlCollection.instagram && (
+                <button
+                  onClick={() => {
+                    window.open(urlCollection.instagram);
+                  }}
+                >
+                  <Instagram /> 인스타그램 계정
+                </button>
+              )}
+              {!!urlCollection.youtube && (
+                <button
+                  onClick={() => {
+                    window.open(urlCollection.youtube);
+                  }}
+                >
+                  <Youtube /> 유튜브 채널
+                </button>
+              )}
+            </div>
+          </li>
+        </ul>
+        <div className="header">
+          <h2>축제 후기</h2>
+        </div>
+        <ReviewTab festival={summary.festival} authState={authState} />
+      </MobileWrapper>
     </>
   );
 };
