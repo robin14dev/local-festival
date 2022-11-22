@@ -16,3 +16,7 @@ LOCO를 추천합니다.
 내 리뷰가 LOCO를 더 유용한 앱으로 만들 수 있습니다.
 
 **"날씨도 좋은 요즘 나가서 노는게 어때?"**
+
+- [배포링크](http://local-festival-s3.s3-website.ap-northeast-2.amazonaws.com/)
+- [프로젝트 중 정리한 개발 지식들](https://robin14dev.notion.site/Final-project-Refactoring-9b8ca014e4834efbbd0369a8c511bfb4) 
+- [개발 블로그](https://robin14dev.notion.site/Dev-4dfb9365d1fe4613b70bd7f7ff1ff0a3)
