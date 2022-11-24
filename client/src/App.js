@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -16,7 +16,6 @@ import { ModalContext } from './contexts/modalContext';
 import { ThemeProvider } from 'styled-components';
 import theme from './styles/theme';
 import '../src/styles/common.scss';
-
 import LoginModal from './components/LoginModal';
 const Wrapper = styled.div`
   width: 100%; //1425px 스크롤바 생김
@@ -39,7 +38,8 @@ function App() {
   const [filteredData, setFilteredData] = useState(festivalData);
   const [openLoginModal, setLoginModal] = useState(false);
   const [openSignupModal, setSignupModal] = useState(false);
-
+  console.log('App rendering, festivalData.length : ', festivalData.length);
+  const offset = useRef(0);
   const loginHandler = async (userId, account, nickname, loginStatus) => {
     //* 로그인한 후의 유저정보 상태변경입니다.
     const nextState = {
@@ -126,44 +126,42 @@ function App() {
     nextAuthState.nickname = nickname;
     setAuthState(nextAuthState);
   };
+  const refreshData = async () => {
+    if (sessionStorage.getItem('accesstoken')) {
+      const authData = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/users`,
+        {
+          headers: {
+            accesstoken: sessionStorage.getItem('accesstoken'),
+          },
+        }
+      );
 
+      const { userId, account, nickname } = authData.data.data;
+
+      setAuthState({
+        userId: userId,
+        account: account,
+        nickname: nickname,
+        loginStatus: true,
+      });
+
+      const pickedItems = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/pick`,
+        {
+          headers: {
+            accesstoken: sessionStorage.getItem('accesstoken'),
+          },
+        }
+      );
+
+      setPickItems(pickedItems.data);
+    }
+    console.log('App refresh!!');
+    console.log(sessionStorage, 'App!!');
+  };
   useEffect(() => {
-    const refreshData = async () => {
-      if (sessionStorage.getItem('accesstoken')) {
-        const authData = await axios.get(
-          `${process.env.REACT_APP_SERVER_URL}/users`,
-          {
-            headers: {
-              accesstoken: sessionStorage.getItem('accesstoken'),
-            },
-          }
-        );
-
-        const { userId, account, nickname } = authData.data.data;
-
-        setAuthState({
-          userId: userId,
-          account: account,
-          nickname: nickname,
-          loginStatus: true,
-        });
-
-        const pickedItems = await axios.get(
-          `${process.env.REACT_APP_SERVER_URL}/pick`,
-          {
-            headers: {
-              accesstoken: sessionStorage.getItem('accesstoken'),
-            },
-          }
-        );
-
-        setPickItems(pickedItems.data);
-      }
-      console.log('App refresh!!');
-      console.log(sessionStorage);
-      window.scrollTo(0, 0);
-      sessionStorage.getItem('offset') && sessionStorage.removeItem('offset');
-    };
+    console.log('App useEffect!!');
     refreshData();
   }, []);
 
@@ -188,9 +186,7 @@ function App() {
                 setLoginModal={setLoginModal}
               />
             )}
-            {/* {openWithdrawModal && (
-                <Withdraw setWithdrawModal={setWithdrawModal} />
-              )} */}
+
             <Header
               loginHandler={loginHandler}
               authState={authState}
@@ -212,6 +208,7 @@ function App() {
                     setAuthState={setAuthState}
                     setFestivalData={setFestivalData}
                     setFilteredData={setFilteredData}
+                    offset={offset}
                   />
                 }
               ></Route>
@@ -261,7 +258,6 @@ function App() {
                     loginHandler={loginHandler}
                     handleAuthState={handleAuthState}
                     authState={authState}
-                    // setWithdrawModal={setWithdrawModal}
                   />
                 }
               ></Route>
