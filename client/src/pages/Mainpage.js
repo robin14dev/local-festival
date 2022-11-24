@@ -62,21 +62,27 @@ const Loading = styled.div`
 `;
 
 const ErrorMsg = styled.section`
-  width: 40rem;
+  margin: 0 auto;
+  max-width: 40rem;
   padding-top: 92px;
   display: flex;
   justify-content: space-between;
+  svg {
+    width: 50%;
+    height: 100%;
+  }
   & > div {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
   }
+
   h1 {
     font-family: 'Inter';
     font-style: normal;
     font-weight: 700;
-    font-size: 40px;
+    font-size: 2rem;
     line-height: 48px;
 
     color: #6268ff;
@@ -86,11 +92,26 @@ const ErrorMsg = styled.section`
     font-family: 'Inter';
     font-style: normal;
     font-weight: 600;
-    font-size: 24px;
+    font-size: 1.2rem;
     line-height: 29px;
 
     span {
       color: #ff9a62;
+    }
+  }
+  @media screen and (max-width: 485px) {
+    width: 100%;
+    flex-direction: column;
+    padding: 0;
+
+    svg {
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 1.5rem;
+    }
+    p {
+      font-size: 1rem;
     }
   }
 `;
@@ -98,27 +119,34 @@ const Mainpage = ({
   togglePick,
   filteredData,
   pickItems,
-
+  offset,
   setFestivalData,
   setFilteredData,
 }) => {
+  console.log('Mainpage 렌더링');
   const [searchParams, setSearchParams] = useSearchParams();
   const observerTargetEl = useRef(null);
   const [hasNextPage, setHasNextPage] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [query, setQuery] = useState(searchParams.get('query'));
-  let offset = +sessionStorage.getItem('offset') || 0;
-  console.log('Mainpage offset', offset);
+
+  console.log(
+    'Mainpage filteredData.length ,isLoading, offset : ',
+    filteredData.length,
+    isLoading,
+    offset
+  );
 
   const navigate = useNavigate();
-
+  console.log(navigate);
   const fetchData = useCallback(async () => {
+    console.log('fetchDaata offset', offset);
     setIsLoading(true);
 
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/festivals`,
-        { params: { limit: 8, offset, query } }
+        { params: { limit: 8, offset: offset.current, query } }
       );
 
       const festivals = response.data;
@@ -128,7 +156,7 @@ const Mainpage = ({
       setHasNextPage(festivals.length === 8);
 
       if (festivals.length) {
-        offset += 8;
+        offset.current += 8;
         sessionStorage.setItem('offset', offset);
       }
 
@@ -152,16 +180,23 @@ const Mainpage = ({
       console.log(error);
     }
   };
-
   useEffect(() => {
+    console.log('useEffect!!');
+    console.log(observerTargetEl.current, hasNextPage);
     if (!observerTargetEl.current || !hasNextPage) return;
     const callback = (entries, observer) => {
-      if (offset === 0) {
+      console.log(
+        'callback함수 호출, offset, enrties[0].isInterSecting : ',
+        offset,
+        entries[0].isIntersecting
+      );
+      if (offset.current === 0) {
         fetchData();
         return;
       }
 
       if (entries[0].isIntersecting) {
+        console.log('intersecting true!!');
         fetchData();
       }
     };
