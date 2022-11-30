@@ -38,8 +38,8 @@ function App() {
   const [filteredData, setFilteredData] = useState(festivalData);
   const [openLoginModal, setLoginModal] = useState(false);
   const [openSignupModal, setSignupModal] = useState(false);
-  console.log('App rendering, festivalData.length : ', festivalData.length);
   const offset = useRef(0);
+
   const loginHandler = async (userId, account, nickname, loginStatus) => {
     //* 로그인한 후의 유저정보 상태변경입니다.
     const nextState = {
@@ -65,14 +65,11 @@ function App() {
 
   const togglePick = (newPick) => {
     //#1. 픽했는지 아닌지 부터 확인
-    console.log('festival', newPick);
     const found = pickItems.filter(
       (el) => el.festivalId === newPick.festivalId
     );
-    console.log('wht is found', found);
     if (found.length !== 0) {
       // 이미 찜목록에 있으면 해제를 시켜줘야됨
-      console.log('found');
 
       //#2-1. 픽 해제해서 서버에 픽 해제한 정보 보내주기
       console.log('removeId what!!!', newPick);
@@ -96,7 +93,6 @@ function App() {
         pickItems.filter((el) => el.festivalId !== newPick.festivalId)
       );
     } else {
-      console.log('add new');
       //#2-2. 픽해서 서버에 픽한 정보 보내주기
       axios
         .post(
@@ -110,9 +106,7 @@ function App() {
             },
           }
         )
-        .then((response) => {
-          console.log(response.data.message);
-        })
+        .then((response) => {})
         .catch((err) => {
           console.log(err);
         });
@@ -157,11 +151,9 @@ function App() {
 
       setPickItems(pickedItems.data);
     }
-    console.log('App refresh!!');
-    console.log(sessionStorage, 'App!!');
+    // console.log(sessionStorage, 'App!!');
   };
   useEffect(() => {
-    console.log('App useEffect!!');
     refreshData();
   }, []);
 
@@ -225,6 +217,7 @@ function App() {
                     setAuthState={setAuthState}
                     setFestivalData={setFestivalData}
                     setFilteredData={setFilteredData}
+                    offset={offset}
                   />
                 }
               ></Route>

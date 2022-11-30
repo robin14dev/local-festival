@@ -123,24 +123,14 @@ const Mainpage = ({
   setFestivalData,
   setFilteredData,
 }) => {
-  console.log('Mainpage 렌더링');
   const [searchParams, setSearchParams] = useSearchParams();
   const observerTargetEl = useRef(null);
   const [hasNextPage, setHasNextPage] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [query, setQuery] = useState(searchParams.get('query'));
 
-  console.log(
-    'Mainpage filteredData.length ,isLoading, offset : ',
-    filteredData.length,
-    isLoading,
-    offset
-  );
-
   const navigate = useNavigate();
-  console.log(navigate);
   const fetchData = useCallback(async () => {
-    console.log('fetchDaata offset', offset);
     setIsLoading(true);
 
     try {
@@ -169,9 +159,9 @@ const Mainpage = ({
 
   const onSearch = (searchText) => {
     try {
+      offset.current = 0;
       setSearchParams({ query: '' });
 
-      sessionStorage.removeItem('offset');
       navigate(`/search?query=${searchText}`);
       setQuery(searchText);
       setFilteredData([]);
@@ -181,22 +171,14 @@ const Mainpage = ({
     }
   };
   useEffect(() => {
-    console.log('useEffect!!');
-    console.log(observerTargetEl.current, hasNextPage);
     if (!observerTargetEl.current || !hasNextPage) return;
     const callback = (entries, observer) => {
-      console.log(
-        'callback함수 호출, offset, enrties[0].isInterSecting : ',
-        offset,
-        entries[0].isIntersecting
-      );
       if (offset.current === 0) {
         fetchData();
         return;
       }
 
       if (entries[0].isIntersecting) {
-        console.log('intersecting true!!');
         fetchData();
       }
     };
