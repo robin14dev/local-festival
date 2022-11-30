@@ -9,14 +9,12 @@ const Wrapper = styled.div`
   width: 100%;
   min-height: 199px;
   border-bottom: 1px solid #d9d9d9;
-  padding-bottom: 1rem;
+  padding: 1rem;
 
   & + & {
     margin-bottom: 1rem;
   }
   @media (max-width: 485px) {
-    /* max-width: 380px;
-    height: 199px; */
     border: 1px solid #d9d9d9;
     border-radius: 7px;
   }
@@ -73,7 +71,6 @@ const Info = styled.div`
 `;
 
 const Body = styled.div`
-  /* background-color: green; */
   padding-top: 22px;
   padding-left: 16px;
 `;
@@ -151,7 +148,6 @@ export const showRating = (rating, size = 18) => {
 const Review = ({ review, authState, deleteReview }) => {
   const [deleteClicked, setDeleteClicked] = useState(false);
   const { rating, content, createdAt, User, festivalId, id } = review;
-  console.log(review);
   const modalHandler = () => {
     setDeleteClicked(!deleteClicked);
   };
@@ -179,7 +175,7 @@ const Review = ({ review, authState, deleteReview }) => {
               <img src={profileImg} alt="프로필사진" />
               <div className="nicknameAndDate">
                 <ul>
-                  <li>{User.nickname}</li>
+                  <li>{User ? User.nickname : '탈퇴한 회원입니다'}</li>
                   <li>{moment(createdAt).format('YYYY-MM-DD')}</li>
                 </ul>
               </div>

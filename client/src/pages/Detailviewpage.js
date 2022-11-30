@@ -359,6 +359,7 @@ const MobileWrapper = styled.section`
 
   p {
     padding: 18px;
+    line-height: 1.5;
   }
 
   .infoList {
