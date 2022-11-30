@@ -82,6 +82,7 @@ const ModalContainer = styled.div`
     & > button {
       width: 50%;
       padding-right: 32px;
+      color: gray;
       &:nth-child(1) {
         border-right: 1px solid black;
         padding-left: 32px;

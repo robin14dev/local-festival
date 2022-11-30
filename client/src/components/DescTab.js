@@ -14,6 +14,7 @@ const Wrapper = styled.section`
   overflow-y: auto;
   border-radius: 0 0 1rem 1rem;
   padding: 1rem;
+  padding-bottom: 5rem;
 
   h1 {
     font-size: 2rem;
@@ -35,6 +36,7 @@ const Wrapper = styled.section`
   p {
     margin-top: 43px;
     margin-bottom: 21px;
+    line-height: 1.5;
   }
 
   h3 {

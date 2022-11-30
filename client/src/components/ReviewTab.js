@@ -92,6 +92,12 @@ const ReviewList = styled.section`
     display: none; /* for Chrome, Safari, and Opera */
   }
 
+  .noReview {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .pagination {
     display: flex;
     justify-content: center;
@@ -100,7 +106,7 @@ const ReviewList = styled.section`
       width: 2rem;
       height: 2rem;
       margin: 0 0.5rem;
-      border-radius: 0.5rem rem;
+      border-radius: 0.5rem;
       font-size: 1.2rem;
     }
   }
@@ -151,79 +157,6 @@ const ReviewTab = ({ festival, authState }) => {
     }
     console.log('reviews', reviews);
   }, [festivalId, offset]);
-  /* totalReview : 18
-  unit : 5
-  pageLength : totalReview % unit === 0 ? totalReview/unit : parseInt(totalReview/unit) + 1  (나누어 떨어지면 그대로, 나누어떨어지지 않으면 +1)
-  page : (현재 페이지)
-  page    1  2  3  ~~ n
-  offset  0  5  10 ~~ (n-1)*5 <- 페이지로부터 계산
-  level  : page % 5 === 0 ? page / 5  : parseInt(page / 5) + 1
-  
-  
-  limit(계속 5개)
-  
-  0. 1페이지에 5개 리뷰씩 5페이지씩 보여준다고 가정
-  1. 처음 렌더링 되었을 때 
-      a. 페이지 버튼
-            총 리뷰의 개수를 통해 몇개의 페이지가 생성되는지 계산, 페이지 개수에 따라 몇개의 번들이 만들어지는지 계산 
-         
-            pageLength<5? Array(pageLength) : Array(5) 맵핑할 때 [1+5*(level -1), 2+5*(level -1), 3+5*(level -1), 4+5*(level -1), 5+5*(level -1)]
-  
-              총 리뷰 3개
-              : 1페이지, 1번들 
-              총 리뷰 6개
-              : 2페이지, 1번들
-              총 리뷰 57개
-              : 11페이지, 3번들
-  
-        i. 2번들 이상일 때
-        
-            offset : 0, 5, 10, 15, 20,        25, 30, 35
-            page   : 1, 2, 3,  4,  5 ,        6,  7,  8
-  
-            현재 page가 1, 6, 11 일때마다 페이지 버튼 바꿔야됨
-                5n-4 (n>=1)
-                (5*0)+1<= page <(5*1)+1 : 1,2,3,4,5 몫 : 0   => 1+(0*5) 2+(0*5) 3+(0*5) 4+(0*5) 5+(0*5) 
-                (5*1)+1<= page <(5*2)+1 : 6,7,8,9,10 몫 : 1 =>  1+(1*5) 2+(1*5) 3+(1*5) 4+(1*5) 5+(1*5) 
-  \
-                1 < ~~~ < 5  
-                5p-4          5p
-                1,2,3,4,5 ==>     몫 : 0  => 1+(0*5) 2+(0*5) 3+(0*5) 4+(0*5) 5+(0*5) 
-                6,7,8,9,10 ==>    몫 : 1  => 1+(1*5) 2+(1*5) 3+(1*5) 4+(1*5) 5+(1*5) 
-                11,12,13,14,15 >  몫 : 2
-                2페이지면
-                0.2로만들고 
-                parseInt(0.2) => 0
-  
-                해야할 것 : 7이 5와 10사이에 있는지 판단이 가능하면됨
-  
-                7페이지면 
-                0.7로만들고
-                parseInt(0.7) => 
-  
-                !10으로 나누어 소숫점을 만들어준 다음 반올림을 하고 여기에 다시 10을 곱해주어서 정수 반올림을 한다. 같은 방법으로 올림은 Math.ceil, 내림은 Math.floor을 하면 된다.
-  
-      b. 화살표 버튼
-            < : 비활성화
-            > : page<=5? 비활성화 : 활성화
-  
-  
-  2. 각 nav버튼을 누를 때 
-      특정 페이지의 다섯개의 리뷰를 불러오기 axios.get(limit=5, offset=)
-      
-  
-      a. 페이지 버튼을 누를 때 
-         ex) 2페이지면 axios.get(limit = 5, offset = (2-1)*5)
-      b. 화살표 번호를 누를 때
-         < 버튼 
-            - axios.get(limit= 5, offset = ((page-2)*5)로 이동
-            - page가 0이면 비활성화
-  
-         > 버튼
-            - axios.get(limit= 5, offset = (page*5)로 이동
-            - 마지막 page면 비활성화 (page === pageLength)
-  
-  */
 
   useEffect(() => {
     //# 특정 축제에 대한 리뷰글들을 불러온다.
@@ -316,7 +249,7 @@ const ReviewTab = ({ festival, authState }) => {
           </div>
         )}
         {reviews.length === 0 ? (
-          <>리뷰가 등록되어있지 않습니다.</>
+          <div className="noReview">리뷰가 등록되어있지 않습니다.</div>
         ) : (
           <>
             {reviews.map((review) => (
@@ -335,23 +268,6 @@ const ReviewTab = ({ festival, authState }) => {
               >
                 &lt;
               </button>
-              {/*
-              
-                현재 레벨에서 5개 이하이면 5개 이하의 버튼을 보여줘야함
-
-                총 페이지 7개
-                레벨 2에선 페이지 2개
-
-                pageLength - (level - 1) * unit < 5 이면
-
-                현재 레벨에서 남은 개수만큼 렌더링
-
-                level * unit
-
-                [1,2,3,4,5]
-                [6,7]
-
-            unit(5)*(level-1) + 1 부터 시작해서 맵핑*/}
 
               {pageLength - (level - 1) * unit < 5
                 ? Array(pageLength - (level - 1) * unit)

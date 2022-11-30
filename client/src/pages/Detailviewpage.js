@@ -71,8 +71,9 @@ const Wrapper = styled.section`
     border-radius: 18px;
     box-shadow: 1px 0px 7px rgb(0 0 0 / 22%);
     & > img {
+      width: 100%;
       max-width: 100%;
-      aspect-ratio: 367 / 393;
+      height: 80%;
       border-radius: 1rem;
       padding: 0.5rem;
     }
@@ -88,18 +89,19 @@ const Wrapper = styled.section`
         display: flex;
         align-items: center;
       }
-    }
-    button {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 1.1rem;
-      margin-right: 0.5rem;
-      img,
-      svg {
-        width: 25px;
-        height: auto;
-        margin-right: 0.2rem;
+      button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.1rem;
+        margin-right: 0.5rem;
+        color: gray;
+        img,
+        svg {
+          width: 25px;
+          height: auto;
+          margin-right: 0.2rem;
+        }
       }
     }
 
@@ -135,7 +137,6 @@ const Wrapper = styled.section`
       font-weight: 700;
       font-size: 2rem;
       line-height: 42px;
-      background-color: paleturquoise;
     }
 
     ul {
@@ -150,11 +151,11 @@ const Wrapper = styled.section`
       color: #a0a0a0;
     }
 
-    .review {
+    .reviews {
       background-color: white;
       flex: 0 1 auto;
       padding: 0.4rem;
-      /* max-width: 400px; */
+
       width: 100%;
       height: 116px;
       max-height: 116px;
@@ -173,9 +174,22 @@ const Wrapper = styled.section`
           }
         }
       }
+      .noReview {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #a0a0a0;
+      }
     }
     div + div {
       margin-top: 14px;
+    }
+    @media screen and (max-width: 845px) {
+      h1 {
+        font-size: 1.5rem;
+      }
     }
 
     @media (max-width: 485px) {
@@ -395,7 +409,7 @@ const Detailviewpage = ({ togglePick, authState }) => {
           `${process.env.REACT_APP_SERVER_URL}/festivals/${params.festivalId}`,
           { params: { userId: authState.userId } }
         );
-
+        console.log(result.data);
         setSummary(result.data);
         const isPicked = result.data.isPicked;
 
@@ -543,7 +557,7 @@ const Detailviewpage = ({ togglePick, authState }) => {
                 {moment(endDate, 'YYYY.MM.DD').format('YYYY.MM.DD')}
               </li>
             </ul>
-            <div className="review">
+            <div className="reviews">
               {goodReview[0] ? (
                 <>
                   <div className="header">
@@ -556,10 +570,10 @@ const Detailviewpage = ({ togglePick, authState }) => {
                   <p>{goodReview[0].content}</p>
                 </>
               ) : (
-                '리뷰가 등록되어있지 않습니다'
+                <div className="noReview">등록된 리뷰가 없습니다</div>
               )}
             </div>
-            <div className="review">
+            <div className="reviews">
               {badReview[0] ? (
                 <>
                   <div className="header">
@@ -572,7 +586,7 @@ const Detailviewpage = ({ togglePick, authState }) => {
                   <p>{badReview[0].content}</p>
                 </>
               ) : (
-                '리뷰가 등록되어있지 않습니다'
+                <div className="noReview">등록된 리뷰가 없습니다</div>
               )}
             </div>
           </section>

@@ -190,7 +190,11 @@ module.exports = {
       isPicked = isPicked === 1 ? true : false;
       //별점 평균
       const sum = await Reviews.sum('rating', { where: { festivalId } });
-      const average = Number((sum / reviewCount).toFixed(1));
+      let average = 0;
+
+      if (reviewCount !== 0) {
+        average = Number((sum / reviewCount).toFixed(1));
+      }
       //좋아요개수
       const likes = await Picks.count({
         where: { festivalId },
