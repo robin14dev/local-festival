@@ -1,25 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import HeartButton from './HeartButton';
 import onErrorImage from '../assets/noimage.png';
 import moment from 'moment';
 import HeartImg from '../assets/heart.png';
 import EmptyHeartImg from '../assets/empty-heart.png';
-import { Wrapper } from '../components/Festival.js';
+import { Wrapper } from './Festival';
+
+type PickProps = {
+  festival: FestivalItem;
+
+  togglePick: (festival: FestivalItem) => void;
+};
 
 const FestivalWrapper = styled(Wrapper)``;
-const Pick = ({ festival, togglePick }) => {
-  const [like, setLike] = useState(true);
+const Pick = ({ festival, togglePick }: PickProps) => {
+  const [like] = useState(true);
 
   let navigate = useNavigate();
   const { festivalId, title, imageUrl, startDate, endDate, location } =
     festival;
-  const onClickRemove = (event, festival) => {
-    event.stopPropagation();
-    togglePick(festival);
+  const onClickRemove = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    item: FestivalItem
+  ) => {
+    e.stopPropagation();
+    togglePick(item);
   };
-  const onErrorImg = (e) => {
+  const onErrorImg = (e: React.ChangeEvent<HTMLImageElement>) => {
     e.target.src = onErrorImage;
   };
 

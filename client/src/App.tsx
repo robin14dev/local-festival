@@ -6,7 +6,7 @@ import axios from 'axios';
 import { Helmet } from 'react-helmet';
 import Header from './components/Header';
 import Mainpage from './pages/Mainpage';
-import MyPick from '../src/pages/MyPick';
+import MyPick from './pages/MyPick';
 import Footer from './components/Footer';
 import Detailviewpage from './pages/Detailviewpage';
 import SignupModal from './components/SignupModal';
@@ -28,19 +28,26 @@ const Wrapper = styled.div`
 
 function App() {
   const [authState, setAuthState] = useState({
-    userId: '',
+    userId: 0,
     account: '',
     nickname: '',
     loginStatus: false,
   });
-  const [festivalData, setFestivalData] = useState([]);
-  const [pickItems, setPickItems] = useState([]);
-  const [filteredData, setFilteredData] = useState(festivalData);
+  const [festivalData, setFestivalData] = useState<FestivalItem[]>([]);
+  const [pickItems, setPickItems] = useState<FestivalItem[]>([]);
+  const [filteredData, setFilteredData] =
+    useState<FestivalItem[]>(festivalData);
   const [openLoginModal, setLoginModal] = useState(false);
   const [openSignupModal, setSignupModal] = useState(false);
   const offset = useRef(0);
 
-  const loginHandler = async (userId, account, nickname, loginStatus) => {
+  const loginHandler: loginHandlerFunc = async (
+    userId,
+    account,
+    nickname,
+    loginStatus
+  ) => {
+    console.log(userId, account, nickname, loginStatus);
     //* 로그인한 후의 유저정보 상태변경입니다.
     const nextState = {
       userId: userId,
@@ -52,18 +59,14 @@ function App() {
     //# 유저별 찜한 축제 가져오기
     let result = await axios.get(`${process.env.REACT_APP_SERVER_URL}/pick`, {
       headers: {
-        accesstoken: sessionStorage.getItem('accesstoken'),
+        accesstoken: sessionStorage.getItem('accesstoken') ?? '',
       },
     });
 
     setPickItems(result.data);
   };
 
-  const resetCondition = () => {
-    setFilteredData(festivalData);
-  };
-
-  const togglePick = (newPick) => {
+  const togglePick: togglePick = (newPick) => {
     //#1. 픽했는지 아닌지 부터 확인
     const found = pickItems.filter(
       (el) => el.festivalId === newPick.festivalId
@@ -79,7 +82,7 @@ function App() {
         .delete(`${process.env.REACT_APP_SERVER_URL}/pick`, {
           data: { festivalId: newPick.festivalId },
           headers: {
-            accesstoken: sessionStorage.getItem('accesstoken'),
+            accesstoken: sessionStorage.getItem('accesstoken') ?? '',
           },
         })
         .then((response) => {
@@ -102,7 +105,7 @@ function App() {
           },
           {
             headers: {
-              accesstoken: sessionStorage.getItem('accesstoken'),
+              accesstoken: sessionStorage.getItem('accesstoken') ?? '',
             },
           }
         )
@@ -115,7 +118,7 @@ function App() {
     }
   };
 
-  const handleAuthState = (nickname) => {
+  const handleAuthState = (nickname: string) => {
     const nextAuthState = authState;
     nextAuthState.nickname = nickname;
     setAuthState(nextAuthState);
@@ -126,7 +129,7 @@ function App() {
         `${process.env.REACT_APP_SERVER_URL}/users`,
         {
           headers: {
-            accesstoken: sessionStorage.getItem('accesstoken'),
+            accesstoken: sessionStorage.getItem('accesstoken') ?? '',
           },
         }
       );
@@ -144,7 +147,7 @@ function App() {
         `${process.env.REACT_APP_SERVER_URL}/pick`,
         {
           headers: {
-            accesstoken: sessionStorage.getItem('accesstoken'),
+            accesstoken: sessionStorage.getItem('accesstoken') ?? '',
           },
         }
       );
@@ -183,8 +186,6 @@ function App() {
               loginHandler={loginHandler}
               authState={authState}
               setLoginModal={setLoginModal}
-              setSignupModal={setSignupModal}
-              togglePick={togglePick}
             />
             <Routes>
               <Route
@@ -194,10 +195,6 @@ function App() {
                     togglePick={togglePick}
                     filteredData={filteredData}
                     pickItems={pickItems}
-                    setPickItems={setPickItems}
-                    resetCondition={resetCondition}
-                    authState={authState}
-                    setAuthState={setAuthState}
                     setFestivalData={setFestivalData}
                     setFilteredData={setFilteredData}
                     offset={offset}
@@ -211,10 +208,6 @@ function App() {
                     togglePick={togglePick}
                     filteredData={filteredData}
                     pickItems={pickItems}
-                    setPickItems={setPickItems}
-                    resetCondition={resetCondition}
-                    authState={authState}
-                    setAuthState={setAuthState}
                     setFestivalData={setFestivalData}
                     setFilteredData={setFilteredData}
                     offset={offset}
@@ -225,20 +218,13 @@ function App() {
               <Route
                 path="/MyPick"
                 element={
-                  <MyPick
-                    authState={authState}
-                    handleAuthState={handleAuthState}
-                    festivalData={festivalData}
-                    pickItems={pickItems}
-                    togglePick={togglePick}
-                  />
+                  <MyPick pickItems={pickItems} togglePick={togglePick} />
                 }
               ></Route>
               <Route
                 path="/Detail/:festivalId/*"
                 element={
                   <Detailviewpage
-                    pickItems={pickItems}
                     togglePick={togglePick}
                     authState={authState}
                   />

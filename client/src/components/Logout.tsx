@@ -85,7 +85,7 @@ const LogoutViewButton = styled.div`
   }
 `;
 
-const Logout = ({ loginHandler }) => {
+const Logout = ({ loginHandler }: { loginHandler: loginHandlerFunc }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   let navigate = useNavigate();
@@ -96,7 +96,7 @@ const Logout = ({ loginHandler }) => {
 
   const onClickLogoutBtn = () => {
     //# 클라이언트에서 토큰 지우기
-    loginHandler('', '', '', false);
+    loginHandler(0, '', '', false);
     navigate('/');
     window.sessionStorage.clear();
   };

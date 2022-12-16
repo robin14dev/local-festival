@@ -46,7 +46,12 @@ const PickList = styled.section`
     width: 100%;
   }
 `;
-const MyPick = ({ authState, pickItems, togglePick }) => {
+
+type MyPickProps = {
+  pickItems: FestivalItem[];
+  togglePick: togglePick;
+};
+const MyPick = ({ pickItems, togglePick }: MyPickProps) => {
   console.log('mypick!!');
   return (
     <Wrapper>
@@ -67,7 +72,6 @@ const MyPick = ({ authState, pickItems, togglePick }) => {
               <Pick
                 key={pick.festivalId}
                 festival={pick}
-                pickItems={pickItems}
                 togglePick={togglePick}
               />
             );

@@ -89,7 +89,11 @@ const ButtonSection = styled.div`
   }
 `;
 
-const Withdraw = ({ setWithdrawModal, setFinishModal }) => {
+type WithdrawProps = {
+  setWithdrawModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setFinishModal: React.Dispatch<React.SetStateAction<boolean>>;
+};
+const Withdraw = ({ setWithdrawModal, setFinishModal }: WithdrawProps) => {
   const [passwordCheck, setPasswordCheck] = useState('');
   const [isInvalid, setIsInvalid] = useState(false);
   const [errMessage, setErrorMessage] = useState('');
@@ -97,13 +101,16 @@ const Withdraw = ({ setWithdrawModal, setFinishModal }) => {
     '비밀번호를 입력해 주세요',
     '비밀번호가 일치하지 않습니다.',
   ];
-  const handlePasswordCheck = useCallback((e) => {
-    setPasswordCheck(e.target.value);
-    setIsInvalid(false);
-  }, []);
+  const handlePasswordCheck = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setPasswordCheck(e.target.value);
+      setIsInvalid(false);
+    },
+    []
+  );
 
   const handleSubmit = useCallback(
-    async (e) => {
+    async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       //# 빈값일 때 비밀번호를 입력해 주세요
       if (passwordCheck.length === 0) {
@@ -113,10 +120,9 @@ const Withdraw = ({ setWithdrawModal, setFinishModal }) => {
       }
 
       try {
-        console.log(sessionStorage.getItem('accesstoken'));
         await axios.delete(`${process.env.REACT_APP_SERVER_URL}/users`, {
           data: { passwordCheck: passwordCheck },
-          headers: { accesstoken: sessionStorage.getItem('accesstoken') },
+          headers: { accesstoken: sessionStorage.getItem('accesstoken') ?? '' },
         });
         setWithdrawModal(false);
         setFinishModal(true);

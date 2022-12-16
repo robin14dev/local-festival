@@ -108,7 +108,12 @@ const LoginSection = styled.div`
   }
 `;
 
-const SignupModal = ({ setSignupModal, setLoginModal }) => {
+type SignupModalProps = {
+  setSignupModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const SignupModal = ({ setSignupModal, setLoginModal }: SignupModalProps) => {
   const [userInfo, setUserInfo] = useState({
     account: '',
     nickname: '',
@@ -126,8 +131,8 @@ const SignupModal = ({ setSignupModal, setLoginModal }) => {
   const { account, nickname, password, passwordCheck } = userInfo;
 
   const handleUserInfo = useCallback(
-    (e) => {
-      function validate(type) {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      function validate(type: string) {
         let message = {
           account: {
             success: '사용가능한 이메일 입니다.',
@@ -151,6 +156,9 @@ const SignupModal = ({ setSignupModal, setLoginModal }) => {
         let passwordRgx =
           /^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!~@#$%^&+=]).*$/;
 
+        const errMsgDom: HTMLElement | null = document.body.querySelector(
+          `.${e.target.name}`
+        );
         switch (type) {
           case 'account':
             if (emailRgx.test(e.target.value) === false) {
@@ -158,17 +166,18 @@ const SignupModal = ({ setSignupModal, setLoginModal }) => {
                 ...prevMsg,
                 [e.target.name]: message.account.fail,
               }));
-              document.body.querySelector(`.${e.target.name}`).style.color =
-                'red';
+              if (errMsgDom) {
+                errMsgDom.style.color = 'red';
+              }
             } else {
               setValidMsg((prevMsg) => ({
                 ...prevMsg,
                 [e.target.name]: message.account.success,
               }));
-              document.body.querySelector(`.${e.target.name}`).style.color =
-                'green';
+              if (errMsgDom) {
+                errMsgDom.style.color = 'green';
+              }
             }
-
             break;
 
           case 'nickname':
@@ -177,15 +186,17 @@ const SignupModal = ({ setSignupModal, setLoginModal }) => {
                 ...prevMsg,
                 [e.target.name]: message.nickname.fail,
               }));
-              document.body.querySelector(`.${e.target.name}`).style.color =
-                'red';
+              if (errMsgDom) {
+                errMsgDom.style.color = 'red';
+              }
             } else {
               setValidMsg((prevMsg) => ({
                 ...prevMsg,
                 [e.target.name]: message.nickname.success,
               }));
-              document.body.querySelector(`.${e.target.name}`).style.color =
-                'green';
+              if (errMsgDom) {
+                errMsgDom.style.color = 'green';
+              }
             }
             break;
 
@@ -195,15 +206,17 @@ const SignupModal = ({ setSignupModal, setLoginModal }) => {
                 ...prevMsg,
                 [e.target.name]: message.password.fail,
               }));
-              document.body.querySelector(`.${e.target.name}`).style.color =
-                'red';
+              if (errMsgDom) {
+                errMsgDom.style.color = 'red';
+              }
             } else {
               setValidMsg((prevMsg) => ({
                 ...prevMsg,
                 [e.target.name]: message.password.success,
               }));
-              document.body.querySelector(`.${e.target.name}`).style.color =
-                'green';
+              if (errMsgDom) {
+                errMsgDom.style.color = 'green';
+              }
             }
 
             break;
@@ -213,15 +226,17 @@ const SignupModal = ({ setSignupModal, setLoginModal }) => {
                 ...prevMsg,
                 [e.target.name]: message.password.notSame,
               }));
-              document.body.querySelector(`.${e.target.name}`).style.color =
-                'red';
+              if (errMsgDom) {
+                errMsgDom.style.color = 'red';
+              }
             } else {
               setValidMsg((prevMsg) => ({
                 ...prevMsg,
                 [e.target.name]: message.password.same,
               }));
-              document.body.querySelector(`.${e.target.name}`).style.color =
-                'green';
+              if (errMsgDom) {
+                errMsgDom.style.color = 'green';
+              }
             }
 
             break;
@@ -240,10 +255,12 @@ const SignupModal = ({ setSignupModal, setLoginModal }) => {
   );
 
   const handleSubmit = useCallback(
-    (e) => {
+    (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
       let pwdRgx = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,}$/;
+      const errMsgDom: HTMLElement | null =
+        document.body.querySelector('.errorMessage');
 
       if (pwdRgx.test(password) === false) {
         console.log('비밀번호 유효성 x');
@@ -252,9 +269,10 @@ const SignupModal = ({ setSignupModal, setLoginModal }) => {
       if (password !== passwordCheck) {
         console.log('password Not Match');
 
-        document.body.querySelector('.errorMessage').textContent =
-          '비밀번호가 일치하지 않습니다';
-        document.body.querySelector('.errorMessage').style.fontWeight = 'bold';
+        if (errMsgDom) {
+          errMsgDom.textContent = '비밀번호가 일치하지 않습니다';
+          errMsgDom.style.fontWeight = 'bold';
+        }
       } else {
         //# 유효성 검증 후 서버에 회원가입 정보 전송 (주석 해제)
         axios
@@ -270,10 +288,10 @@ const SignupModal = ({ setSignupModal, setLoginModal }) => {
           })
           .catch((err) => {
             if (err.response.status === 409) {
-              document.body.querySelector('.errorMessage').textContent =
-                '이미 가입된 아이디 입니다.';
-              document.body.querySelector('.errorMessage').style.fontWeight =
-                'bold';
+              if (errMsgDom) {
+                errMsgDom.textContent = '이미 가입된 아이디 입니다.';
+                errMsgDom.style.fontWeight = 'bold';
+              }
             }
           });
       }
@@ -304,9 +322,7 @@ const SignupModal = ({ setSignupModal, setLoginModal }) => {
             type="text"
             value={account}
             required
-            onChange={(e) => {
-              handleUserInfo(e, e.target.name);
-            }}
+            onChange={handleUserInfo}
           />
           <div className="validInfo">
             <label htmlFor="nickname">닉네임</label>
@@ -317,9 +333,7 @@ const SignupModal = ({ setSignupModal, setLoginModal }) => {
             type="text"
             value={nickname}
             required
-            onChange={(e) => {
-              handleUserInfo(e);
-            }}
+            onChange={handleUserInfo}
           />
           <div className="validInfo">
             <label htmlFor="password">비밀번호</label>{' '}
@@ -330,9 +344,7 @@ const SignupModal = ({ setSignupModal, setLoginModal }) => {
             type="password"
             value={password}
             required
-            onChange={(e) => {
-              handleUserInfo(e);
-            }}
+            onChange={handleUserInfo}
           />
           <div className="validInfo">
             <label htmlFor="passwordCheck">비밀번호 확인</label>
@@ -343,9 +355,7 @@ const SignupModal = ({ setSignupModal, setLoginModal }) => {
             type="password"
             value={passwordCheck}
             required
-            onChange={(e) => {
-              handleUserInfo(e);
-            }}
+            onChange={handleUserInfo}
           />
           <button type="submit">회원가입</button>
         </form>

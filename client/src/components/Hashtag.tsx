@@ -28,7 +28,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const Button = styled.button`
+const Button = styled.button<{ active: boolean }>`
   width: max-content;
   height: 38px;
   padding: 0.1rem 0.5rem;
@@ -52,8 +52,8 @@ const Button = styled.button`
     `}
 `;
 
-const Hashtag = ({ onSearch }) => {
-  const [SearchParams, setSearchParams] = useSearchParams();
+const Hashtag = ({ onSearch }: { onSearch: onSearchFunc }) => {
+  const [SearchParams] = useSearchParams();
   const [curTag, setCurTag] = useState(SearchParams.get('query'));
   const tagsArr = [
     {

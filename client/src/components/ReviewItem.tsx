@@ -129,7 +129,7 @@ const Modal = styled.div`
   }
 `;
 
-export const showRating = (rating, size = 18) => {
+export const showRating = (rating: number, size = 18) => {
   const ratingArr = [1, 2, 3, 4, 5];
   return ratingArr.map((ele) => {
     const ratingValue = ele;
@@ -138,21 +138,37 @@ export const showRating = (rating, size = 18) => {
         className="starr"
         key={ele}
         size={size}
-        ele={ele}
+        // ele={ele}
         color={ratingValue <= rating ? `var(--mainColor)` : '#c6c6c6'}
       />
     );
   });
 };
 
-const Review = ({ review, authState, deleteReview }) => {
+// User: {nickname: '닉네임2'}
+// content: "review content"
+// createdAt: "2022-11-15T05:02:18.000Z"
+// festivalId: 141661
+// id: 9
+// rating: 4
+// updatedAt: "2022-11-15T05:02:18.000Z"
+// userId: 2
+
+type ReviewProps = {
+  review: TReviewItem;
+  authState: AuthState;
+  deleteReview: (reviewId: number, festivalId: number) => void;
+};
+
+const Review = ({ review, authState, deleteReview }: ReviewProps) => {
+  console.log(review);
   const [deleteClicked, setDeleteClicked] = useState(false);
   const { rating, content, createdAt, User, festivalId, id } = review;
   const modalHandler = () => {
     setDeleteClicked(!deleteClicked);
   };
 
-  const onClickDelete = (reviewId, festivalId) => {
+  const onClickDelete = (reviewId: number, festivalId: number) => {
     deleteReview(reviewId, festivalId);
   };
 

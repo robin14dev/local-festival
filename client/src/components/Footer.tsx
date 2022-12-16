@@ -1,9 +1,7 @@
 import React from 'react';
 import peachmong from '../assets/peachmong.png';
-import styled, { css } from 'styled-components';
-import searchImage from '../assets/search-mobile.png';
-import pickImage from '../assets/pick-mobile.png';
-import profileImage from '../assets/profile-mobile.png';
+import styled from 'styled-components';
+
 import { useNavigate } from 'react-router-dom';
 import { useCallback } from 'react';
 import { ReactComponent as Account } from '../assets/profile.svg';
@@ -67,10 +65,15 @@ const Item = styled.div`
   }
 `;
 
-const Footer = ({ authState, setLoginModal }) => {
+type FooterProps = {
+  authState: AuthState;
+  setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const Footer = ({ authState, setLoginModal }: FooterProps) => {
   let navigate = useNavigate();
   const goPage = useCallback(
-    (path) => {
+    (path: string) => {
       if (authState.loginStatus) {
         navigate(`/${path}`);
       } else {
@@ -88,18 +91,15 @@ const Footer = ({ authState, setLoginModal }) => {
       </Wrapper>
       <WrapperMobile>
         <Item onClick={() => navigate('/')}>
-          {/* <img src={searchImage} alt="home"></img> */}
           <Mainpage width={23} height={23} fill={'#FF9A62'} />
 
           <div>둘러보기</div>
         </Item>
-        <Item path="MyPick" onClick={() => goPage('MyPick')}>
-          {/* <img src={pickImage} alt="mypick"></img> */}
+        <Item onClick={() => goPage('MyPick')}>
           <MyPick width={23} height={23} fill={'#FF9A62'} />
           <div>위시리스트</div>
         </Item>
         <Item onClick={() => goPage('AccountSetting')}>
-          {/* <img src={profileImage} alt="profile"></img> */}
           <Account width={23} height={23} fill={'#FF9A62'} />
           <div>프로필</div>
         </Item>

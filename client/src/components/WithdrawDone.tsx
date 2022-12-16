@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const ModalBackdrop = styled.div`
@@ -53,12 +53,16 @@ const ModalView = styled.div`
   }
 `;
 
-const WithdrawDone = ({ setFinishModdal }) => {
+const WithdrawDone = ({
+  setFinishModal,
+}: {
+  setFinishModal: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   return (
     <>
       <ModalBackdrop
         onClick={() => {
-          setFinishModdal(false);
+          setFinishModal(false);
         }}
       />
       <ModalView

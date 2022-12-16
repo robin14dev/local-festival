@@ -21,11 +21,16 @@ const Wrapper = styled.div`
     transition: color 200ms;
   }
 `;
+type RatingProps = {
+  handleRating: (rating: number) => void;
+  initial: null | number;
+  nowShowErrMsg: () => void;
+};
 
-const Rating = ({ handleRating, initial, nowShowErrMsg }) => {
-  const [rating, setRating] = useState(initial);
-  const [hover, setHover] = useState(null);
-  const onClickRating = (rating) => {
+const Rating = ({ handleRating, initial, nowShowErrMsg }: RatingProps) => {
+  const [rating, setRating] = useState<number | null>(initial);
+  const [hover, setHover] = useState<number | null>(null);
+  const onClickRating = (rating: number) => {
     nowShowErrMsg();
     setRating(rating);
     console.log(rating);
@@ -48,13 +53,13 @@ const Rating = ({ handleRating, initial, nowShowErrMsg }) => {
               type="radio"
               name="rating"
               value={ratingValue}
-              onClick={(e) => onClickRating(e.target.value)}
+              onClick={(e) => onClickRating(ratingValue)}
             />
 
             <AiFillStar
               className="star" // 각각 ratingValue : 1 2 3 4 5
               color={
-                ratingValue <= (hover || rating)
+                ratingValue <= ((hover as number) || (rating as number))
                   ? 'var(--mainColor)'
                   : 'lightgray'
               }

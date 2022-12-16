@@ -140,11 +140,27 @@ const Password = styled(Accordion)`
   }
 `;
 
+type AccountSettingProps = {
+  authState: AuthState;
+  handleAuthState: (nickname: string) => void;
+  loginHandler: loginHandlerFunc;
+};
+
 export default function AccountSetting({
   authState,
   handleAuthState,
   loginHandler,
-}) {
+}: AccountSettingProps) {
+  // type Open = {
+  //   [index: string]: boolean;
+  //   nickname: boolean;
+  //   password: boolean;
+  // };
+  // const [isOpen, setIsOpen] = useState<Open>({
+  //   nickname: false,
+  //   password: false,
+  // });
+
   const [isOpen, setIsOpen] = useState({
     nickname: false,
     password: false,
@@ -159,14 +175,14 @@ export default function AccountSetting({
   const [finishWithdrawModal, setFinishModal] = useState(false);
   const [updatedAt, setUpdatedAt] = useState('');
 
-  const inputhere = useRef();
-  const errMessagePwd = useRef();
+  const inputhere = useRef<HTMLInputElement | null>(null);
+  const errMessagePwd = useRef<HTMLSpanElement | null>(null);
 
   useEffect(() => {
     console.log('accountSetting!!');
     axios
       .get(`${process.env.REACT_APP_SERVER_URL}/users/edit`, {
-        headers: { accesstoken: sessionStorage.getItem('accesstoken') },
+        headers: { accesstoken: sessionStorage.getItem('accesstoken') ?? '' },
       })
       .then((response) => {
         console.log(response);
@@ -174,86 +190,100 @@ export default function AccountSetting({
       });
   }, []);
 
-  const nicknameHandler = (e) => {
+  const nicknameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
   };
 
   const profileHandler = () => {
-    if (inputhere.current.value === '') {
-      document.querySelector('.errorMessage').textContent =
-        '최소 한 글자 이상의 단어를 적어주세요';
-    } else {
-      axios
-        .put(
-          `${process.env.REACT_APP_SERVER_URL}/users/nickname`,
-          { nickname },
-          { headers: { accesstoken: sessionStorage.getItem('accesstoken') } }
-        )
-        .then((response) => {
-          const nextNickname = response.data.nickname;
+    if (inputhere.current) {
+      if (inputhere.current.value === '') {
+        document.querySelector('.errorMessage')!.textContent =
+          '최소 한 글자 이상의 단어를 적어주세요';
+      } else {
+        axios
+          .put(
+            `${process.env.REACT_APP_SERVER_URL}/users/nickname`,
+            { nickname },
+            {
+              headers: {
+                accesstoken: sessionStorage.getItem('accesstoken') ?? '',
+              },
+            }
+          )
+          .then((response) => {
+            const nextNickname = response.data.nickname;
 
-          handleAuthState(nextNickname);
-          window.location.replace('/AccountSetting');
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+            handleAuthState(nextNickname);
+            window.location.replace('/AccountSetting');
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     }
   };
 
-  const openModalHandler = (e) => {
-    if (isOpen[e.target.name] === false) {
-      const nextIsOpen = { ...isOpen, [e.target.name]: true };
-      e.target.textContent = '취소';
+  const openModalHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const target = e.currentTarget as HTMLButtonElement;
+    const name = target.name as 'nickname' | 'password';
+
+    if (isOpen[name] === false) {
+      const nextIsOpen = { ...isOpen, [name]: true };
       setIsOpen(nextIsOpen);
     } else {
-      const nextIsOpen = { ...isOpen, [e.target.name]: false };
-      e.target.textContent = '수정';
+      const nextIsOpen = { ...isOpen, [name]: false };
       setIsOpen(nextIsOpen);
     }
   };
 
-  const onChangeHandler = useCallback((e) => {
-    setPwdForm((prevForm) => ({
-      ...prevForm,
-      [e.target.name]: e.target.value,
-    }));
-  }, []);
+  const onChangeHandler = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setPwdForm((prevForm) => ({
+        ...prevForm,
+        [e.target.name]: e.target.value,
+      }));
+    },
+    []
+  );
   const submitPwd = useCallback(() => {
     const { newPassword, passwordCheck } = pwdForm;
     if (newPassword !== passwordCheck) {
-      errMessagePwd.current.textContent =
-        '새로 입력한 비밀번호가 서로 일치하지 않습니다.';
+      if (errMessagePwd.current) {
+        errMessagePwd.current.textContent =
+          '새로 입력한 비밀번호가 서로 일치하지 않습니다.';
+      }
     } else {
       axios
         .put(`${process.env.REACT_APP_SERVER_URL}/users/password`, pwdForm, {
-          headers: { accesstoken: sessionStorage.getItem('accesstoken') },
+          headers: { accesstoken: sessionStorage.getItem('accesstoken') ?? '' },
         })
         .then((response) => {
           console.log(response);
           const { message, updatedAt } = response.data;
           if (message === 'password successfully changed') {
-            errMessagePwd.current.textContent = '비밀번호가 변경되었습니다.';
-            setUpdatedAt(updatedAt);
+            if (errMessagePwd.current) {
+              errMessagePwd.current.textContent = '비밀번호가 변경되었습니다.';
+              setUpdatedAt(updatedAt);
+            }
           }
         })
         .catch((err) => {
           console.log('errrrr', err.response.data.message);
 
           if (err.response.data.message === 'Wrong Password') {
-            errMessagePwd.current.textContent =
-              '기존 비밀번호가 일치하지 않습니다.';
+            if (errMessagePwd.current) {
+              errMessagePwd.current.textContent =
+                '기존 비밀번호가 일치하지 않습니다.';
+            }
           } else {
             console.log(err);
           }
         });
-
-      //기존 비밀번호가 일치하지 않을 때
     }
   }, [pwdForm]);
 
   const onClickLogout = useCallback(() => {
-    loginHandler('', '', '', false);
+    loginHandler(0, '', '', false);
     window.location.replace('/');
     window.sessionStorage.clear();
   }, []);
@@ -278,7 +308,7 @@ export default function AccountSetting({
               <h4>닉네임</h4>
               <Button>
                 <button name="nickname" onClick={openModalHandler}>
-                  <img name="nickname" src={EditImg} alt="수정" />
+                  <img src={EditImg} alt="수정" />
                 </button>
               </Button>
             </Heading>
@@ -305,7 +335,7 @@ export default function AccountSetting({
               <h4>비밀번호</h4>
               <Button>
                 <button name="password" onClick={openModalHandler}>
-                  <img name="password" src={EditImg} alt="수정" />
+                  <img src={EditImg} alt="수정" />
                 </button>
               </Button>
             </Heading>

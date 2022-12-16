@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const validateToken = require('../token-functions/validateToken');
 
 module.exports = async (req, res) => {
-  console.log('req.body는?', req.body); //{ passwordCheck: 'ccccxxx' }
+  console.log('withDraw!! req.body는?', req.body); //{ passwordCheck: 'ccccxxx' }
   console.log(validateToken);
   const accessTokenData = validateToken(req);
 

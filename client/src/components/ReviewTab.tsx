@@ -1,8 +1,8 @@
-import React, { useState, useEffect, forwardRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import ReviewWrite from './ReviewWrite';
-import axios from 'axios';
 import ReviewItem from './ReviewItem';
+import axios from 'axios';
 import { useCallback } from 'react';
 import { useRef } from 'react';
 import loadImg from '../assets/loading.gif';
@@ -111,13 +111,16 @@ const ReviewList = styled.section`
     }
   }
 `;
-
-const ReviewTab = ({ festival, authState }) => {
+type ReviewTabProps = {
+  festival: FestivalItem;
+  authState: AuthState;
+};
+const ReviewTab = ({ festival, authState }: ReviewTabProps) => {
   let navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   const { festivalId } = festival;
-  const [reviews, setReviews] = useState([]);
+  const [reviews, setReviews] = useState<TReviewItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [average, setAverage] = useState(0);
@@ -126,11 +129,11 @@ const ReviewTab = ({ festival, authState }) => {
   const pageLength = reviewsCount.current
     ? reviewsCount.current % unit === 0
       ? reviewsCount.current / unit
-      : parseInt(reviewsCount.current / unit) + 1
-    : undefined;
+      : Math.floor(reviewsCount.current / unit) + 1
+    : 0;
 
   let offset = (page - 1) * unit;
-  let level = page % 5 === 0 ? page / 5 : parseInt(page / 5) + 1;
+  let level = page % 5 === 0 ? page / 5 : Math.floor(page / 5) + 1;
 
   const fetchReviews = useCallback(async () => {
     setIsLoading(true);
@@ -140,7 +143,7 @@ const ReviewTab = ({ festival, authState }) => {
           `${process.env.REACT_APP_SERVER_URL}/review/${festivalId}`,
           {
             headers: {
-              accesstoken: sessionStorage.getItem('accesstoken'),
+              accesstoken: sessionStorage.getItem('accesstoken') ?? '',
             },
             params: { limit: 5, offset },
           }
@@ -168,7 +171,7 @@ const ReviewTab = ({ festival, authState }) => {
     fetchReviews();
   }, [fetchReviews, searchParams]);
 
-  const updateReviewList = (newReview) => {
+  const updateReviewList = (newReview: TReviewItem) => {
     console.log('상끌 성공!!!!');
     console.log(newReview);
     setReviews((prevReviews) => {
@@ -181,13 +184,13 @@ const ReviewTab = ({ festival, authState }) => {
     reviewsCount.current++;
   };
 
-  const deleteReview = (reviewId, festivalId) => {
+  const deleteReview = (reviewId: number, festivalId: number) => {
     axios
       .delete(
         `${process.env.REACT_APP_SERVER_URL}/review/${festivalId}/${reviewId}`,
         {
           headers: {
-            accesstoken: sessionStorage.getItem('accesstoken'),
+            accesstoken: sessionStorage.getItem('accesstoken') ?? '',
           },
         }
       )
@@ -206,7 +209,8 @@ const ReviewTab = ({ festival, authState }) => {
       });
   };
 
-  const goToPage = (navTo) => {
+  const goToPage = (event: React.MouseEvent<HTMLElement>) => {
+    const navTo = (event.target as HTMLElement).textContent;
     if (navTo === '<') {
       navigate(`.?page=${page - 1}`);
     } else if (navTo === '>') {
@@ -262,10 +266,7 @@ const ReviewTab = ({ festival, authState }) => {
             ))}
 
             <section className="pagination">
-              <button
-                disabled={page === 1}
-                onClick={(e) => goToPage(e.target.textContent)}
-              >
+              <button disabled={page === 1} onClick={goToPage}>
                 &lt;
               </button>
 
@@ -279,7 +280,7 @@ const ReviewTab = ({ festival, authState }) => {
                           color: `${ele === page ? `#FF9A62` : 'black'}`,
                           fontWeight: `${ele === page ? 'bold' : 'normal'}`,
                         }}
-                        onClick={() => goToPage(ele)}
+                        onClick={goToPage}
                         key={ele}
                       >
                         {ele}
@@ -297,16 +298,13 @@ const ReviewTab = ({ festival, authState }) => {
                         color: `${ele === page ? '#FF9A62' : 'black'}`,
                         fontWeight: `${ele === page ? 'bold' : 'normal'}`,
                       }}
-                      onClick={() => goToPage(ele)}
+                      onClick={goToPage}
                       key={ele}
                     >
                       {ele}
                     </button>
                   ))}
-              <button
-                disabled={page === pageLength}
-                onClick={(e) => goToPage(e.target.textContent)}
-              >
+              <button disabled={page === pageLength} onClick={goToPage}>
                 &gt;
               </button>
             </section>
