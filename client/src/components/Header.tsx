@@ -27,7 +27,13 @@ const Wrapper = styled.header`
   }
 `;
 
-const Header = ({ authState, loginHandler, setLoginModal, setSignupModal }) => {
+type HeaderProps = {
+  authState: AuthState;
+  loginHandler: loginHandlerFunc;
+  setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const Header = ({ authState, loginHandler, setLoginModal }: HeaderProps) => {
   const onClickReload = () => {
     window.location.replace('/');
   };
@@ -37,7 +43,6 @@ const Header = ({ authState, loginHandler, setLoginModal, setSignupModal }) => {
       <h1 onClick={onClickReload}>LoCo</h1>
       <Navigationbar
         setLoginModal={setLoginModal}
-        setSignupModal={setSignupModal}
         loginHandler={loginHandler}
         authState={authState}
       />

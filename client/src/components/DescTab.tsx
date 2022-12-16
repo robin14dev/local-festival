@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
-import { useParams } from 'react-router-dom';
 
 import { ReactComponent as Instagram } from '../assets/instagram.svg';
 import { ReactComponent as Youtube } from '../assets/youtube.svg';
@@ -79,8 +78,11 @@ const Wrapper = styled.section`
     display: none;
   }
 `;
+type DescTabProps = {
+  festival: FestivalItem;
+};
 
-const DescTab = ({ festival }) => {
+const DescTab = ({ festival }: DescTabProps) => {
   const { location, overview, tel, title, homepageUrl, startDate, endDate } =
     festival;
 
@@ -89,21 +91,23 @@ const DescTab = ({ festival }) => {
     instagram: '',
     youtube: '',
   };
-  if (!!homepageUrl !== false) {
+  if (homepageUrl) {
     const regex = {
       official: /http(s)?:\/\/[a-zA-Z\\d`~!@#$%^&*()-_=+]+/g,
       instagram: /(https?:\/\/www.instagram.com\/[a-zA-Z0-9]+)/g,
       youtube: /(https?:\/\/www.youtube.com\/[a-zA-Z0-9]+)/g,
     };
 
-    urlCollection['official'] = homepageUrl.match(regex.official)[0];
+    if (homepageUrl.match(regex.official)) {
+      urlCollection['official'] = homepageUrl.match(regex.official)![0];
+    }
     if (homepageUrl.match(regex.instagram)) {
-      urlCollection['instagram'] = homepageUrl.match(regex.instagram)[0];
+      urlCollection['official'] = homepageUrl.match(regex.instagram)![0];
     }
+
     if (homepageUrl.match(regex.youtube)) {
-      urlCollection['youtube'] = homepageUrl.match(regex.youtube)[0];
+      urlCollection['youtube'] = homepageUrl.match(regex.youtube)![0];
     }
-  } else {
   }
 
   return (

@@ -115,6 +115,16 @@ const ErrorMsg = styled.section`
     }
   }
 `;
+
+type MainpageProps = {
+  togglePick: togglePick;
+  filteredData: FestivalItem[];
+  pickItems: FestivalItem[];
+  offset: React.MutableRefObject<number>;
+  setFestivalData: React.Dispatch<React.SetStateAction<FestivalItem[]>>;
+  setFilteredData: React.Dispatch<React.SetStateAction<FestivalItem[]>>;
+};
+
 const Mainpage = ({
   togglePick,
   filteredData,
@@ -122,7 +132,7 @@ const Mainpage = ({
   offset,
   setFestivalData,
   setFilteredData,
-}) => {
+}: MainpageProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const observerTargetEl = useRef(null);
   const [hasNextPage, setHasNextPage] = useState(true);
@@ -147,7 +157,7 @@ const Mainpage = ({
 
       if (festivals.length) {
         offset.current += 8;
-        sessionStorage.setItem('offset', offset);
+        sessionStorage.setItem('offset', offset.current.toString());
       }
 
       setIsLoading(false);
@@ -157,7 +167,7 @@ const Mainpage = ({
     }
   }, [offset, query]);
 
-  const onSearch = (searchText) => {
+  const onSearch: onSearchFunc = (searchText) => {
     try {
       offset.current = 0;
       setSearchParams({ query: '' });
@@ -172,7 +182,7 @@ const Mainpage = ({
   };
   useEffect(() => {
     if (!observerTargetEl.current || !hasNextPage) return;
-    const callback = (entries, observer) => {
+    const callback: IntersectionObserverCallback = (entries, observer) => {
       if (offset.current === 0) {
         fetchData();
         return;

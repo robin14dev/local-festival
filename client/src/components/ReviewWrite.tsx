@@ -43,7 +43,8 @@ const Controllers = styled.div`
   border-top: 1px solid #d9d9d9;
   border-radius: 0px 0px 0.5rem 0.5rem;
 `;
-const Button = styled.button`
+
+const Button = styled.button<{ photo?: boolean }>`
   background: ${(props) => (props.photo ? 'white' : `var(--primaryPurple)`)};
   border: ${(props) => (props.photo ? '1px solid #D9D9D9' : 'none')};
   border-radius: 4px;
@@ -80,9 +81,6 @@ const Button = styled.button`
 const ErrorMessage = styled.div`
   width: 60%;
   color: red;
-  /* position: relative; */
-  /* left: 9rem; */
-  /* background-color: yellow; */
   text-align: right;
   line-height: 2.4;
   font-size: large;
@@ -93,36 +91,44 @@ const ErrorMessage = styled.div`
     font-size: 12px;
   }
 `;
-const ReviewWrite = ({ updateReviewList, festivalId, authState }) => {
-  const { setLoginModal } = useContext(ModalContext);
-  const [content, setContent] = useState('');
-  const [rating, setRating] = useState(null);
-  // console.log(authState);
-  const errorMessage = useRef();
 
-  const handleContent = (e) => {
+type ReviewWriteProps = {
+  updateReviewList: (newReview: TReviewItem) => void;
+  festivalId: number;
+  authState: AuthState;
+};
+const ReviewWrite = ({
+  updateReviewList,
+  festivalId,
+  authState,
+}: ReviewWriteProps) => {
+  const modalContext = useContext(ModalContext);
+  const [content, setContent] = useState('');
+  const [rating, setRating] = useState<number | null>(null);
+  const errorMessage = useRef<HTMLDivElement | null>(null);
+
+  const handleContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     console.log(e.target.value);
     setContent(e.target.value);
   };
 
-  const handleRating = (rating) => {
-    // 올려와진 값으로 setRating
+  const handleRating = (rating: number) => {
     setRating(rating);
   };
 
   const nowShowErrMsg = () => {
-    errorMessage.current.textContent = '';
+    if (errorMessage.current) {
+      errorMessage.current.textContent = '';
+    }
   };
-
-  // ReviewWrite : handleRating > <Rating howmany={rating} handleRating={handleRating} />
 
   const handleSubmit = () => {
     if (!rating) {
-      console.log(errorMessage.current);
-      errorMessage.current.textContent = '별점을 입력해 주세요';
+      if (errorMessage.current)
+        errorMessage.current.textContent = '별점을 입력해 주세요';
     } else if (content.length === 0) {
-      console.log(errorMessage.current);
-      errorMessage.current.textContent = '내용을 입력해 주세요';
+      if (errorMessage.current)
+        errorMessage.current.textContent = '내용을 입력해 주세요';
     } else {
       axios
         .post(
@@ -134,7 +140,7 @@ const ReviewWrite = ({ updateReviewList, festivalId, authState }) => {
           },
           {
             headers: {
-              accesstoken: sessionStorage.getItem('accesstoken'),
+              accesstoken: sessionStorage.getItem('accesstoken') ?? '',
             },
           }
         )
@@ -166,12 +172,10 @@ const ReviewWrite = ({ updateReviewList, festivalId, authState }) => {
               nickname: authState.nickname,
             },
           };
-          // updateReviewList({userId : authState.userId, nickname: authState.nickname, content : content, rating : rating, createdAt:(new Date()).toLocaleString()})
           updateReviewList(newReview);
           setRating(0);
           setContent('');
-          errorMessage.current.textContent = '';
-          // window.scrollTo({top:0, behavior:'smooth'})
+          if (errorMessage.current) errorMessage.current.textContent = '';
         })
         .catch((err) => {
           console.log(err);
@@ -201,7 +205,9 @@ const ReviewWrite = ({ updateReviewList, festivalId, authState }) => {
         ) : (
           <Button
             onClick={() => {
-              setLoginModal(true);
+              if (modalContext) {
+                modalContext.setLoginModal(true);
+              }
             }}
           >
             로그인

@@ -61,12 +61,22 @@ const ItemsWrapper = styled.div`
     }
   }
 `;
-const Navigationbar = ({ authState, loginHandler, setLoginModal }) => {
+
+type NavigationbarProps = {
+  authState: AuthState;
+  loginHandler: loginHandlerFunc;
+  setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
+};
+const Navigationbar = ({
+  authState,
+  loginHandler,
+  setLoginModal,
+}: NavigationbarProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const NavItems = () => {
     const onClickLogout = () => {
       //# 클라이언트에서 토큰 지우기
-      loginHandler('', '', '', false);
+      loginHandler(0, '', '', false);
       window.location.replace('/');
 
       window.sessionStorage.clear();

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
+import { ModalContext } from '../contexts/modalContext';
 import moment from 'moment';
 import DescTab from '../components/DescTab';
 import {
@@ -11,7 +12,6 @@ import {
 import styled from 'styled-components';
 import ReviewTab from '../components/ReviewTab';
 import onErrorImage from '../assets/noimage.png';
-import { ModalContext } from '../contexts/modalContext';
 import { Helmet } from 'react-helmet';
 import BackImg from '../assets/back-mobile.png';
 import ShareImg from '../assets/share-mobile.png';
@@ -393,12 +393,56 @@ const MobileWrapper = styled.section`
   padding-bottom: 5rem;
 `;
 
-const Detailviewpage = ({ togglePick, authState }) => {
-  const { setLoginModal } = useContext(ModalContext);
+type DetailviewpageProps = {
+  togglePick: togglePick;
+  authState: AuthState;
+};
+
+const Detailviewpage = ({ togglePick, authState }: DetailviewpageProps) => {
+  const modalContext = useContext(ModalContext);
   const [like, setLike] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [summary, setSummary] = useState({});
-  const reviewRef = useRef(null);
+  const [summary, setSummary] = useState<Summary>({
+    average: 0,
+    badReview: [
+      {
+        content: '',
+        festivalId: 0,
+        id: 0,
+        nickname: '',
+        rating: 0,
+        updatedAt: '',
+      },
+    ],
+    festival: {
+      createdAt: '',
+      deletedAt: '',
+      endDate: 0,
+      festivalId: 0,
+      homepageUrl: '',
+      imageUrl: '',
+      location: '',
+      overview: '',
+      startDate: 0,
+      tel: '',
+      title: '',
+      updatedAt: '',
+    },
+    goodReview: [
+      {
+        content: '',
+        festivalId: 0,
+        id: 0,
+        nickname: '',
+        rating: 0,
+        updatedAt: '',
+      },
+    ],
+    isPicked: false,
+    likes: 0,
+    reviewCount: 0,
+  });
+  const reviewRef = useRef<HTMLElement | null>(null);
 
   let params = useParams();
   let navigate = useNavigate();
@@ -430,7 +474,7 @@ const Detailviewpage = ({ togglePick, authState }) => {
       reviewRef.current?.scrollIntoView({ behavior: 'smooth' });
     } catch (error) {}
   };
-  const toggleLike = (event) => {
+  const toggleLike = () => {
     setSummary((prevSummary) => {
       if (like === true) {
         return { ...prevSummary, likes: prevSummary.likes - 1 };
@@ -440,7 +484,10 @@ const Detailviewpage = ({ togglePick, authState }) => {
     });
     setLike(!like);
   };
-  const onClickPick = (e, festival) => {
+  const onClickPick = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    festival: FestivalItem
+  ) => {
     e.stopPropagation();
 
     togglePick(festival);
@@ -473,7 +520,6 @@ const Detailviewpage = ({ togglePick, authState }) => {
     festival: {
       imageUrl,
       title,
-      festivalId,
       location,
       startDate,
       endDate,
@@ -488,26 +534,30 @@ const Detailviewpage = ({ togglePick, authState }) => {
     reviewCount,
   } = summary;
 
+  console.log(summary);
+
   const urlCollection = {
     official: '',
     instagram: '',
     youtube: '',
   };
-  if (!!homepageUrl !== false) {
+  if (homepageUrl) {
     const regex = {
       official: /http(s)?:\/\/[a-zA-Z\\d`~!@#$%^&*()-_=+]+/g,
       instagram: /(https?:\/\/www.instagram.com\/[a-zA-Z0-9]+)/g,
       youtube: /(https?:\/\/www.youtube.com\/[a-zA-Z0-9]+)/g,
     };
 
-    urlCollection['official'] = homepageUrl.match(regex.official)[0];
+    if (homepageUrl.match(regex.official)) {
+      urlCollection['official'] = homepageUrl.match(regex.official)![0];
+    }
     if (homepageUrl.match(regex.instagram)) {
-      urlCollection['instagram'] = homepageUrl.match(regex.instagram)[0];
+      urlCollection['official'] = homepageUrl.match(regex.instagram)![0];
     }
+
     if (homepageUrl.match(regex.youtube)) {
-      urlCollection['youtube'] = homepageUrl.match(regex.youtube)[0];
+      urlCollection['youtube'] = homepageUrl.match(regex.youtube)![0];
     }
-  } else {
   }
 
   return (
@@ -530,7 +580,9 @@ const Detailviewpage = ({ togglePick, authState }) => {
                     onClickPick(e, summary.festival);
                   } else {
                     e.stopPropagation();
-                    setLoginModal(true);
+                    if (modalContext) {
+                      modalContext.setLoginModal(true);
+                    }
                   }
                 }}
               >
@@ -634,7 +686,9 @@ const Detailviewpage = ({ togglePick, authState }) => {
                   onClickPick(e, summary.festival);
                 } else {
                   e.stopPropagation();
-                  setLoginModal(true);
+                  if (modalContext) {
+                    modalContext.setLoginModal(true);
+                  }
                 }
               }}
             >

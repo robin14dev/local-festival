@@ -60,17 +60,16 @@ const Wrapper = styled.div`
   }
 `;
 
-const Search = ({ onSearch }) => {
+const Search = ({ onSearch }: { onSearch: onSearchFunc }) => {
   const [searchText, setSearchText] = useState('');
 
   const onClickSearch = () => {
     onSearch(searchText);
   };
-  const onChangeHandler = (e) => {
-    console.log(e.target.value);
+  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
-  const onKeyPress = (e) => {
+  const onKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       onSearch(searchText);
     }

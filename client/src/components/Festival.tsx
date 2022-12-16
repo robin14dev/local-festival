@@ -3,7 +3,6 @@ import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import onErrorImage from '../assets/noimage.png';
-import HeartButton from './HeartButton';
 import { UserContext } from '../contexts/userContext';
 import { ModalContext } from '../contexts/modalContext';
 import HeartImg from '../assets/heart.png';
@@ -85,19 +84,25 @@ export const Wrapper = styled.article`
   }
 `;
 
-const Festival = ({ festival, togglePick, pickItems }) => {
-  const { authState } = useContext(UserContext);
-  const { setLoginModal } = useContext(ModalContext);
+type FestivalProps = {
+  festival: FestivalItem;
+  togglePick: togglePick;
+  pickItems: FestivalItem[];
+};
+
+const Festival = ({ festival, togglePick, pickItems }: FestivalProps) => {
+  const userContext = useContext(UserContext);
+  const modalContext = useContext(ModalContext);
   const { festivalId, title, imageUrl, startDate, endDate, location } =
     festival;
   const [like, setLike] = useState(false);
   let navigate = useNavigate();
 
-  const onErrorImg = (e) => {
+  const onErrorImg = (e: React.ChangeEvent<HTMLImageElement>) => {
     e.target.src = onErrorImage;
   };
 
-  const onClickMoveDVP = (festivalId) => {
+  const onClickMoveDVP = (festivalId: number) => {
     navigate(`/Detail/${festivalId}`);
   };
   const toggleLike = () => {
@@ -109,8 +114,11 @@ const Festival = ({ festival, togglePick, pickItems }) => {
     setLike(isPicked);
   }, [pickItems, festivalId]);
 
-  const onClickPick = (event, festival) => {
-    event.stopPropagation();
+  const onClickPick = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    festival: FestivalItem
+  ) => {
+    e.stopPropagation();
     togglePick(festival);
     toggleLike();
   };
@@ -125,7 +133,7 @@ const Festival = ({ festival, togglePick, pickItems }) => {
       <img
         src={imageUrl || onErrorImage}
         alt={`${title} : 이미지가 존재하지 않습니다`}
-        onError={(e) => onErrorImg(e)}
+        onError={onErrorImg}
       />
 
       <section>
@@ -141,11 +149,15 @@ const Festival = ({ festival, togglePick, pickItems }) => {
         </div>
         <button
           onClick={(e) => {
-            if (authState.loginStatus) {
-              onClickPick(e, festival);
-            } else {
-              e.stopPropagation();
-              setLoginModal(true);
+            if (userContext) {
+              if (userContext.authState.loginStatus) {
+                onClickPick(e, festival);
+              } else {
+                e.stopPropagation();
+                if (modalContext) {
+                  modalContext.setLoginModal(true);
+                }
+              }
             }
           }}
         >

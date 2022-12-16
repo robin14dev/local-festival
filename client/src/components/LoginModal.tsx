@@ -114,7 +114,18 @@ const ModalContainer = styled.div`
     }
   }
 `;
-const LoginModal = ({ setLoginModal, loginHandler, setSignupModal }) => {
+
+type LoginModalProps = {
+  setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setSignupModal: React.Dispatch<React.SetStateAction<boolean>>;
+  loginHandler: loginHandlerFunc;
+};
+
+const LoginModal = ({
+  setLoginModal,
+  setSignupModal,
+  loginHandler,
+}: LoginModalProps) => {
   const [userInfo, setUserInfo] = useState({ account: '', password: '' });
   const { account, password } = userInfo;
   const [errMessage, setErrMessage] = useState('');
@@ -124,16 +135,19 @@ const LoginModal = ({ setLoginModal, loginHandler, setSignupModal }) => {
     '비밀번호가 일치하지 않습니다',
   ];
 
-  const handleUserInfo = useCallback((e) => {
-    if (e.target.value.length > 0) setErrMessage('');
-    setUserInfo((prevInfo) => ({
-      ...prevInfo,
-      [e.target.name]: e.target.value,
-    }));
-  }, []);
+  const handleUserInfo = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.value.length > 0) setErrMessage('');
+      setUserInfo((prevInfo) => ({
+        ...prevInfo,
+        [e.target.name]: e.target.value,
+      }));
+    },
+    []
+  );
 
   const handleSubmit = useCallback(
-    (e) => {
+    (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       axios
         .post(`${process.env.REACT_APP_SERVER_URL}/users/signin`, {
