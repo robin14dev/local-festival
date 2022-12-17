@@ -12,10 +12,10 @@ module.exports = async (req, res) => {
   //유저 아이디가 1인 사람이 픽한 축제정보 다가져오기
 
   const { id } = accessTokenData;
-  let result = await Picks.findAll({
-    attributes: ['festivalId'],
-    where: { userId: Number(id) },
-  });
+  // let result = await Picks.findAll({
+  //   attributes: ['festivalId'],
+  //   where: { userId: Number(id) },
+  // });
 
   let test = await sequelize.query(
     `SELECT 
@@ -25,7 +25,7 @@ inner join Picks
 On F.festivalId = Picks.festivalId 
 inner join Users 
 On Picks.userId = Users.id 
-where users.id = ${Number(id)}`,
+where Users.id = ${Number(id)}`,
     { type: sequelize.QueryTypes.SELECT }
   );
 

@@ -151,12 +151,12 @@ function App() {
           },
         }
       );
-
       setPickItems(pickedItems.data);
     }
-    // console.log(sessionStorage, 'App!!');
   };
   useEffect(() => {
+    console.log('useEffect !!!!');
+
     refreshData();
   }, []);
 
