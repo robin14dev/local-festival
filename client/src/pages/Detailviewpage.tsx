@@ -18,7 +18,6 @@ import ShareImg from '../assets/share-mobile.png';
 import HeartImg from '../assets/heart-mobile.png';
 import EmptyHeartImg from '../assets/empty-heart.png';
 import RatingImg from '../assets/rating-mobile.png';
-import loadImg from '../assets/loading.gif';
 import { ReactComponent as ReviewIcon } from '../assets/review.svg';
 import { ReactComponent as RatingIcon } from '../assets/rating.svg';
 import { ReactComponent as LikeIcon } from '../assets/heart-fill.svg';
@@ -31,6 +30,11 @@ import { ReactComponent as Homepage } from '../assets/homepage.svg';
 
 import axios from 'axios';
 import { showRating } from '../components/ReviewItem';
+import Loading, { Wrapper as W } from '../components/Loading';
+
+const LoadingWrapper = styled(W)`
+  margin-top: 50vh;
+`;
 
 const Wrapper = styled.section`
   flex: 1 1 auto;
@@ -504,14 +508,6 @@ const Detailviewpage = ({ togglePick, authState }: DetailviewpageProps) => {
     borderBottom: '4px solid var(--primaryPurple)',
   };
 
-  if (isLoading) {
-    return (
-      <div>
-        <img src={loadImg} alt="loading"></img>로딩중입니다.
-      </div>
-    );
-  }
-
   if (Object.keys(summary).length === 0) {
     return null;
   }
@@ -533,8 +529,6 @@ const Detailviewpage = ({ togglePick, authState }: DetailviewpageProps) => {
     badReview,
     reviewCount,
   } = summary;
-
-  console.log(summary);
 
   const urlCollection = {
     official: '',
@@ -558,6 +552,16 @@ const Detailviewpage = ({ togglePick, authState }: DetailviewpageProps) => {
     if (homepageUrl.match(regex.youtube)) {
       urlCollection['youtube'] = homepageUrl.match(regex.youtube)![0];
     }
+  }
+  if (isLoading) {
+    // return <Loading text={'상세페이지를 불러오고 있습니다'} />;
+    return (
+      <LoadingWrapper>
+        <Loading text="상세페이지를 불러오고 있습니다" />
+        {/* <img src={loadImg} alt="loading"></img>
+    <div>리뷰를 불러오고 있습니다</div>. */}
+      </LoadingWrapper>
+    );
   }
 
   return (

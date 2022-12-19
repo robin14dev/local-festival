@@ -1,6 +1,7 @@
 declare module '*.png';
 declare module '*.svg';
 declare module '*.gif';
+declare module '*.mp4';
 
 type onSearchFunc = (searchText: string) => void;
 
