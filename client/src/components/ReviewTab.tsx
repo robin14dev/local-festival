@@ -5,9 +5,14 @@ import ReviewItem from './ReviewItem';
 import axios from 'axios';
 import { useCallback } from 'react';
 import { useRef } from 'react';
-import loadImg from '../assets/loading.gif';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { showRating } from './ReviewItem';
+import Loading, { Wrapper as W } from './Loading';
+
+const LoadingWrapper = styled(W)`
+  margin-top: 0;
+`;
+
 const Wrapper = styled.div`
   width: 100%;
   padding-bottom: 5rem;
@@ -246,13 +251,13 @@ const ReviewTab = ({ festival, authState }: ReviewTabProps) => {
         updateReviewList={updateReviewList}
       />
       <ReviewList>
-        {isLoading && (
-          <div>
-            리뷰를 불러오고 있습니다
-            <img src={loadImg} alt="loading"></img>
-          </div>
-        )}
-        {reviews.length === 0 ? (
+        {isLoading ? (
+          <LoadingWrapper>
+            <Loading text="리뷰를 불러오고 있습니다" />
+            {/* <img src={loadImg} alt="loading"></img>
+            <div>리뷰를 불러오고 있습니다</div>. */}
+          </LoadingWrapper>
+        ) : reviews.length === 0 ? (
           <div className="noReview">리뷰가 등록되어있지 않습니다.</div>
         ) : (
           <>

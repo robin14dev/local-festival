@@ -8,9 +8,9 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { useState } from 'react';
 import { useCallback } from 'react';
-import loadImg from '../assets/loading.gif';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ReactComponent as NoData } from '../assets/noData.svg';
+import Loading, { Wrapper as W } from '../components/Loading';
 const Wrapper = styled.div`
   margin: 0 auto 5rem auto;
   width: 100%;
@@ -50,16 +50,7 @@ const FestivalList = styled.section`
   }
 `;
 
-const Loading = styled.div`
-  display: flex;
-
-  align-items: center;
-  flex-direction: column;
-  color: gray;
-  img {
-    width: 3rem;
-  }
-`;
+const LoadingWrapper = styled(W)``;
 
 const ErrorMsg = styled.section`
   margin: 0 auto;
@@ -167,6 +158,14 @@ const Mainpage = ({
     }
   }, [offset, query]);
 
+  /*
+  복잡해진 이유가 검색버튼을 눌러서 검색기록을 url로 표현하고 그 url에서 query를 따와서 axios로 보내는 구조
+
+  그냥 url은 url 대로, 검색은 검색대로 하면 안되나??
+
+  공유 url를 복붙했을 때 해당 페이지가 뜨려면, 그 url에 쿼리가 들어 있어야 하고, 그 쿼리를 가지고 axios를 보내는 구조
+  */
+
   const onSearch: onSearchFunc = (searchText) => {
     try {
       offset.current = 0;
@@ -189,6 +188,8 @@ const Mainpage = ({
       }
 
       if (entries[0].isIntersecting) {
+        console.log('isInterSecting!!');
+
         fetchData();
       }
     };
@@ -208,7 +209,16 @@ const Mainpage = ({
         <Hashtag onSearch={onSearch} />
       </SearchAndTag>
       <FestivalList>
-        {filteredData.length === 0 && (
+        {filteredData.length > 0 &&
+          filteredData.map((festival) => (
+            <Festival
+              togglePick={togglePick}
+              key={festival.festivalId}
+              festival={festival}
+              pickItems={pickItems}
+            />
+          ))}
+        {isLoading === false && filteredData.length === 0 && (
           <ErrorMsg>
             <NoData />
             <div>
@@ -220,21 +230,15 @@ const Mainpage = ({
             </div>
           </ErrorMsg>
         )}
-
-        {filteredData.map((festival) => (
-          <Festival
-            togglePick={togglePick}
-            key={festival.festivalId}
-            festival={festival}
-            pickItems={pickItems}
-          />
-        ))}
       </FestivalList>
       {isLoading ? (
-        <Loading>
-          축제들을 불러오고 있습니다
-          <img src={loadImg} alt="loading"></img>
-        </Loading>
+        // <Loading>
+        //   <img src={loadImg} alt="loading"></img>
+        //   축제들을 불러오고 있습니다
+        // </Loading>
+        <LoadingWrapper>
+          <Loading text="축제들을 불러오고 있습니다." />
+        </LoadingWrapper>
       ) : null}
       <div ref={observerTargetEl}></div>
     </Wrapper>
