@@ -141,6 +141,7 @@ const Mainpage = ({
       );
 
       const festivals = response.data;
+      console.log(festivals);
 
       setFestivalData((prevData) => [...prevData, ...festivals]);
       setFilteredData((prevData) => [...prevData, ...festivals]);
