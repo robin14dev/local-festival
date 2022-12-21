@@ -10,6 +10,7 @@ import EmptyHeartImg from '../assets/empty-heart.png';
 import '../styles/common.scss';
 import { useCallback } from 'react';
 export const Wrapper = styled.article`
+  /* background-color: aliceblue; */
   width: 25%;
   padding: 1rem;
   display: flex;
@@ -22,9 +23,15 @@ export const Wrapper = styled.article`
     border-radius: 10px;
   }
   section {
+    /* background-color: yellowgreen; */
     display: flex;
     justify-content: space-between;
     padding: 0 0.5rem;
+
+    div {
+      /* background-color: aliceblue; */
+      width: 85%;
+    }
 
     h1 {
       font-weight: 600;
@@ -49,6 +56,10 @@ export const Wrapper = styled.article`
     }
   }
 
+  button {
+    /* background-color: white; */
+  }
+
   button > img {
     height: 1.5rem;
     width: auto;
@@ -70,9 +81,7 @@ export const Wrapper = styled.article`
     width: 100%;
   }
   @media (max-width: 485px) {
-    /* margin: 0.5rem 0;
-    width: ${({ theme }) => theme.calcRem(357)}; */
-
+    padding: 1rem 0;
     &:hover {
       transform: none;
     }
@@ -87,23 +96,6 @@ export const Wrapper = styled.article`
 `;
 
 const Status = styled.div<{ status: string }>`
-  /* 오늘 : 1201
-       endDate가 1201 이전이면 종료
-       startDate가 1201이하이면서 endDate가 1201~ 이면 진행중
-       startDate가 1201초과이면 진행전
-       endDate가 1201이전이면 종료
-       오늘을 기준으로 startDate가 오늘 초과면 진행전, endDate가 오늘 이전이면 종료 나머지는 다 진행중
-
-1
-2
-3
-4
-5
-
-
-
-
-    */
   position: absolute;
   width: 52px;
   height: 26px;

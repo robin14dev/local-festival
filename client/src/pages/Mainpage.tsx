@@ -17,9 +17,8 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: white;
   @media (max-width: 475px) {
-    margin: 0;
+    margin-bottom: 4rem;
   }
 `;
 
@@ -42,11 +41,17 @@ const SearchAndTag = styled.div`
 const FestivalList = styled.section`
   width: 88%;
   margin-top: 12rem;
+  padding-bottom: 5rem;
+
   display: flex;
   flex-wrap: wrap;
-  padding-bottom: 4rem;
   @media (max-width: 1210px) {
     width: 90vw;
+  }
+
+  @media screen and (max-width: 485px) {
+    margin-top: 10rem;
+    padding-bottom: 0;
   }
 `;
 
@@ -159,14 +164,6 @@ const Mainpage = ({
     }
   }, [offset, query]);
 
-  /*
-  복잡해진 이유가 검색버튼을 눌러서 검색기록을 url로 표현하고 그 url에서 query를 따와서 axios로 보내는 구조
-
-  그냥 url은 url 대로, 검색은 검색대로 하면 안되나??
-
-  공유 url를 복붙했을 때 해당 페이지가 뜨려면, 그 url에 쿼리가 들어 있어야 하고, 그 쿼리를 가지고 axios를 보내는 구조
-  */
-
   const onSearch: onSearchFunc = (searchText) => {
     try {
       offset.current = 0;
@@ -181,6 +178,7 @@ const Mainpage = ({
     }
   };
   useEffect(() => {
+    console.log(observerTargetEl.current);
     if (!observerTargetEl.current || !hasNextPage) return;
     const callback: IntersectionObserverCallback = (entries, observer) => {
       if (offset.current === 0) {
@@ -233,15 +231,11 @@ const Mainpage = ({
         )}
       </FestivalList>
       {isLoading ? (
-        // <Loading>
-        //   <img src={loadImg} alt="loading"></img>
-        //   축제들을 불러오고 있습니다
-        // </Loading>
         <LoadingWrapper>
           <Loading text="축제들을 불러오고 있습니다." />
         </LoadingWrapper>
       ) : null}
-      <div ref={observerTargetEl}></div>
+      <div style={{ height: '1rem' }} ref={observerTargetEl}></div>
     </Wrapper>
   );
 };
