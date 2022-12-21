@@ -42,7 +42,7 @@ const WrapperMobile = styled.footer`
   display: flex;
   justify-content: space-between;
   padding: 0 3rem;
-  height: 3.438rem;
+  height: 4rem;
   width: 100%;
   @media (min-width: 476px) {
     display: none;
