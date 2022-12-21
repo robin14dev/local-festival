@@ -57,7 +57,7 @@ const Hashtag = ({ onSearch }: { onSearch: onSearchFunc }) => {
   const [curTag, setCurTag] = useState(SearchParams.get('query'));
   const tagsArr = [
     {
-      text: '가을꽃축제',
+      text: '눈꽃축제',
     },
     {
       text: '불빛축제',
@@ -65,7 +65,7 @@ const Hashtag = ({ onSearch }: { onSearch: onSearchFunc }) => {
     {
       text: '역사탐방',
     },
-    { text: '할로윈축제' },
+    { text: '크리스마스' },
   ];
 
   return (
