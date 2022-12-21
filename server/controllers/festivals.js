@@ -27,8 +27,8 @@ module.exports = {
 
     const tagsArr = [
       {
-        text: '가을꽃축제',
-        query: ['가을', '꽃', '핑크', '플라워', '국화'],
+        text: '눈꽃축제',
+        query: ['눈꽃'],
       },
       {
         text: '불빛축제',
@@ -38,7 +38,7 @@ module.exports = {
         text: '역사탐방',
         query: ['민속', '수문장', '근현대사', '화성'],
       },
-      { text: '할로윈축제', query: ['호러', '할로윈'] },
+      { text: '크리스마스', query: ['성탄', '크리스마스', '산타'] },
     ];
 
     function tagCheck(query) {
@@ -59,8 +59,8 @@ module.exports = {
             where: {
               [Op.and]: [
                 {
-                  endDate: { [Op.gte]: date },
-                  startDate: { [Op.lte]: date },
+                  // endDate: { [Op.gte]: date },
+                  // startDate: { [Op.lte]: date },
                 },
 
                 {
@@ -87,6 +87,7 @@ module.exports = {
 
             limit: Number(limit),
             offset: Number(offset),
+            order: [['endDate', 'desc']],
           });
 
           total = total.concat(festivals);
@@ -111,8 +112,8 @@ module.exports = {
           where: {
             [Op.and]: [
               {
-                endDate: { [Op.gte]: date },
-                startDate: { [Op.lte]: date },
+                // endDate: { [Op.gte]: date },
+                // startDate: { [Op.lte]: date },
               },
 
               {
@@ -139,7 +140,9 @@ module.exports = {
 
           limit: Number(limit),
           offset: Number(offset),
+          order: [['endDate', 'desc']],
         });
+        console.log(festivals.length);
 
         return res.json(festivals);
       } catch (error) {
@@ -148,14 +151,16 @@ module.exports = {
     }
 
     try {
+      // 진행중이랑 진행 예정인것 까지 나오도록
       let festivals = await Festivals.findAll({
         where: {
           endDate: { [Op.gte]: date },
-          startDate: { [Op.lte]: date },
+          // startDate: { [Op.lte]: date },
         },
 
         limit: Number(limit),
         offset: Number(offset),
+        order: [['startDate', 'asc']],
       });
       res.json(festivals);
     } catch (error) {

@@ -8,12 +8,14 @@ import { ModalContext } from '../contexts/modalContext';
 import HeartImg from '../assets/heart.png';
 import EmptyHeartImg from '../assets/empty-heart.png';
 import '../styles/common.scss';
+import { useCallback } from 'react';
 export const Wrapper = styled.article`
   width: 25%;
   padding: 1rem;
   display: flex;
   flex-direction: column;
   cursor: pointer;
+
   & > img {
     max-width: 100%;
     aspect-ratio: 1/1;
@@ -84,6 +86,41 @@ export const Wrapper = styled.article`
   }
 `;
 
+const Status = styled.div<{ status: string }>`
+  /* 오늘 : 1201
+       endDate가 1201 이전이면 종료
+       startDate가 1201이하이면서 endDate가 1201~ 이면 진행중
+       startDate가 1201초과이면 진행전
+       endDate가 1201이전이면 종료
+       오늘을 기준으로 startDate가 오늘 초과면 진행전, endDate가 오늘 이전이면 종료 나머지는 다 진행중
+
+1
+2
+3
+4
+5
+
+
+
+
+    */
+  position: absolute;
+  width: 52px;
+  height: 26px;
+  border-radius: 0.5rem 0.1rem 0.4rem 0.1rem;
+
+  background-color: ${({ status }) =>
+    status === 'scheduled'
+      ? `var(--primaryBlue)`
+      : status === 'completed'
+      ? '#4e4d4d'
+      : `var(--primaryOrange)`};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+`;
+
 type FestivalProps = {
   festival: FestivalItem;
   togglePick: togglePick;
@@ -109,11 +146,6 @@ const Festival = ({ festival, togglePick, pickItems }: FestivalProps) => {
     setLike(!like);
   };
 
-  useEffect(() => {
-    const isPicked = pickItems.some((ele) => ele.festivalId === festivalId);
-    setLike(isPicked);
-  }, [pickItems, festivalId]);
-
   const onClickPick = (
     e: React.MouseEvent<HTMLButtonElement>,
     festival: FestivalItem
@@ -123,6 +155,53 @@ const Festival = ({ festival, togglePick, pickItems }: FestivalProps) => {
     toggleLike();
   };
 
+  const todayFunc = useCallback((): number => {
+    let now = new Date();
+    let year = now.getFullYear().toString();
+    let month = now.getMonth() + 1;
+    let convertMonth;
+    let convertDate;
+    let date = now.getDate();
+
+    if (month < 10) {
+      convertMonth = '0' + month;
+    } else {
+      convertMonth = month;
+    }
+    if (date < 10) {
+      convertDate = '0' + date;
+    } else {
+      convertDate = date;
+    }
+
+    return Number(year + convertMonth + convertDate);
+  }, []);
+
+  const showStatus = useCallback((startDate: number, endDate: number) => {
+    const status = {
+      scheduled: '예정',
+      completed: '종료',
+      inProgress: '진행중',
+    };
+
+    const today = todayFunc();
+
+    // 순서 중요
+    if (today < startDate) {
+      // 예정
+      return Object.entries(status)[0];
+    }
+    if (today > endDate) {
+      return Object.entries(status)[1];
+    }
+    return Object.entries(status)[2];
+  }, []);
+
+  useEffect(() => {
+    const isPicked = pickItems.some((ele) => ele.festivalId === festivalId);
+    setLike(isPicked);
+  }, [pickItems, festivalId]);
+
   return (
     <Wrapper
       key={festivalId}
@@ -130,6 +209,9 @@ const Festival = ({ festival, togglePick, pickItems }: FestivalProps) => {
         onClickMoveDVP(festivalId);
       }}
     >
+      <Status status={showStatus(startDate, endDate)[0]}>
+        {showStatus(startDate, endDate)[1]}
+      </Status>
       <img
         src={imageUrl || onErrorImage}
         alt={`${title} : 이미지가 존재하지 않습니다`}
