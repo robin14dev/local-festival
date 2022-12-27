@@ -50,6 +50,7 @@ const WrapperMobile = styled.footer`
 `;
 
 const Item = styled.div`
+  cursor: pointer;
   width: 4rem;
   display: flex;
   flex-direction: column;
