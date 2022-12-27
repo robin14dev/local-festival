@@ -49,6 +49,7 @@ const ModalContainer = styled.div`
       padding: 0.5rem;
       width: 80%;
       height: 3rem;
+      font-family: 'NanumSquareRound';
       &::placeholder {
         opacity: 0.5;
       }
@@ -66,7 +67,10 @@ const ModalContainer = styled.div`
       width: 80%;
       height: 3rem;
       margin-top: 1rem;
+      font-size: 1rem;
+
       color: #fff;
+      font-family: 'NanumSquareRound';
       font-weight: bold;
       background: var(--mainColor);
       border-radius: 6px;
@@ -80,6 +84,8 @@ const ModalContainer = styled.div`
     font-size: 1rem;
 
     & > button {
+      font-family: 'NanumSquareRound';
+      font-weight: bold;
       width: 50%;
       padding-right: 32px;
       color: gray;
@@ -111,6 +117,7 @@ const ModalContainer = styled.div`
       display: block;
       margin-top: 2rem;
       color: gray;
+      font-family: 'NanumSquareRound';
     }
   }
 `;

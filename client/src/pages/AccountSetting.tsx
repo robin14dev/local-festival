@@ -81,7 +81,8 @@ const Button = styled.div`
 `;
 const Accordion = styled.div`
   line-height: 1.5rem;
-  transition: all 2s ease-out;
+  transition: height 0.3s ease-in-out;
+  /* transition: all 2s ease-out; */
   margin-bottom: 1rem;
   input {
     height: 2rem;
