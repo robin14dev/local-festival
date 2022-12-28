@@ -1,6 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 
 const Wrapper = styled.div`
@@ -52,9 +51,13 @@ const Button = styled.button<{ active: boolean }>`
     `}
 `;
 
-const Hashtag = ({ onSearch }: { onSearch: onSearchFunc }) => {
-  const [SearchParams] = useSearchParams();
-  const [curTag, setCurTag] = useState(SearchParams.get('query'));
+type HashtagProps = {
+  onSearch: onSearchFunc;
+  query: string | null;
+};
+
+const Hashtag = ({ onSearch, query }: HashtagProps) => {
+  const [curTag, setCurTag] = useState(query);
   const tagsArr = [
     {
       text: '눈꽃축제',
@@ -67,6 +70,10 @@ const Hashtag = ({ onSearch }: { onSearch: onSearchFunc }) => {
     },
     { text: '크리스마스' },
   ];
+
+  useEffect(() => {
+    setCurTag(query);
+  }, [query]);
 
   return (
     <Wrapper>

@@ -178,7 +178,7 @@ const Mainpage = ({
     }
   };
   useEffect(() => {
-    console.log(observerTargetEl.current);
+    // console.log(observerTargetEl.current);
     if (!observerTargetEl.current || !hasNextPage) return;
     const callback: IntersectionObserverCallback = (entries, observer) => {
       if (offset.current === 0) {
@@ -205,7 +205,7 @@ const Mainpage = ({
     <Wrapper>
       <SearchAndTag>
         <Search onSearch={onSearch} />
-        <Hashtag onSearch={onSearch} />
+        <Hashtag query={query} onSearch={onSearch} />
       </SearchAndTag>
       <FestivalList>
         {filteredData.length > 0 &&
