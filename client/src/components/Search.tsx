@@ -1,19 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import SearchImage from '../assets/search-mobile.png';
 
-const Wrapper = styled.div`
+const Form = styled.form`
   width: 90%;
   max-width: 476px;
   height: 43px;
-
   margin-top: 0.5rem;
   background: white;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   box-shadow: 0 0.1rem 0.3rem 0.01rem lightgray;
-
   border-radius: 0.7rem;
   position: fixed;
   top: 5rem;
@@ -45,7 +43,6 @@ const Wrapper = styled.div`
   }
 
   @media (max-width: 475px) {
-    /* width: 320px; */
     border-radius: 9px;
     height: 43px;
     box-shadow: none;
@@ -60,31 +57,55 @@ const Wrapper = styled.div`
   }
 `;
 
-const Search = ({ onSearch }: { onSearch: onSearchFunc }) => {
+type onSearchProps = {
+  onSearch: onSearchFunc;
+  isTag: boolean;
+  setIsTag: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const Search = ({ onSearch, isTag, setIsTag }: onSearchProps) => {
+  /*
+  검색하다가 태그누르면 검색어가 지워저야함
+  태그가 눌러졌다는 것을 알아야함
+  태그를 누를 때는 검색어 searchText를 빈값으로 해주어야함
+  Mainpage에서 
+  isTag라는 것을 만들어서
+  태그를 클릭할 때 isTag를 true로 만들어주고
+  search는 isTag를 props로 받아서 isTag가 true면 검색창을 비워준다.
+  */
   const [searchText, setSearchText] = useState('');
 
-  const onClickSearch = () => {
-    onSearch(searchText);
-  };
-  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchText(e.target.value);
-  };
-  const onKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+  const onClickHandler = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
       onSearch(searchText);
+      setIsTag(false);
+    },
+    [searchText]
+  );
+  const onChangeHandler = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchText(e.target.value);
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (isTag) {
+      setSearchText('');
     }
-  };
+  }, [isTag]);
   return (
-    <Wrapper>
+    <Form onSubmit={onClickHandler}>
       <input
-        onKeyPress={onKeyPress}
         onChange={onChangeHandler}
         placeholder="축제를 검색해 주세요"
+        value={searchText}
       />
-      <button onClick={onClickSearch}>
+      <button type="submit">
         <img src={SearchImage} alt="search"></img>
       </button>
-    </Wrapper>
+    </Form>
   );
 };
 
