@@ -54,9 +54,10 @@ const Button = styled.button<{ active: boolean }>`
 type HashtagProps = {
   onSearch: onSearchFunc;
   query: string | null;
+  setIsTag: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Hashtag = ({ onSearch, query }: HashtagProps) => {
+const Hashtag = ({ onSearch, query, setIsTag }: HashtagProps) => {
   const [curTag, setCurTag] = useState(query);
   const tagsArr = [
     {
@@ -83,6 +84,7 @@ const Hashtag = ({ onSearch, query }: HashtagProps) => {
           onClick={() => {
             onSearch(tag.text);
             setCurTag(tag.text);
+            setIsTag(true);
           }}
           key={tag.text}
         >
