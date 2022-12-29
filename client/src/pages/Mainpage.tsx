@@ -134,7 +134,7 @@ const Mainpage = ({
   const [hasNextPage, setHasNextPage] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [query, setQuery] = useState(searchParams.get('query'));
-
+  const [isTag, setIsTag] = useState(false);
   const navigate = useNavigate();
   const fetchData = useCallback(async () => {
     setIsLoading(true);
@@ -204,8 +204,8 @@ const Mainpage = ({
   return (
     <Wrapper>
       <SearchAndTag>
-        <Search onSearch={onSearch} />
-        <Hashtag query={query} onSearch={onSearch} />
+        <Search isTag={isTag} setIsTag={setIsTag} onSearch={onSearch} />
+        <Hashtag setIsTag={setIsTag} query={query} onSearch={onSearch} />
       </SearchAndTag>
       <FestivalList>
         {filteredData.length > 0 &&
