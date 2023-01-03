@@ -8,9 +8,12 @@ const Wrapper = styled.div`
   padding: 0.5rem;
   border-radius: 0.5rem;
 
-  & * {
+  & > label {
     width: 20%;
-    height: 100%;
+    svg {
+      width: 100%;
+      height: 100%;
+    }
   }
   & input[type='radio'] {
     display: none;
@@ -24,14 +27,12 @@ const Wrapper = styled.div`
 type RatingProps = {
   handleRating: (rating: number) => void;
   initial: null | number;
-  nowShowErrMsg: () => void;
 };
 
-const Rating = ({ handleRating, initial, nowShowErrMsg }: RatingProps) => {
+const Rating = ({ handleRating, initial }: RatingProps) => {
   const [rating, setRating] = useState<number | null>(initial);
   const [hover, setHover] = useState<number | null>(null);
   const onClickRating = (rating: number) => {
-    nowShowErrMsg();
     setRating(rating);
     console.log(rating);
     console.log('상끌 rating ReviewWrite로 rating값 올려주기 ', rating);

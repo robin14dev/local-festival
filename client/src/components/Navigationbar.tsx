@@ -84,10 +84,10 @@ const Navigationbar = ({
     };
 
     const onClickMyPage = () => {
-      navigate('/MyPick ');
+      navigate('/Wishlist ');
     };
     const onClickAccount = () => {
-      navigate('/AccountSetting');
+      navigate('/Account');
     };
     return (
       <ItemsWrapper>

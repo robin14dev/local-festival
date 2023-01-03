@@ -373,8 +373,11 @@ const MobileWrapper = styled.section`
       font-size: 16px;
       line-height: 26px;
       display: flex;
-      div {
+      & > div {
         width: 60px;
+        @media screen and (max-width: 375px) {
+          font-size: 0.8rem;
+        }
         & + div {
           width: 260px;
           padding-left: 1rem;
@@ -397,12 +400,12 @@ const MobileWrapper = styled.section`
   padding-bottom: 5rem;
 `;
 
-type DetailviewpageProps = {
+type DetailViewProps = {
   togglePick: togglePick;
   authState: AuthState;
 };
 
-const Detailviewpage = ({ togglePick, authState }: DetailviewpageProps) => {
+const DetailView = ({ togglePick, authState }: DetailViewProps) => {
   const modalContext = useContext(ModalContext);
   const [like, setLike] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -554,12 +557,9 @@ const Detailviewpage = ({ togglePick, authState }: DetailviewpageProps) => {
     }
   }
   if (isLoading) {
-    // return <Loading text={'상세페이지를 불러오고 있습니다'} />;
     return (
       <LoadingWrapper>
         <Loading text="상세페이지를 불러오고 있습니다" />
-        {/* <img src={loadImg} alt="loading"></img>
-    <div>리뷰를 불러오고 있습니다</div>. */}
       </LoadingWrapper>
     );
   }
@@ -596,7 +596,7 @@ const Detailviewpage = ({ togglePick, authState }: DetailviewpageProps) => {
 
               <div>
                 <button onClick={goToReview}>
-                  <img src={RatingImg} alt="전체평점" /> {average}
+                  <img src={RatingImg} alt="전체평점" /> {average.toFixed(1)}
                 </button>
                 <button onClick={goToReview}>
                   <ReviewIcon width={25} height={25} fill={'#FF9A62'} />
@@ -627,7 +627,7 @@ const Detailviewpage = ({ togglePick, authState }: DetailviewpageProps) => {
                   <p>{goodReview[0].content}</p>
                 </>
               ) : (
-                <div className="noReview">등록된 리뷰가 없습니다</div>
+                <div className="noReview">4점 이상의 리뷰가 없습니다</div>
               )}
             </div>
             <div className="reviews">
@@ -643,7 +643,7 @@ const Detailviewpage = ({ togglePick, authState }: DetailviewpageProps) => {
                   <p>{badReview[0].content}</p>
                 </>
               ) : (
-                <div className="noReview">등록된 리뷰가 없습니다</div>
+                <div className="noReview">2점 이하의 리뷰가 없습니다</div>
               )}
             </div>
           </section>
@@ -797,4 +797,4 @@ const Detailviewpage = ({ togglePick, authState }: DetailviewpageProps) => {
   );
 };
 
-export default Detailviewpage;
+export default DetailView;
