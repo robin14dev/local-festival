@@ -10,10 +10,8 @@ const Wrapper = styled.div`
   min-height: 199px;
   border-bottom: 1px solid #d9d9d9;
   padding: 1rem;
+  margin-bottom: 0.5rem;
 
-  & + & {
-    margin-bottom: 1rem;
-  }
   @media (max-width: 485px) {
     border: 1px solid #d9d9d9;
     border-radius: 7px;
@@ -161,7 +159,6 @@ type ReviewProps = {
 };
 
 const Review = ({ review, authState, deleteReview }: ReviewProps) => {
-  console.log(review);
   const [deleteClicked, setDeleteClicked] = useState(false);
   const { rating, content, createdAt, User, festivalId, id } = review;
   const modalHandler = () => {

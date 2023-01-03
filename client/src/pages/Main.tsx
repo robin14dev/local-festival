@@ -112,7 +112,7 @@ const ErrorMsg = styled.section`
   }
 `;
 
-type MainpageProps = {
+type MainProps = {
   togglePick: togglePick;
   filteredData: FestivalItem[];
   pickItems: FestivalItem[];
@@ -121,14 +121,14 @@ type MainpageProps = {
   setFilteredData: React.Dispatch<React.SetStateAction<FestivalItem[]>>;
 };
 
-const Mainpage = ({
+const Main = ({
   togglePick,
   filteredData,
   pickItems,
   offset,
   setFestivalData,
   setFilteredData,
-}: MainpageProps) => {
+}: MainProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const observerTargetEl = useRef(null);
   const [hasNextPage, setHasNextPage] = useState(true);
@@ -240,4 +240,4 @@ const Mainpage = ({
   );
 };
 
-export default Mainpage;
+export default Main;

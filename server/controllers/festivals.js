@@ -198,7 +198,7 @@ module.exports = {
       let average = 0;
 
       if (reviewCount !== 0) {
-        average = Number((sum / reviewCount).toFixed(1));
+        average = sum / reviewCount;
       }
       //좋아요개수
       const likes = await Picks.count({
@@ -206,16 +206,19 @@ module.exports = {
       });
 
       //최고리뷰, 최저리뷰
-      const ratingMin = `select R.id, R.content, R.rating, R.updatedAt, R.festivalId, U.nickname FROM Reviews as R  INNER JOIN Users as U on R.userId = U.id where R.festivalId = ${festivalId} order by  rating asc, updatedAt desc limit 1 ;`;
-      const ratingMax = `select R.id, R.content, R.rating, R.updatedAt, R.festivalId, U.nickname FROM Reviews as R  INNER JOIN Users as U on R.userId = U.id where R.festivalId = ${festivalId} order by rating desc ,updatedAt desc limit 1 ;`;
+      const ratingMin = `select R.id, R.content, R.rating, R.updatedAt, R.festivalId, U.nickname FROM Reviews as R  INNER JOIN Users as U on R.userId = U.id where R.festivalId = ${festivalId} and rating<=2 order by rating asc, updatedAt desc limit 1 ;`;
+      const ratingMax = `select R.id, R.content, R.rating, R.updatedAt, R.festivalId, U.nickname FROM Reviews as R  INNER JOIN Users as U on R.userId = U.id where R.festivalId = ${festivalId} and rating>=4 order by rating desc ,updatedAt desc limit 1 ;`;
 
       let badReview = await sequelize.query(ratingMin, {
         type: sequelize.QueryTypes.SELECT,
       });
+      console.log(badReview);
 
       let goodReview = await sequelize.query(ratingMax, {
         type: sequelize.QueryTypes.SELECT,
       });
+      console.log(goodReview);
+
       res.json({
         festival,
         likes,
@@ -227,6 +230,7 @@ module.exports = {
       });
     } catch (error) {
       console.log(error);
+      res.status(500);
     }
   },
 };

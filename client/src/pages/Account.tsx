@@ -141,17 +141,17 @@ const Password = styled(Accordion)`
   }
 `;
 
-type AccountSettingProps = {
+type AccountProps = {
   authState: AuthState;
   handleAuthState: (nickname: string) => void;
   loginHandler: loginHandlerFunc;
 };
 
-export default function AccountSetting({
+export default function Account({
   authState,
   handleAuthState,
   loginHandler,
-}: AccountSettingProps) {
+}: AccountProps) {
   // type Open = {
   //   [index: string]: boolean;
   //   nickname: boolean;
@@ -215,7 +215,7 @@ export default function AccountSetting({
             const nextNickname = response.data.nickname;
 
             handleAuthState(nextNickname);
-            window.location.replace('/AccountSetting');
+            window.location.replace('/Account');
           })
           .catch((err) => {
             console.log(err);

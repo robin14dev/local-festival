@@ -5,12 +5,12 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { Helmet } from 'react-helmet';
 import Header from './components/Header';
-import Mainpage from './pages/Mainpage';
-import MyPick from './pages/MyPick';
+import Main from './pages/Main';
+import Wishlist from './pages/Wishlist';
 import Footer from './components/Footer';
-import Detailviewpage from './pages/Detailviewpage';
+import DetailView from './pages/DetailView';
 import SignupModal from './components/SignupModal';
-import AccountSetting from './pages/AccountSetting';
+import Account from './pages/Account';
 import { UserContext } from './contexts/userContext';
 import { ModalContext } from './contexts/modalContext';
 import { ThemeProvider } from 'styled-components';
@@ -191,7 +191,7 @@ function App() {
               <Route
                 path="/"
                 element={
-                  <Mainpage
+                  <Main
                     togglePick={togglePick}
                     filteredData={filteredData}
                     pickItems={pickItems}
@@ -204,7 +204,7 @@ function App() {
               <Route
                 path=":search"
                 element={
-                  <Mainpage
+                  <Main
                     togglePick={togglePick}
                     filteredData={filteredData}
                     pickItems={pickItems}
@@ -216,24 +216,21 @@ function App() {
               ></Route>
 
               <Route
-                path="/MyPick"
+                path="/Wishlist"
                 element={
-                  <MyPick pickItems={pickItems} togglePick={togglePick} />
+                  <Wishlist pickItems={pickItems} togglePick={togglePick} />
                 }
               ></Route>
               <Route
                 path="/Detail/:festivalId/*"
                 element={
-                  <Detailviewpage
-                    togglePick={togglePick}
-                    authState={authState}
-                  />
+                  <DetailView togglePick={togglePick} authState={authState} />
                 }
               ></Route>
               <Route
-                path="/AccountSetting"
+                path="/Account"
                 element={
-                  <AccountSetting
+                  <Account
                     loginHandler={loginHandler}
                     handleAuthState={handleAuthState}
                     authState={authState}
