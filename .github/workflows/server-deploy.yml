@@ -43,4 +43,5 @@ jobs:
             pwd
             npm -v
             node -v
+            pm2 restart app.js
     
