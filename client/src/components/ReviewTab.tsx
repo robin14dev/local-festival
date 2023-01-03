@@ -115,6 +115,10 @@ const ReviewList = styled.section`
       font-size: 1.2rem;
     }
   }
+
+  @media (max-width: 485px) {
+    width: 90%;
+  }
 `;
 type ReviewTabProps = {
   festival: FestivalItem;
@@ -177,16 +181,47 @@ const ReviewTab = ({ festival, authState }: ReviewTabProps) => {
   }, [fetchReviews, searchParams]);
 
   const updateReviewList = (newReview: TReviewItem) => {
-    console.log('상끌 성공!!!!');
-    console.log(newReview);
     setReviews((prevReviews) => {
+      /*
+      첫페이지에서 리뷰는 다섯개만 받아옴 첫페이지에서 리뷰가 다섯개니깐 다섯개씩 보여주려면 새로 리뷰를 등록할 때 하나 빼고 보여줘야함
+      */
+
       if (prevReviews.length < 5) {
         return [newReview, ...prevReviews];
       } else {
         return [newReview, ...prevReviews.slice(0, -1)];
       }
+
+      // return [newReview, ...prevReviews];
     });
     reviewsCount.current++;
+
+    // setAverage((prevAverage) => {
+    //   //리뷰수가 업데이트된 줄 알았는데 안됨
+    //   console.log(
+    //     'prevAverage,reviewsCount.current, newReview.rating',
+    //     prevAverage,
+    //     reviewsCount.current,
+    //     newReview.rating
+    //   );
+
+    //   return (
+    //     (prevAverage * (reviewsCount.current - 1) + newReview.rating) /
+    //     reviewsCount.current
+    //   );
+    // });
+
+    /*
+   reviewWrite에서 평점을 작성하면 작성한 결과가 DB로 가고
+    detailviewpage에는 db에서 받아온 축제 후기정보를
+    dvp에서 사용하고
+    리뷰탭에서 사용
+
+    작성한 결과의 즉각적인 변화를 보여주려면
+    reviewWrite에서 변경한 상태를 DVP까지 글고 올라가서 평점을 바꿔주고 dvp에서 사용하고 리뷰탭에서 사용한다.
+    
+
+   */
   };
 
   const deleteReview = (reviewId: number, festivalId: number) => {
@@ -201,7 +236,7 @@ const ReviewTab = ({ festival, authState }: ReviewTabProps) => {
       )
       .then((response) => {
         console.log(response.data.message);
-        if (response.data.message === 'ok') {
+        if (response.data.message === 'delete review success') {
           const nextReviewLists = reviews.filter(
             (review) => Number(review.id) !== Number(reviewId)
           );
@@ -240,7 +275,7 @@ const ReviewTab = ({ festival, authState }: ReviewTabProps) => {
             {showRating(5, 30)}
           </div>
         </div>
-        <span>{average}</span>
+        <span>{average.toFixed(1)}</span>
       </div>
       <h2>
         후기<span> {reviewsCount.current}</span>
@@ -254,8 +289,6 @@ const ReviewTab = ({ festival, authState }: ReviewTabProps) => {
         {isLoading ? (
           <LoadingWrapper>
             <Loading text="리뷰를 불러오고 있습니다" />
-            {/* <img src={loadImg} alt="loading"></img>
-            <div>리뷰를 불러오고 있습니다</div>. */}
           </LoadingWrapper>
         ) : reviews.length === 0 ? (
           <div className="noReview">리뷰가 등록되어있지 않습니다.</div>

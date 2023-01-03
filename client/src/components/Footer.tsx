@@ -5,8 +5,8 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useCallback } from 'react';
 import { ReactComponent as Account } from '../assets/profile.svg';
-import { ReactComponent as MyPick } from '../assets/heart-empty.svg';
-import { ReactComponent as Mainpage } from '../assets/search.svg';
+import { ReactComponent as Wishlist } from '../assets/heart-empty.svg';
+import { ReactComponent as Main } from '../assets/search.svg';
 const Wrapper = styled.footer`
   width: 100%;
   height: 3rem;
@@ -92,15 +92,15 @@ const Footer = ({ authState, setLoginModal }: FooterProps) => {
       </Wrapper>
       <WrapperMobile>
         <Item onClick={() => navigate('/')}>
-          <Mainpage width={23} height={23} fill={'#FF9A62'} />
+          <Main width={23} height={23} fill={'#FF9A62'} />
 
           <div>둘러보기</div>
         </Item>
-        <Item onClick={() => goPage('MyPick')}>
-          <MyPick width={23} height={23} fill={'#FF9A62'} />
+        <Item onClick={() => goPage('Wishlist')}>
+          <Wishlist width={23} height={23} fill={'#FF9A62'} />
           <div>위시리스트</div>
         </Item>
-        <Item onClick={() => goPage('AccountSetting')}>
+        <Item onClick={() => goPage('Account')}>
           <Account width={23} height={23} fill={'#FF9A62'} />
           <div>프로필</div>
         </Item>

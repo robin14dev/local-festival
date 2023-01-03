@@ -47,12 +47,11 @@ const PickList = styled.section`
   }
 `;
 
-type MyPickProps = {
+type WishlistProps = {
   pickItems: FestivalItem[];
   togglePick: togglePick;
 };
-const MyPick = ({ pickItems, togglePick }: MyPickProps) => {
-  console.log('mypick!!');
+const Wishlist = ({ pickItems, togglePick }: WishlistProps) => {
   return (
     <Wrapper>
       <Helmet>
@@ -82,4 +81,4 @@ const MyPick = ({ pickItems, togglePick }: MyPickProps) => {
   );
 };
 
-export default MyPick;
+export default Wishlist;

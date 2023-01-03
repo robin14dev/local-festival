@@ -68,7 +68,7 @@ const Search = ({ onSearch, isTag, setIsTag }: onSearchProps) => {
   검색하다가 태그누르면 검색어가 지워저야함
   태그가 눌러졌다는 것을 알아야함
   태그를 누를 때는 검색어 searchText를 빈값으로 해주어야함
-  Mainpage에서 
+  Main에서 
   isTag라는 것을 만들어서
   태그를 클릭할 때 isTag를 true로 만들어주고
   search는 isTag를 props로 받아서 isTag가 true면 검색창을 비워준다.
