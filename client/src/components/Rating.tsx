@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { AiFillStar } from 'react-icons/ai';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
+  display: flex;
   width: 10rem;
   height: 2.5rem;
   padding: 0.5rem;
@@ -26,51 +27,38 @@ const Wrapper = styled.div`
 `;
 type RatingProps = {
   handleRating: (rating: number) => void;
-  initial: null | number;
+  initialRating?: number | null;
 };
 
-const Rating = ({ handleRating, initial }: RatingProps) => {
-  const [rating, setRating] = useState<number | null>(initial);
+const Rating = ({ handleRating, initialRating }: RatingProps) => {
   const [hover, setHover] = useState<number | null>(null);
+  const [click, setClick] = useState<number | null>(initialRating || 0);
   const onClickRating = (rating: number) => {
-    setRating(rating);
-    console.log(rating);
-    console.log('상끌 rating ReviewWrite로 rating값 올려주기 ', rating);
+    setClick(rating);
     handleRating(rating);
   };
-
-  useEffect(() => {
-    setRating(initial);
-  });
 
   return (
     <Wrapper>
       {[1, 2, 3, 4, 5].map((ele) => {
-        const ratingValue = ele;
-
         return (
           <label key={ele}>
             <input
               type="radio"
               name="rating"
-              value={ratingValue}
-              onClick={(e) => onClickRating(ratingValue)}
+              value={ele}
+              onClick={(e) => onClickRating(ele)}
             />
 
             <AiFillStar
               className="star" // 각각 ratingValue : 1 2 3 4 5
               color={
-                ratingValue <= ((hover as number) || (rating as number))
+                ele <= ((hover as number) || (click as number))
                   ? 'var(--mainColor)'
                   : 'lightgray'
               }
-              // ele={ele}
-              // hover={hover}
-              // rating={rating}
-              //2. 각각의 ratingValue가 갖다댄값 hover보다 크면 회색
-              //3 클릭햇을 때 rating값이 생기므로 hover가 null이어도 고정 더 큰값을 하면 일단 hover값이 있으니 rating까지 가지않고 hover에서 끊김
               size={100}
-              onMouseEnter={() => setHover(ratingValue)} //1. 갖다대면 hover가 ratingValue로 바뀜
+              onMouseEnter={() => setHover(ele)}
               onMouseLeave={() => setHover(null)}
             />
           </label>

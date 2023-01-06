@@ -25,13 +25,6 @@ const ButtonsWrapper = styled.div`
 `;
 
 const Button = styled.button`
-  background: inherit;
-  border: none;
-  box-shadow: none;
-  border-radius: 0;
-  padding: 0;
-  overflow: visible;
-  cursor: pointer;
   color: white;
 `;
 const ItemsWrapper = styled.div`

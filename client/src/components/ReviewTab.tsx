@@ -90,7 +90,7 @@ const ReviewList = styled.section`
   display: flex;
   flex-direction: column;
 
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
   -ms-overflow-style: none; /* for Internet Explorer, Edge */
   scrollbar-width: none; /* for Firefox */
   &::-webkit-scrollbar {
@@ -124,10 +124,10 @@ type ReviewTabProps = {
   festival: FestivalItem;
   authState: AuthState;
 };
+
 const ReviewTab = ({ festival, authState }: ReviewTabProps) => {
   let navigate = useNavigate();
   const [searchParams] = useSearchParams();
-
   const { festivalId } = festival;
   const [reviews, setReviews] = useState<TReviewItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -148,6 +148,7 @@ const ReviewTab = ({ festival, authState }: ReviewTabProps) => {
     setIsLoading(true);
     if (festivalId) {
       try {
+        //# 리뷰만 불러오는거는 토큰 필요없음
         let result = await axios.get(
           `${process.env.REACT_APP_SERVER_URL}/review/${festivalId}`,
           {
@@ -191,37 +192,8 @@ const ReviewTab = ({ festival, authState }: ReviewTabProps) => {
       } else {
         return [newReview, ...prevReviews.slice(0, -1)];
       }
-
-      // return [newReview, ...prevReviews];
     });
     reviewsCount.current++;
-
-    // setAverage((prevAverage) => {
-    //   //리뷰수가 업데이트된 줄 알았는데 안됨
-    //   console.log(
-    //     'prevAverage,reviewsCount.current, newReview.rating',
-    //     prevAverage,
-    //     reviewsCount.current,
-    //     newReview.rating
-    //   );
-
-    //   return (
-    //     (prevAverage * (reviewsCount.current - 1) + newReview.rating) /
-    //     reviewsCount.current
-    //   );
-    // });
-
-    /*
-   reviewWrite에서 평점을 작성하면 작성한 결과가 DB로 가고
-    detailviewpage에는 db에서 받아온 축제 후기정보를
-    dvp에서 사용하고
-    리뷰탭에서 사용
-
-    작성한 결과의 즉각적인 변화를 보여주려면
-    reviewWrite에서 변경한 상태를 DVP까지 글고 올라가서 평점을 바꿔주고 dvp에서 사용하고 리뷰탭에서 사용한다.
-    
-
-   */
   };
 
   const deleteReview = (reviewId: number, festivalId: number) => {
@@ -247,6 +219,25 @@ const ReviewTab = ({ festival, authState }: ReviewTabProps) => {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  const updateReview = (updatedItem: TReviewItem) => {
+    /* reviewId를 찾아서 해당 리뷰를 업데이트된거로 바꿔쥐 */
+    console.log('여기까지와??');
+
+    setReviews((prevReviews) => {
+      return prevReviews.map((review) => {
+        if (review.id === updatedItem.id) {
+          console.log('같은거 발견');
+
+          return {
+            ...updatedItem,
+          };
+        } else {
+          return review;
+        }
+      });
+    });
   };
 
   const goToPage = (event: React.MouseEvent<HTMLElement>) => {
@@ -300,6 +291,8 @@ const ReviewTab = ({ festival, authState }: ReviewTabProps) => {
                 deleteReview={deleteReview}
                 authState={authState}
                 review={review}
+                updateReviewList={updateReviewList}
+                updateReview={updateReview}
               />
             ))}
 

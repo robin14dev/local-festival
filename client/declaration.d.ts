@@ -84,3 +84,8 @@ type UserContext = {
     }>
   >;
 };
+
+type EditItem = {
+  isEdit: boolean;
+  info: TReviewItem;
+};

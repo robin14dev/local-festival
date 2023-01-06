@@ -1,12 +1,12 @@
 import axios from 'axios';
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { ModalContext } from '../contexts/modalContext';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Rating from './Rating';
 import Toast from './Toast';
 import cameraImg from '../assets/camera.png';
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ isEdit?: boolean }>`
   width: 100%;
   height: auto;
   border: 1px solid #d9d9d9;
@@ -17,17 +17,40 @@ const Wrapper = styled.div`
     top: -3rem;
     right: 0rem;
   }
+  ${(props) =>
+    props.isEdit &&
+    css`
+      border: none;
+    `}
+
   @media screen and (max-width: 1076px) {
     width: 95%;
   }
 
   @media (max-width: 768px) {
-    width: 90%;
+    /* width: 90%; */
   }
 
   @media (max-width: 485px) {
-    max-width: 400px;
+    /* max-width: 400px; */
     margin: 0 1rem;
+
+    ${(props) =>
+      props.isEdit &&
+      css`
+        margin: 0;
+        width: 100%;
+        border: 1px solid #d9d9d9;
+        width: 100%;
+      `}
+  }
+
+  @media (max-width: 375px) {
+    ${(props) =>
+      props.isEdit &&
+      css`
+        border: 1px solid #d9d9d9;
+      `}
   }
 `;
 
@@ -62,8 +85,9 @@ const Controllers = styled.div`
   }
 `;
 
-const Button = styled.button<{ photo?: boolean }>`
-  background: ${(props) => (props.photo ? 'white' : `var(--primaryPurple)`)};
+const Button = styled.button<{ photo?: boolean; back?: boolean }>`
+  background-color: ${(props) =>
+    props.photo ? 'white' : `var(--primaryPurple)`};
   border: ${(props) => (props.photo ? '1px solid #D9D9D9' : 'none')};
   border-radius: 4px;
   color: white;
@@ -72,6 +96,19 @@ const Button = styled.button<{ photo?: boolean }>`
 
   font-weight: bold;
   font-size: 1rem;
+
+  ${(props) =>
+    props.back &&
+    css`
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background-color: white;
+      border: 1.5px solid #b7b9f8;
+      border-radius: 4px;
+      color: var(--primaryPurple);
+      width: 3rem;
+    `}
 
   img {
     height: 24px;
@@ -96,7 +133,12 @@ const Button = styled.button<{ photo?: boolean }>`
   }
   @media (max-width: 375px) {
     width: 3rem;
-    /* font-size: 0.8rem; */
+    font-size: 0.8rem;
+    ${(props) =>
+      props.back &&
+      css`
+        font-size: 0.8rem;
+      `};
   }
 `;
 
@@ -104,15 +146,28 @@ type ReviewWriteProps = {
   updateReviewList: (newReview: TReviewItem) => void;
   festivalId: number;
   authState: AuthState;
+  editItem?: EditItem;
+  setEditItem?: React.Dispatch<React.SetStateAction<EditItem>>;
+  updateReview?: (updatedItem: TReviewItem) => void;
 };
 const ReviewWrite = ({
   updateReviewList,
   festivalId,
   authState,
+  setEditItem,
+  editItem,
+  updateReview,
 }: ReviewWriteProps) => {
   const modalContext = useContext(ModalContext);
-  const [content, setContent] = useState('');
-  const [rating, setRating] = useState<number | null>(null);
+  /* 빈값으로 초기화 되어있던 것들을 작성한 글들로 바꿔줘야함
+    리렌더링이 되야하니깐, 어차피 리뷰탭 상태가 바뀌니깐 reviewWrite로 바뀐 값으로 리렌더링되고
+    해당 작성이 수정인지 생성인지 알아야 하니깐 받아온 걸로 flag처리
+  */
+
+  const [content, setContent] = useState(editItem?.info.content || '');
+  const [rating, setRating] = useState<number | null>(
+    editItem?.info.rating || null
+  );
   type Message = {
     text: string;
     dismissTime: number;
@@ -146,7 +201,7 @@ const ReviewWrite = ({
     }, 2000);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!rating && content.length === 0) {
       return createNotification('후기와 별점을 작성해 주세요');
     }
@@ -156,6 +211,49 @@ const ReviewWrite = ({
     if (content.length === 0) {
       return createNotification('후기를 작성해 주세요');
     }
+
+    /* 기존거를 수정해야 하기 때문에 put으로 수정
+    분기해서 나눠주기 mode에 따라서 다르게 처리
+    */
+    if (editItem) {
+      console.log('수정타임');
+      const updateSrc = {
+        id: {
+          review: editItem.info.id,
+          festival: festivalId,
+          user: editItem.info.userId,
+        },
+        content,
+        rating,
+      };
+      try {
+        let updated = await axios.put(
+          `${process.env.REACT_APP_SERVER_URL}/review`,
+          updateSrc,
+          {
+            headers: {
+              accesstoken: sessionStorage.getItem('accesstoken') ?? '',
+            },
+          }
+        );
+        console.log(updated.data);
+        const updatedItem = updated.data[0];
+        if (updateReview) {
+          console.log('revewWrite');
+
+          updateReview(updatedItem);
+        }
+        if (setEditItem) {
+          setEditItem((prevEditItem) => ({
+            ...prevEditItem,
+            isEdit: false,
+          }));
+        }
+
+        return;
+      } catch (error) {}
+    }
+    console.log('실행되??');
 
     axios
       .post(
@@ -176,6 +274,15 @@ const ReviewWrite = ({
           'axios 보낸다음에 일시적으로 update하기 !! response???',
           response
         );
+        /*
+        올리고나서 요청을 보내고 받은 정보를 setState해주면 시간이 오래걸리는거 아님?
+        일단 작성한 것을 바로 보여주고 수정한 결과는 어케??
+
+        서버랑 통신되기 전에 올리면 일단올린거로 올렸구나 판단이 드는데 서버랑 뻑났다면 새로고침했을 때 안보디나자 
+        그러면 갔다오는게 맞지
+
+        
+        */
 
         const {
           content,
@@ -209,7 +316,7 @@ const ReviewWrite = ({
   };
 
   return (
-    <Wrapper>
+    <Wrapper isEdit={editItem?.isEdit}>
       <div className="notifications">
         {messages.map((message) => (
           <Toast key={message.uuid} message={message} />
@@ -221,14 +328,29 @@ const ReviewWrite = ({
         placeholder="후기를 남겨주세요."
       ></Textarea>
       <Controllers>
-        <Rating initial={rating} handleRating={handleRating} />
-
+        <Rating initialRating={rating} handleRating={handleRating} />
         <div>
           <Button photo>
             <img src={cameraImg} alt="사진올리기"></img>
           </Button>
           {authState.loginStatus ? (
-            <Button onClick={handleSubmit}>올리기</Button>
+            editItem ? (
+              <>
+                <Button
+                  back={true}
+                  onClick={() => {
+                    if (setEditItem) {
+                      setEditItem((prev) => ({ ...prev, isEdit: false }));
+                    }
+                  }}
+                >
+                  취소
+                </Button>
+                <Button onClick={handleSubmit}>수정하기</Button>
+              </>
+            ) : (
+              <Button onClick={handleSubmit}>올리기</Button>
+            )
           ) : (
             <Button
               onClick={() => {
