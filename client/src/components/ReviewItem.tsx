@@ -1,11 +1,20 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { AiFillStar } from 'react-icons/ai';
-import { FaTrashAlt } from 'react-icons/fa';
 import moment from 'moment';
 import profileImg from '../assets/profile.png';
+import ReviewWrite from './ReviewWrite';
+import { ReactComponent as Setting } from '../assets/setting.svg';
+import { ReactComponent as Edit } from '../assets/edit.svg';
+import { ReactComponent as Delete } from '../assets/delete.svg';
+const Wrapper = styled.div<{ editMode?: boolean }>`
+  ${(props) =>
+    props.editMode &&
+    css`
+      display: flex;
+      justify-content: center;
+    `}
 
-const Wrapper = styled.div`
   width: 100%;
   min-height: 199px;
   border-bottom: 1px solid #d9d9d9;
@@ -15,6 +24,13 @@ const Wrapper = styled.div`
   @media (max-width: 485px) {
     border: 1px solid #d9d9d9;
     border-radius: 7px;
+
+    ${(props) =>
+      props.editMode &&
+      css`
+        border: none;
+        padding: 0;
+      `}
   }
 `;
 
@@ -22,6 +38,62 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 0.3rem;
+  position: relative;
+
+  .dropdown {
+    transition: transform 0.6s ease-in-out;
+    transition: 0.3s ease;
+    animation: toast-in-right 0.6s;
+
+    @keyframes toast-in-right {
+      from {
+        transform: translateX(20%);
+      }
+      to {
+        transform: translateX(0);
+      }
+    }
+    width: 8rem;
+    height: 5rem;
+    position: absolute;
+    right: 2rem;
+    background-color: yellow;
+    display: flex;
+    align-items: center;
+    line-height: 1.4;
+    box-shadow: 1px 1.5px 2px gray;
+    background-color: white;
+    border-radius: 0.5rem;
+    overflow: hidden;
+
+    ul {
+      width: 100%;
+      height: 100%;
+      li {
+        display: flex;
+        align-items: center;
+        height: 50%;
+        padding: 0 0.5rem;
+        cursor: pointer;
+        &:hover {
+          background-color: #f4f4f4;
+        }
+        &:active {
+          background-color: white;
+        }
+        svg {
+          margin-right: 1.8rem;
+        }
+      }
+    }
+  }
+
+  .setting {
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
 
   @media (max-width: 485px) {
     & .setting {
@@ -60,6 +132,7 @@ const Info = styled.div`
   }
 
   .rating {
+    display: flex;
     padding-left: 1rem;
     @media (max-width: 485px) {
       padding-top: 3px;
@@ -143,24 +216,40 @@ export const showRating = (rating: number, size = 18) => {
   });
 };
 
-// User: {nickname: '닉네임2'}
-// content: "review content"
-// createdAt: "2022-11-15T05:02:18.000Z"
-// festivalId: 141661
-// id: 9
-// rating: 4
-// updatedAt: "2022-11-15T05:02:18.000Z"
-// userId: 2
-
 type ReviewProps = {
   review: TReviewItem;
   authState: AuthState;
   deleteReview: (reviewId: number, festivalId: number) => void;
+  updateReviewList: (newReview: TReviewItem) => void;
+  updateReview?: (updatedItem: TReviewItem) => void;
 };
 
-const Review = ({ review, authState, deleteReview }: ReviewProps) => {
+const ReviewItem = ({
+  review,
+  authState,
+  deleteReview,
+  updateReviewList,
+  updateReview,
+}: ReviewProps) => {
   const [deleteClicked, setDeleteClicked] = useState(false);
-  const { rating, content, createdAt, User, festivalId, id } = review;
+  const [isDrop, setIsDrop] = useState(false);
+  const [editItem, setEditItem] = useState<EditItem>({
+    isEdit: false,
+    info: {
+      User: {
+        nickname: '',
+      },
+      content: '',
+      createdAt: '',
+      festivalId: 0,
+      id: 0,
+      rating: 0,
+      updatedAt: '',
+      userId: 0,
+    },
+  });
+  const { rating, content, createdAt, updatedAt, User, festivalId, id } =
+    review;
   const modalHandler = () => {
     setDeleteClicked(!deleteClicked);
   };
@@ -170,7 +259,14 @@ const Review = ({ review, authState, deleteReview }: ReviewProps) => {
   };
 
   return (
-    <Wrapper>
+    <Wrapper
+      editMode={editItem.isEdit}
+      onClick={(e) => {
+        if (isDrop) {
+          setIsDrop(false);
+        }
+      }}
+    >
       {deleteClicked ? (
         <Modal>
           <h3>리뷰를 정말 삭제하시겠습니까?</h3>
@@ -181,23 +277,57 @@ const Review = ({ review, authState, deleteReview }: ReviewProps) => {
             </button>
           </div>
         </Modal>
+      ) : editItem?.isEdit ? (
+        <ReviewWrite
+          authState={authState}
+          festivalId={festivalId}
+          updateReviewList={updateReviewList}
+          editItem={editItem}
+          setEditItem={setEditItem}
+          updateReview={updateReview}
+        />
       ) : (
         <>
           <Header>
+            {isDrop && (
+              <div className="dropdown">
+                <ul>
+                  <li
+                    onClick={() => {
+                      setEditItem((prev) => ({
+                        ...prev,
+                        isEdit: true,
+                        info: review,
+                      }));
+                    }}
+                  >
+                    <Edit /> 수정하기
+                  </li>
+                  <li onClick={modalHandler}>
+                    {' '}
+                    <Delete />
+                    삭제하기
+                  </li>
+                </ul>
+              </div>
+            )}
             <Info>
               <img src={profileImg} alt="프로필사진" />
               <div className="nicknameAndDate">
                 <ul>
                   <li>{User ? User.nickname : '탈퇴한 회원입니다'}</li>
-                  <li>{moment(createdAt).format('YYYY-MM-DD')}</li>
+                  <li>
+                    {moment(createdAt).format('YYYY-MM-DD')}{' '}
+                    {createdAt !== updatedAt && '수정됨'}
+                  </li>
                 </ul>
               </div>
               <div className="rating">{showRating(rating)}</div>
             </Info>
             {Number(review.userId) === Number(authState.userId) && (
               <span className="setting">
-                <Button onClick={modalHandler}>
-                  <FaTrashAlt size={15} />
+                <Button onClick={() => setIsDrop(!isDrop)}>
+                  <Setting />
                 </Button>
               </span>
             )}
@@ -211,4 +341,4 @@ const Review = ({ review, authState, deleteReview }: ReviewProps) => {
   );
 };
 
-export default Review;
+export default ReviewItem;

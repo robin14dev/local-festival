@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
       offset: Number(offset),
       limit: Number(limit),
     });
-    console.log(rows);
+    console.log(rows, 'rows!!!');
 
     // 특정 축제 평균평점
     const reviewSum = await Reviews.sum('rating', { where: { festivalId } });
