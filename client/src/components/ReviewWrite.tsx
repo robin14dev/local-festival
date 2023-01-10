@@ -5,6 +5,7 @@ import styled, { css } from 'styled-components';
 import Rating from './Rating';
 import Toast from './Toast';
 import cameraImg from '../assets/camera.png';
+import { useRef } from 'react';
 
 const Wrapper = styled.div<{ isEdit?: boolean }>`
   width: 100%;
@@ -27,12 +28,7 @@ const Wrapper = styled.div<{ isEdit?: boolean }>`
     width: 95%;
   }
 
-  @media (max-width: 768px) {
-    /* width: 90%; */
-  }
-
   @media (max-width: 485px) {
-    /* max-width: 400px; */
     margin: 0 1rem;
 
     ${(props) =>
@@ -54,13 +50,44 @@ const Wrapper = styled.div<{ isEdit?: boolean }>`
   }
 `;
 
-const Textarea = styled.textarea`
+const Textarea = styled.textarea<{ length: number }>`
   width: 100%;
-  height: 131px;
+  height: 7rem;
   border: none;
   resize: none;
   border-radius: 8px 8px 0 0;
   padding: 1rem;
+  transition: all 1s;
+
+  & + .countText {
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+    display: flex;
+    justify-content: space-evenly;
+    width: 5.5rem;
+    margin-left: 1rem;
+    margin-bottom: 0.5rem;
+    .count {
+      width: 40%;
+      text-align: center;
+    }
+    .max {
+      width: 40%;
+      text-align: end;
+      color: gray;
+    }
+  }
+
+  @media screen and (max-width: 730px) {
+    height: ${(props) => props.length >= 150 && '9rem'};
+  }
+  @media screen and (max-width: 540px) {
+    height: ${(props) => props.length >= 150 && '12rem'};
+  }
+  @media screen and (max-width: 420px) {
+    height: ${(props) => props.length >= 150 && '13rem'};
+  }
 `;
 const Controllers = styled.div`
   height: 3.5rem;
@@ -159,12 +186,8 @@ const ReviewWrite = ({
   updateReview,
 }: ReviewWriteProps) => {
   const modalContext = useContext(ModalContext);
-  /* 빈값으로 초기화 되어있던 것들을 작성한 글들로 바꿔줘야함
-    리렌더링이 되야하니깐, 어차피 리뷰탭 상태가 바뀌니깐 reviewWrite로 바뀐 값으로 리렌더링되고
-    해당 작성이 수정인지 생성인지 알아야 하니깐 받아온 걸로 flag처리
-  */
-
   const [content, setContent] = useState(editItem?.info.content || '');
+  const maxContentLength = useRef(301);
   const [rating, setRating] = useState<number | null>(
     editItem?.info.rating || null
   );
@@ -178,6 +201,13 @@ const ReviewWrite = ({
   const handleContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     console.log(e.target.value);
     setContent(e.target.value);
+    if (e.target.value.length >= maxContentLength.current) {
+      createNotification(
+        `${maxContentLength.current - 1}자 까지 입력할 수 있습니다.`
+      );
+      setContent(e.target.value.slice(0, -1));
+      return;
+    }
   };
 
   const handleRating = (rating: number) => {
@@ -212,9 +242,6 @@ const ReviewWrite = ({
       return createNotification('후기를 작성해 주세요');
     }
 
-    /* 기존거를 수정해야 하기 때문에 put으로 수정
-    분기해서 나눠주기 mode에 따라서 다르게 처리
-    */
     if (editItem) {
       console.log('수정타임');
       const updateSrc = {
@@ -274,15 +301,6 @@ const ReviewWrite = ({
           'axios 보낸다음에 일시적으로 update하기 !! response???',
           response
         );
-        /*
-        올리고나서 요청을 보내고 받은 정보를 setState해주면 시간이 오래걸리는거 아님?
-        일단 작성한 것을 바로 보여주고 수정한 결과는 어케??
-
-        서버랑 통신되기 전에 올리면 일단올린거로 올렸구나 판단이 드는데 서버랑 뻑났다면 새로고침했을 때 안보디나자 
-        그러면 갔다오는게 맞지
-
-        
-        */
 
         const {
           content,
@@ -323,10 +341,17 @@ const ReviewWrite = ({
         ))}
       </div>
       <Textarea
+        length={content.length}
+        spellCheck="false"
+        maxLength={maxContentLength.current}
         value={content}
         onChange={handleContent}
         placeholder="후기를 남겨주세요."
-      ></Textarea>
+      />
+      <section className="countText">
+        <span className="count">{content.length}</span>/
+        <span className="max">{` ${maxContentLength.current - 1}`}</span>
+      </section>
       <Controllers>
         <Rating initialRating={rating} handleRating={handleRating} />
         <div>

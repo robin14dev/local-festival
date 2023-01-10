@@ -144,6 +144,10 @@ const Info = styled.div`
 const Body = styled.div`
   padding-top: 22px;
   padding-left: 16px;
+  p {
+    word-break: break-all;
+    line-height: 1.5;
+  }
 `;
 
 const Button = styled.button`
