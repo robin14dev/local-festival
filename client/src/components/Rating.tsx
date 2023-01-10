@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AiFillStar } from 'react-icons/ai';
 import styled from 'styled-components';
 
@@ -33,11 +33,16 @@ type RatingProps = {
 const Rating = ({ handleRating, initialRating }: RatingProps) => {
   const [hover, setHover] = useState<number | null>(null);
   const [click, setClick] = useState<number | null>(initialRating || 0);
+  console.log('rating!!', 'initialRating : ', initialRating, 'click :', click);
   const onClickRating = (rating: number) => {
     setClick(rating);
     handleRating(rating);
   };
-
+  useEffect(() => {
+    if (initialRating === 0) {
+      setClick(initialRating);
+    }
+  }, [initialRating]);
   return (
     <Wrapper>
       {[1, 2, 3, 4, 5].map((ele) => {
