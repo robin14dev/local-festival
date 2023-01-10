@@ -161,8 +161,7 @@ const Wrapper = styled.section`
       padding: 0.4rem;
 
       width: 100%;
-      height: 116px;
-      max-height: 116px;
+      min-height: 7rem;
       border: 1px solid #d9d9d9;
       border-radius: 7px;
       .header {
@@ -178,6 +177,9 @@ const Wrapper = styled.section`
           }
         }
       }
+      p {
+        line-height: 1.2;
+      }
       .noReview {
         width: 100%;
         height: 100%;
@@ -190,9 +192,16 @@ const Wrapper = styled.section`
     div + div {
       margin-top: 14px;
     }
-    @media screen and (max-width: 845px) {
+    @media screen and (max-width: 870px) {
       h1 {
         font-size: 1.5rem;
+      }
+
+      ul {
+        margin-bottom: 0.5rem;
+        li {
+          font-size: 1.1rem;
+        }
       }
     }
 
@@ -217,6 +226,7 @@ const Wrapper = styled.section`
     }
     .summary {
       padding-left: 1rem;
+      padding-right: 1rem;
     }
   }
 
@@ -716,7 +726,8 @@ const DetailView = ({ togglePick, authState }: DetailViewProps) => {
             {likes}
           </div>
           <div>
-            <RatingIcon width={25} height={25} fill={'#FF9A62'} /> {average}
+            <RatingIcon width={25} height={25} fill={'#FF9A62'} />{' '}
+            {average.toFixed(1)}
           </div>
           <div>
             <ReviewIcon width={25} height={25} fill={'#FF9A62'} />
