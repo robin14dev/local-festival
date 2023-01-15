@@ -263,6 +263,19 @@ type userInfo = {
   };
 };
 
+type Rgx = {
+  [index: string]: RegExp;
+  account: RegExp;
+  nickname: RegExp;
+  password: RegExp;
+};
+
+export const rgx: Rgx = {
+  account: /[a-z0-9_!#$%^&*()-]+\@+[a-z0-9]+\.[a-z]+/,
+  nickname: /^[가-힣|a-z|A-Z|0-9|]{4,8}$/,
+  password: /^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!~@#$%^&+=]).*$/,
+};
+
 const SignupModal = ({ setSignupModal, setLoginModal }: SignupModalProps) => {
   const [userInfo, setUserInfo] = useState<userInfo>({
     account: { text: '', isValid: false, isUnique: false },
@@ -318,23 +331,23 @@ const SignupModal = ({ setSignupModal, setLoginModal }: SignupModalProps) => {
           | 'password'
           | 'passwordCheck';
 
-        type Rgx = {
-          [index: string]: RegExp;
-          account: RegExp;
-          nickname: RegExp;
-          password: RegExp;
-        };
+        // type Rgx = {
+        //   [index: string]: RegExp;
+        //   account: RegExp;
+        //   nickname: RegExp;
+        //   password: RegExp;
+        // };
 
-        const rgx: Rgx = {
-          account: /[a-z0-9_!#$%^&*()-]+\@+[a-z0-9]+\.[a-z]+/,
-          nickname: /^[가-힣|a-z|A-Z|0-9|]{4,8}$/,
-          password: /^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!~@#$%^&+=]).*$/,
-        };
+        // const rgx: Rgx = {
+        //   account: /[a-z0-9_!#$%^&*()-]+\@+[a-z0-9]+\.[a-z]+/,
+        //   nickname: /^[가-힣|a-z|A-Z|0-9|]{4,8}$/,
+        //   password: /^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!~@#$%^&+=]).*$/,
+        // };
 
         const errMsgDom: HTMLElement | null = document.body.querySelector(
           `.${e.target.name}`
         );
-        //# 빈값일때는 메시지 안보이게
+        //#1 빈값일때는 메시지 안보이게
         if (e.target.value === '') {
           setValidMsg((prevMsg) => ({
             ...prevMsg,
@@ -352,8 +365,9 @@ const SignupModal = ({ setSignupModal, setLoginModal }: SignupModalProps) => {
           return false;
         }
 
-        //# 빈값이 아닐때 정규식 체크
+        //#2 빈값이 아닐때 정규식 체크
         if (rgx[validType]) {
+          //#2-1 정규식이 있는 account, nickname의 중복확인여부 isUnique를 계속 false
           if (e.target.name === 'account' || e.target.name === 'nickname') {
             console.log(e.target.value);
 
@@ -378,6 +392,7 @@ const SignupModal = ({ setSignupModal, setLoginModal }: SignupModalProps) => {
               dupliCheckBtnNickname.current.disabled = false;
             }
           }
+          //#2-2 정규식이 있는 account, nickname, password가 통과 못했을 때
           if (rgx[validType].test(e.target.value) === false) {
             setValidMsg((prevMsg) => ({
               ...prevMsg,
