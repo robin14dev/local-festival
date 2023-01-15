@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import axios from 'axios';
 import moment from 'moment';
 import Withdraw from '../components/Withdraw';
@@ -8,10 +8,11 @@ import { useCallback } from 'react';
 import { Helmet } from 'react-helmet';
 import EditImg from '../assets/edit-mobile.png';
 import DeleteImg from '../assets/delete-mobile.png';
+import { ReactComponent as Cancel } from '../assets/cancel.svg';
+
 const Wrapper = styled.div`
   margin: 8rem 5rem;
   height: 55vh;
-  /* background-color: white; */
 
   & > span {
     display: none;
@@ -33,6 +34,7 @@ const Wrapper = styled.div`
 `;
 
 const List = styled.div`
+  transition: all 1s;
   margin-left: 0.5rem;
 
   @media (max-width: 485px) {
@@ -41,6 +43,7 @@ const List = styled.div`
 `;
 
 const Info = styled.div`
+  transition: all 1s;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -66,8 +69,6 @@ const Heading = styled.div`
   }
 
   padding-top: 0.8rem;
-  /* border: 1px solid black; */
-  /* height: 5rem; */
 `;
 const Button = styled.div`
   & > button {
@@ -75,14 +76,16 @@ const Button = styled.div`
   }
 
   img {
-    width: 22px;
+    width: 1.5rem;
+    height: auto;
+  }
+  svg {
+    width: 1.8rem;
     height: auto;
   }
 `;
 const Accordion = styled.div`
   line-height: 1.5rem;
-  transition: height 0.3s ease-in-out;
-  /* transition: all 2s ease-out; */
   margin-bottom: 1rem;
   input {
     height: 2rem;
@@ -152,16 +155,6 @@ export default function Account({
   handleAuthState,
   loginHandler,
 }: AccountProps) {
-  // type Open = {
-  //   [index: string]: boolean;
-  //   nickname: boolean;
-  //   password: boolean;
-  // };
-  // const [isOpen, setIsOpen] = useState<Open>({
-  //   nickname: false,
-  //   password: false,
-  // });
-
   const [isOpen, setIsOpen] = useState({
     nickname: false,
     password: false,
@@ -224,18 +217,33 @@ export default function Account({
     }
   };
 
-  const openModalHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const target = e.currentTarget as HTMLButtonElement;
-    const name = target.name as 'nickname' | 'password';
+  const openModalHandler = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      const target = e.currentTarget as HTMLButtonElement;
+      const name = target.name as 'nickname' | 'password';
 
-    if (isOpen[name] === false) {
-      const nextIsOpen = { ...isOpen, [name]: true };
-      setIsOpen(nextIsOpen);
-    } else {
-      const nextIsOpen = { ...isOpen, [name]: false };
-      setIsOpen(nextIsOpen);
-    }
-  };
+      if (isOpen[name] === false) {
+        // 닫혀있으면 열고
+        return setIsOpen((prev) => ({ ...prev, [name]: true }));
+      }
+
+      if (isOpen[name] === true) {
+        // 열려있으면 닫고
+        setIsOpen((prev) => ({ ...prev, [name]: false }));
+
+        // 닫을 때 해당 입력값 초기화 해주기
+        if (name === 'nickname') return setNickname('');
+        if (name === 'password')
+          return setPwdForm((prev) => ({
+            ...prev,
+            currentPassword: '',
+            newPassword: '',
+            passwordCheck: '',
+          }));
+      }
+    },
+    [isOpen]
+  );
 
   const onChangeHandler = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -246,17 +254,45 @@ export default function Account({
     },
     []
   );
-  const submitPwd = useCallback(() => {
-    const { newPassword, passwordCheck } = pwdForm;
-    if (newPassword !== passwordCheck) {
-      if (errMessagePwd.current) {
-        errMessagePwd.current.textContent =
-          '새로 입력한 비밀번호가 서로 일치하지 않습니다.';
+  const submitPwd = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      const { currentPassword, newPassword, passwordCheck } = pwdForm;
+
+      if (!currentPassword) {
+        if (errMessagePwd.current) {
+          errMessagePwd.current.textContent = '현재 비밀번호를 입력해 주세요';
+        }
+        return;
       }
-    } else {
+      if (!newPassword) {
+        if (errMessagePwd.current) {
+          errMessagePwd.current.textContent = '새 비밀번호를 입력해 주세요';
+        }
+        return;
+      }
+      if (newPassword && !passwordCheck) {
+        if (errMessagePwd.current) {
+          errMessagePwd.current.textContent =
+            '비밀번호를 한번 더 입력해 주세요';
+        }
+        return;
+      }
+
+      if (newPassword !== passwordCheck) {
+        console.log('here');
+
+        if (errMessagePwd.current) {
+          errMessagePwd.current.textContent =
+            '새로 입력한 비밀번호가 서로 일치하지 않습니다.';
+        }
+        return;
+      }
       axios
         .put(`${process.env.REACT_APP_SERVER_URL}/users/password`, pwdForm, {
-          headers: { accesstoken: sessionStorage.getItem('accesstoken') ?? '' },
+          headers: {
+            accesstoken: sessionStorage.getItem('accesstoken') ?? '',
+          },
         })
         .then((response) => {
           console.log(response);
@@ -280,14 +316,17 @@ export default function Account({
             console.log(err);
           }
         });
-    }
-  }, [pwdForm]);
+    },
+    [pwdForm]
+  );
 
   const onClickLogout = useCallback(() => {
     loginHandler(0, '', '', false);
     window.location.replace('/');
     window.sessionStorage.clear();
   }, []);
+
+  const { currentPassword, newPassword, passwordCheck } = pwdForm;
   return (
     <>
       {openWithdrawModal && (
@@ -309,7 +348,11 @@ export default function Account({
               <h4>닉네임</h4>
               <Button>
                 <button name="nickname" onClick={openModalHandler}>
-                  <img src={EditImg} alt="수정" />
+                  {isOpen.nickname ? (
+                    <Cancel alt="취소" />
+                  ) : (
+                    <img src={EditImg} alt="수정" />
+                  )}
                 </button>
               </Button>
             </Heading>
@@ -323,6 +366,7 @@ export default function Account({
                   onChange={nicknameHandler}
                   placeholder={authState.nickname}
                   name="nickname"
+                  value={nickname}
                 ></input>
                 <button onClick={profileHandler}>수정하기</button>
               </Nickname>
@@ -336,43 +380,52 @@ export default function Account({
               <h4>비밀번호</h4>
               <Button>
                 <button name="password" onClick={openModalHandler}>
-                  <img src={EditImg} alt="수정" />
+                  {isOpen.password ? (
+                    <Cancel alt="취소" />
+                  ) : (
+                    <img src={EditImg} alt="수정" />
+                  )}
                 </button>
               </Button>
             </Heading>
 
-            {isOpen.password ? (
+            {isOpen.password && (
               <Password>
                 <form onSubmit={submitPwd}>
                   <label htmlFor="currentPassword">현재 비밀번호</label>
-                  <br></br>
+                  <br />
                   <input
                     type={'password'}
                     onChange={onChangeHandler}
                     name="currentPassword"
-                  ></input>
-                  <br></br>
+                    value={currentPassword}
+                  />
+                  <br />
                   <label htmlFor="newPassword">새 비밀번호</label>
-                  <br></br>
+                  <br />
                   <input
                     type={'password'}
                     onChange={onChangeHandler}
                     name="newPassword"
-                  ></input>
-                  <br></br>
+                    value={newPassword}
+                  />
+                  <br />
                   <label htmlFor="passwordCheck">비밀번호 확인</label>
-                  <br></br>
+                  <br />
                   <input
                     type={'password'}
                     onChange={onChangeHandler}
                     name="passwordCheck"
-                  ></input>
-                  <br></br>
+                    value={passwordCheck}
+                  />
+                  <br />
                   <button type="submit">비밀번호 변경</button>
                 </form>
                 <span ref={errMessagePwd}></span>
               </Password>
-            ) : (
+            )}
+
+            {!isOpen.password && (
               <div style={{ color: 'gray' }}>
                 최종수정일 :{' '}
                 {moment(updatedAt).format('YYYY년 MM월 DD일 HH시 mm분')}
