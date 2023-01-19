@@ -9,6 +9,7 @@ import { Helmet } from 'react-helmet';
 import EditImg from '../assets/edit-mobile.png';
 import DeleteImg from '../assets/delete-mobile.png';
 import { ReactComponent as Cancel } from '../assets/cancel.svg';
+import { userInfo } from '../components/SignupModal';
 
 const Wrapper = styled.div`
   margin: 8rem 5rem;
@@ -165,6 +166,7 @@ export default function Account({
     newPassword: '',
     passwordCheck: '',
   });
+
   const [openWithdrawModal, setWithdrawModal] = useState(false);
   const [finishWithdrawModal, setFinishModal] = useState(false);
   const [updatedAt, setUpdatedAt] = useState('');

@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as Confirm } from '../assets/confirm.svg';
 import { ReactComponent as ServerFail } from '../assets/server-fail.svg';
@@ -85,19 +85,6 @@ const ModalContainer = styled.div`
           &:hover {
             background-color: var(--primaryBlue);
           }
-        }
-
-        div {
-          /* background-color: yellow; */
-          font-size: 0.8rem;
-          font-weight: bold;
-          font-family: 'NanumSquareRound';
-          word-break: normal;
-          padding-left: 0.5rem;
-          flex: 1;
-          display: flex;
-          align-items: center;
-          justify-content: flex-start;
         }
       }
 
@@ -240,6 +227,29 @@ const LoginSection = styled.div`
   }
 `;
 
+const ShowValid = styled.div<{
+  checkType: string;
+  isValid: boolean;
+  isUnique?: boolean;
+}>`
+  font-size: 0.8rem;
+  font-weight: bold;
+  font-family: 'NanumSquareRound';
+  word-break: normal;
+  padding-left: 0.5rem;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: ${({ isValid, checkType }) =>
+    isValid === false
+      ? 'red'
+      : checkType === 'nickname' || checkType === 'account'
+      ? 'orange'
+      : 'green'};
+  color: ${({ isUnique }) => isUnique && 'green'};
+`;
+
 type SignupModalProps = {
   setSignupModal: React.Dispatch<React.SetStateAction<boolean>>;
   setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -250,12 +260,12 @@ type Message = {
     success: string;
     fail: string;
     empty: string;
-    already?: string;
+    exist?: string;
     unique?: string;
   };
 };
 
-type userInfo = {
+export type userInfo = {
   [index: string]: {
     text: string;
     isValid: boolean;
@@ -292,21 +302,19 @@ const SignupModal = ({ setSignupModal, setLoginModal }: SignupModalProps) => {
   const [isLoading, setLoading] = useState(false);
   type Progress = 'inProgress' | 'success' | 'failed';
   const [progress, setProgress] = useState<Progress>('inProgress');
-  const dupliCheckBtnAccount = useRef<HTMLButtonElement | null>(null);
-  const dupliCheckBtnNickname = useRef<HTMLButtonElement | null>(null);
   const { account, nickname, password, passwordCheck } = userInfo;
   const message: Message = {
     account: {
       success: '중복 확인을 눌러주세요',
       fail: '유효하지 않은 이메일 형식 입니다',
-      already: '이미 사용중인 이메일 입니다.',
+      exist: '이미 사용중인 이메일 입니다.',
       unique: '가입이 가능한 이메일입니다',
       empty: '',
     },
     nickname: {
       success: '중복 확인을 눌러주세요',
       fail: '영문, 한글, 숫자 포함 4자에서 8자 이하여야 합니다',
-      already: '이미 사용중인 닉네임 입니다.',
+      exist: '이미 사용중인 닉네임 입니다.',
       unique: '사용이 가능한 닉네임입니다',
       empty: '',
     },
@@ -321,190 +329,95 @@ const SignupModal = ({ setSignupModal, setLoginModal }: SignupModalProps) => {
       empty: '',
     },
   };
+  function validate(type: string, value: string, rgx: Rgx) {
+    const validType = type as
+      | 'account'
+      | 'nickname'
+      | 'password'
+      | 'passwordCheck';
+
+    //#1 빈값일때는 메시지 안보이게하고 return false
+    if (value === '') {
+      return false;
+    }
+
+    //#2 빈값이 아닐때 정규식 체크
+    if (rgx[validType]) {
+      return rgx[validType].test(value) ? true : false;
+    } else {
+      return password.text === value ? true : false;
+    }
+  }
 
   const handleUserInfo = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      function validate(type: string) {
-        const validType = type as
-          | 'account'
-          | 'nickname'
-          | 'password'
-          | 'passwordCheck';
-
-        // type Rgx = {
-        //   [index: string]: RegExp;
-        //   account: RegExp;
-        //   nickname: RegExp;
-        //   password: RegExp;
-        // };
-
-        // const rgx: Rgx = {
-        //   account: /[a-z0-9_!#$%^&*()-]+\@+[a-z0-9]+\.[a-z]+/,
-        //   nickname: /^[가-힣|a-z|A-Z|0-9|]{4,8}$/,
-        //   password: /^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!~@#$%^&+=]).*$/,
-        // };
-
-        const errMsgDom: HTMLElement | null = document.body.querySelector(
-          `.${e.target.name}`
-        );
-        //#1 빈값일때는 메시지 안보이게
-        if (e.target.value === '') {
-          setValidMsg((prevMsg) => ({
-            ...prevMsg,
-            [e.target.name]: '',
-          }));
-
-          setUserInfo((prevInfo) => ({
-            ...prevInfo,
-            [e.target.name]: {
-              ...prevInfo[e.target.name],
-              isValid: false,
-            },
-          }));
-
-          return false;
-        }
-
-        //#2 빈값이 아닐때 정규식 체크
-        if (rgx[validType]) {
-          //#2-1 정규식이 있는 account, nickname의 중복확인여부 isUnique를 계속 false
-          if (e.target.name === 'account' || e.target.name === 'nickname') {
-            console.log(e.target.value);
-
-            // 계정과 닉네임은 다시 작성시 중복확인을 또 해줘야하므로 작성중에는 isUnique계속 false
-            setUserInfo((prevInfo) => ({
-              ...prevInfo,
-              [e.target.name]: {
-                ...prevInfo[e.target.name],
-                isUnique: false,
-              },
-            }));
-            if (
-              e.target.name === 'account' &&
-              dupliCheckBtnAccount.current?.disabled === true
-            ) {
-              dupliCheckBtnAccount.current.disabled = false;
-            }
-            if (
-              e.target.name === 'nickname' &&
-              dupliCheckBtnNickname.current?.disabled === true
-            ) {
-              dupliCheckBtnNickname.current.disabled = false;
-            }
-          }
-          //#2-2 정규식이 있는 account, nickname, password가 통과 못했을 때
-          if (rgx[validType].test(e.target.value) === false) {
-            setValidMsg((prevMsg) => ({
-              ...prevMsg,
-              [e.target.name]: message[validType].fail,
-            }));
-            setUserInfo((prevInfo) => ({
-              ...prevInfo,
-              [e.target.name]: {
-                ...prevInfo[e.target.name],
-                text: e.target.value,
-                isValid: false,
-              },
-            }));
-
-            if (errMsgDom) {
-              errMsgDom.style.color = 'red';
-            }
-            return false;
-          } else {
-            setValidMsg((prevMsg) => ({
-              ...prevMsg,
-              [e.target.name]: message[validType].success,
-            }));
-            setUserInfo((prevInfo) => ({
-              ...prevInfo,
-              [e.target.name]: {
-                ...prevInfo[e.target.name],
-                text: e.target.value,
-                isValid: true,
-              },
-            }));
-
-            if (errMsgDom) {
-              if (e.target.name === 'account' || e.target.name === 'nickname') {
-                errMsgDom.style.color = 'var(--primaryOrange)';
-                return true;
-              }
-              errMsgDom.style.color = 'green';
-            }
-            return true;
-          }
-        } else {
-          // 정규식이 없으면 없는대로 체크
-          if (password.text !== e.target.value) {
-            setValidMsg((prevMsg) => ({
-              ...prevMsg,
-              [e.target.name]: message.passwordCheck.fail,
-            }));
-            setUserInfo((prevInfo) => ({
-              ...prevInfo,
-              [e.target.name]: {
-                ...prevInfo[e.target.name],
-                text: e.target.value,
-                isValid: false,
-              },
-            }));
-            if (errMsgDom) {
-              errMsgDom.style.color = 'red';
-            }
-            return false;
-          } else {
-            setValidMsg((prevMsg) => ({
-              ...prevMsg,
-              [e.target.name]: message.passwordCheck.success,
-            }));
-            setUserInfo((prevInfo) => ({
-              ...prevInfo,
-              [e.target.name]: {
-                ...prevInfo[e.target.name],
-                text: e.target.value,
-                isValid: true,
-              },
-            }));
-            if (errMsgDom) {
-              errMsgDom.style.color = 'green';
-            }
-          }
-          return true;
-        }
-      }
-
+    (e: React.ChangeEvent<HTMLInputElement>): void => {
       //# 유효성 검사 실패시 isValid: false로 바꾸고 리턴
 
-      if (validate(e.target.name) === false) {
-        return setUserInfo((prevInfo) => ({
-          ...prevInfo,
-          [e.target.name]: {
-            ...prevInfo[e.target.name],
-            text: e.target.value,
-            isValid: false,
-          },
+      const checkType = e.target.name;
+      const value = e.target.value;
+
+      if (validate(checkType, value, rgx)) {
+        // 유저정보 변경
+        setUserInfo((prevInfo) => {
+          const nextInfo = {
+            ...prevInfo,
+            [checkType]: { ...prevInfo[checkType], text: value, isValid: true },
+          };
+          if (checkType === 'account' || checkType === 'nickname') {
+            console.log(checkType);
+
+            Object.assign(nextInfo[checkType], { isUnique: false });
+          }
+          return nextInfo;
+        });
+        // - 메시지 변경 (유효성 통과)
+        setValidMsg((prevMsg) => ({
+          ...prevMsg,
+          [checkType]: message[checkType].success,
         }));
+        // dom 색깔 변경 => styled-component 조건부로 해결
+        //! - 중복확인 버튼 활성화 => dom 조건부로 해결
+      } else {
+        //빈값인 경우
+        setUserInfo((prevInfo) => {
+          const nextInfo = {
+            ...prevInfo,
+            [checkType]: {
+              ...prevInfo[checkType],
+              text: value,
+              isValid: false,
+            },
+          };
+          if (checkType === 'account' || checkType === 'nickname') {
+            Object.assign(nextInfo[checkType], { isUnique: false });
+          }
+          return nextInfo;
+        });
+        //빈값이어서 실패한 경우
+        if (value.length === 0) {
+          setValidMsg((prevMsg) => ({
+            ...prevMsg,
+            [checkType]: '',
+          }));
+        } else {
+          //빈값이 아닌 입력값이 유효성에  실패한 경우
+          // - 메시지 변경 (유효성 실패)
+          setValidMsg((prevMsg) => ({
+            ...prevMsg,
+            [checkType]: message[checkType].fail,
+          }));
+          // dom 색깔 변경 => styled-component 조건부로 해결
+          //! - 중복확인 버튼 비활성화 => dom 조건부로 해결
+        }
       }
-
-      console.log('설마 여기?');
-
-      //# 유효성 검사 통과시 isValid: true 바꾸고 리턴
-      return setUserInfo((prevInfo) => ({
-        ...prevInfo,
-        [e.target.name]: {
-          ...prevInfo[e.target.name],
-          text: e.target.value,
-          isValid: true,
-        },
-      }));
     },
-    [userInfo]
+    [userInfo, message]
   );
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLButtonElement>) => {
       e.preventDefault();
+      console.log('submit');
 
       const validUserInfo = (): boolean => {
         for (const info in userInfo) {
@@ -526,14 +439,11 @@ const SignupModal = ({ setSignupModal, setLoginModal }: SignupModalProps) => {
 
       try {
         setLoading(true);
-        const response = await axios.post(
-          `${process.env.REACT_APP_SERVER_URL}/users/signup`,
-          {
-            account: account.text,
-            password: password.text,
-            nickname: nickname.text,
-          }
-        );
+        await axios.post(`${process.env.REACT_APP_SERVER_URL}/users/signup`, {
+          account: account.text,
+          password: password.text,
+          nickname: nickname.text,
+        });
         console.log('success!!');
 
         //# 회원가입 성공시, 성공메시지와 함께 3초 뒤 로그인 모달로 이동
@@ -552,66 +462,51 @@ const SignupModal = ({ setSignupModal, setLoginModal }: SignupModalProps) => {
 
   const duplicateCheck = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const target = e.target as HTMLButtonElement;
-    const errMsgDom: HTMLInputElement | null = document.body.querySelector(
-      `.${target.name}`
-    );
-    if (userInfo[target.name].isValid === false) {
-      // console.log('중복확인 누를 때 유효성 검사가 통과되지 않은경우');
+    const checkType = e.currentTarget.name;
+
+    console.log('duplicaatecheck');
+
+    if (userInfo[checkType].isValid === false) {
+      //console.log('중복확인 누를 때 유효성 검사가 통과되지 않은경우');
       return;
     }
-    // console.log('중복확인 누를 때 유효성 검사가 통과된경우');
+    //console.log('중복확인 누를 때 유효성 검사가 통과된경우');
 
     try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/users/signup`,
-        {
-          params: { [target.name]: userInfo[target.name].text },
-        }
-      );
-      if (target.name === 'account' && dupliCheckBtnAccount.current) {
-        dupliCheckBtnAccount.current.disabled = true;
-      }
-      if (target.name === 'nickname' && dupliCheckBtnNickname.current) {
-        dupliCheckBtnNickname.current.disabled = true;
-      }
+      await axios.get(`${process.env.REACT_APP_SERVER_URL}/users/signup`, {
+        params: { [checkType]: userInfo[checkType].text },
+      });
+      // 중복확인 버튼 비활성화 dom disabled로 해결
 
       setValidMsg((prevMsg) => ({
         ...prevMsg,
-        [target.name]: message[target.name].unique,
+        [checkType]: message[checkType].unique,
       }));
       setUserInfo((prevInfo) => ({
         ...prevInfo,
-        [target.name]: {
-          ...prevInfo[target.name],
+        [checkType]: {
+          ...prevInfo[checkType],
           isUnique: true,
         },
       }));
-      if (errMsgDom) {
-        errMsgDom.style.color = 'green';
-      }
-
-      // console.log(response);
+      // 중복 메시지 색깔 styled-componnet로 해결
     } catch (err: unknown) {
       if (err instanceof AxiosError) {
         console.log(err.response);
-        if (err.response?.data === `Already ${target.name}`) {
+        if (err.response?.data === `Already ${checkType}`) {
           console.log('here!!');
 
           setUserInfo((prevInfo) => ({
             ...prevInfo,
-            [target.name]: {
-              ...prevInfo[target.name],
+            [checkType]: {
+              ...prevInfo[checkType],
               isUnique: false,
             },
           }));
           setValidMsg((prevMsg) => ({
             ...prevMsg,
-            [target.name]: message[target.name].already,
+            [checkType]: message[checkType].exist,
           }));
-          if (errMsgDom) {
-            errMsgDom.style.color = 'red';
-          }
         }
       }
     }
@@ -690,11 +585,17 @@ const SignupModal = ({ setSignupModal, setLoginModal }: SignupModalProps) => {
             <form>
               <div className="validInfo">
                 <label htmlFor="account">이메일 주소</label>{' '}
-                <div className="account">{validMsg.account}</div>
+                <ShowValid
+                  checkType={'account'}
+                  isValid={account.isValid}
+                  isUnique={account.isUnique}
+                >
+                  {validMsg.account}
+                </ShowValid>
                 <button
-                  ref={dupliCheckBtnAccount}
                   name="account"
                   onClick={duplicateCheck}
+                  disabled={!account.isValid || account.isUnique}
                 >
                   중복 확인
                 </button>
@@ -708,11 +609,17 @@ const SignupModal = ({ setSignupModal, setLoginModal }: SignupModalProps) => {
               />
               <div className="validInfo">
                 <label htmlFor="nickname">닉네임</label>
-                <div className="nickname">{validMsg.nickname}</div>
+                <ShowValid
+                  checkType={'nickname'}
+                  isValid={nickname.isValid}
+                  isUnique={nickname.isUnique}
+                >
+                  {validMsg.nickname}
+                </ShowValid>
                 <button
-                  ref={dupliCheckBtnNickname}
                   name="nickname"
                   onClick={duplicateCheck}
+                  disabled={!nickname.isValid || nickname.isUnique}
                 >
                   중복 확인
                 </button>
@@ -726,7 +633,9 @@ const SignupModal = ({ setSignupModal, setLoginModal }: SignupModalProps) => {
               />
               <div className="validInfo">
                 <label htmlFor="password">비밀번호</label>{' '}
-                <div className="password">{validMsg.password}</div>
+                <ShowValid checkType="password" isValid={password.isValid}>
+                  {validMsg.password}
+                </ShowValid>
               </div>
               <input
                 name="password"
@@ -737,7 +646,12 @@ const SignupModal = ({ setSignupModal, setLoginModal }: SignupModalProps) => {
               />
               <div className="validInfo">
                 <label htmlFor="passwordCheck">비밀번호 확인</label>
-                <div className="passwordCheck">{validMsg.passwordCheck}</div>
+                <ShowValid
+                  checkType="passwordCheck"
+                  isValid={passwordCheck.isValid}
+                >
+                  {validMsg.passwordCheck}
+                </ShowValid>
               </div>
               <input
                 name="passwordCheck"
