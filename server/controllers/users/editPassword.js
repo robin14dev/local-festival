@@ -29,11 +29,9 @@ module.exports = async (req, res) => {
       .then(async (response) => {
         console.log(response);
         console.log('비번 변경 성공');
-        let result = await Users.findOne(
-          { attributes: ['updatedAt'] },
-          { where: id }
-        );
-        console.log(result.updatedAt);
+        console.log(id);
+        let result = await Users.findOne({ where: { id } });
+        console.log(result);
         res.json({
           updatedAt: result.updatedAt,
           message: 'password successfully changed',

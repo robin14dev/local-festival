@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import moment from 'moment';
 import Withdraw from '../components/Withdraw';
 import WithdrawDone from '../components/WithdrawDone';
@@ -10,15 +10,26 @@ import EditImg from '../assets/edit-mobile.png';
 import DeleteImg from '../assets/delete-mobile.png';
 import { ReactComponent as Cancel } from '../assets/cancel.svg';
 import { userInfo } from '../components/SignupModal';
+import { validate } from '../components/SignupModal';
+import { rgx } from '../components/SignupModal';
+import { message } from '../components/SignupModal';
+import { ShowValid } from '../components/SignupModal';
+import { Progress } from '../components/SignupModal';
+import { ReactComponent as Confirm } from '../assets/confirm.svg';
+import { ReactComponent as Fail } from '../assets/server-fail.svg';
 
+import Modal from '../components/Modal';
 const Wrapper = styled.div`
   margin: 8rem 5rem;
-  height: 55vh;
+  /* height: 55vh; */
 
   & > span {
     display: none;
   }
-
+  #last-modified {
+    color: gray;
+    margin: 1rem;
+  }
   @media (max-width: 485px) {
     margin: 8rem 0;
 
@@ -71,7 +82,7 @@ const Heading = styled.div`
 
   padding-top: 0.8rem;
 `;
-const Button = styled.div`
+const Toggle = styled.div`
   & > button {
     text-decoration: underline;
   }
@@ -93,37 +104,92 @@ const Accordion = styled.div`
     border-radius: 0.3rem;
     border: 1px solid #d1cece;
     padding-left: 0.5rem;
-  }
-  button {
-    background-color: var(--mainColor);
-    color: white;
-    height: 2rem;
-    border-radius: 0.3rem;
-    padding: 0 1rem;
-    font-weight: 550;
+
+    & + div {
+    }
   }
 
   label {
     color: #7a7777;
   }
 `;
-const Nickname = styled(Accordion)`
-  /* label {
-    margin: 1.5rem 0rem;
-  } */
 
+const Button = styled.button<{ isLoading: boolean }>`
+  background-color: var(--mainColor);
+  color: white;
+  height: 2rem;
+  border-radius: 0.3rem;
+  padding: 0 1rem;
+  font-weight: 550;
+  position: relative;
+
+  ${(props) =>
+    props.isLoading === true &&
+    css`
+      span {
+        visibility: hidden;
+        opacity: 0.5;
+        transition: all 0.2s;
+      }
+
+      &:active {
+        background: #007a63;
+      }
+      &::after {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        border: 4px solid transparent;
+        border-top-color: #ffffff;
+        border-radius: 50%;
+        animation: button-loading-spinner 1s ease infinite;
+      }
+    `}
+
+  @keyframes button-loading-spinner {
+    from {
+      transform: rotate(0turn);
+    }
+
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  &:disabled {
+    background-color: darkgray;
+    &:hover {
+      background-color: darkgray;
+    }
+
+    /*
+   loading일 때 스피너 뜨게 하기
+   
+   */
+  }
+`;
+const Nickname = styled(Accordion)`
   label {
     margin-bottom: 1rem;
   }
   & button {
-    margin-left: 1rem;
+    /* margin-left: 1rem; */
 
-    &:hover {
+    /* &:hover {
       box-shadow: 1px 3px 1px rgba(217, 220, 224, 0.901);
-    }
+    } */
   }
 `;
-
+const ValidMsg = styled(ShowValid)`
+  padding-left: 0;
+  margin: 0.3rem 0;
+`;
 const Password = styled(Accordion)`
   margin-top: 0.5rem;
 
@@ -160,19 +226,29 @@ export default function Account({
     nickname: false,
     password: false,
   });
-  const [nickname, setNickname] = useState(authState.nickname);
-  const [pwdForm, setPwdForm] = useState({
-    currentPassword: '',
-    newPassword: '',
+
+  const [userInfo, setUserInfo] = useState<userInfo>({
+    nickname: { text: '', isValid: false, isUnique: false },
+    password: { text: '', isValid: false },
+    passwordCheck: { text: '', isValid: false },
+    curPassword: { text: '', isValid: true },
+  });
+  const [validMsg, setValidMsg] = useState({
+    nickname: '',
+    password: '',
     passwordCheck: '',
+    curPassword: '',
   });
 
   const [openWithdrawModal, setWithdrawModal] = useState(false);
   const [finishWithdrawModal, setFinishModal] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [progress, setProgress] = useState<Progress>('inProgress');
   const [updatedAt, setUpdatedAt] = useState('');
-
+  const editType = useRef<null | string>(null);
   const inputhere = useRef<HTMLInputElement | null>(null);
   const errMessagePwd = useRef<HTMLSpanElement | null>(null);
+  const { nickname, password, passwordCheck, curPassword } = userInfo;
 
   useEffect(() => {
     console.log('accountSetting!!');
@@ -185,150 +261,353 @@ export default function Account({
         setUpdatedAt(response.data.updatedAt);
       });
   }, []);
+  const duplicateCheck = async (type: string, value: string) => {
+    const checkType = type;
 
-  const nicknameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNickname(e.target.value);
-  };
+    console.log('duplicaatecheck');
+    console.log(value, checkType, userInfo);
 
-  const profileHandler = () => {
-    if (inputhere.current) {
-      if (inputhere.current.value === '') {
-        document.querySelector('.errorMessage')!.textContent =
-          '최소 한 글자 이상의 단어를 적어주세요';
-      } else {
-        axios
-          .put(
-            `${process.env.REACT_APP_SERVER_URL}/users/nickname`,
-            { nickname },
-            {
-              headers: {
-                accesstoken: sessionStorage.getItem('accesstoken') ?? '',
-              },
-            }
-          )
-          .then((response) => {
-            const nextNickname = response.data.nickname;
+    // if (userInfo[checkType].isValid === false) {
+    //   console.log('중복확인 누를 때 유효성 검사가 통과되지 않은경우');
+    //   return;
+    // }
+    console.log('중복확인 누를 때 유효성 검사가 통과된경우');
 
-            handleAuthState(nextNickname);
-            window.location.replace('/Account');
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+    try {
+      await axios.get(`${process.env.REACT_APP_SERVER_URL}/users/signup`, {
+        params: { [checkType]: value },
+      });
+      // 중복확인 버튼 비활성화 dom disabled로 해결
+
+      setValidMsg((prevMsg) => ({
+        ...prevMsg,
+        [checkType]: message[checkType].unique,
+      }));
+      setUserInfo((prevInfo) => ({
+        ...prevInfo,
+        [checkType]: {
+          ...prevInfo[checkType],
+          isUnique: true,
+        },
+      }));
+      // 중복 메시지 색깔 styled-componnet로 해결
+    } catch (err: unknown) {
+      if (err instanceof AxiosError) {
+        console.log(err.response);
+        if (err.response?.data === `Already ${checkType}`) {
+          console.log('here!!');
+
+          setUserInfo((prevInfo) => ({
+            ...prevInfo,
+            [checkType]: {
+              ...prevInfo[checkType],
+              isUnique: false,
+            },
+          }));
+          setValidMsg((prevMsg) => ({
+            ...prevMsg,
+            [checkType]: message[checkType].exist,
+          }));
+        }
       }
     }
   };
+  const handleUserInfo = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>): void => {
+      //# 유효성 검사 실패시 isValid: false로 바꾸고 리턴
 
-  const openModalHandler = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      const target = e.currentTarget as HTMLButtonElement;
-      const name = target.name as 'nickname' | 'password';
+      const checkType = e.target.name;
+      const value = e.target.value;
 
-      if (isOpen[name] === false) {
-        // 닫혀있으면 열고
-        return setIsOpen((prev) => ({ ...prev, [name]: true }));
+      if (progress === 'success' || progress === 'failed') {
+        console.log('here');
+
+        setProgress('inProgress');
       }
 
-      if (isOpen[name] === true) {
-        // 열려있으면 닫고
-        setIsOpen((prev) => ({ ...prev, [name]: false }));
-
-        // 닫을 때 해당 입력값 초기화 해주기
-        if (name === 'nickname') return setNickname('');
-        if (name === 'password')
-          return setPwdForm((prev) => ({
-            ...prev,
-            currentPassword: '',
-            newPassword: '',
-            passwordCheck: '',
+      if (checkType === 'curPassword') {
+        setUserInfo((prevInfo) => ({
+          ...prevInfo,
+          [checkType]: { ...prevInfo[checkType], text: value },
+        }));
+        if (value.length !== 0)
+          return setValidMsg((prevMsg) => ({
+            ...prevMsg,
+            [checkType]: '',
           }));
+      }
+
+      if (validate(checkType, value, rgx, password.text)) {
+        console.log(checkType, value);
+
+        // 유저정보 변경
+        setUserInfo((prevInfo) => {
+          const nextInfo = {
+            ...prevInfo,
+            [checkType]: { ...prevInfo[checkType], text: value, isValid: true },
+          };
+          if (checkType === 'nickname') {
+            console.log(checkType);
+
+            Object.assign(nextInfo[checkType], { isUnique: false });
+          }
+          return nextInfo;
+        });
+        // - 메시지 변경 (유효성 통과)
+        setValidMsg((prevMsg) => ({
+          ...prevMsg,
+          [checkType]: '',
+        }));
+
+        if (checkType === 'nickname') {
+          duplicateCheck(checkType, value);
+        }
+      } else {
+        //# 유효성 실패시 isValid false
+        setUserInfo((prevInfo) => {
+          const nextInfo = {
+            ...prevInfo,
+            [checkType]: {
+              ...prevInfo[checkType],
+              text: value,
+              isValid: false,
+            },
+          };
+          if (checkType === 'account' || checkType === 'nickname') {
+            Object.assign(nextInfo[checkType], { isUnique: false });
+          }
+          return nextInfo;
+        });
+        //# 메시지 보여주기
+        //빈값이어서 실패한 경우
+        if (value.length === 0) {
+          setValidMsg((prevMsg) => ({
+            ...prevMsg,
+            [checkType]: '',
+          }));
+        } else {
+          //빈값이 아닌 입력값이 유효성에  실패한 경우
+          setValidMsg((prevMsg) => ({
+            ...prevMsg,
+            [checkType]: message[checkType].fail,
+          }));
+        }
+      }
+    },
+    [userInfo, message, progress]
+  );
+
+  const accordionHandler = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      const target = e.currentTarget as HTMLButtonElement;
+      const checkType = target.name as 'nickname' | 'password';
+
+      if (isOpen[checkType] === false) {
+        // 닫혀있으면 열고
+        return setIsOpen((prev) => ({ ...prev, [checkType]: true }));
+      }
+
+      if (isOpen[checkType] === true) {
+        // 열려있으면 닫고
+        setIsOpen((prev) => ({ ...prev, [checkType]: false }));
+
+        //# 닫을 때 해당 입력값 초기화 해주기(userInfo)
+        setUserInfo((prevInfo) => {
+          const nextInfo = {
+            ...prevInfo,
+            [checkType]: { ...[checkType], text: '', isValid: false },
+          };
+          if (checkType === 'password') {
+            Object.assign(nextInfo, {
+              passwordCheck: { text: '', isValid: false },
+              curPassword: { text: '', isValid: true },
+            });
+          }
+
+          return nextInfo;
+        });
+        //# 메시지도 초기화 해주기
+        setValidMsg((prevMsg) => {
+          const nextMsg = {
+            ...prevMsg,
+            [checkType]: '',
+          };
+          if (checkType === 'password') {
+            Object.assign(nextMsg, { passwordCheck: '', curPassword: '' });
+          }
+          return nextMsg;
+        });
       }
     },
     [isOpen]
   );
 
-  const onChangeHandler = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setPwdForm((prevForm) => ({
-        ...prevForm,
-        [e.target.name]: e.target.value,
-      }));
-    },
-    []
-  );
-  const submitPwd = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      const { currentPassword, newPassword, passwordCheck } = pwdForm;
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>,
+    ...type: string[]
+  ) => {
+    e.preventDefault();
+    const typeList = [...type];
 
-      if (!currentPassword) {
-        if (errMessagePwd.current) {
-          errMessagePwd.current.textContent = '현재 비밀번호를 입력해 주세요';
-        }
-        return;
+    const validUserInfo = (typeList: string[]): boolean => {
+      for (const type of typeList) {
+        if (userInfo[type].isValid === false) return false;
+        /* //!isUnique 있으면 true인지도 확인 false면 바로 false */
+        if (
+          userInfo[type].hasOwnProperty('isUnique') &&
+          userInfo[type]['isUnique'] === false
+        )
+          return false;
       }
-      if (!newPassword) {
-        if (errMessagePwd.current) {
-          errMessagePwd.current.textContent = '새 비밀번호를 입력해 주세요';
-        }
-        return;
-      }
-      if (newPassword && !passwordCheck) {
-        if (errMessagePwd.current) {
-          errMessagePwd.current.textContent =
-            '비밀번호를 한번 더 입력해 주세요';
-        }
-        return;
-      }
+      return true;
+    };
 
-      if (newPassword !== passwordCheck) {
-        console.log('here');
-
-        if (errMessagePwd.current) {
-          errMessagePwd.current.textContent =
-            '새로 입력한 비밀번호가 서로 일치하지 않습니다.';
-        }
-        return;
-      }
-      axios
-        .put(`${process.env.REACT_APP_SERVER_URL}/users/password`, pwdForm, {
-          headers: {
-            accesstoken: sessionStorage.getItem('accesstoken') ?? '',
-          },
-        })
-        .then((response) => {
-          console.log(response);
-          const { message, updatedAt } = response.data;
-          if (message === 'password successfully changed') {
-            if (errMessagePwd.current) {
-              errMessagePwd.current.textContent = '비밀번호가 변경되었습니다.';
-              setUpdatedAt(updatedAt);
-            }
+    if (validUserInfo(typeList) === false) return;
+    if (progress === 'success' || progress === 'failed') {
+      setProgress('inProgress');
+    }
+    if (typeList[0] === 'nickname') {
+      const checkType = 'nickname';
+      setLoading(true);
+      try {
+        const response = await axios.put(
+          `${process.env.REACT_APP_SERVER_URL}/users/nickname`,
+          { nickname: userInfo.nickname.text },
+          {
+            headers: {
+              accesstoken: sessionStorage.getItem('accesstoken') ?? '',
+            },
           }
-        })
-        .catch((err) => {
-          console.log('errrrr', err.response.data.message);
+        );
+        const nextNickname = response.data.data.nickname;
 
-          if (err.response.data.message === 'Wrong Password') {
-            if (errMessagePwd.current) {
-              errMessagePwd.current.textContent =
-                '기존 비밀번호가 일치하지 않습니다.';
-            }
-          } else {
-            console.log(err);
-          }
+        // 젼역정보수정
+        handleAuthState(nextNickname);
+
+        // 모달메시지 세팅
+        editType.current = '닉네임이';
+        setProgress('success');
+        setLoading(false);
+        // 아코디언 닫기
+        setIsOpen((prev) => ({ ...prev, [typeList[0]]: false }));
+
+        // 기존 입력값과 메시지 초기화
+        setValidMsg((prevMsg) => {
+          const nextMsg = {
+            ...prevMsg,
+            [checkType]: '',
+          };
+
+          return nextMsg;
         });
-    },
-    [pwdForm]
-  );
+        setUserInfo((prevInfo) => {
+          const nextInfo = {
+            ...prevInfo,
+            [checkType]: {
+              ...prevInfo[checkType],
+              isValid: false,
+              text: '',
+              isUnique: false,
+            },
+          };
+
+          return nextInfo;
+        });
+
+        // 기본 상태로 바꾸기
+        setTimeout(() => {
+          setProgress('inProgress');
+        }, 3000);
+      } catch (error) {
+        setLoading(false);
+        setProgress('failed');
+      }
+    }
+
+    if (typeList[0] === 'password') {
+      const { curPassword, password, passwordCheck } = userInfo;
+      const pwdForm = {
+        currentPassword: curPassword.text,
+        newPassword: password.text,
+        passwordCheck: passwordCheck.text,
+      };
+
+      try {
+        setLoading(true);
+        const response = await axios.put(
+          `${process.env.REACT_APP_SERVER_URL}/users/password`,
+          pwdForm,
+          {
+            headers: {
+              accesstoken: sessionStorage.getItem('accesstoken') ?? '',
+            },
+          }
+        );
+
+        const { updatedAt } = response.data;
+
+        // input값들 초기화
+        setUserInfo((prevInfo) => ({
+          ...prevInfo,
+          password: { ...password, text: '', isValid: false },
+          passwordCheck: { ...passwordCheck, text: '', isValid: false },
+          curPassword: { ...password, text: '' },
+        }));
+
+        //모달메시지 준비
+        editType.current = '비밀번호가';
+
+        // 아코디언 닫으면서 최종수정일 업데이트
+        setUpdatedAt(updatedAt);
+        setIsOpen((prev) => ({ ...prev, [typeList[0]]: false }));
+
+        //모달 띄우기
+        setProgress('success');
+        setLoading(false);
+
+        setTimeout(() => {
+          setProgress('inProgress');
+        }, 3000);
+      } catch (err: unknown) {
+        //! 아래 지우면 안됨
+        if (err instanceof AxiosError) {
+          if (err.message === 'Network Error') {
+            setProgress('failed');
+            setLoading(false);
+          }
+
+          if (err.response?.data.message === 'Wrong Password') {
+            setLoading(false);
+          }
+          const checkType = 'curPassword';
+          setUserInfo((prevInfo) => {
+            const nextInfo = {
+              ...prevInfo,
+              [checkType]: {
+                ...prevInfo[checkType],
+                isValid: false,
+              },
+            };
+
+            return nextInfo;
+          });
+          setValidMsg((prevMsg) => ({
+            ...prevMsg,
+            [checkType]: message[checkType].fail,
+          }));
+        }
+      }
+    }
+  };
 
   const onClickLogout = useCallback(() => {
     loginHandler(0, '', '', false);
     window.location.replace('/');
     window.sessionStorage.clear();
   }, []);
+  // const { currentPassword, newPassword, passwordCheck } = pwdForm;
+  console.log(editType);
 
-  const { currentPassword, newPassword, passwordCheck } = pwdForm;
   return (
     <>
       {openWithdrawModal && (
@@ -348,29 +627,46 @@ export default function Account({
           <Info>
             <Heading>
               <h4>닉네임</h4>
-              <Button>
-                <button name="nickname" onClick={openModalHandler}>
+              <Toggle>
+                <button name="nickname" onClick={accordionHandler}>
                   {isOpen.nickname ? (
                     <Cancel alt="취소" />
                   ) : (
                     <img src={EditImg} alt="수정" />
                   )}
                 </button>
-              </Button>
+              </Toggle>
             </Heading>
 
             {isOpen.nickname ? (
               <Nickname>
                 <label htmlFor="nickname">변경할 닉네임을 입력해 주세요</label>
                 <br></br>
-                <input
-                  ref={inputhere}
-                  onChange={nicknameHandler}
-                  placeholder={authState.nickname}
-                  name="nickname"
-                  value={nickname}
-                ></input>
-                <button onClick={profileHandler}>수정하기</button>
+
+                <form onSubmit={(e) => handleSubmit(e, 'nickname')}>
+                  <input
+                    ref={inputhere}
+                    onChange={handleUserInfo}
+                    placeholder={authState.nickname}
+                    name="nickname"
+                    value={nickname.text}
+                  ></input>
+                  <ValidMsg
+                    checkType={'nickname'}
+                    isValid={nickname.isValid}
+                    isUnique={nickname.isUnique}
+                  >
+                    {validMsg.nickname}
+                  </ValidMsg>
+
+                  <Button
+                    isLoading={isLoading}
+                    disabled={!(nickname.isValid && nickname.isUnique)}
+                    type="submit"
+                  >
+                    <span>수정하기</span>
+                  </Button>
+                </form>
               </Nickname>
             ) : (
               <div style={{ color: 'gray' }}>{authState.nickname}</div>
@@ -380,64 +676,87 @@ export default function Account({
           <Info>
             <Heading>
               <h4>비밀번호</h4>
-              <Button>
-                <button name="password" onClick={openModalHandler}>
+              <Toggle>
+                <button name="password" onClick={accordionHandler}>
                   {isOpen.password ? (
                     <Cancel alt="취소" />
                   ) : (
                     <img src={EditImg} alt="수정" />
                   )}
                 </button>
-              </Button>
+              </Toggle>
             </Heading>
 
             {isOpen.password && (
               <Password>
-                <form onSubmit={submitPwd}>
-                  <label htmlFor="currentPassword">현재 비밀번호</label>
+                <form
+                  onSubmit={(e) => handleSubmit(e, 'password', 'passwordCheck')}
+                >
+                  <label htmlFor="curPassword">현재 비밀번호</label>
                   <br />
                   <input
+                    required
                     type={'password'}
-                    onChange={onChangeHandler}
-                    name="currentPassword"
-                    value={currentPassword}
+                    onChange={handleUserInfo}
+                    name="curPassword"
+                    value={curPassword.text}
                   />
-                  <br />
-                  <label htmlFor="newPassword">새 비밀번호</label>
+                  <ValidMsg
+                    checkType={'curPassword'}
+                    isValid={curPassword.isValid}
+                  >
+                    {validMsg.curPassword}
+                  </ValidMsg>
+                  <label htmlFor="password">새 비밀번호</label>
                   <br />
                   <input
+                    required
                     type={'password'}
-                    onChange={onChangeHandler}
-                    name="newPassword"
-                    value={newPassword}
+                    onChange={handleUserInfo}
+                    name="password"
+                    value={password.text}
                   />
-                  <br />
+                  <ValidMsg checkType={'password'} isValid={password.isValid}>
+                    {validMsg.password}
+                  </ValidMsg>
                   <label htmlFor="passwordCheck">비밀번호 확인</label>
                   <br />
                   <input
+                    required
                     type={'password'}
-                    onChange={onChangeHandler}
+                    onChange={handleUserInfo}
                     name="passwordCheck"
-                    value={passwordCheck}
+                    value={passwordCheck.text}
                   />
-                  <br />
-                  <button type="submit">비밀번호 변경</button>
+                  <ValidMsg
+                    checkType={'passwordCheck'}
+                    isValid={passwordCheck.isValid}
+                  >
+                    {validMsg.passwordCheck}{' '}
+                  </ValidMsg>
+                  <Button
+                    isLoading={isLoading}
+                    disabled={!(password.isValid && passwordCheck.isValid)}
+                    type="submit"
+                  >
+                    <span>비밀번호 변경</span>
+                  </Button>
                 </form>
                 <span ref={errMessagePwd}></span>
               </Password>
             )}
 
-            {!isOpen.password && (
+            {/* {!isOpen.password && (
               <div style={{ color: 'gray' }}>
                 최종수정일 :{' '}
                 {moment(updatedAt).format('YYYY년 MM월 DD일 HH시 mm분')}
               </div>
-            )}
+            )} */}
           </Info>
           <Info>
             <Heading>
               <h4>계정 삭제</h4>
-              <Button>
+              <Toggle>
                 <button
                   onClick={() => {
                     setWithdrawModal(true);
@@ -445,12 +764,55 @@ export default function Account({
                 >
                   <img src={DeleteImg} alt="삭제" />
                 </button>
-              </Button>
+              </Toggle>
             </Heading>
           </Info>
         </List>
+        <div id="last-modified">
+          최종수정일 : {moment(updatedAt).format('YYYY년 MM월 DD일 HH시 mm분')}
+        </div>
         <span onClick={onClickLogout}>로그아웃</span>
       </Wrapper>
+      {!isLoading && progress === 'success' && (
+        <Modal
+          timer={{ time: 3000 }}
+          containerStyle={{ color: 'black', width: '50vw', height: '' }}
+          clickOption={{ back: false }}
+          btnOption={{
+            text: '확인',
+            style: {
+              color: 'white',
+              backGroundColor: 'var(--primaryPurple)',
+            },
+          }}
+        >
+          <Confirm />
+          <div>
+            <h1>{editType.current} 변경되었습니다</h1>
+            <h2>잠시 후에 계정페이지로 돌아갑니다</h2>
+          </div>
+        </Modal>
+      )}
+      {!isLoading && progress === 'failed' && (
+        <Modal
+          timer={null}
+          containerStyle={{ color: 'black', width: '50vw', height: '' }}
+          clickOption={{ back: false }}
+          btnOption={{
+            text: '확인',
+            style: {
+              color: 'white',
+              backGroundColor: 'var(--primaryPurple)',
+            },
+          }}
+        >
+          <Fail />
+          <div>
+            <h1>서버와의 연결에 실패했습니다</h1>
+            <h2>잠시 후에 다시 시도해 주세요</h2>
+          </div>
+        </Modal>
+      )}
     </>
   );
 }

@@ -227,12 +227,13 @@ const LoginSection = styled.div`
   }
 `;
 
-const ShowValid = styled.div<{
+export const ShowValid = styled.div<{
   checkType: string;
   isValid: boolean;
   isUnique?: boolean;
 }>`
   font-size: 0.8rem;
+  height: 0.8rem;
   font-weight: bold;
   font-family: 'NanumSquareRound';
   word-break: normal;
@@ -257,9 +258,9 @@ type SignupModalProps = {
 
 type Message = {
   [index: string]: {
-    success: string;
+    success?: string;
     fail: string;
-    empty: string;
+
     exist?: string;
     unique?: string;
   };
@@ -285,6 +286,54 @@ export const rgx: Rgx = {
   nickname: /^[가-힣|a-z|A-Z|0-9|]{4,8}$/,
   password: /^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!~@#$%^&+=]).*$/,
 };
+export const message: Message = {
+  account: {
+    success: '중복 확인을 눌러주세요',
+    fail: '유효하지 않은 이메일 형식 입니다',
+    exist: '이미 사용중인 이메일 입니다.',
+    unique: '가입이 가능한 이메일입니다',
+  },
+  nickname: {
+    success: '중복 확인을 눌러주세요',
+    fail: '영문, 한글, 숫자 포함 4자에서 8자 이하여야 합니다',
+    exist: '이미 사용중인 닉네임 입니다.',
+    unique: '사용이 가능한 닉네임입니다',
+  },
+  password: {
+    success: '사용이 가능한 비밀번호 입니다',
+    fail: '영문, 숫자, 특수문자 조합으로 최소 8자리 이상이여야 합니다',
+  },
+  passwordCheck: {
+    success: '비밀번호가 일치합니다',
+    fail: '비밀번호가 일치하지 않습니다',
+  },
+  curPassword: {
+    fail: '기존 비밀번호가 일치하지 않습니다',
+  },
+};
+
+export function validate(
+  type: string,
+  value: string,
+  rgx: Rgx,
+  password: string
+) {
+  // userInfo의 전체 키를 타입으로 하고 싶을 때
+
+  //#1 빈값일때는 메시지 안보이게하고 return false
+  if (value === '') {
+    return false;
+  }
+
+  //#2 빈값이 아닐때 정규식 체크
+
+  if (rgx[type]) {
+    return rgx[type].test(value) ? true : false;
+  } else {
+    return password === value ? true : false;
+  }
+}
+export type Progress = 'inProgress' | 'success' | 'failed';
 
 const SignupModal = ({ setSignupModal, setLoginModal }: SignupModalProps) => {
   const [userInfo, setUserInfo] = useState<userInfo>({
@@ -300,54 +349,8 @@ const SignupModal = ({ setSignupModal, setLoginModal }: SignupModalProps) => {
     passwordCheck: '',
   });
   const [isLoading, setLoading] = useState(false);
-  type Progress = 'inProgress' | 'success' | 'failed';
   const [progress, setProgress] = useState<Progress>('inProgress');
   const { account, nickname, password, passwordCheck } = userInfo;
-  const message: Message = {
-    account: {
-      success: '중복 확인을 눌러주세요',
-      fail: '유효하지 않은 이메일 형식 입니다',
-      exist: '이미 사용중인 이메일 입니다.',
-      unique: '가입이 가능한 이메일입니다',
-      empty: '',
-    },
-    nickname: {
-      success: '중복 확인을 눌러주세요',
-      fail: '영문, 한글, 숫자 포함 4자에서 8자 이하여야 합니다',
-      exist: '이미 사용중인 닉네임 입니다.',
-      unique: '사용이 가능한 닉네임입니다',
-      empty: '',
-    },
-    password: {
-      success: '사용이 가능한 비밀번호 입니다',
-      fail: '영문, 숫자, 특수문자 조합으로 최소 8자리 이상이여야 합니다',
-      empty: '',
-    },
-    passwordCheck: {
-      success: '비밀번호가 일치합니다',
-      fail: '비밀번호가 일치하지 않습니다',
-      empty: '',
-    },
-  };
-  function validate(type: string, value: string, rgx: Rgx) {
-    const validType = type as
-      | 'account'
-      | 'nickname'
-      | 'password'
-      | 'passwordCheck';
-
-    //#1 빈값일때는 메시지 안보이게하고 return false
-    if (value === '') {
-      return false;
-    }
-
-    //#2 빈값이 아닐때 정규식 체크
-    if (rgx[validType]) {
-      return rgx[validType].test(value) ? true : false;
-    } else {
-      return password.text === value ? true : false;
-    }
-  }
 
   const handleUserInfo = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -356,7 +359,7 @@ const SignupModal = ({ setSignupModal, setLoginModal }: SignupModalProps) => {
       const checkType = e.target.name;
       const value = e.target.value;
 
-      if (validate(checkType, value, rgx)) {
+      if (validate(checkType, value, rgx, password.text)) {
         // 유저정보 변경
         setUserInfo((prevInfo) => {
           const nextInfo = {
@@ -524,6 +527,8 @@ const SignupModal = ({ setSignupModal, setLoginModal }: SignupModalProps) => {
 
   const Success = () => {
     const [count, setCount] = useState(3);
+    console.log(count);
+
     useEffect(() => {
       const timer = setInterval(() => {
         setCount((prevCount) => prevCount - 1);
