@@ -18,8 +18,10 @@ export const ModalBackdrop = styled.div`
 export const ModalContainer = styled.div<{
   custom?: { color: string; width: string; height: string };
   btnStyle?: { color: string; backGroundColor: string };
+  transition: boolean;
 }>`
   z-index: 100;
+
   position: absolute;
   min-width: 19rem;
   max-width: 25rem;
@@ -39,6 +41,17 @@ export const ModalContainer = styled.div<{
   width: ${({ custom }) => custom?.width || '40vw'};
   height: ${({ custom }) => custom?.height};
   box-shadow: 0 1rem 1rem grey;
+
+  transition: all 0.3s ease;
+
+  opacity: 0.5;
+  ${(props) =>
+    props.transition &&
+    css`
+      transform: translateY(-7%);
+      opacity: 1;
+    `}
+
   div {
     display: flex;
     flex-flow: column;
@@ -106,6 +119,19 @@ export default function Modal({
 
   const [isOpen, setIsOpen] = useState(true);
   const [count, setCount] = useState(timer ? timer.time / 1000 : 0);
+  const [transition, setTransition] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setTransition(true);
+    }, 10);
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setTransition(false);
+    }, count * 1000 - 200);
+  }, []);
 
   useEffect(() => {
     if (timer) {
@@ -132,10 +158,20 @@ export default function Modal({
             clickOption.back && setIsOpen(false);
           }}
         >
-          <ModalContainer custom={containerStyle} btnStyle={btnOption?.style}>
+          <ModalContainer
+            transition={transition}
+            custom={containerStyle}
+            btnStyle={btnOption?.style}
+          >
             {children}
             {btnOption && (
-              <button onClick={() => setIsOpen(false)}>{btnOption.text}</button>
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                {btnOption.text}
+              </button>
             )}
             <div id="count">{timer && count}</div>
           </ModalContainer>

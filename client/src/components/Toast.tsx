@@ -6,7 +6,7 @@ type Props = {
 };
 
 const Wrapper = styled.div<{ isFading: boolean }>`
-  transition: transform 0.6s ease-in-out;
+  /* transition: transform 0.6s ease-in-out; */
   animation: toast-in-right 0.6s;
   background: var(--primaryBlue);
   transition: 0.3s ease;
@@ -24,7 +24,7 @@ const Wrapper = styled.div<{ isFading: boolean }>`
     props.isFading &&
     css`
       opacity: 0;
-      transform: opacity 2s;
+      /* transform: opacity 2s; */
     `}
 
   @keyframes toast-in-right {
