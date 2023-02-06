@@ -27,21 +27,6 @@ module.exports = {
       console.log(error);
       return res.status(500).send(error);
     }
-
-    // bcrypt
-    //   .hash(password, 10)
-    //   .then((hash) => {
-    //     const newUser = {
-    //       account: account,
-    //       password: hash,
-    //       nickname: nickname,
-    //     };
-
-    //     Users.create(newUser).then(res.send('created'));
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
   },
   validate: async (req, res) => {
     console.log(req.query, 'here!!');
