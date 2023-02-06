@@ -233,7 +233,7 @@ export const ShowValid = styled.div<{
   isUnique?: boolean;
 }>`
   font-size: 0.8rem;
-  height: 0.8rem;
+  /* height: 0.8rem; */
   font-weight: bold;
   font-family: 'NanumSquareRound';
   word-break: normal;
@@ -244,11 +244,11 @@ export const ShowValid = styled.div<{
   justify-content: flex-start;
   color: ${({ isValid, checkType }) =>
     isValid === false
-      ? 'red'
+      ? 'var(--primaryPink)'
       : checkType === 'nickname' || checkType === 'account'
       ? 'orange'
-      : 'green'};
-  color: ${({ isUnique }) => isUnique && 'green'};
+      : 'var(--primaryBlue)'};
+  color: ${({ isUnique }) => isUnique && 'var(--primaryBlue)'};
 `;
 
 type SignupModalProps = {
@@ -302,6 +302,7 @@ export const message: Message = {
   password: {
     success: '사용이 가능한 비밀번호 입니다',
     fail: '영문, 숫자, 특수문자 조합으로 최소 8자리 이상이여야 합니다',
+    exist: '새로운 비밀번호는 이전의 비밀번호와 같을 수 없습니다',
   },
   passwordCheck: {
     success: '비밀번호가 일치합니다',
@@ -330,6 +331,9 @@ export function validate(
   if (rgx[type]) {
     return rgx[type].test(value) ? true : false;
   } else {
+    /* 계정페이지에서 현재 비밀번호와 같다면 해줄 필요 없으니깐 
+    account에서 이전비밀번호가 인자로 들어오면 이전번호와 같을 때 false
+    해당 */
     return password === value ? true : false;
   }
 }

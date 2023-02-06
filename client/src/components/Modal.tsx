@@ -128,9 +128,11 @@ export default function Modal({
   }, []);
 
   useEffect(() => {
-    setTimeout(() => {
-      setTransition(false);
-    }, count * 1000 - 200);
+    if (count) {
+      setTimeout(() => {
+        setTransition(false);
+      }, count * 1000 - 200);
+    }
   }, []);
 
   useEffect(() => {

@@ -9,12 +9,15 @@ import { Helmet } from 'react-helmet';
 import EditImg from '../assets/edit-mobile.png';
 import DeleteImg from '../assets/delete-mobile.png';
 import { ReactComponent as Cancel } from '../assets/cancel.svg';
-import { userInfo } from '../components/SignupModal';
-import { validate } from '../components/SignupModal';
-import { rgx } from '../components/SignupModal';
-import { message } from '../components/SignupModal';
-import { ShowValid } from '../components/SignupModal';
-import { Progress } from '../components/SignupModal';
+import {
+  userInfo,
+  validate,
+  rgx,
+  message,
+  ShowValid,
+  Progress,
+} from '../components/SignupModal';
+
 import { ReactComponent as Confirm } from '../assets/confirm.svg';
 import { ReactComponent as Fail } from '../assets/server-fail.svg';
 
@@ -29,6 +32,9 @@ const Wrapper = styled.div`
   #last-modified {
     color: gray;
     margin: 1rem;
+  }
+  @media (max-width: 700px) {
+    margin: 8rem 2rem;
   }
   @media (max-width: 485px) {
     margin: 8rem 0;
@@ -99,13 +105,27 @@ const Toggle = styled.div`
 const Accordion = styled.div`
   line-height: 1.5rem;
   margin-bottom: 1rem;
-  input {
-    height: 2rem;
-    border-radius: 0.3rem;
-    border: 1px solid #d1cece;
-    padding-left: 0.5rem;
+  form {
+    width: 50%;
+    max-width: 25rem;
 
-    & + div {
+    .input-valid {
+      transition: all 0.3s;
+      height: 2rem;
+      border-radius: 0.3rem;
+      border: 1px solid #ebebeb;
+      padding-left: 0.5rem;
+      width: 100%;
+      &.valid {
+        box-shadow: 0 0 3px var(--primaryPurple);
+      }
+      &.not-valid {
+        box-shadow: 0 0 5px var(--primaryPink);
+      }
+    }
+    @media screen and (max-width: 590px) {
+      width: 100%;
+      max-width: none;
     }
   }
 
@@ -122,6 +142,7 @@ const Button = styled.button<{ isLoading: boolean }>`
   padding: 0 1rem;
   font-weight: 550;
   position: relative;
+  transition: all 0.3s;
 
   ${(props) =>
     props.isLoading === true &&
@@ -188,7 +209,12 @@ const Nickname = styled(Accordion)`
 `;
 const ValidMsg = styled(ShowValid)`
   padding-left: 0;
-  margin: 0.3rem 0;
+  margin: 0.5rem 0;
+  height: 1rem;
+
+  @media screen and (max-width: 320px) {
+    font-size: 0.7rem;
+  }
 `;
 const Password = styled(Accordion)`
   margin-top: 0.5rem;
@@ -249,7 +275,9 @@ export default function Account({
   const inputhere = useRef<HTMLInputElement | null>(null);
   const errMessagePwd = useRef<HTMLSpanElement | null>(null);
   const { nickname, password, passwordCheck, curPassword } = userInfo;
-
+  const pwRef = useRef<HTMLInputElement>(null);
+  const curpwRef = useRef<HTMLInputElement>(null);
+  const pwcheckRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     console.log('accountSetting!!');
     axios
@@ -293,6 +321,11 @@ export default function Account({
       // 중복 메시지 색깔 styled-componnet로 해결
     } catch (err: unknown) {
       if (err instanceof AxiosError) {
+        if (err.message === 'Network Error') {
+          setProgress('failed');
+          setLoading(false);
+        }
+
         console.log(err.response);
         if (err.response?.data === `Already ${checkType}`) {
           console.log('here!!');
@@ -328,7 +361,7 @@ export default function Account({
       if (checkType === 'curPassword') {
         setUserInfo((prevInfo) => ({
           ...prevInfo,
-          [checkType]: { ...prevInfo[checkType], text: value },
+          [checkType]: { ...prevInfo[checkType], text: value, isValid: true },
         }));
         if (value.length !== 0)
           return setValidMsg((prevMsg) => ({
@@ -533,6 +566,10 @@ export default function Account({
       };
 
       try {
+        //# 비밀번호칸 입력하고 비밀번호 확인칸 입력하고 비밀번호칸을 수정했을 때 에러 체크
+        if (password.text !== passwordCheck.text)
+          throw new Error('passwordCheck is not valid');
+
         setLoading(true);
         const response = await axios.put(
           `${process.env.REACT_APP_SERVER_URL}/users/password`,
@@ -569,6 +606,23 @@ export default function Account({
           setProgress('inProgress');
         }, 3000);
       } catch (err: unknown) {
+        if (err instanceof Error) {
+          if (err.message === 'passwordCheck is not valid') {
+            setUserInfo((prevInfo) => ({
+              ...prevInfo,
+              passwordCheck: { ...passwordCheck, isValid: false },
+            }));
+            setValidMsg((prevMsg) => ({
+              ...prevMsg,
+              passwordCheck: message.passwordCheck.fail,
+            }));
+            if (pwcheckRef.current) {
+              pwcheckRef.current.focus();
+            }
+            return;
+          }
+        }
+
         //! 아래 지우면 안됨
         if (err instanceof AxiosError) {
           if (err.message === 'Network Error') {
@@ -576,26 +630,58 @@ export default function Account({
             setLoading(false);
           }
 
+          if (
+            err.response?.data.message ===
+            'New password cannot be the same as the current password'
+          ) {
+            setLoading(false);
+            const checkType = 'password';
+
+            setUserInfo((prevInfo) => ({
+              ...prevInfo,
+              password: { ...password, isValid: false },
+            }));
+
+            setValidMsg((prevMsg) => {
+              const nextMsg = Object.assign(prevMsg, {
+                [checkType]: message[checkType].exist,
+              });
+
+              return nextMsg;
+            });
+
+            if (pwRef.current) {
+              pwRef.current.focus();
+            }
+            return;
+          }
+
           if (err.response?.data.message === 'Wrong Password') {
             setLoading(false);
-          }
-          const checkType = 'curPassword';
-          setUserInfo((prevInfo) => {
-            const nextInfo = {
-              ...prevInfo,
-              [checkType]: {
-                ...prevInfo[checkType],
-                isValid: false,
-              },
-            };
+            const checkType = 'curPassword';
+            setUserInfo((prevInfo) => {
+              const nextInfo = {
+                ...prevInfo,
+                [checkType]: {
+                  ...prevInfo[checkType],
+                  isValid: false,
+                },
+              };
 
-            return nextInfo;
-          });
-          setValidMsg((prevMsg) => ({
-            ...prevMsg,
-            [checkType]: message[checkType].fail,
-          }));
+              return nextInfo;
+            });
+            setValidMsg((prevMsg) => ({
+              ...prevMsg,
+              [checkType]: message[checkType].fail,
+            }));
+            if (curpwRef.current) {
+              curpwRef.current.focus();
+            }
+            return;
+          }
         }
+
+        console.log(err);
       }
     }
   };
@@ -645,6 +731,13 @@ export default function Account({
 
                 <form onSubmit={(e) => handleSubmit(e, 'nickname')}>
                   <input
+                    className={`input-valid ${
+                      nickname.text
+                        ? nickname.isValid
+                          ? 'valid'
+                          : 'not-valid'
+                        : ''
+                    }`}
                     ref={inputhere}
                     onChange={handleUserInfo}
                     placeholder={authState.nickname}
@@ -695,6 +788,14 @@ export default function Account({
                   <label htmlFor="curPassword">현재 비밀번호</label>
                   <br />
                   <input
+                    ref={curpwRef}
+                    className={`input-valid ${
+                      curPassword.text
+                        ? curPassword.isValid
+                          ? 'valid'
+                          : 'not-valid'
+                        : ''
+                    }`}
                     required
                     type={'password'}
                     onChange={handleUserInfo}
@@ -710,6 +811,14 @@ export default function Account({
                   <label htmlFor="password">새 비밀번호</label>
                   <br />
                   <input
+                    ref={pwRef}
+                    className={`input-valid ${
+                      password.text
+                        ? password.isValid
+                          ? 'valid'
+                          : 'not-valid'
+                        : ''
+                    }`}
                     required
                     type={'password'}
                     onChange={handleUserInfo}
@@ -722,6 +831,14 @@ export default function Account({
                   <label htmlFor="passwordCheck">비밀번호 확인</label>
                   <br />
                   <input
+                    ref={pwcheckRef}
+                    className={`input-valid ${
+                      passwordCheck.text
+                        ? passwordCheck.isValid
+                          ? 'valid'
+                          : 'not-valid'
+                        : ''
+                    }`}
                     required
                     type={'password'}
                     onChange={handleUserInfo}
