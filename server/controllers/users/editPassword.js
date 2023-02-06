@@ -3,7 +3,6 @@ const validateToken = require('../token-functions/validateToken');
 const bcrypt = require('bcrypt');
 
 module.exports = async (req, res) => {
-  console.log('rerereererererere');
   const accessTokenData = validateToken(req);
   if (!accessTokenData) {
     return res.status(404).json({ data: null, message: 'User not logged in' });
@@ -14,33 +13,59 @@ module.exports = async (req, res) => {
   const { id, account } = accessTokenData;
 
   let user = await Users.findOne({ where: { id } });
-  console.log(user.password);
 
-  bcrypt.compare(currentPassword, user.password).then(async (match) => {
-    if (!match) {
+  // bcrypt.compare(currentPassword, user.password).then(async (match) => {
+  //   if (!match) {
+  //     return res.status(401).json({ message: 'Wrong Password' });
+  //   }
+  //   if (currentPassword === newPassword) {
+  //     return res.status(422).json({
+  //       message: 'New password cannot be the same as the current password',
+  //     });
+  //   }
+
+  //   bcrypt
+  //     .hash(newPassword, 10)
+  //     .then((hash) => {
+  //       return Users.update({ password: hash }, { where: { id } });
+  //     })
+  //     .then(async (response) => {
+  //       console.log(response);
+  //       console.log('비번 변경 성공');
+  //       console.log(id);
+  //       let result = await Users.findOne({ where: { id } });
+  //       console.log(result);
+  //       res.json({
+  //         updatedAt: result.updatedAt,
+  //         message: 'password successfully changed',
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // });
+
+  try {
+    const match = await bcrypt.compare(currentPassword, user.password);
+    if (!match) throw new Error('Wrong Password');
+    if (currentPassword === newPassword)
+      throw new Error('same as the current password');
+    const hashed = await bcrypt.hash(newPassword, 10);
+    await Users.update({ password: hashed }, { where: { id } });
+    const userInfo = await Users.findOne({ where: { id } });
+    return res.json({
+      updatedAt: userInfo.updatedAt,
+      message: 'password successfully changed',
+    });
+  } catch (error) {
+    console.log(error);
+    if (error.message === 'Wrong Password') {
       return res.status(401).json({ message: 'Wrong Password' });
     }
-
-    bcrypt
-      .hash(newPassword, 10)
-      .then((hash) => {
-        return Users.update({ password: hash }, { where: { id } });
-      })
-      .then(async (response) => {
-        console.log(response);
-        console.log('비번 변경 성공');
-        let result = await Users.findOne(
-          { attributes: ['updatedAt'] },
-          { where: id }
-        );
-        console.log(result.updatedAt);
-        res.json({
-          updatedAt: result.updatedAt,
-          message: 'password successfully changed',
-        });
-      })
-      .catch((err) => {
-        console.log(err);
+    if (error.message === 'same as the current password') {
+      return res.status(422).json({
+        message: 'New password cannot be the same as the current password',
       });
-  });
+    }
+  }
 };
