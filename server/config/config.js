@@ -9,6 +9,10 @@ const {
   DB_USERNAME_DEV,
   DB_PWD_DEV,
   DB_PORT_DEV,
+  DB_HOST_PROD,
+  DB_USERNAME_PROD,
+  DB_PWD_PROD,
+  DB_PORT_PROD,
 } = process.env;
 module.exports = {
   development: {
@@ -22,16 +26,17 @@ module.exports = {
   test: {
     username: DB_USERNAME_TEST,
     password: DB_PWD_TEST,
-    database: 'local_festival',
+    database: 'local_festival_test',
     host: DB_HOST_TEST,
     dialect: 'mysql',
     port: DB_PORT_TEST,
   },
   production: {
-    username: 'root',
-    password: null,
-    database: 'database_production',
-    host: '127.0.0.1',
+    username: DB_USERNAME_PROD,
+    password: DB_PWD_PROD,
+    database: 'local_festival',
+    host: DB_HOST_PROD,
     dialect: 'mysql',
+    port: DB_PORT_PROD,
   },
 };
