@@ -40,6 +40,7 @@ type TReviewItem = {
   rating: number;
   updatedAt: string;
   userId: number;
+  like_num: number;
 };
 
 type loginHandlerFunc = (
@@ -88,4 +89,24 @@ type UserContext = {
 type EditItem = {
   isEdit: boolean;
   info: TReviewItem;
+};
+
+type TComment = {
+  id: number;
+  ref: number;
+  step: number;
+  ref_order: number;
+  child_num: number;
+  parent_id: number;
+  parent_nickname: string;
+  like: number;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  userId: number;
+  reviewId: number;
+  User: {
+    nickname: string;
+  };
 };

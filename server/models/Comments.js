@@ -1,5 +1,4 @@
 module.exports = (sequelize, DataTypes) => {
-  console.log(sequelize, DataTypes);
   const Comments = sequelize.define(
     'Comments',
     {
@@ -23,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       parent_id: {
         type: DataTypes.INTEGER,
       },
-      like: {
+      like_num: {
         type: DataTypes.INTEGER,
       },
       content: {

@@ -323,6 +323,7 @@ const ReviewWrite = ({
           User: {
             nickname: authState.nickname,
           },
+          like_num: 0,
         };
         updateReviewList(newReview);
         setRating(0);

@@ -35,6 +35,11 @@ input {
   border: none;
 }
 
+textarea {
+  border: none;
+  resize: none;
+}
+
 textarea:focus,
 input:focus {
   outline: none;

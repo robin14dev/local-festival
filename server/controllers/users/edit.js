@@ -2,7 +2,6 @@ const { Users } = require('../../models');
 const validateToken = require('../token-functions/validateToken');
 
 module.exports = async (req, res) => {
-  console.log('rerereererererere');
   const accessTokenData = validateToken(req);
   if (!accessTokenData) {
     return res.status(404).json({ data: null, message: 'User not logged in' });

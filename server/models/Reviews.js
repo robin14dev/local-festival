@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
     rating: {
       type: DataTypes.INTEGER,
     },
+    like_num: {
+      type: DataTypes.INTEGER,
+    },
   });
   Reviews.associate = (models) => {
     Reviews.belongsTo(models.Users, { foreignKey: 'userId', sourceKey: 'id' });

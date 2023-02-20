@@ -168,7 +168,6 @@ const ReviewTab = ({ festival, authState }: ReviewTabProps) => {
         console.log(error);
       }
     }
-    console.log('reviews', reviews);
   }, [festivalId, offset]);
 
   useEffect(() => {

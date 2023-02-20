@@ -155,8 +155,6 @@ function App() {
     }
   };
   useEffect(() => {
-    console.log('useEffect !!!!');
-
     refreshData();
   }, []);
 

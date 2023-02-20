@@ -7,6 +7,15 @@ import ReviewWrite from './ReviewWrite';
 import { ReactComponent as Setting } from '../assets/setting.svg';
 import { ReactComponent as Edit } from '../assets/edit.svg';
 import { ReactComponent as Delete } from '../assets/delete.svg';
+import { ReactComponent as Like } from '../assets/heart-fill.svg';
+import { ReactComponent as Unlike } from '../assets/heart-empty.svg';
+
+import CommentWrite from './CommentWrite';
+import { useEffect } from 'react';
+import axios from 'axios';
+import CommentItem from './CommentItem';
+import { useContext } from 'react';
+import { ModalContext } from '../contexts/modalContext';
 const Wrapper = styled.div<{ editMode?: boolean }>`
   ${(props) =>
     props.editMode &&
@@ -14,10 +23,14 @@ const Wrapper = styled.div<{ editMode?: boolean }>`
       display: flex;
       justify-content: center;
     `}
-
+  /* background-color : lightblue; */
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
   width: 100%;
   min-height: 199px;
-  border-bottom: 1px solid #d9d9d9;
+  border-radius: 0.5rem;
+  box-shadow: 0px 1px 0.2rem lightgrey;
   padding: 1rem;
   margin-bottom: 0.5rem;
 
@@ -35,6 +48,7 @@ const Wrapper = styled.div<{ editMode?: boolean }>`
 `;
 
 const Header = styled.div`
+  /* background-color: lightpink; */
   display: flex;
   justify-content: space-between;
   padding: 0.3rem;
@@ -61,7 +75,8 @@ const Header = styled.div`
     display: flex;
     align-items: center;
     line-height: 1.4;
-    box-shadow: 1px 1.5px 2px gray;
+    box-shadow: 1.5px 1.5px 3px lightgrey;
+    border: 1px solid #d3d3d345;
     background-color: white;
     border-radius: 0.5rem;
     overflow: hidden;
@@ -142,14 +157,47 @@ const Info = styled.div`
 `;
 
 const Body = styled.div`
-  padding-top: 22px;
-  padding-left: 16px;
+  /* background-color: lightsalmon; */
+  padding: 0.4rem 1rem;
   p {
     word-break: break-all;
     line-height: 1.5;
   }
 `;
+const Bottom = styled.div`
+  /* position: relative; */
+  /* display: flex; */
+  /* background-color: yellow; */
+  align-items: center;
 
+  .reaction-info {
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    button + button {
+      margin-left: 1rem;
+    }
+
+    #comment-toggle {
+      color: var(--primaryOrange);
+      /* margin-left: 1rem; */
+    }
+  }
+  .comment-list {
+    /* position: absolute;
+    top: 1.5rem;
+    left: 3rem; */
+    z-index: 9999;
+    width: 90%;
+    background-color: white;
+  }
+
+  .comment-toggle {
+    button {
+      color: var(--primaryOrange);
+    }
+  }
+`;
 const Button = styled.button`
   background: inherit;
   border: none;
@@ -250,10 +298,26 @@ const ReviewItem = ({
       rating: 0,
       updatedAt: '',
       userId: 0,
+      like_num: 0,
     },
   });
-  const { rating, content, createdAt, updatedAt, User, festivalId, id } =
-    review;
+  const [commentWrite, setCommentWrite] = useState(false);
+  const [comments, setComments] = useState<TComment[]>([]);
+  const [commentToggle, setCommentToggle] = useState(false);
+  const [isLike, setIsLike] = useState(false);
+  const {
+    rating,
+    content,
+    createdAt,
+    updatedAt,
+    User,
+    festivalId,
+    id,
+    like_num,
+  } = review;
+  const modalContext = useContext(ModalContext);
+  // console.log(review);
+
   const modalHandler = () => {
     setDeleteClicked(!deleteClicked);
   };
@@ -261,6 +325,44 @@ const ReviewItem = ({
   const onClickDelete = (reviewId: number, festivalId: number) => {
     deleteReview(reviewId, festivalId);
   };
+
+  const toggleLike = () => {
+    /*
+    필요한 정보
+    해당 댓글을 내가 좋아요 했는지 안했는지
+
+    */
+  };
+
+  const createComment = () => {
+    setCommentWrite(!commentWrite);
+  };
+
+  const getComments = async (reviewId: number) => {
+    try {
+      const result = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/comments/${reviewId}`
+      );
+      let comments;
+      if (result.status === 204 && result.statusText === 'No Content') {
+        comments = [];
+      } else {
+        comments = result.data;
+      }
+
+      setComments(comments);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const showComments = () => {
+    setCommentToggle(!commentToggle);
+  };
+
+  useEffect(() => {
+    getComments(id);
+  }, []);
 
   return (
     <Wrapper
@@ -339,6 +441,56 @@ const ReviewItem = ({
           <Body>
             <p>{content}</p>
           </Body>
+          <Bottom>
+            <div className="reaction-info">
+              <button
+                onClick={(e) => {
+                  console.log('here');
+
+                  if (authState.loginStatus) {
+                    // onClickPick(e, summary.festival);
+                  } else {
+                    e.stopPropagation();
+                    console.log('login');
+
+                    if (modalContext) {
+                      modalContext.setLoginModal(true);
+                    }
+                  }
+                }}
+              >
+                {isLike ? <Like alt="liked" /> : <Unlike alt="unliked" />}
+                {like_num}
+              </button>
+
+              <button onClick={createComment}>답글</button>
+
+              {comments.length ? (
+                <button id="comment-toggle" onClick={showComments}>
+                  답글 {comments.length}개
+                </button>
+              ) : null}
+            </div>
+            {commentWrite && (
+              <CommentWrite
+                authState={authState}
+                commentWrite={commentWrite}
+                setCommentWrite={setCommentWrite}
+                review={review}
+              />
+            )}
+
+            <div className="comment-list">
+              {commentToggle &&
+                comments.map((comment) => (
+                  <CommentItem
+                    authState={authState}
+                    key={comment.id}
+                    comment={comment}
+                  />
+                ))}
+            </div>
+          </Bottom>
         </>
       )}
     </Wrapper>

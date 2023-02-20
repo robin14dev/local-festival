@@ -471,7 +471,6 @@ const DetailView = ({ togglePick, authState }: DetailViewProps) => {
           `${process.env.REACT_APP_SERVER_URL}/festivals/${params.festivalId}`,
           { params: { userId: authState.userId } }
         );
-        console.log(result.data);
         setSummary(result.data);
         const isPicked = result.data.isPicked;
 
