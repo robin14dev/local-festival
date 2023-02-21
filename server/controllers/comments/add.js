@@ -1,7 +1,6 @@
 const { Comments, Users } = require('../../models');
 const validateToken = require('../token-functions/validateToken');
 const { Op } = require('sequelize');
-
 module.exports = async (req, res) => {
   const accessTokenData = validateToken(req);
 
@@ -22,17 +21,26 @@ module.exports = async (req, res) => {
     # 댓글 테이블에 글 추가하기
     1. 부모글이 있는지 없는지 판단
     */
-
+    let reviewId;
+    let ref;
+    let step;
+    let ref_order;
+    let child_num;
+    let like_num;
+    let parent_id;
     if (parentComment) {
       //# 부모글이 있는 경우
-      const review_id = parentComment.reviewId;
-      const ref = parentComment.ref;
-      const step = parentComment.step + 1;
-      let ref_order;
+      console.log('부모글 있음', parentComment);
+      reviewId = parentComment.reviewId;
+      ref = parentComment.ref;
+      step = parentComment.step + 1;
+      child_num = 0;
+      like_num = 0;
+      parent_id = parentComment.id;
       const isParentStep = await Comments.findOne({
         where: {
           [Op.and]: [
-            { reviewId: review_id },
+            { reviewId },
             { ref },
             {
               step: {
@@ -48,24 +56,13 @@ module.exports = async (req, res) => {
       if (isParentStep) {
         // 부모 스텝이 있는 경우
         console.log('isParentStep이 있는 경우', isParentStep);
-        // ref_order = isParentStep.ref_order;
-        // await Comments.update(
-        //   { ref_order: ref_order + 1 },
-        //   { where: { id: isParentStep.id } }
-        // );
         ref_order = isParentStep.ref_order + 1;
-
-        /*
-        부모 스텝이 있는 경우에, 동일 스텝이 있는 경우와 없는 경우
-
-        */
       } else {
         // 자신과 같은 스텝이 있는 경우
-
         const lastSameStep = await Comments.findOne({
           where: {
             [Op.and]: [
-              { reviewId: review_id },
+              { reviewId },
               { ref },
               {
                 step,
@@ -83,17 +80,11 @@ module.exports = async (req, res) => {
         }
       }
 
-      const child_num = 0;
-      // model.update({ field: 바꿀값 }, {where: {field: 찾을값}});
       await Comments.update(
         { child_num: parentComment.child_num + 1 },
         { where: { id: parentComment.id } }
       );
-      const parent_id = parentComment.id;
-      const like_num = 0;
-
-      console.log(reviewId, 'here!!!!');
-      let comment = await Comments.create({
+      await Comments.create({
         ref,
         step,
         ref_order,
@@ -101,65 +92,70 @@ module.exports = async (req, res) => {
         like_num,
         parent_id,
         content,
-        reviewId: parentComment.reviewId,
         userId,
+        reviewId,
       });
-
-      const userInfo = await Users.findByPk(userId, {
-        attributes: ['nickname'],
-      });
-      const result = Object.assign(comment.dataValues, {
-        User: { nickname: userInfo.nickname },
-      });
-      // console.log(result);
-      return res.json(result);
     } else {
       //# 부모글이 없는 순수 댓글
-      const review_id = reviewId;
-      // let ref = await Comments.findAll({
-      //   where: { reviewId },
-      //   attributes: ['ref'],
-      // });
-      let ref;
-      const maxRef = await Comments.max('ref', { where: { reviewId } });
-      // console.log(maxRef);
+      console.log('부모글 없어??');
+      reviewId = req.body.reviewId;
 
+      const maxRef = await Comments.max('ref', { where: { reviewId } });
       if (maxRef) {
         ref = maxRef + 1;
       } else {
         ref = 1;
       }
+      step = 0;
+      ref_order = 0;
+      child_num = 0;
+      parent_id = 0;
+      like = 0;
 
-      let step = 0;
-      let ref_order = 0;
-      let child_num = 0;
-      let parent_id = 0;
-      let like = 0;
-
-      let comment = await Comments.create(
-        {
-          ref,
-          step,
-          ref_order,
-          child_num,
-          parent_id,
-          content,
-          userId,
-          reviewId: review_id,
-          like,
-        }
-        // { raw: true }
-      );
-      // console.log(comment);
-      const userInfo = await Users.findByPk(userId, {
-        attributes: ['nickname'],
+      await Comments.create({
+        ref,
+        step,
+        ref_order,
+        child_num,
+        parent_id,
+        content,
+        userId,
+        reviewId,
+        like,
       });
-      const result = Object.assign(comment.dataValues, {
-        User: { nickname: userInfo.nickname },
-      });
-      // console.log(result);
-      res.json(result);
     }
+
+    let comments = await Comments.findAll({
+      where: { reviewId },
+      include: [
+        {
+          model: Users,
+          attributes: ['nickname'],
+        },
+      ],
+      order: [
+        ['ref', 'DESC'],
+        ['ref_order', 'ASC'],
+      ],
+    });
+    if (comments.length === 0) {
+      return res.status(204).send('No content');
+    }
+
+    for (let comment of comments) {
+      if (comment.dataValues.parent_id) {
+        const parentComment = await Comments.findOne({
+          where: { id: comment.parent_id },
+          include: [{ model: Users, attributes: ['nickname'] }],
+        });
+
+        comment.dataValues = Object.assign(comment.dataValues, {
+          parent_nickname: parentComment.User.nickname,
+        });
+      }
+    }
+
+    return res.json(comments);
   } catch (error) {
     console.log(error);
   }

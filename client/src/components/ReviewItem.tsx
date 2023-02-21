@@ -317,6 +317,7 @@ const ReviewItem = ({
   } = review;
   const modalContext = useContext(ModalContext);
   // console.log(review);
+  console.log(comments);
 
   const modalHandler = () => {
     setDeleteClicked(!deleteClicked);
@@ -463,7 +464,7 @@ const ReviewItem = ({
                 {like_num}
               </button>
 
-              <button onClick={createComment}>답글</button>
+              <button onClick={createComment}>댓글</button>
 
               {comments.length ? (
                 <button id="comment-toggle" onClick={showComments}>
@@ -477,6 +478,7 @@ const ReviewItem = ({
                 commentWrite={commentWrite}
                 setCommentWrite={setCommentWrite}
                 review={review}
+                setComments={setComments}
               />
             )}
 
@@ -484,9 +486,11 @@ const ReviewItem = ({
               {commentToggle &&
                 comments.map((comment) => (
                   <CommentItem
+                    setComments={setComments}
                     authState={authState}
                     key={comment.id}
                     comment={comment}
+                    // setCommentWrite={setCommentWrite}
                   />
                 ))}
             </div>

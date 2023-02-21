@@ -10,6 +10,7 @@ import { ReactComponent as Delete } from '../assets/delete.svg';
 import { ReactComponent as Setting } from '../assets/setting.svg';
 
 import Dropdown from './Dropdown';
+import axios from 'axios';
 const Wrapper = styled.div`
   border-radius: 0.5rem;
   box-shadow: 0px 1px 0.2rem lightgrey;
@@ -117,20 +118,62 @@ const Wrapper = styled.div`
         margin-left: 1rem;
       }
     }
+
+    .loading {
+      position: relative;
+      color: transparent;
+      transition: all 0.2s;
+      &::after {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        border: 4px solid var(--primaryOrange);
+        border-top-color: #ffffff;
+        border-radius: 50%;
+        animation: button-loading-spinner 1s ease infinite;
+      }
+
+      @keyframes button-loading-spinner {
+        from {
+          transform: rotate(0turn);
+        }
+
+        to {
+          transform: rotate(1turn);
+        }
+      }
+    }
   }
 `;
 
-type CommentItemProps = { comment: TComment; authState: AuthState };
+type CommentItemProps = {
+  comment: TComment;
+  authState: AuthState;
+  setComments?: React.Dispatch<React.SetStateAction<TComment[]>>;
+  // setCommentWrite?: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-const CommentItem = ({ comment, authState }: CommentItemProps) => {
-  const { content, updatedAt, User, parent_nickname } = comment;
-  const [commentWrite, setCommentWrite] = useState(false);
+const CommentItem = ({
+  comment,
+  authState,
+  setComments,
+}: // setCommentWrite,
+CommentItemProps) => {
+  const { content, updatedAt, User, parent_nickname, id } = comment;
+  const [isReplying, setReplying] = useState(false);
   const [isLike, setIsLike] = useState(false);
   const [isDrop, setIsDrop] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const createComment = () => {
-    setCommentWrite(!commentWrite);
+    setReplying(!isReplying);
   };
   /*
   필요 정보
@@ -147,18 +190,50 @@ const CommentItem = ({ comment, authState }: CommentItemProps) => {
   
   */
 
-  const deleteComment = () => {};
+  const deleteComment = async () => {
+    try {
+      setIsLoading(true);
+      const result = await axios.delete(
+        `${process.env.REACT_APP_SERVER_URL}/comments`,
+        {
+          data: { id },
+          headers: {
+            accesstoken: sessionStorage.getItem('accesstoken') ?? '',
+          },
+        }
+      );
+      console.log(result);
+      if (result.data.message === 'delete comment success') {
+        if (setComments) {
+          setComments((prevComments) => {
+            return prevComments.filter((comment) => comment.id !== id);
+          });
+        }
+        setIsDelete(false);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  // if (isDelete)
-  //   return (
-  //     <Wrapper>
-  //       <p>정말 삭제?</p>
-  //       <div>
-  //         <button>ㅇㅇ</button>
-  //         <button>xx</button>
-  //       </div>
-  //     </Wrapper>
-  //   );
+  const Alert = () => {
+    return (
+      <div className="alert">
+        <p>댓글을 완전히 삭제할까요?</p>
+        <div>
+          <button onClick={() => setIsDelete(false)}>취소</button>
+          <button
+            className={isLoading ? 'loading' : undefined}
+            onClick={deleteComment}
+          >
+            삭제
+          </button>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <Wrapper
@@ -169,15 +244,7 @@ const CommentItem = ({ comment, authState }: CommentItemProps) => {
         setIsDrop(false);
       }}
     >
-      {isDelete && (
-        <div className="alert">
-          <p>댓글을 완전히 삭제할까요?</p>
-          <div>
-            <button onClick={() => setIsDelete(false)}>취소</button>
-            <button>삭제</button>
-          </div>
-        </div>
-      )}
+      {isDelete && <Alert />}
       <div className="content-header">
         <span>
           <img src={profileImg} alt="프로필사진" />
@@ -242,12 +309,13 @@ const CommentItem = ({ comment, authState }: CommentItemProps) => {
           )}
         </div>
 
-        {commentWrite && (
+        {isReplying && (
           <CommentWrite
+            setComments={setComments}
             comment={comment}
             authState={authState}
-            commentWrite={commentWrite}
-            setCommentWrite={setCommentWrite}
+            setReplying={setReplying}
+            // setCommentWrite={setCommentWrite}
           />
         )}
       </div>
