@@ -4,6 +4,7 @@ import axios, { AxiosError } from 'axios';
 import moment from 'moment';
 import Withdraw from '../components/Withdraw';
 import WithdrawDone from '../components/WithdrawDone';
+import DefaultPic from '../components/DefaultPic';
 import { useCallback } from 'react';
 import { Helmet } from 'react-helmet';
 import EditImg from '../assets/edit-mobile.png';
@@ -24,14 +25,19 @@ import { ReactComponent as Fail } from '../assets/server-fail.svg';
 import Modal from '../components/Modal';
 const Wrapper = styled.div`
   margin: 8rem 5rem;
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
   /* height: 55vh; */
 
-  & > span {
+  .logout {
     display: none;
   }
   #last-modified {
     color: gray;
     margin: 1rem;
+    margin-left: 0.5rem;
   }
   @media (max-width: 700px) {
     margin: 8rem 2rem;
@@ -43,7 +49,7 @@ const Wrapper = styled.div`
       padding-left: 1rem;
     }
 
-    & > span {
+    .logout {
       display: inline-block;
       margin: 1rem;
       text-decoration: underline;
@@ -71,7 +77,7 @@ const Info = styled.div`
 
   @media (max-width: 485px) {
     padding: 0 1rem;
-    min-height: 101px;
+    min-height: 5rem;
   } ;
 `;
 
@@ -196,6 +202,9 @@ const Button = styled.button<{ isLoading: boolean }>`
   }
 `;
 const Nickname = styled(Accordion)`
+  .updated-nickname {
+    margin-bottom: 1rem;
+  }
   label {
     margin-bottom: 1rem;
   }
@@ -691,8 +700,6 @@ export default function Account({
     window.location.replace('/');
     window.sessionStorage.clear();
   }, []);
-  // const { currentPassword, newPassword, passwordCheck } = pwdForm;
-  console.log(editType);
 
   return (
     <>
@@ -708,7 +715,7 @@ export default function Account({
           <title>계정 관리 - LOCO</title>
         </Helmet>
         <h1>계정</h1>
-
+        <DefaultPic />
         <List>
           <Info>
             <Heading>
@@ -762,7 +769,9 @@ export default function Account({
                 </form>
               </Nickname>
             ) : (
-              <div style={{ color: 'gray' }}>{authState.nickname}</div>
+              <div className="updated-nickname" style={{ color: 'gray' }}>
+                {authState.nickname}
+              </div>
             )}
           </Info>
 
@@ -888,7 +897,9 @@ export default function Account({
         <div id="last-modified">
           최종수정일 : {moment(updatedAt).format('YYYY년 MM월 DD일 HH시 mm분')}
         </div>
-        <span onClick={onClickLogout}>로그아웃</span>
+        <span className="logout" onClick={onClickLogout}>
+          로그아웃
+        </span>
       </Wrapper>
       {!isLoading && progress === 'success' && (
         <Modal
