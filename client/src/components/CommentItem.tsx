@@ -11,11 +11,13 @@ import { ReactComponent as Setting } from '../assets/setting.svg';
 
 import Dropdown from './Dropdown';
 import axios from 'axios';
-const Wrapper = styled.div`
+import { useRef } from 'react';
+const Wrapper = styled.div<{ isEdit: boolean }>`
   border-radius: 0.5rem;
   box-shadow: 0px 1px 0.2rem lightgrey;
   padding: 1rem;
   padding-right: 0.5rem;
+  padding-bottom: ${(props) => props.isEdit && 0};
   margin-top: 0.5rem;
   margin-left: 1rem;
   display: flex;
@@ -41,9 +43,13 @@ const Wrapper = styled.div`
       font-weight: 600;
       font-size: 1rem;
     }
-    .updatedAt {
+    .createdAt {
       color: gray;
       margin-left: 1rem;
+      span {
+        margin-left: 0.5rem;
+        font-size: 0.9rem;
+      }
     }
 
     button {
@@ -109,13 +115,16 @@ const Wrapper = styled.div`
 
     button {
       padding: 0.5rem 1.4rem;
-      background-color: var(--primaryOrange);
+      color: var(--primaryOrange);
       border-radius: 0.7rem;
       font-weight: 500;
       font-size: 1rem;
-      color: white;
+      transition: all 0.3s;
       & + button {
         margin-left: 1rem;
+      }
+      &:hover {
+        background-color: #feccaf33;
       }
     }
 
@@ -150,12 +159,82 @@ const Wrapper = styled.div`
       }
     }
   }
+
+  .edit {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 1rem;
+    padding: 1rem;
+    span {
+      width: 7%;
+      img {
+        width: 100%;
+      }
+    }
+    section {
+      flex: 1;
+      display: flex;
+      flex-flow: column;
+      margin-left: 1rem;
+      /* background-color: yellow; */
+      /* justify-content: space-between; */
+
+      textarea {
+        padding: 1rem;
+        /* background-color: yellowgreen; */
+        /* min-height: 5rem; */
+        overflow: hidden;
+        border-radius: 0.5rem;
+        border: 1px solid #fcb086b8;
+      }
+      .controller {
+        align-self: flex-end;
+        margin-top: 1rem;
+        /* background-color: red; */
+
+        button {
+          font-weight: 500;
+          font-size: 0.9rem;
+          transition: all 0.3s;
+          padding: 0.5rem 0.8rem;
+          background-color: white;
+          border-radius: 0.9rem;
+          & + button {
+            margin-left: 0.5rem;
+          }
+          &:hover {
+            filter: brightness(95%);
+          }
+          &#submit {
+            background-color: var(--primaryOrange);
+            /* border-radius: 0.9rem; */
+            color: white;
+            &:disabled {
+              background-color: lightgray;
+              &:hover {
+                filter: brightness(95%);
+              }
+            }
+
+            &:hover {
+              filter: brightness(105%);
+            }
+          }
+        }
+      }
+    }
+  }
 `;
 
 type CommentItemProps = {
   comment: TComment;
   authState: AuthState;
-  setComments?: React.Dispatch<React.SetStateAction<TComment[]>>;
+  setComments: React.Dispatch<React.SetStateAction<TComment[]>>;
   // setCommentWrite?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
@@ -165,13 +244,13 @@ const CommentItem = ({
   setComments,
 }: // setCommentWrite,
 CommentItemProps) => {
-  const { content, updatedAt, User, parent_nickname, id } = comment;
+  const { content, updatedAt, createdAt, User, parent_nickname, id } = comment;
   const [isReplying, setReplying] = useState(false);
   const [isLike, setIsLike] = useState(false);
   const [isDrop, setIsDrop] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
+  const [isEdit, setIsEdit] = useState(false);
+  const [isLoading, setIsLoading] = useState({ update: false, delete: false });
   const createComment = () => {
     setReplying(!isReplying);
   };
@@ -192,7 +271,7 @@ CommentItemProps) => {
 
   const deleteComment = async () => {
     try {
-      setIsLoading(true);
+      setIsLoading((prev) => ({ ...prev, delete: true }));
       const result = await axios.delete(
         `${process.env.REACT_APP_SERVER_URL}/comments`,
         {
@@ -214,7 +293,7 @@ CommentItemProps) => {
     } catch (error) {
       console.log(error);
     } finally {
-      setIsLoading(false);
+      setIsLoading((prev) => ({ ...prev, delete: false }));
     }
   };
 
@@ -223,9 +302,15 @@ CommentItemProps) => {
       <div className="alert">
         <p>댓글을 완전히 삭제할까요?</p>
         <div>
-          <button onClick={() => setIsDelete(false)}>취소</button>
           <button
-            className={isLoading ? 'loading' : undefined}
+            onClick={() => {
+              setIsDelete(false);
+            }}
+          >
+            취소
+          </button>
+          <button
+            className={isLoading.delete ? 'loading' : undefined}
             onClick={deleteComment}
           >
             삭제
@@ -235,90 +320,209 @@ CommentItemProps) => {
     );
   };
 
-  return (
-    <Wrapper
-      onClick={() => {
-        // e.stopPropagation();
-        console.log('gg');
+  type EditModeProps = {
+    setComments: React.Dispatch<React.SetStateAction<TComment[]>>;
+  };
 
+  const EditMode = ({ setComments }: EditModeProps) => {
+    const [editContent, setEditContent] = useState(content);
+    const textareaRef = useRef<null | HTMLTextAreaElement>(null);
+
+    const handleEditContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      console.log(e.target.value);
+
+      setEditContent(e.target.value);
+    };
+
+    const handleResizeHeight = () => {
+      if (textareaRef.current) {
+        textareaRef.current.style.height = 'auto';
+        textareaRef.current.style.height =
+          textareaRef.current.scrollHeight + 'px';
+      }
+    };
+
+    const submitEditContent = async () => {
+      try {
+        /*
+        댓글 아이디, 
+        */
+        const commentId = id;
+        setIsLoading((prev) => ({ ...prev, update: true }));
+        const result = await axios.patch(
+          `${process.env.REACT_APP_SERVER_URL}/comments`,
+          { id, content: editContent },
+          {
+            headers: {
+              accesstoken: sessionStorage.getItem('accesstoken') ?? '',
+            },
+          }
+        );
+        /*
+        
+        */
+        const { content, updatedAt } = result.data;
+        setEditContent('');
+        setComments((prevComments) => {
+          return prevComments.map((comment) =>
+            comment.id === id ? { ...comment, content, updatedAt } : comment
+          );
+        });
+        setIsEdit(false);
         setIsDrop(false);
-      }}
-    >
-      {isDelete && <Alert />}
-      <div className="content-header">
+        // console.log(result);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading((prev) => ({ ...prev, update: false }));
+      }
+    };
+
+    return (
+      <div className="edit">
         <span>
           <img src={profileImg} alt="프로필사진" />
-          <div className="nickname">{User.nickname}</div>
-          <div className="updatedAt">
-            {moment(updatedAt).format('YYYY-MM-DD-h:mm')}
-          </div>
         </span>
-        {authState.userId === comment.userId && (
-          <button
-            className="setting"
-            onClick={(e) => {
-              e.stopPropagation();
-              console.log('gg');
-
-              setIsDrop(!isDrop);
+        <section>
+          <textarea
+            onChange={(e) => {
+              handleResizeHeight();
+              handleEditContent(e);
             }}
-          >
-            <Setting />
-          </button>
-        )}
-        {isDrop && (
-          <Dropdown>
-            {
-              <>
-                <li>
-                  <Edit />
-                  수정하기
-                </li>
-                <li onClick={() => setIsDelete(true)}>
-                  <Delete />
-                  삭제하기
-                </li>
-              </>
-            }
-          </Dropdown>
-        )}
-      </div>
-      <div className="content-body">
-        {parent_nickname && <span>@{parent_nickname}</span>}
-        <p>{content}</p>
-      </div>
-      <div className="content-bottom">
-        <div>
-          <button
-            onClick={(e) => {
-              if (authState.loginStatus) {
-                // onClickPick(e, summary.festival);
-              } else {
-                e.stopPropagation();
-                // if (modalContext) {
-                //   modalContext.setLoginModal(true);
-                // }
-              }
-            }}
-          >
-            {isLike ? <Like alt="liked" /> : <Unlike alt="unliked" />}
-            {/* {likes} */}
-          </button>
-          {authState.userId !== comment.userId && (
-            <button onClick={createComment}>답글</button>
-          )}
-        </div>
-
-        {isReplying && (
-          <CommentWrite
-            setComments={setComments}
-            comment={comment}
-            authState={authState}
-            setReplying={setReplying}
-            // setCommentWrite={setCommentWrite}
+            ref={textareaRef}
+            rows={1}
+            value={editContent}
           />
-        )}
+          <div className="controller">
+            <button
+              onClick={() => {
+                setIsEdit(false);
+              }}
+            >
+              취소
+            </button>
+            <button
+              onClick={submitEditContent}
+              id="submit"
+              disabled={editContent.length === 0 || editContent === content}
+            >
+              저장
+            </button>
+          </div>
+        </section>
       </div>
+    );
+  };
+
+  return (
+    <Wrapper
+      isEdit={isEdit}
+      // onClick={(e) => {
+      //   e.stopPropagation();
+      //   console.log('gg');
+
+      //   setIsDrop(false);
+      // }}
+    >
+      {isDelete && <Alert />}
+      {isEdit && <EditMode setComments={setComments} />}
+      {!isEdit && (
+        <>
+          {' '}
+          <div className="content-header">
+            <span>
+              <img src={profileImg} alt="프로필사진" />
+              <div className="nickname">{User.nickname}</div>
+              <div className="createdAt">
+                {updatedAt !== createdAt ? (
+                  <>
+                    {moment(updatedAt).format('YYYY-MM-DD-h:mm')}
+                    <span>(수정됨)</span>
+                  </>
+                ) : (
+                  moment(createdAt).format('YYYY-MM-DD-h:mm')
+                )}
+              </div>
+              {/* {updatedAt !== createdAt && <span>수정됨</span>} */}
+            </span>
+            {authState.userId === comment.userId && (
+              <button
+                className="setting"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  console.log('gg');
+
+                  setIsDrop(!isDrop);
+                }}
+              >
+                <Setting />
+              </button>
+            )}
+            {isDrop && (
+              <Dropdown>
+                {
+                  <>
+                    <li
+                      onClick={() => {
+                        setIsEdit(true);
+                        setIsDrop(false);
+                      }}
+                    >
+                      <Edit />
+                      수정하기
+                    </li>
+                    <li
+                      onClick={() => {
+                        setIsDelete(true);
+                        setIsDrop(false);
+                      }}
+                    >
+                      <Delete />
+                      삭제하기
+                    </li>
+                  </>
+                }
+              </Dropdown>
+            )}
+          </div>
+          <div className="content-body">
+            {parent_nickname && <span>@{parent_nickname}</span>}
+            <p>{content}</p>
+          </div>
+          <div className="content-bottom">
+            <div>
+              <button
+                onClick={(e) => {
+                  if (authState.loginStatus) {
+                    // onClickPick(e, summary.festival);
+                  } else {
+                    e.stopPropagation();
+                    // if (modalContext) {
+                    //   modalContext.setLoginModal(true);
+                    // }
+                  }
+                }}
+              >
+                {isLike ? <Like alt="liked" /> : <Unlike alt="unliked" />}
+                {/* {likes} */}
+              </button>
+              {authState.userId !== comment.userId && (
+                <button onClick={createComment}>답글</button>
+              )}
+            </div>
+
+            {isReplying && (
+              <CommentWrite
+                setComments={setComments}
+                comment={comment}
+                authState={authState}
+                setReplying={setReplying}
+                // setCommentWrite={setCommentWrite}
+              />
+            )}
+          </div>
+        </>
+      )}
     </Wrapper>
   );
 };

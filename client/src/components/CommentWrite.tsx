@@ -129,21 +129,6 @@ const CommentWrite = ({
       console.log(result);
       tempComment.current = result.data;
       if (setComments) {
-        // setComments((prevComments) => {
-        //   const idx = prevComments.findIndex(
-        //     (comment) =>
-        //       comment.ref === result.data.ref &&
-        //       comment.ref_order === result.data.ref_order - 1
-        //   );
-        //   const nextComments = [
-        //     ...prevComments.slice(0, idx - 1),
-        //     result.data,
-        //     ...prevComments.slice(0, idx + 1),
-        //   ];
-        //   console.log(nextComments);
-
-        //   return nextComments;
-        // });
         setComments(result.data);
         setContent('');
         if (setCommentWrite) {
@@ -153,15 +138,6 @@ const CommentWrite = ({
         if (setReplying) {
           setReplying(false);
         }
-
-        /*
-        그 위치에 업데이트가 되어있어야함
-
-        [o o o o o ]  [ u u u ]
-
-        ref가 같으면서 ref_order+1의 위치에 있어야함
-        
-        */
       }
       setProgress('success');
       /*
@@ -202,6 +178,9 @@ const CommentWrite = ({
           onClick={() => {
             if (setCommentWrite) {
               setCommentWrite(false);
+            }
+            if (setReplying) {
+              setReplying(false);
             }
           }}
         >
