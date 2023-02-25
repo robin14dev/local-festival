@@ -29,7 +29,6 @@ const Wrapper = styled.div`
     font-size: 2rem;
     margin-bottom: 2rem;
   }
-  /* height: 55vh; */
 
   .logout {
     display: none;
@@ -43,8 +42,6 @@ const Wrapper = styled.div`
     margin: 8rem 2rem;
   }
   @media (max-width: 485px) {
-    margin: 8rem 0;
-
     & > h1 {
       padding-left: 1rem;
     }
@@ -54,7 +51,13 @@ const Wrapper = styled.div`
       margin: 1rem;
       text-decoration: underline;
     }
-  } ;
+  }
+  @media (max-width: 385px) {
+    margin: 8rem 1rem;
+    #last-modified {
+      font-size: 0.8rem;
+    }
+  }
 `;
 
 const List = styled.div`
@@ -261,7 +264,6 @@ export default function Account({
     nickname: false,
     password: false,
   });
-
   const [userInfo, setUserInfo] = useState<userInfo>({
     nickname: { text: '', isValid: false, isUnique: false },
     password: { text: '', isValid: false },
@@ -274,19 +276,21 @@ export default function Account({
     passwordCheck: '',
     curPassword: '',
   });
-
   const [openWithdrawModal, setWithdrawModal] = useState(false);
   const [finishWithdrawModal, setFinishModal] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [progress, setProgress] = useState<Progress>('inProgress');
   const [updatedAt, setUpdatedAt] = useState('');
+
   const editType = useRef<null | string>(null);
   const inputhere = useRef<HTMLInputElement | null>(null);
   const errMessagePwd = useRef<HTMLSpanElement | null>(null);
-  const { nickname, password, passwordCheck, curPassword } = userInfo;
   const pwRef = useRef<HTMLInputElement>(null);
   const curpwRef = useRef<HTMLInputElement>(null);
   const pwcheckRef = useRef<HTMLInputElement>(null);
+
+  const { nickname, password, passwordCheck, curPassword } = userInfo;
+
   useEffect(() => {
     console.log('accountSetting!!');
     axios
@@ -438,7 +442,6 @@ export default function Account({
     },
     [userInfo, message, progress]
   );
-
   const accordionHandler = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       const target = e.currentTarget as HTMLButtonElement;
@@ -483,7 +486,6 @@ export default function Account({
     },
     [isOpen]
   );
-
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>,
     ...type: string[]
@@ -694,7 +696,6 @@ export default function Account({
       }
     }
   };
-
   const onClickLogout = useCallback(() => {
     loginHandler(0, '', '', false);
     window.location.replace('/');
