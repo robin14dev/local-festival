@@ -1,12 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { UserContext } from '../contexts/userContext';
-
 import styled from 'styled-components';
-
-import { ReactComponent as CameraRound } from '../assets/camera-round.svg';
-import { ReactComponent as Profile } from '../assets/profile-fill.svg';
-
-import CurrentPic from './CurrentPic';
 
 export const Backdrop = styled.div`
   z-index: 10;
@@ -54,6 +46,7 @@ export const Modal = styled.div`
     margin-bottom: 2rem;
   }
   .isLoading {
+    position: relative;
     &::after {
       content: '';
       position: absolute;
@@ -98,6 +91,10 @@ export const Modal = styled.div`
   }
 
   .alert {
+    /* display: flex;
+    align-items: center;
+    justify-content: center; */
+
     p {
       display: flex;
       justify-content: center;
@@ -134,10 +131,13 @@ export const Modal = styled.div`
       align-items: center;
       justify-content: center;
       padding: 0 1rem;
-
       transition: all 0.5s;
-      &:hover {
+
+      &:hover:enabled {
         background-color: #efecece1;
+      }
+      &:disabled {
+        filter: grayscale(1);
       }
 
       & + button {
@@ -146,6 +146,8 @@ export const Modal = styled.div`
       svg {
         height: 50%;
         width: 40%;
+        /* margin-right: 0.2rem; */
+        /* background-color: yellow; */
         path {
           fill: var(--primaryPurple);
         }
@@ -155,90 +157,9 @@ export const Modal = styled.div`
       display: none;
     }
   }
-`;
 
-const Container = styled.section`
-  margin-bottom: 1rem;
-  position: relative;
-  .img-container {
-    width: 5rem;
-    height: 5rem;
-    border-radius: 50%;
-    overflow: hidden;
-    left: -0.5rem;
-    cursor: pointer;
-
-    svg,
-    img {
-      width: 100%;
-      height: 100%;
-      position: relative;
-
-      & + svg {
-        position: absolute;
-        width: 1.7rem;
-        height: 30%;
-        bottom: 0;
-        left: 3.5rem;
-      }
-    }
-  }
-
-  input {
-    display: none;
-  }
-
-  @media (max-width: 485px) {
-    .img-container {
-      left: 1rem;
-    }
+  @media screen and (max-width: 370px) {
+    width: 17rem;
+    height: 18rem;
   }
 `;
-type DefaultPicProps = {
-  initialUrl: string;
-};
-
-function DefaultPic({ initialUrl }: DefaultPicProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [picUrl, setPicUrl] = useState(initialUrl);
-  const userContext = useContext(UserContext);
-  useEffect(() => {
-    setPicUrl(initialUrl);
-  }, [initialUrl]);
-
-  const imgOnError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    e.currentTarget.style.display = 'none';
-    userContext?.setAuthState((prevState) => ({
-      ...prevState,
-      defaultPic: '',
-    }));
-  };
-  return (
-    <>
-      {isOpen && (
-        <CurrentPic
-          picUrl={picUrl}
-          setPicUrl={setPicUrl}
-          setIsOpen={setIsOpen}
-        />
-      )}
-      <Container>
-        <div
-          className="img-container"
-          onClick={() => {
-            setIsOpen(true);
-          }}
-        >
-          {picUrl ? (
-            <img onError={imgOnError} src={picUrl} alt={`프로필 사진`}></img>
-          ) : (
-            <Profile />
-          )}
-          <CameraRound />
-        </div>
-      </Container>
-    </>
-  );
-}
-
-export default DefaultPic;

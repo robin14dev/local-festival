@@ -14,37 +14,6 @@ module.exports = async (req, res) => {
 
   let user = await Users.findOne({ where: { id } });
 
-  // bcrypt.compare(currentPassword, user.password).then(async (match) => {
-  //   if (!match) {
-  //     return res.status(401).json({ message: 'Wrong Password' });
-  //   }
-  //   if (currentPassword === newPassword) {
-  //     return res.status(422).json({
-  //       message: 'New password cannot be the same as the current password',
-  //     });
-  //   }
-
-  //   bcrypt
-  //     .hash(newPassword, 10)
-  //     .then((hash) => {
-  //       return Users.update({ password: hash }, { where: { id } });
-  //     })
-  //     .then(async (response) => {
-  //       console.log(response);
-  //       console.log('비번 변경 성공');
-  //       console.log(id);
-  //       let result = await Users.findOne({ where: { id } });
-  //       console.log(result);
-  //       res.json({
-  //         updatedAt: result.updatedAt,
-  //         message: 'password successfully changed',
-  //       });
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // });
-
   try {
     const match = await bcrypt.compare(currentPassword, user.password);
     if (!match) throw new Error('Wrong Password');

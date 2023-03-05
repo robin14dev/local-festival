@@ -178,7 +178,6 @@ const Main = ({
     }
   };
   useEffect(() => {
-    // console.log(observerTargetEl.current);
     if (!observerTargetEl.current || !hasNextPage) return;
     const callback: IntersectionObserverCallback = (entries, observer) => {
       if (offset.current === 0) {

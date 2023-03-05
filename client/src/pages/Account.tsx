@@ -557,6 +557,7 @@ export default function Account({
 
           return nextInfo;
         });
+        //! 세션 상태도 바꿔주기
 
         // 기본 상태로 바꾸기
         setTimeout(() => {
@@ -697,7 +698,7 @@ export default function Account({
     }
   };
   const onClickLogout = useCallback(() => {
-    loginHandler(0, '', '', false);
+    loginHandler(0, '', '', '', false);
     window.location.replace('/');
     window.sessionStorage.clear();
   }, []);
@@ -716,7 +717,7 @@ export default function Account({
           <title>계정 관리 - LOCO</title>
         </Helmet>
         <h1>계정</h1>
-        <DefaultPic />
+        <DefaultPic initialUrl={authState.defaultPic} />
         <List>
           <Info>
             <Heading>
