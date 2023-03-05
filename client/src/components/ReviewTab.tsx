@@ -116,8 +116,12 @@ const ReviewList = styled.section`
     }
   }
 
+  @media screen and (max-width: 1076px) {
+    padding: 0 1.5rem;
+  }
+
   @media (max-width: 485px) {
-    width: 90%;
+    /* width: 90%; */
   }
 `;
 type ReviewTabProps = {
