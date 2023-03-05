@@ -247,6 +247,7 @@ const ReviewItem = ({
     info: {
       User: {
         nickname: '',
+        defaultPic: '',
       },
       content: '',
       createdAt: '',
@@ -321,8 +322,8 @@ const ReviewItem = ({
               </div>
             )}
             <Info>
-              {authState.defaultPic ? (
-                <img src={authState.defaultPic} alt="프로필사진" />
+              {User.defaultPic ? (
+                <img src={User.defaultPic} alt="프로필사진" />
               ) : (
                 <img src={profileImg} alt="프로필사진" />
               )}

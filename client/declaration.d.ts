@@ -33,6 +33,7 @@ type AuthState = {
 type TReviewItem = {
   User: {
     nickname: string;
+    defaultPic: string;
   };
   content: string;
   createdAt: string;

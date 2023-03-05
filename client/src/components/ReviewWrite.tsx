@@ -322,6 +322,7 @@ const ReviewWrite = ({
           id,
           User: {
             nickname: authState.nickname,
+            defaultPic: authState.defaultPic,
           },
         };
         updateReviewList(newReview);
