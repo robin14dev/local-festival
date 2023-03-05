@@ -252,14 +252,9 @@ const Password = styled(Accordion)`
 type AccountProps = {
   authState: AuthState;
   handleAuthState: (nickname: string) => void;
-  loginHandler: loginHandlerFunc;
 };
 
-export default function Account({
-  authState,
-  handleAuthState,
-  loginHandler,
-}: AccountProps) {
+export default function Account({ authState, handleAuthState }: AccountProps) {
   const [isOpen, setIsOpen] = useState({
     nickname: false,
     password: false,
@@ -698,9 +693,8 @@ export default function Account({
     }
   };
   const onClickLogout = useCallback(() => {
-    loginHandler(0, '', '', '', false);
+    sessionStorage.clear();
     window.location.replace('/');
-    window.sessionStorage.clear();
   }, []);
 
   return (

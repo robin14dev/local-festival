@@ -33,7 +33,7 @@ type RatingProps = {
 const Rating = ({ handleRating, initialRating }: RatingProps) => {
   const [hover, setHover] = useState<number | null>(null);
   const [click, setClick] = useState<number | null>(initialRating || 0);
-  console.log('rating!!', 'initialRating : ', initialRating, 'click :', click);
+  // console.log('rating!!', 'initialRating : ', initialRating, 'click :', click);
   const onClickRating = (rating: number) => {
     setClick(rating);
     handleRating(rating);
