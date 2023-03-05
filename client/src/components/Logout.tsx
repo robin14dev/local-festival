@@ -96,7 +96,7 @@ const Logout = ({ loginHandler }: { loginHandler: loginHandlerFunc }) => {
 
   const onClickLogoutBtn = () => {
     //# 클라이언트에서 토큰 지우기
-    loginHandler(0, '', '', false);
+    loginHandler(0, '', '', '', false);
     navigate('/');
     window.sessionStorage.clear();
   };
