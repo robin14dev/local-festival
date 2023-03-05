@@ -26,13 +26,49 @@ const Wrapper = styled.div`
   padding: 0;
 `;
 
+// const temporal = async () => {
+//   if (sessionStorage.getItem('accesstoken')) {
+//     const authData = await axios.get(
+//       `${process.env.REACT_APP_SERVER_URL}/users`,
+//       {
+//         headers: {
+//           accesstoken: sessionStorage.getItem('accesstoken') ?? '',
+//         },
+//       }
+//     );
+
+//     const { userId, account, nickname, defaultPic } = authData.data.info;
+//     const result = { userId, account, nickname, defaultPic, loginStatus: true };
+//     return result;
+//   } else {
+//     return {
+//       userId: 0,
+//       account: '',
+//       nickname: '',
+//       defaultPic: '',
+//       loginStatus: false,
+//     };
+//   }
+// };
+const getUserInfoFromStorage: () => AuthState = () => {
+  if (sessionStorage.getItem('user')) {
+    const user = sessionStorage.getItem('user');
+    if (user) {
+      return JSON.parse(user);
+    }
+  } else {
+    return {
+      userId: 0,
+      account: '',
+      nickname: '',
+      defaultPic: '',
+      loginStatus: false,
+    };
+  }
+};
+
 function App() {
-  const [authState, setAuthState] = useState({
-    userId: 0,
-    account: '',
-    nickname: '',
-    loginStatus: false,
-  });
+  const [authState, setAuthState] = useState(getUserInfoFromStorage());
   const [festivalData, setFestivalData] = useState<FestivalItem[]>([]);
   const [pickItems, setPickItems] = useState<FestivalItem[]>([]);
   const [filteredData, setFilteredData] =
@@ -45,15 +81,17 @@ function App() {
     userId,
     account,
     nickname,
+    defaultPic,
     loginStatus
   ) => {
     console.log(userId, account, nickname, loginStatus);
     //* 로그인한 후의 유저정보 상태변경입니다.
     const nextState = {
-      userId: userId,
-      account: account,
-      nickname: nickname,
-      loginStatus: loginStatus,
+      userId,
+      account,
+      nickname,
+      defaultPic,
+      loginStatus,
     };
     setAuthState(nextState);
     //# 유저별 찜한 축제 가져오기
@@ -123,41 +161,64 @@ function App() {
     nextAuthState.nickname = nickname;
     setAuthState(nextAuthState);
   };
-  const refreshData = async () => {
-    if (sessionStorage.getItem('accesstoken')) {
-      const authData = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/users`,
-        {
-          headers: {
-            accesstoken: sessionStorage.getItem('accesstoken') ?? '',
-          },
-        }
-      );
+  // const refreshData = async () => {
+  //   if (sessionStorage.getItem('accesstoken')) {
+  //     const authData = await axios.get(
+  //       `${process.env.REACT_APP_SERVER_URL}/users`,
+  //       {
+  //         headers: {
+  //           accesstoken: sessionStorage.getItem('accesstoken') ?? '',
+  //         },
+  //       }
+  //     );
 
-      const { userId, account, nickname } = authData.data.data;
+  //     const { userId, account, nickname, defaultPic } = authData.data.info;
+  //     const user: { [index: string]: number | boolean | string } = {
+  //       userId,
+  //       account,
+  //       nickname,
+  //       defaultPic,
+  //       loginStatus: true,
+  //     };
+  //     if (sessionStorage.getItem('user')) {
+  //       const storageUser = sessionStorage.getItem('user');
 
-      setAuthState({
-        userId: userId,
-        account: account,
-        nickname: nickname,
-        loginStatus: true,
-      });
+  //       if (storageUser) {
+  //         const parsedUser = JSON.parse(storageUser);
+  //         for (const key in user) {
+  //           console.log(user[key], parsedUser[key]);
+  //           if (user[key] !== parsedUser[key]) {
+  //             break;
+  //           }
+  //         }
+  //         return;
+  //       }
+  //     }
+  //     console.log('업데이트간다');
 
-      const pickedItems = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/pick`,
-        {
-          headers: {
-            accesstoken: sessionStorage.getItem('accesstoken') ?? '',
-          },
-        }
-      );
-      setPickItems(pickedItems.data);
-    }
-  };
+  //     setAuthState({
+  //       userId,
+  //       account,
+  //       nickname,
+  //       defaultPic,
+  //       loginStatus: true,
+  //     });
+
+  //     const pickedItems = await axios.get(
+  //       `${process.env.REACT_APP_SERVER_URL}/pick`,
+  //       {
+  //         headers: {
+  //           accesstoken: sessionStorage.getItem('accesstoken') ?? '',
+  //         },
+  //       }
+  //     );
+  //     setPickItems(pickedItems.data);
+  //   }
+  // };
   useEffect(() => {
     console.log('useEffect !!!!');
 
-    refreshData();
+    // refreshData();
   }, []);
 
   return (
@@ -185,6 +246,7 @@ function App() {
             <Header
               loginHandler={loginHandler}
               authState={authState}
+              setAuthState={setAuthState}
               setLoginModal={setLoginModal}
             />
             <Routes>

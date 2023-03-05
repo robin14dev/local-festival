@@ -22,7 +22,7 @@ module.exports = {
   test: {
     username: DB_USERNAME_TEST,
     password: DB_PWD_TEST,
-    database: 'local_festival',
+    database: 'local_festival_test2',
     host: DB_HOST_TEST,
     dialect: 'mysql',
     port: DB_PORT_TEST,

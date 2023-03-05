@@ -4,6 +4,7 @@ import axios, { AxiosError } from 'axios';
 import moment from 'moment';
 import Withdraw from '../components/Withdraw';
 import WithdrawDone from '../components/WithdrawDone';
+import DefaultPic from '../components/DefaultPic';
 import { useCallback } from 'react';
 import { Helmet } from 'react-helmet';
 import EditImg from '../assets/edit-mobile.png';
@@ -24,31 +25,39 @@ import { ReactComponent as Fail } from '../assets/server-fail.svg';
 import Modal from '../components/Modal';
 const Wrapper = styled.div`
   margin: 8rem 5rem;
-  /* height: 55vh; */
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
 
-  & > span {
+  .logout {
     display: none;
   }
   #last-modified {
     color: gray;
     margin: 1rem;
+    margin-left: 0.5rem;
   }
   @media (max-width: 700px) {
     margin: 8rem 2rem;
   }
   @media (max-width: 485px) {
-    margin: 8rem 0;
-
     & > h1 {
       padding-left: 1rem;
     }
 
-    & > span {
+    .logout {
       display: inline-block;
       margin: 1rem;
       text-decoration: underline;
     }
-  } ;
+  }
+  @media (max-width: 385px) {
+    margin: 8rem 1rem;
+    #last-modified {
+      font-size: 0.8rem;
+    }
+  }
 `;
 
 const List = styled.div`
@@ -71,7 +80,7 @@ const Info = styled.div`
 
   @media (max-width: 485px) {
     padding: 0 1rem;
-    min-height: 101px;
+    min-height: 5rem;
   } ;
 `;
 
@@ -196,6 +205,9 @@ const Button = styled.button<{ isLoading: boolean }>`
   }
 `;
 const Nickname = styled(Accordion)`
+  .updated-nickname {
+    margin-bottom: 1rem;
+  }
   label {
     margin-bottom: 1rem;
   }
@@ -252,7 +264,6 @@ export default function Account({
     nickname: false,
     password: false,
   });
-
   const [userInfo, setUserInfo] = useState<userInfo>({
     nickname: { text: '', isValid: false, isUnique: false },
     password: { text: '', isValid: false },
@@ -265,19 +276,21 @@ export default function Account({
     passwordCheck: '',
     curPassword: '',
   });
-
   const [openWithdrawModal, setWithdrawModal] = useState(false);
   const [finishWithdrawModal, setFinishModal] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [progress, setProgress] = useState<Progress>('inProgress');
   const [updatedAt, setUpdatedAt] = useState('');
+
   const editType = useRef<null | string>(null);
   const inputhere = useRef<HTMLInputElement | null>(null);
   const errMessagePwd = useRef<HTMLSpanElement | null>(null);
-  const { nickname, password, passwordCheck, curPassword } = userInfo;
   const pwRef = useRef<HTMLInputElement>(null);
   const curpwRef = useRef<HTMLInputElement>(null);
   const pwcheckRef = useRef<HTMLInputElement>(null);
+
+  const { nickname, password, passwordCheck, curPassword } = userInfo;
+
   useEffect(() => {
     console.log('accountSetting!!');
     axios
@@ -429,7 +442,6 @@ export default function Account({
     },
     [userInfo, message, progress]
   );
-
   const accordionHandler = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       const target = e.currentTarget as HTMLButtonElement;
@@ -474,7 +486,6 @@ export default function Account({
     },
     [isOpen]
   );
-
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>,
     ...type: string[]
@@ -546,6 +557,7 @@ export default function Account({
 
           return nextInfo;
         });
+        //! 세션 상태도 바꿔주기
 
         // 기본 상태로 바꾸기
         setTimeout(() => {
@@ -685,14 +697,11 @@ export default function Account({
       }
     }
   };
-
   const onClickLogout = useCallback(() => {
-    loginHandler(0, '', '', false);
+    loginHandler(0, '', '', '', false);
     window.location.replace('/');
     window.sessionStorage.clear();
   }, []);
-  // const { currentPassword, newPassword, passwordCheck } = pwdForm;
-  console.log(editType);
 
   return (
     <>
@@ -708,7 +717,7 @@ export default function Account({
           <title>계정 관리 - LOCO</title>
         </Helmet>
         <h1>계정</h1>
-
+        <DefaultPic initialUrl={authState.defaultPic} />
         <List>
           <Info>
             <Heading>
@@ -762,7 +771,9 @@ export default function Account({
                 </form>
               </Nickname>
             ) : (
-              <div style={{ color: 'gray' }}>{authState.nickname}</div>
+              <div className="updated-nickname" style={{ color: 'gray' }}>
+                {authState.nickname}
+              </div>
             )}
           </Info>
 
@@ -888,7 +899,9 @@ export default function Account({
         <div id="last-modified">
           최종수정일 : {moment(updatedAt).format('YYYY년 MM월 DD일 HH시 mm분')}
         </div>
-        <span onClick={onClickLogout}>로그아웃</span>
+        <span className="logout" onClick={onClickLogout}>
+          로그아웃
+        </span>
       </Wrapper>
       {!isLoading && progress === 'success' && (
         <Modal

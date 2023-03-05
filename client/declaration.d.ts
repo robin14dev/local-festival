@@ -26,6 +26,7 @@ type AuthState = {
   userId: number;
   account: string;
   nickname: string;
+  defaultPic: string;
   loginStatus: boolean;
 };
 
@@ -46,6 +47,7 @@ type loginHandlerFunc = (
   userId: number,
   account: string,
   nickname: string,
+  defaultPic: string,
   loginStatus: boolean
 ) => void;
 
@@ -80,6 +82,7 @@ type UserContext = {
       userId: number;
       account: string;
       nickname: string;
+      defaultPic: string;
       loginStatus: boolean;
     }>
   >;

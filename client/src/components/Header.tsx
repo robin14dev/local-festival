@@ -1,6 +1,7 @@
 import React from 'react';
 import Navigationbar from './Navigationbar';
 import styled from 'styled-components';
+import { memo } from 'react';
 
 const Wrapper = styled.header`
   display: flex;
@@ -9,7 +10,7 @@ const Wrapper = styled.header`
   width: 100vw;
   align-items: center;
   background-color: var(--mainColor);
-
+  padding: 0 3rem;
   position: fixed;
   top: 0;
   z-index: 2;
@@ -20,7 +21,6 @@ const Wrapper = styled.header`
     font-style: italic;
     font-family: 'HS-Regular';
     color: rgba(255, 255, 255, 0.78);
-    margin: 0 3rem;
   }
   @media (max-width: 475px) {
     justify-content: center;
@@ -29,11 +29,19 @@ const Wrapper = styled.header`
 
 type HeaderProps = {
   authState: AuthState;
+  setAuthState: React.Dispatch<React.SetStateAction<AuthState>>;
   loginHandler: loginHandlerFunc;
   setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Header = ({ authState, loginHandler, setLoginModal }: HeaderProps) => {
+const Header = ({
+  authState,
+  loginHandler,
+  setLoginModal,
+  setAuthState,
+}: HeaderProps) => {
+  console.log(authState);
+
   const onClickReload = () => {
     window.location.replace('/');
   };
@@ -45,9 +53,10 @@ const Header = ({ authState, loginHandler, setLoginModal }: HeaderProps) => {
         setLoginModal={setLoginModal}
         loginHandler={loginHandler}
         authState={authState}
+        setAuthState={setAuthState}
       />
     </Wrapper>
   );
 };
 
-export default Header;
+export default memo(Header);
