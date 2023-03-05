@@ -1,8 +1,7 @@
 import axios from 'axios';
-import React from 'react';
-import { useCallback } from 'react';
-import { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
+
 const ModalBackdrop = styled.div`
   z-index: 10;
   position: fixed;

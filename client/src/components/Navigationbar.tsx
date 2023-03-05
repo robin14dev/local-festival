@@ -131,18 +131,14 @@ const ItemsWrapper = styled.ul`
 type NavigationbarProps = {
   authState: AuthState;
   setAuthState: React.Dispatch<React.SetStateAction<AuthState>>;
-
-  loginHandler: loginHandlerFunc;
   setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const Navigationbar = ({
   authState,
   setAuthState,
-  loginHandler,
   setLoginModal,
 }: NavigationbarProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  console.log(authState);
 
   const NavItems = ({
     setIsOpen,
@@ -150,12 +146,9 @@ const Navigationbar = ({
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   }) => {
     const onClickLogout = () => {
-      //# 클라이언트에서 토큰 지우기
-      loginHandler(0, '', '', '', false);
-      window.location.replace('/');
-
-      window.sessionStorage.clear();
+      sessionStorage.clear();
       setIsOpen(false);
+      window.location.replace('/');
     };
 
     const onClickMyPage = () => {
