@@ -41,14 +41,15 @@ const ButtonsWrapper = styled.div<{ isLogin: boolean; isPic: string }>`
     width: 100%;
     border-radius: 50%;
     height: 100%;
-    padding: 0.5rem;
+    padding: 0.3rem;
     display: flex;
     justify-content: center;
     align-items: center;
 
     img {
-      width: 80%;
-      height: 80%;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
     }
 
     svg {
