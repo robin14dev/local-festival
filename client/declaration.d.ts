@@ -26,12 +26,14 @@ type AuthState = {
   userId: number;
   account: string;
   nickname: string;
+  defaultPic: string;
   loginStatus: boolean;
 };
 
 type TReviewItem = {
   User: {
     nickname: string;
+    defaultPic: string;
   };
   content: string;
   createdAt: string;
@@ -47,6 +49,7 @@ type loginHandlerFunc = (
   userId: number,
   account: string,
   nickname: string,
+  defaultPic: string,
   loginStatus: boolean
 ) => void;
 
@@ -81,6 +84,7 @@ type UserContext = {
       userId: number;
       account: string;
       nickname: string;
+      defaultPic: string;
       loginStatus: boolean;
     }>
   >;

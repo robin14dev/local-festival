@@ -1,42 +1,48 @@
 require('dotenv').config();
-// console.log(process.env.DATABASE_PASSWORD);
 const {
-  DB_HOST_TEST,
-  DB_USERNAME_TEST,
-  DB_PWD_TEST,
-  DB_PORT_TEST,
+  DB_SCHEMA_DEV,
   DB_HOST_DEV,
   DB_USERNAME_DEV,
   DB_PWD_DEV,
   DB_PORT_DEV,
+
+  DB_SCHEMA_TEST,
+  DB_HOST_TEST,
+  DB_USERNAME_TEST,
+  DB_PWD_TEST,
+  DB_PORT_TEST,
+
+  DB_SCHEMA_PROD,
   DB_HOST_PROD,
   DB_USERNAME_PROD,
   DB_PWD_PROD,
   DB_PORT_PROD,
+
+  DB_DIALECT,
 } = process.env;
 module.exports = {
   development: {
+    database: DB_SCHEMA_DEV,
+    host: DB_HOST_DEV,
     username: DB_USERNAME_DEV,
     password: DB_PWD_DEV,
-    database: 'local_festival',
-    host: DB_HOST_DEV,
     port: DB_PORT_DEV,
-    dialect: 'mysql',
+    dialect: DB_DIALECT,
   },
   test: {
+    database: DB_SCHEMA_TEST,
+    host: DB_HOST_TEST,
     username: DB_USERNAME_TEST,
     password: DB_PWD_TEST,
-    database: 'local_festival_test',
-    host: DB_HOST_TEST,
-    dialect: 'mysql',
     port: DB_PORT_TEST,
+    dialect: DB_DIALECT,
   },
   production: {
+    database: DB_SCHEMA_PROD,
+    host: DB_HOST_PROD,
     username: DB_USERNAME_PROD,
     password: DB_PWD_PROD,
-    database: 'local_festival',
-    host: DB_HOST_PROD,
-    dialect: 'mysql',
     port: DB_PORT_PROD,
+    dialect: DB_DIALECT,
   },
 };

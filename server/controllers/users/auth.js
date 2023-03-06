@@ -12,8 +12,8 @@ module.exports = async (req, res) => {
     const { account } = accessTokenData;
 
     let user = await Users.findOne({ where: { account } });
-    const { id, nickname } = user;
-    res.json({ data: { userId: id, account: account, nickname: nickname } });
+    const { id, nickname, defaultPic } = user;
+    res.json({ info: { userId: id, account, nickname, defaultPic } });
   } catch (error) {
     console.log(error); // 서버 뻑나는거 없애주기
   }

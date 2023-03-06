@@ -9,7 +9,8 @@ module.exports = async (req, res) => {
   if (user.length === 0) {
     return res.status(409).json({ message: "User Doesn't Exist" });
   } else {
-    const { id, account, nickname } = user[0];
+    //console.log("userExist--------", user);
+    const { id, account, nickname, defaultPic } = user[0];
     bcrypt.compare(password, user[0].password).then(async (match) => {
       if (!match) {
         return res
@@ -22,11 +23,12 @@ module.exports = async (req, res) => {
         process.env.ACCESS_SECRET
       );
       res.json({
-        data: {
+        info: {
           token: accessToken,
           userId: id,
-          account: account,
-          nickname: nickname,
+          account,
+          nickname,
+          defaultPic,
         },
         message: 'login success',
       });

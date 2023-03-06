@@ -1,8 +1,7 @@
 import axios from 'axios';
-import React from 'react';
-import { useCallback } from 'react';
-import { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
+
 const ModalBackdrop = styled.div`
   z-index: 10;
   position: fixed;
@@ -163,13 +162,19 @@ const LoginModal = ({
         })
         .then((response) => {
           //# 토큰과 유저정보를 받아온다.
-          sessionStorage.setItem('accesstoken', response.data.data.token);
+          const { nickname, userId, account, defaultPic } = response.data.info;
+          const user = {
+            account,
+            nickname,
+            userId,
+            defaultPic,
+            loginStatus: true,
+          };
+          sessionStorage.setItem('user', JSON.stringify(user));
+          sessionStorage.setItem('accesstoken', response.data.info.token);
 
-          const { nickname, userId, account } = response.data.data;
-          //# 토큰 설정
+          loginHandler(userId, account, nickname, defaultPic, true);
 
-          loginHandler(userId, account, nickname, true);
-          // }
           modalClose();
         })
         .catch((err) => {

@@ -1,8 +1,8 @@
 module.exports = (req, res) => {
   require('dotenv').config();
-  // console.log(req.headers);
   const { verify } = require('jsonwebtoken');
-  const validateToken = req.headers['accesstoken'];
+  const validateToken =
+    req.headers['accesstoken'] || req.body.headers['accesstoken'];
   if (!validateToken) {
     return null;
   }

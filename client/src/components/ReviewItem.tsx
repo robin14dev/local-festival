@@ -29,14 +29,16 @@ const Wrapper = styled.div<{ editMode?: boolean }>`
   justify-content: space-between;
   width: 100%;
   min-height: 199px;
-  border-radius: 0.5rem;
-  box-shadow: 0px 1px 0.2rem lightgrey;
+  border: 0.8px solid #d9d9d9;
+  box-shadow: 0 2px 5px #e6e2e2;
+  border-top: none;
+  border-radius: 0.8rem;
   padding: 1rem;
   margin-bottom: 0.5rem;
 
   @media (max-width: 485px) {
-    border: 1px solid #d9d9d9;
-    border-radius: 7px;
+    /* border: 1px solid #d9d9d9; */
+    /* border-radius: 7px; */
 
     ${(props) =>
       props.editMode &&
@@ -125,8 +127,10 @@ const Info = styled.div`
     width: 49.13px;
     height: 48px;
     margin-right: 6px;
+    border-radius: 50%;
   }
   .nicknameAndDate {
+    margin-left: 0.5rem;
     ul {
       padding: 0;
       li {
@@ -290,6 +294,7 @@ const ReviewItem = ({
     info: {
       User: {
         nickname: '',
+        defaultPic: '',
       },
       content: '',
       createdAt: '',
@@ -419,7 +424,11 @@ const ReviewItem = ({
               </div>
             )}
             <Info>
-              <img src={profileImg} alt="프로필사진" />
+              {User.defaultPic ? (
+                <img src={User.defaultPic} alt="프로필사진" />
+              ) : (
+                <img src={profileImg} alt="프로필사진" />
+              )}
               <div className="nicknameAndDate">
                 <ul>
                   <li>{User ? User.nickname : '탈퇴한 회원입니다'}</li>
