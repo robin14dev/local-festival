@@ -10,12 +10,12 @@ import { ReactComponent as Delete } from '../assets/delete.svg';
 import { ReactComponent as Like } from '../assets/heart-fill.svg';
 import { ReactComponent as Unlike } from '../assets/heart-empty.svg';
 
-import CommentWrite from './CommentWrite';
+import CommentWrite from './comments/CommentWrite';
 import { useEffect } from 'react';
 import axios from 'axios';
-import CommentItem from './CommentItem';
+import CommentItem from './comments/CommentItem';
 import { useContext } from 'react';
-import { ModalContext } from '../contexts/modalContext';
+import { induceLogin, ModalContext } from '../contexts/modalContext';
 const Wrapper = styled.div<{ editMode?: boolean }>`
   ${(props) =>
     props.editMode &&
@@ -355,6 +355,7 @@ const ReviewItem = ({
       } else {
         comments = result.data;
       }
+      console.log(comments);
 
       setComments(comments);
     } catch (error) {
@@ -473,7 +474,17 @@ const ReviewItem = ({
                 {like_num}
               </button>
 
-              <button onClick={createComment}>댓글</button>
+              {authState.loginStatus ? (
+                <button onClick={createComment}>댓글</button>
+              ) : (
+                <button
+                  onClick={() => {
+                    induceLogin(modalContext);
+                  }}
+                >
+                  댓글
+                </button>
+              )}
 
               {comments.length ? (
                 <button id="comment-toggle" onClick={showComments}>
@@ -486,6 +497,7 @@ const ReviewItem = ({
                 authState={authState}
                 commentWrite={commentWrite}
                 setCommentWrite={setCommentWrite}
+                setCommentToggle={setCommentToggle}
                 review={review}
                 setComments={setComments}
               />
@@ -499,6 +511,7 @@ const ReviewItem = ({
                     authState={authState}
                     key={comment.id}
                     comment={comment}
+                    // setCommentToggle={setCommentToggle}
                     // setCommentWrite={setCommentWrite}
                   />
                 ))}

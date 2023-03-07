@@ -3,7 +3,7 @@ const { Users } = require('../../models');
 
 module.exports = async (req, res) => {
   try {
-    console.log(req.params, '-----------');
+    console.log(req.params, '리뷰 아이디 받아오기');
     /*
   댓글 불러올 때 필요한 것
   
@@ -21,7 +21,7 @@ module.exports = async (req, res) => {
       include: [
         {
           model: Users,
-          attributes: ['nickname'],
+          attributes: ['nickname', 'defaultPic'],
         },
       ],
       order: [
@@ -29,15 +29,21 @@ module.exports = async (req, res) => {
         ['ref_order', 'ASC'],
       ],
     });
+    console.group('해당 리뷰아이디의 댓글 불러오기');
+    console.log('댓글 수 : ', comments.length);
+    console.log(comments);
+    console.groupEnd();
     if (comments.length === 0) {
       return res.status(204).send('No content');
     }
 
     for (let comment of comments) {
       if (comment.dataValues.parent_id) {
+        console.log('부모글이 있는 글의 id : ', comment.dataValues.id);
         const parentComment = await Comments.findOne({
           where: { id: comment.parent_id },
           include: [{ model: Users, attributes: ['nickname'] }],
+          paranoid: false, //# 부모글이 삭제 되었을 때도 생각해야함
         });
 
         comment.dataValues = Object.assign(comment.dataValues, {

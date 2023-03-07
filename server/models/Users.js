@@ -19,6 +19,9 @@ module.exports = (sequelize, DataTypes) => {
       password: {
         type: DataTypes.STRING(100),
       },
+      defaultPic: {
+        type: DataTypes.TEXT,
+      },
     },
     {
       charset: 'utf8', // 한국어 설정

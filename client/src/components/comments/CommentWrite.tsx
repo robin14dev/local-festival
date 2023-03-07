@@ -19,14 +19,20 @@ const Wrapper = styled.div`
   .content {
     display: flex;
     align-items: center;
+    transition: all 1s;
+
     img {
       max-width: 3rem;
+      border-radius: 50%;
+      margin-right: 0.5rem;
     }
     textarea {
+      transition: all 1s;
       flex: 1;
       /* border: 1px solid lightgray; */
       border-radius: 0.2rem;
       padding: 1rem;
+      overflow: hidden;
     }
     .user-parent {
       background-color: var(--primaryOrange);
@@ -68,6 +74,8 @@ type CommentWriteProps = {
   review?: TReviewItem;
   commentWrite?: boolean;
   setCommentWrite?: React.Dispatch<React.SetStateAction<boolean>>;
+  setCommentToggle?: React.Dispatch<React.SetStateAction<boolean>>;
+
   comment?: TComment;
   setComments?: React.Dispatch<React.SetStateAction<TComment[]>>;
 };
@@ -78,6 +86,7 @@ const CommentWrite = ({
   authState,
   review,
   setCommentWrite,
+  setCommentToggle,
   commentWrite,
   setComments,
 }: CommentWriteProps) => {
@@ -108,7 +117,6 @@ const CommentWrite = ({
     2. 좋아요 몇개인지
     
     */
-    console.log('here');
 
     try {
       setLoading(true);
@@ -131,13 +139,9 @@ const CommentWrite = ({
       if (setComments) {
         setComments(result.data);
         setContent('');
-        if (setCommentWrite) {
-          console.log('efefefefefe');
-          setCommentWrite(false);
-        }
-        if (setReplying) {
-          setReplying(false);
-        }
+        setCommentWrite && setCommentWrite(false);
+        setCommentToggle && setCommentToggle(true);
+        setReplying && setReplying(false);
       }
       setProgress('success');
       /*
@@ -151,6 +155,14 @@ const CommentWrite = ({
     }
   };
 
+  const handleResizeHeight = () => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height =
+        textareaRef.current?.scrollHeight + 'px';
+    }
+  };
+
   // if (!isLoading && progress === 'success' && tempComment.current) {
   //   return <CommentItem authState={authState} comment={tempComment.current} />;
   // }
@@ -161,7 +173,11 @@ const CommentWrite = ({
   return (
     <Wrapper>
       <div className="content">
-        <img src={profileImg} alt="프로필사진" />
+        {authState.defaultPic ? (
+          <img src={authState.defaultPic} alt="프로필사진" />
+        ) : (
+          <img src={profileImg} alt="프로필사진" />
+        )}
 
         {comment && (
           <div className="user-parent">@{comment?.User.nickname}</div>
@@ -169,7 +185,11 @@ const CommentWrite = ({
         <textarea
           ref={textareaRef}
           placeholder="여기에 작성해 주세요"
-          onChange={(e) => setContent(e.target.value)}
+          spellCheck="false"
+          onChange={(e) => {
+            setContent(e.target.value);
+            handleResizeHeight();
+          }}
         ></textarea>
       </div>
       <div className="controller">
@@ -186,7 +206,10 @@ const CommentWrite = ({
         >
           취소
         </button>
-        <button onClick={submitComment} disabled={content.length === 0}>
+        <button
+          onClick={submitComment}
+          disabled={content.length === 0 || isLoading}
+        >
           답글
         </button>
       </div>

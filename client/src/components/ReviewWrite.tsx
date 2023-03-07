@@ -242,8 +242,9 @@ const ReviewWrite = ({
       return createNotification('후기를 작성해 주세요');
     }
 
+    //# Update
     if (editItem) {
-      console.log('수정타임');
+      // console.log('수정타임');
       const updateSrc = {
         id: {
           review: editItem.info.id,
@@ -263,7 +264,7 @@ const ReviewWrite = ({
             },
           }
         );
-        console.log(updated.data);
+        // console.log(updated.data);
         const updatedItem = updated.data[0];
         if (updateReview) {
           console.log('revewWrite');
@@ -278,10 +279,13 @@ const ReviewWrite = ({
         }
 
         return;
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     }
-    console.log('실행되??');
+    // console.log('실행되??');
 
+    //# Create
     axios
       .post(
         `${process.env.REACT_APP_SERVER_URL}/review`,

@@ -9,9 +9,12 @@ import { ReactComponent as Edit } from '../assets/edit.svg';
 import { ReactComponent as Delete } from '../assets/delete.svg';
 import { ReactComponent as Setting } from '../assets/setting.svg';
 
-import Dropdown from './Dropdown';
+import Dropdown from '../Dropdown';
 import axios from 'axios';
 import { useRef } from 'react';
+import { induceLogin, ModalContext } from '../../contexts/modalContext';
+import { useContext } from 'react';
+import { useEffect } from 'react';
 const Wrapper = styled.div<{ isEdit: boolean }>`
   border-radius: 0.5rem;
   box-shadow: 0px 1px 0.2rem lightgrey;
@@ -37,6 +40,8 @@ const Wrapper = styled.div<{ isEdit: boolean }>`
     }
     img {
       max-height: 2rem;
+      border-radius: 50%;
+      margin-right: 0.5rem;
     }
 
     .nickname {
@@ -80,7 +85,7 @@ const Wrapper = styled.div<{ isEdit: boolean }>`
 
     p {
       flex: 1;
-      margin-left: 1rem;
+      margin: 0 1rem;
     }
   }
 
@@ -174,6 +179,8 @@ const Wrapper = styled.div<{ isEdit: boolean }>`
       width: 7%;
       img {
         width: 100%;
+        border-radius: 50%;
+        margin-right: 0.5rem;
       }
     }
     section {
@@ -187,7 +194,7 @@ const Wrapper = styled.div<{ isEdit: boolean }>`
       textarea {
         padding: 1rem;
         /* background-color: yellowgreen; */
-        /* min-height: 5rem; */
+        height: auto;
         overflow: hidden;
         border-radius: 0.5rem;
         border: 1px solid #fcb086b8;
@@ -235,22 +242,25 @@ type CommentItemProps = {
   comment: TComment;
   authState: AuthState;
   setComments: React.Dispatch<React.SetStateAction<TComment[]>>;
-  // setCommentWrite?: React.Dispatch<React.SetStateAction<boolean>>;
+  // setCommentToggle: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const CommentItem = ({
   comment,
   authState,
   setComments,
-}: // setCommentWrite,
+}: // setCommentToggle,
+// setCommentWrite,
 CommentItemProps) => {
-  const { content, updatedAt, createdAt, User, parent_nickname, id } = comment;
+  const { content, is_edit, createdAt, User, parent_nickname, id } = comment;
   const [isReplying, setReplying] = useState(false);
   const [isLike, setIsLike] = useState(false);
   const [isDrop, setIsDrop] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [isLoading, setIsLoading] = useState({ update: false, delete: false });
+
+  const modalContext = useContext(ModalContext);
   const createComment = () => {
     setReplying(!isReplying);
   };
@@ -361,11 +371,13 @@ CommentItemProps) => {
         /*
         
         */
-        const { content, updatedAt } = result.data;
+        console.log(result);
+
+        const { content, is_edit } = result.data;
         setEditContent('');
         setComments((prevComments) => {
           return prevComments.map((comment) =>
-            comment.id === id ? { ...comment, content, updatedAt } : comment
+            comment.id === id ? { ...comment, content, is_edit } : comment
           );
         });
         setIsEdit(false);
@@ -378,19 +390,34 @@ CommentItemProps) => {
       }
     };
 
+    useEffect(() => {
+      if (textareaRef.current) {
+        console.log('rerer');
+
+        textareaRef.current.style.height =
+          textareaRef.current?.scrollHeight + 'px';
+      }
+    }, []);
+
     return (
       <div className="edit">
         <span>
-          <img src={profileImg} alt="프로필사진" />
+          {authState.defaultPic ? (
+            <img src={authState.defaultPic} alt="프로필사진" />
+          ) : (
+            <img src={profileImg} alt="프로필사진" />
+          )}
         </span>
         <section>
           <textarea
+            style={{ height: `${textareaRef.current?.scrollHeight}px` }}
             onChange={(e) => {
               handleResizeHeight();
               handleEditContent(e);
             }}
             ref={textareaRef}
-            rows={1}
+            spellCheck="false"
+            // rows={textareaRef.current?.scrollHeight}
             value={editContent}
           />
           <div className="controller">
@@ -415,35 +442,32 @@ CommentItemProps) => {
   };
 
   return (
-    <Wrapper
-      isEdit={isEdit}
-      // onClick={(e) => {
-      //   e.stopPropagation();
-      //   console.log('gg');
-
-      //   setIsDrop(false);
-      // }}
-    >
+    <Wrapper isEdit={isEdit}>
       {isDelete && <Alert />}
       {isEdit && <EditMode setComments={setComments} />}
       {!isEdit && (
         <>
-          {' '}
           <div className="content-header">
             <span>
-              <img src={profileImg} alt="프로필사진" />
+              {User.defaultPic ? (
+                <img src={User.defaultPic} alt="프로필사진" />
+              ) : (
+                <img src={profileImg} alt="프로필사진" />
+              )}
               <div className="nickname">{User.nickname}</div>
               <div className="createdAt">
-                {updatedAt !== createdAt ? (
+                {/* {updatedAt !== createdAt ? (
                   <>
                     {moment(updatedAt).format('YYYY-MM-DD-h:mm')}
                     <span>(수정됨)</span>
                   </>
                 ) : (
                   moment(createdAt).format('YYYY-MM-DD-h:mm')
-                )}
+                )} */}
+
+                {moment(createdAt).format('YYYY-MM-DD-h:mm')}
+                {is_edit && <span>(수정됨)</span>}
               </div>
-              {/* {updatedAt !== createdAt && <span>수정됨</span>} */}
             </span>
             {authState.userId === comment.userId && (
               <button
@@ -490,8 +514,8 @@ CommentItemProps) => {
             <p>{content}</p>
           </div>
           <div className="content-bottom">
-            <div>
-              <button
+            <div className="controller">
+              {/* <button
                 onClick={(e) => {
                   if (authState.loginStatus) {
                     // onClickPick(e, summary.festival);
@@ -504,10 +528,19 @@ CommentItemProps) => {
                 }}
               >
                 {isLike ? <Like alt="liked" /> : <Unlike alt="unliked" />}
-                {/* {likes} */}
-              </button>
-              {authState.userId !== comment.userId && (
+                {/* {likes}}
+              </button> */}
+              {authState.loginStatus && authState.userId !== comment.userId && (
                 <button onClick={createComment}>답글</button>
+              )}
+              {!authState.loginStatus && (
+                <button
+                  onClick={() => {
+                    induceLogin(modalContext);
+                  }}
+                >
+                  답글
+                </button>
               )}
             </div>
 

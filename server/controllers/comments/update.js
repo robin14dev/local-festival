@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
 
     const { id, content } = req.body;
 
-    await Comments.update({ content }, { where: { id } });
+    await Comments.update({ content, is_edit: true }, { where: { id } });
 
     const updatedComment = await Comments.findOne({ where: { id } });
     console.log(updatedComment);

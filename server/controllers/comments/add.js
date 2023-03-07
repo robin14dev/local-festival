@@ -130,7 +130,7 @@ module.exports = async (req, res) => {
       include: [
         {
           model: Users,
-          attributes: ['nickname'],
+          attributes: ['nickname', 'defaultPic'],
         },
       ],
       order: [
@@ -147,6 +147,7 @@ module.exports = async (req, res) => {
         const parentComment = await Comments.findOne({
           where: { id: comment.parent_id },
           include: [{ model: Users, attributes: ['nickname'] }],
+          paranoid: false,
         });
 
         comment.dataValues = Object.assign(comment.dataValues, {

@@ -110,7 +110,9 @@ type TComment = {
   deletedAt: string | null;
   userId: number;
   reviewId: number;
+  is_edit: boolean;
   User: {
     nickname: string;
+    defaultPic: string;
   };
 };

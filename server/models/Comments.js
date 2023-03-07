@@ -28,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
       content: {
         type: DataTypes.TEXT,
       },
+      is_edit: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     {
       charset: 'utf8', // 한국어 설정
