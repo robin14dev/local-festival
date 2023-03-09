@@ -20,9 +20,6 @@ const Container = styled.ul`
   position: absolute;
   right: 2.5rem;
   top: 1rem;
-  /* display: flex;
-  flex-flow: column;
-  align-items: center; */
   line-height: 1.4;
   box-shadow: 1.5px 1.5px 3px lightgrey;
   border: 1px solid #d3d3d345;
@@ -51,29 +48,7 @@ const Container = styled.ul`
 type Props = { children: ReactNode };
 
 const Dropdown = ({ children }: Props) => {
-  return (
-    <Container>
-      {/* <li
-      // onClick={() => {
-      //   setEditItem((prev) => ({
-      //     ...prev,
-      //     isEdit: true,
-      //     info: review,
-      //   }));
-      // }}
-      >
-        {/* <Edit />  
-        수정하기
-      </li>
-      {/* <li onClick={modalHandler}> 
-      <li>
-        {' '}
-        {/* <Delete />
-        삭제하기
-      </li> */}
-      {children}
-    </Container>
-  );
+  return <Container>{children}</Container>;
 };
 
 export default Dropdown;

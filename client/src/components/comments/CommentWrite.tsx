@@ -1,112 +1,31 @@
 import axios from 'axios';
-import React from 'react';
-import { useRef } from 'react';
-import { useState } from 'react';
-import styled from 'styled-components';
-import profileImg from '../assets/profile.png';
-import CommentItem from './CommentItem';
-import moment from 'moment';
-import { useEffect } from 'react';
-const Wrapper = styled.div`
-  border: 1px solid lightgray;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  display: flex;
-  flex-flow: column;
-  background-color: white;
-  margin-left: 1rem;
-  width: 90%;
-  .content {
-    display: flex;
-    align-items: center;
-    transition: all 1s;
-
-    img {
-      max-width: 3rem;
-      border-radius: 50%;
-      margin-right: 0.5rem;
-    }
-    textarea {
-      transition: all 1s;
-      flex: 1;
-      /* border: 1px solid lightgray; */
-      border-radius: 0.2rem;
-      padding: 1rem;
-      overflow: hidden;
-    }
-    .user-parent {
-      background-color: var(--primaryOrange);
-      color: white;
-      border-radius: 0.2rem;
-      padding: 0.3rem;
-    }
-  }
-
-  .controller {
-    display: flex;
-    align-self: flex-end;
-
-    button {
-      background: var(--primaryOrange);
-      border-radius: 0.2rem;
-      width: 3.4rem;
-      height: 1.7rem;
-      color: white;
-      :disabled {
-        background-color: lightgray;
-      }
-
-      & + button {
-        margin-left: 0.5rem;
-      }
-    }
-
-    .write-cancel {
-      color: black;
-      background-color: white;
-    }
-  }
-`;
+import React, { useRef, useState } from 'react';
+import Write from '../utilities/Write';
+import CommentError from './CommentError';
 
 type CommentWriteProps = {
-  setReplying?: React.Dispatch<React.SetStateAction<boolean>>;
   authState: AuthState;
   review?: TReviewItem;
+  comment?: TComment;
   commentWrite?: boolean;
   setCommentWrite?: React.Dispatch<React.SetStateAction<boolean>>;
   setCommentToggle?: React.Dispatch<React.SetStateAction<boolean>>;
-
-  comment?: TComment;
+  setReplying?: React.Dispatch<React.SetStateAction<boolean>>;
   setComments?: React.Dispatch<React.SetStateAction<TComment[]>>;
 };
 
 const CommentWrite = ({
   setReplying,
   comment,
-  authState,
   review,
   setCommentWrite,
   setCommentToggle,
-  commentWrite,
   setComments,
 }: CommentWriteProps) => {
   const [content, setContent] = useState('');
-  const [isLoading, setLoading] = useState(false);
-  const [progress, setProgress] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [onError, setOnError] = useState(false);
   const tempComment = useRef(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  // console.log(comment);
-
-  useEffect(() => {
-    if (textareaRef.current) {
-      console.log(textareaRef);
-
-      textareaRef.current.focus();
-    }
-  }, []);
-  /*
-  리뷰의 정보를 알아야 함
-  */
 
   const submitComment = async () => {
     /*
@@ -119,7 +38,7 @@ const CommentWrite = ({
     */
 
     try {
-      setLoading(true);
+      setIsLoading(true);
       const result = await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/comments`,
         {
@@ -134,7 +53,6 @@ const CommentWrite = ({
         }
       );
 
-      console.log(result);
       tempComment.current = result.data;
       if (setComments) {
         setComments(result.data);
@@ -143,78 +61,59 @@ const CommentWrite = ({
         setCommentToggle && setCommentToggle(true);
         setReplying && setReplying(false);
       }
-      setProgress('success');
+
       /*
       작성창 닫히고 업데이트된 댓글 보여주기
       */
     } catch (error) {
-      setProgress('failure');
+      setOnError(true);
       console.log(error);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  const handleResizeHeight = () => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height =
-        textareaRef.current?.scrollHeight + 'px';
+  const submitCancel = () => {
+    if (setCommentWrite) {
+      setCommentWrite(false);
+    }
+    if (setReplying) {
+      setReplying(false);
     }
   };
 
-  // if (!isLoading && progress === 'success' && tempComment.current) {
-  //   return <CommentItem authState={authState} comment={tempComment.current} />;
-  // }
+  const onChangeComment = (content: string) => {
+    setContent(content);
+  };
 
-  if (!isLoading && progress === 'failure') {
-    return <div>Failure</div>;
-  }
   return (
-    <Wrapper>
-      <div className="content">
-        {authState.defaultPic ? (
-          <img src={authState.defaultPic} alt="프로필사진" />
-        ) : (
-          <img src={profileImg} alt="프로필사진" />
-        )}
-
-        {comment && (
-          <div className="user-parent">@{comment?.User.nickname}</div>
-        )}
-        <textarea
-          ref={textareaRef}
-          placeholder="여기에 작성해 주세요"
-          spellCheck="false"
-          onChange={(e) => {
-            setContent(e.target.value);
-            handleResizeHeight();
-          }}
-        ></textarea>
-      </div>
-      <div className="controller">
-        <button
-          className="write-cancel"
-          onClick={() => {
-            if (setCommentWrite) {
-              setCommentWrite(false);
-            }
-            if (setReplying) {
-              setReplying(false);
-            }
-          }}
-        >
-          취소
-        </button>
-        <button
-          onClick={submitComment}
-          disabled={content.length === 0 || isLoading}
-        >
-          답글
-        </button>
-      </div>
-    </Wrapper>
+    <>
+      {onError && <CommentError setOnError={setOnError} />}
+      <Write
+        commentToReply={comment}
+        wrapperStyle="default"
+        onChangeContent={onChangeComment}
+        submitCancel={submitCancel}
+        submitContent={submitComment}
+        isLoading={isLoading}
+      ></Write>
+    </>
   );
 };
 
 export default CommentWrite;
+
+/**
+
+- 댓글쓰기 (부모글 존재 x)
+ReviewItem => CommentWrite => Write   
+
+- 답글쓰기 (부모글 존재 o)
+CommentItem ={comment}=> CommentWrite => Write   
+
+- 댓글, 답글 수정하기
+
+- CommentItem => CommentEdit => Write  (부모글이 없는 '댓글' 수정)
+- CommentItem ={comment}=> CommentEdit => Write  (부모글이 있는 '답글' 수정)
+
+ */

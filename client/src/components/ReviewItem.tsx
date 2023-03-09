@@ -23,7 +23,6 @@ const Wrapper = styled.div<{ editMode?: boolean }>`
       display: flex;
       justify-content: center;
     `}
-  /* background-color : lightblue; */
   display: flex;
   flex-flow: column;
   justify-content: space-between;
@@ -161,7 +160,6 @@ const Info = styled.div`
 `;
 
 const Body = styled.div`
-  /* background-color: lightsalmon; */
   padding: 0.4rem 1rem;
   p {
     word-break: break-all;
@@ -169,11 +167,9 @@ const Body = styled.div`
   }
 `;
 const Bottom = styled.div`
-  /* position: relative; */
-  /* display: flex; */
-  /* background-color: yellow; */
   align-items: center;
 
+  position: relative;
   .reaction-info {
     display: flex;
     align-items: center;
@@ -184,13 +180,9 @@ const Bottom = styled.div`
 
     #comment-toggle {
       color: var(--primaryOrange);
-      /* margin-left: 1rem; */
     }
   }
   .comment-list {
-    /* position: absolute;
-    top: 1.5rem;
-    left: 3rem; */
     z-index: 9999;
     width: 90%;
     background-color: white;
@@ -321,7 +313,6 @@ const ReviewItem = ({
     like_num,
   } = review;
   const modalContext = useContext(ModalContext);
-  // console.log(review);
   console.log(comments);
 
   const modalHandler = () => {

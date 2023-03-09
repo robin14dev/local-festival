@@ -91,3 +91,13 @@ input:focus {
   font-weight: normal;
   font-style: normal;
 }
+
+@keyframes button-loading-spinner {
+  from {
+    transform: rotate(0turn);
+  }
+
+  to {
+    transform: rotate(1turn);
+  }
+}
