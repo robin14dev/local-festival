@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 
 const ModalBackdrop = styled.div`
   position: fixed;
-  z-index: 10;
+  z-index: 20;
   top: 0;
   left: 0;
   width: 100%;

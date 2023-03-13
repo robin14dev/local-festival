@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 
 const ModalBackdrop = styled.div`
-  z-index: 10;
+  z-index: 20;
   position: fixed;
   left: 0;
   top: 0;
@@ -77,21 +77,26 @@ const ModalContainer = styled.div`
     }
   }
 
-  & div {
+  .footer {
     display: flex;
-    justify-content: space-around;
-    font-size: 1rem;
+    /* background-color: yellow; */
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9rem;
+    font-weight: 500;
 
-    & > button {
+    button {
       font-family: 'NanumSquareRound';
+      margin-left: 1rem;
+      font-size: 1rem;
+      /* background-color: yellowgreen; */
+      color: var(--primaryPurple);
       font-weight: bold;
-      width: 50%;
-      padding-right: 32px;
-      color: gray;
-      &:nth-child(1) {
-        border-right: 1px solid black;
-        padding-left: 32px;
-        padding-right: 0;
+      padding-bottom: 3px;
+      transition: all 0.2s;
+      &:hover {
+        color: var(--primaryOrange);
+        border-radius: 5px;
       }
     }
   }
@@ -224,8 +229,9 @@ const LoginModal = ({
           </div>
           <button type="submit">로그인</button>
         </form>
-        <div>
-          <button>비밀번호 재설정</button>
+        <div className="footer">
+          {/* <button>비밀번호 재설정</button> */}
+          <span>아직 계정이 없으신가요?</span>
           <button
             onClick={() => {
               setLoginModal(false);
