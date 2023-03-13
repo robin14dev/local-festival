@@ -23,4 +23,26 @@ const calcRem = (size: number) => `${size / 16}rem`;
 
 const theme = { calcRem };
 
+export const mixin = {
+  spinner: (
+    circleBorder: string,
+    topBorderColor: string,
+    width: string = '1rem',
+    height: string = '1rem'
+  ) =>
+    `content: '';
+    position: absolute;
+    width: ${width};
+    height: ${height};
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    border: ${circleBorder};
+    border-top-color: ${topBorderColor};
+    border-radius: 50%;
+    animation: button-loading-spinner 1s ease infinite;`,
+};
+
 export default theme;

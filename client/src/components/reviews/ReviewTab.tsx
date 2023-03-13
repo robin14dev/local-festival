@@ -7,7 +7,7 @@ import { useCallback } from 'react';
 import { useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { showRating } from './ReviewItem';
-import Loading, { Wrapper as W } from './Loading';
+import Loading, { Wrapper as W } from '../Loading';
 
 const LoadingWrapper = styled(W)`
   margin-top: 0;
@@ -85,16 +85,15 @@ const Wrapper = styled.div`
 
 const ReviewList = styled.section`
   width: 100%;
-  margin: 4rem 0;
+  margin-top: 2rem;
   border-radius: 0.5rem;
   display: flex;
   flex-direction: column;
 
-  /* overflow-y: scroll; */
-  -ms-overflow-style: none; /* for Internet Explorer, Edge */
-  scrollbar-width: none; /* for Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
   &::-webkit-scrollbar {
-    display: none; /* for Chrome, Safari, and Opera */
+    display: none;
   }
 
   .noReview {
@@ -120,8 +119,8 @@ const ReviewList = styled.section`
     padding: 0 1.5rem;
   }
 
-  @media (max-width: 485px) {
-    /* width: 90%; */
+  @media (max-width: 490px) {
+    padding: 0 1rem;
   }
 `;
 type ReviewTabProps = {

@@ -2,12 +2,12 @@ import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 
-import { ReactComponent as Back } from '../assets/arrow-left.svg';
-import { ReactComponent as Profile } from '../assets/profile-fill.svg';
+import { ReactComponent as Back } from '../../assets/arrow-left.svg';
+import { ReactComponent as Profile } from '../../assets/profile-fill.svg';
 
-import { UserContext } from '../contexts/userContext';
+import { UserContext } from '../../contexts/userContext';
 
-import { Backdrop as B, Modal as M } from '../styles/StyledCurrentPic';
+import { Backdrop as B, Modal as M } from '../../styles/StyledCurrentPic';
 const Backdrop = styled(B)``;
 const Modal = styled(M)``;
 

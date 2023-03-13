@@ -170,7 +170,7 @@ module.exports = {
   festival: async (req, res) => {
     const userId = Number(req.query.userId);
     const festivalId = Number(req.params.festivalId);
-    console.log(req.query);
+    // console.log(req.query, 'festival!!');
 
     try {
       let festival = await Festivals.findOne({
@@ -212,12 +212,12 @@ module.exports = {
       let badReview = await sequelize.query(ratingMin, {
         type: sequelize.QueryTypes.SELECT,
       });
-      console.log(badReview);
+      // console.log(badReview);
 
       let goodReview = await sequelize.query(ratingMax, {
         type: sequelize.QueryTypes.SELECT,
       });
-      console.log(goodReview);
+      // console.log(goodReview);
 
       res.json({
         festival,

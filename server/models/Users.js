@@ -41,6 +41,7 @@ module.exports = (sequelize, DataTypes) => {
     // Users.belongsTo(models.CompanyInformation, {foreignKey: "company_id", sourceKey: "id"});
     Users.hasMany(models.Picks, { foreignKey: 'userId', sourceKey: 'id' });
     Users.hasMany(models.Reviews, { foreignKey: 'userId', sourceKey: 'id' });
+    Users.hasMany(models.Comments, { foreignKey: 'userId', sourceKey: 'id' });
   };
   return Users;
 };

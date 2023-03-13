@@ -35,6 +35,11 @@ input {
   border: none;
 }
 
+textarea {
+  border: none;
+  resize: none;
+}
+
 textarea:focus,
 input:focus {
   outline: none;
@@ -85,4 +90,14 @@ input:focus {
     format('woff');
   font-weight: normal;
   font-style: normal;
+}
+
+@keyframes button-loading-spinner {
+  from {
+    transform: rotate(0turn);
+  }
+
+  to {
+    transform: rotate(1turn);
+  }
 }
