@@ -69,9 +69,8 @@ const Wrapper = styled.div<{ wrapperStyle: string }>`
     textarea {
       transition: all 1s;
       flex: 1;
-      border-radius: 0.8rem;
       background-color: transparent;
-      padding: 1rem;
+      margin: 1rem;
       overflow: hidden;
     }
   }
@@ -127,6 +126,48 @@ const Wrapper = styled.div<{ wrapperStyle: string }>`
       }
     }
   }
+
+  @media screen and (max-width: 639px) {
+    .body {
+      .text {
+        flex-flow: column;
+        align-items: flex-start;
+        padding: 1rem;
+        .user-parent {
+          margin-left: 0;
+        }
+        textarea {
+          margin-top: 0.5rem;
+          margin-left: 0px;
+          width: 100%;
+          flex: 1 1 auto;
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 425px) {
+    padding: 1rem 0.5rem;
+    .body {
+      flex-flow: column;
+
+      img {
+        align-self: start;
+        margin-bottom: 1rem;
+        position: relative;
+      }
+
+      .text {
+        width: 100%;
+
+        .user-parent {
+          position: absolute;
+          top: 2.1rem;
+          left: 4.7rem;
+        }
+      }
+    }
+  }
 `;
 
 export default function Write({
@@ -161,6 +202,16 @@ export default function Write({
     }
   }, []);
 
+  // const autoResize: () => undefined = () => {
+  //   if (textareaRef.current) {
+  //     textareaRef.current.style.height = 'auto';
+  //     textareaRef.current.style.height =
+  //       textareaRef.current.scrollHeight + 'px';
+  //     return undefined;
+  //   }
+  //   return undefined;
+  // };
+
   return (
     <Wrapper wrapperStyle={wrapperStyle}>
       <div className="body">
@@ -184,6 +235,7 @@ export default function Write({
             ref={textareaRef}
             placeholder="여기에 작성해 주세요"
             spellCheck="false"
+            // onResize={autoResize()}
             onChange={(e) => {
               setContent(e.target.value);
               setIsEdit(true);

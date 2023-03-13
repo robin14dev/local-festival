@@ -29,7 +29,7 @@ const Wrapper = styled.div<{ isEdit: boolean }>`
     & > * + * {
       margin-left: 0.5rem;
     }
-    & > span {
+    & > div {
       display: flex;
       align-items: center;
     }
@@ -69,12 +69,13 @@ const Wrapper = styled.div<{ isEdit: boolean }>`
 
   .content-body {
     display: flex;
-    margin-top: 1rem;
-    margin-left: 2.5rem;
+    margin-top: 0.5rem;
+    margin-left: 2rem;
     font-size: 0.9rem;
     & > span {
       color: var(--primaryOrange);
       font-weight: 600;
+      padding-top: 5.5px;
     }
 
     p {
@@ -91,6 +92,75 @@ const Wrapper = styled.div<{ isEdit: boolean }>`
     margin-top: 1rem;
     button {
       font-weight: 500;
+    }
+  }
+
+  @media screen and (max-width: 764px) {
+    .content-body {
+      flex-flow: column;
+      margin-left: 2.4rem;
+      margin-right: 1rem;
+      span {
+        margin-bottom: 0.2rem;
+      }
+      p {
+        padding: 0;
+        padding-left: 0.8rem;
+        padding-right: 0.4rem;
+
+        margin: 0;
+      }
+    }
+  }
+  @media screen and (max-width: 600px) {
+    .content-body {
+      margin-left: 1rem;
+      margin-right: 0.5rem;
+
+      p {
+        padding-left: 0.4rem;
+      }
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    padding-bottom: 0.5rem;
+    .content-header {
+      margin-top: 0.5rem;
+      .nicknameAndDate {
+        display: flex;
+        flex-flow: column;
+        .createdAt {
+          margin: 0;
+          margin-top: 4px;
+        }
+      }
+    }
+    .content-body {
+      margin-left: 0.5rem;
+    }
+  }
+  @media screen and (max-width: 425px) {
+    padding: 0.5rem;
+    .content-header {
+      .nickname {
+        font-size: 0.8rem;
+      }
+      .createdAt {
+        font-size: 0.7rem;
+        span {
+          font-size: 0.7rem;
+        }
+      }
+    }
+    .content-body {
+      margin: 0;
+      margin-top: 1rem;
+      font-size: 0.8rem;
+
+      p {
+        padding: 0;
+      }
     }
   }
 `;
@@ -133,18 +203,20 @@ const CommentItem = ({ comment, authState, setComments }: CommentItemProps) => {
         {!isEdit && (
           <>
             <div className="content-header">
-              <span>
+              <div>
                 {User.defaultPic ? (
                   <img src={User.defaultPic} alt="프로필사진" />
                 ) : (
                   <img src={profileImg} alt="프로필사진" />
                 )}
-                <div className="nickname">{User.nickname}</div>
-                <div className="createdAt">
-                  {moment(createdAt).format('YYYY-MM-DD-h:mm')}
-                  {is_edit && <span>(수정됨)</span>}
+                <div className="nicknameAndDate">
+                  <span className="nickname">{User.nickname}</span>
+                  <span className="createdAt">
+                    {moment(createdAt).format('YYYY-MM-DD-h:mm')}
+                    {is_edit && <span>(수정됨)</span>}
+                  </span>
                 </div>
-              </span>
+              </div>
               {authState.userId === comment.userId && (
                 <button
                   className="setting"
@@ -184,15 +256,6 @@ const CommentItem = ({ comment, authState, setComments }: CommentItemProps) => {
                   </button>
                 )}
               </div>
-
-              {/* {isReplying && (
-              <CommentWrite
-                setComments={setComments}
-                comment={comment}
-                authState={authState}
-                setReplying={setReplying}
-              />
-            )} */}
             </div>
           </>
         )}

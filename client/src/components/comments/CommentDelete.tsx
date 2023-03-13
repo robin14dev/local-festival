@@ -16,7 +16,7 @@ const Wrapper = styled.article`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #ffffffde;
+  background-color: rgb(255 255 255 / 95%);
   overflow: auto;
   display: flex;
   flex-flow: column;

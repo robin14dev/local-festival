@@ -25,18 +25,9 @@ const CommentWrite = ({
   const [content, setContent] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [onError, setOnError] = useState(false);
-  const tempComment = useRef(null);
+  // const tempComment = useRef(null);
 
   const submitComment = async () => {
-    /*
-    제공할 정보 : 작성자의 정보, 리뷰의 정보, comment 정보
-
-    리뷰 테이블에 필요한 것
-    1. 댓글이 몇개 달렸는지 
-    2. 좋아요 몇개인지
-    
-    */
-
     try {
       setIsLoading(true);
       const result = await axios.post(
@@ -53,7 +44,7 @@ const CommentWrite = ({
         }
       );
 
-      tempComment.current = result.data;
+      // tempComment.current = result.data;
       if (setComments) {
         setComments(result.data);
         setContent('');

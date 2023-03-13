@@ -26,6 +26,7 @@ const Container = styled.ul`
   background-color: white;
   border-radius: 0.5rem;
   overflow: hidden;
+  z-index: 10;
 
   li {
     display: flex;

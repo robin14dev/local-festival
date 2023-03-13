@@ -8,6 +8,7 @@ import { ReactComponent as Account } from '../assets/profile.svg';
 import { ReactComponent as Wishlist } from '../assets/heart-empty.svg';
 import { ReactComponent as Main } from '../assets/search.svg';
 const Wrapper = styled.footer`
+  z-index: 10;
   width: 100%;
   height: 3rem;
   position: fixed;

@@ -10,7 +10,7 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import styled from 'styled-components';
-import ReviewTab from '../components/ReviewTab';
+import ReviewTab from '../components/reviews/ReviewTab';
 import onErrorImage from '../assets/noimage.png';
 import { Helmet } from 'react-helmet';
 import BackImg from '../assets/back-mobile.png';
@@ -29,7 +29,7 @@ import { ReactComponent as Youtube } from '../assets/youtube.svg';
 import { ReactComponent as Homepage } from '../assets/homepage.svg';
 
 import axios from 'axios';
-import { showRating } from '../components/ReviewItem';
+import { showRating } from '../components/reviews/ReviewItem';
 import Loading, { Wrapper as W } from '../components/Loading';
 
 const LoadingWrapper = styled(W)`
@@ -179,6 +179,7 @@ const Wrapper = styled.section`
       }
       p {
         line-height: 1.2;
+        word-break: break-all;
       }
       .noReview {
         width: 100%;
@@ -371,7 +372,7 @@ const MobileWrapper = styled.section`
     margin-top: 40px;
   }
 
-  p {
+  .description {
     padding: 18px;
     line-height: 1.5;
   }
@@ -738,6 +739,7 @@ const DetailView = ({ togglePick, authState }: DetailViewProps) => {
         </div>
 
         <p
+          className="description"
           style={{
             wordBreak: 'keep-all',
             textIndent: '0.5rem',

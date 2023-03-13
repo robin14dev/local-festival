@@ -1,12 +1,12 @@
 import axios from 'axios';
 import React, { useState, useContext } from 'react';
-import { ModalContext } from '../contexts/modalContext';
+import { ModalContext } from '../../contexts/modalContext';
 import styled, { css } from 'styled-components';
-import Rating from './Rating';
-import Toast from './Toast';
-import cameraImg from '../assets/camera.png';
+import Rating from '../Rating';
+import Toast from '../utilities/Toast';
+import cameraImg from '../../assets/camera.png';
 import { useRef } from 'react';
-import CountText from './utilities/CountText';
+import CountText from '../utilities/CountText';
 
 const Wrapper = styled.div<{ isEdit?: boolean }>`
   width: 100%;

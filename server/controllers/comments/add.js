@@ -21,13 +21,8 @@ module.exports = async (req, res) => {
     # 댓글 테이블에 글 추가하기
     1. 부모글이 있는지 없는지 판단
     */
-    let reviewId;
-    let ref;
-    let step;
-    let ref_order;
-    let child_num;
-    let like_num;
-    let parent_id;
+    let reviewId, ref, step, ref_order, child_num, like_num, parent_id;
+
     if (parentComment) {
       //# 부모글이 있는 경우
       console.log('부모글 있음', parentComment);

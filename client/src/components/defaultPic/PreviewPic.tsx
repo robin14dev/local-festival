@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import styled from 'styled-components';
-import { Backdrop as B, Modal as M } from '../styles/StyledCurrentPic';
-import { UserContext } from '../contexts/userContext';
-import { ReactComponent as Back } from '../assets/arrow-left.svg';
+import { Backdrop as B, Modal as M } from '../../styles/StyledCurrentPic';
+import { UserContext } from '../../contexts/userContext';
+import { ReactComponent as Back } from '../../assets/arrow-left.svg';
 import { parsingUrl } from './DeletePic';
 
 const Backdrop = styled(B)``;
