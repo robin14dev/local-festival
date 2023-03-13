@@ -41,12 +41,12 @@ module.exports = {
             '2759260': 2759260,
             '2819403': 2819403
           } */
-
+      console.log('현재 DB에 저장된 축제 수', arr.length);
       //#2 api1으로 공공데이터 목록 받아오기 (한번요청)) total count : 1060
 
       let result = [];
       let api1 = await axios.get(
-        `http://api.visitkorea.or.kr/openapi/service/rest/KorService/searchFestival?ServiceKey=${process.env.API_KEY}&eventStartDate=20170101&arrange=A&listYN=Y&numOfRows=100&MobileOS=ETC&MobileApp=AppTesting&_type=json`
+        `http://api.visitkorea.or.kr/openapi/service/rest/KorService/searchFestival?ServiceKey=${process.env.API_KEY}&eventStartDate=20170101&arrange=A&listYN=Y&numOfRows=1299&MobileOS=ETC&MobileApp=AppTesting&_type=json`
       );
       let festivalList = api1.data.response.body.items.item;
       console.log('api1 받아온 데이터 개수 : ', festivalList.length);
@@ -74,7 +74,7 @@ module.exports = {
           );
           // console.log(`contentid : ${ele.contentid},  detailCommon`, api2);
           const overviewAndUrl = api2.data.response.body.items.item;
-          console.log(overviewAndUrl);
+          //console.log(overviewAndUrl);
           const { homepage, overview } = overviewAndUrl[0]; // 얘가 바뀜
           const obj = {};
           obj.festivalId = contentid;
@@ -89,7 +89,7 @@ module.exports = {
           obj.overview = overview;
 
           result.push(obj);
-          console.log(result.length);
+          console.log(result.length, obj.festivalId);
         } catch (error) {
           //# 4-3 에러날 경우에 에러나기 직전 데이터만 result에 넣은 채로 for문 끊기
           console.log('for문안에서 error', error);

@@ -61,7 +61,7 @@ const Hashtag = ({ onSearch, query, setIsTag }: HashtagProps) => {
   const [curTag, setCurTag] = useState(query);
   const tagsArr = [
     {
-      text: '눈꽃축제',
+      text: '봄나들이',
     },
     {
       text: '불빛축제',
@@ -69,7 +69,6 @@ const Hashtag = ({ onSearch, query, setIsTag }: HashtagProps) => {
     {
       text: '역사탐방',
     },
-    { text: '크리스마스' },
   ];
 
   useEffect(() => {
