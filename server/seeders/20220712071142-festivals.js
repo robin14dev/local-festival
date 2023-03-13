@@ -46,7 +46,7 @@ module.exports = {
 
       let result = [];
       let api1 = await axios.get(
-        `http://api.visitkorea.or.kr/openapi/service/rest/KorService/searchFestival?ServiceKey=${process.env.API_KEY}&eventStartDate=20170101&arrange=A&listYN=Y&numOfRows=700&MobileOS=ETC&MobileApp=AppTesting&_type=json`
+        `http://api.visitkorea.or.kr/openapi/service/rest/KorService/searchFestival?ServiceKey=${process.env.API_KEY}&eventStartDate=20170101&arrange=A&listYN=Y&numOfRows=100&MobileOS=ETC&MobileApp=AppTesting&_type=json`
       );
       let festivalList = api1.data.response.body.items.item;
       console.log('api1 받아온 데이터 개수 : ', festivalList.length);

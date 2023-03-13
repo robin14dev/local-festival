@@ -1,11 +1,12 @@
 import axios from 'axios';
 import React, { useState, useContext } from 'react';
-import { ModalContext } from '../contexts/modalContext';
+import { ModalContext } from '../../contexts/modalContext';
 import styled, { css } from 'styled-components';
-import Rating from './Rating';
-import Toast from './Toast';
-import cameraImg from '../assets/camera.png';
+import Rating from '../Rating';
+import Toast from '../utilities/Toast';
+import cameraImg from '../../assets/camera.png';
 import { useRef } from 'react';
+import CountText from '../utilities/CountText';
 
 const Wrapper = styled.div<{ isEdit?: boolean }>`
   width: 100%;
@@ -59,24 +60,9 @@ const Textarea = styled.textarea<{ length: number }>`
   padding: 1rem;
   transition: all 1s;
 
-  & + .countText {
-    height: 1.5rem;
-    display: flex;
-    align-items: center;
-    display: flex;
-    justify-content: space-evenly;
-    width: 5.5rem;
-    margin-left: 1rem;
+  & + section {
     margin-bottom: 0.5rem;
-    .count {
-      width: 40%;
-      text-align: center;
-    }
-    .max {
-      width: 40%;
-      text-align: end;
-      color: gray;
-    }
+    margin-left: 0.5rem;
   }
 
   @media screen and (max-width: 730px) {
@@ -242,8 +228,9 @@ const ReviewWrite = ({
       return createNotification('후기를 작성해 주세요');
     }
 
+    //# Update
     if (editItem) {
-      console.log('수정타임');
+      // console.log('수정타임');
       const updateSrc = {
         id: {
           review: editItem.info.id,
@@ -263,7 +250,7 @@ const ReviewWrite = ({
             },
           }
         );
-        console.log(updated.data);
+        // console.log(updated.data);
         const updatedItem = updated.data[0];
         if (updateReview) {
           console.log('revewWrite');
@@ -278,10 +265,13 @@ const ReviewWrite = ({
         }
 
         return;
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     }
-    console.log('실행되??');
+    // console.log('실행되??');
 
+    //# Create
     axios
       .post(
         `${process.env.REACT_APP_SERVER_URL}/review`,
@@ -324,6 +314,7 @@ const ReviewWrite = ({
             nickname: authState.nickname,
             defaultPic: authState.defaultPic,
           },
+          like_num: 0,
         };
         updateReviewList(newReview);
         setRating(0);
@@ -349,10 +340,8 @@ const ReviewWrite = ({
         onChange={handleContent}
         placeholder="후기를 남겨주세요."
       />
-      <section className="countText">
-        <span className="count">{content.length}</span>/
-        <span className="max">{` ${maxContentLength.current - 1}`}</span>
-      </section>
+
+      <CountText content={content} maxContentLength={300} />
       <Controllers>
         <Rating initialRating={rating} handleRating={handleRating} />
         <div>

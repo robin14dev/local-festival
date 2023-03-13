@@ -1,12 +1,12 @@
 import React, { useState, useRef } from 'react';
 
 import styled from 'styled-components';
-import { Backdrop as B, Modal as M } from '../styles/StyledCurrentPic';
+import { Backdrop as B, Modal as M } from '../../styles/StyledCurrentPic';
 
-import { ReactComponent as CameraFill } from '../assets/camera-fill.svg';
-import { ReactComponent as Profile } from '../assets/profile-fill.svg';
-import { ReactComponent as Delete } from '../assets/delete.svg';
-import { ReactComponent as Escape } from '../assets/escape.svg';
+import { ReactComponent as CameraFill } from '../../assets/camera-fill.svg';
+import { ReactComponent as Profile } from '../../assets/profile-fill.svg';
+import { ReactComponent as Delete } from '../../assets/delete.svg';
+import { ReactComponent as Escape } from '../../assets/escape.svg';
 
 import DeletePic from './DeletePic';
 import PreviewPic from './PreviewPic';

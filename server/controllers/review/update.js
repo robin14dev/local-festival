@@ -30,12 +30,12 @@ module.exports = async (req, res) => {
       include: [
         {
           model: Users,
-          attributes: ['nickname'],
+          attributes: ['nickname', 'defaultPic'],
         },
       ],
       where: { festivalId: festival, userId: user, id: review },
     });
-    console.log(updatedReview.rows);
+    // console.log(updatedReview.rows);
     res.status(200).json(updatedReview.rows);
   } catch (error) {
     console.log(error);

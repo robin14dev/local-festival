@@ -4,7 +4,7 @@ import axios, { AxiosError } from 'axios';
 import moment from 'moment';
 import Withdraw from '../components/Withdraw';
 import WithdrawDone from '../components/WithdrawDone';
-import DefaultPic from '../components/DefaultPic';
+import DefaultPic from '../components/defaultPic/DefaultPic';
 import { useCallback } from 'react';
 import { Helmet } from 'react-helmet';
 import EditImg from '../assets/edit-mobile.png';

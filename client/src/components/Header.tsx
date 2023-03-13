@@ -11,9 +11,10 @@ const Wrapper = styled.header`
   align-items: center;
   background-color: var(--mainColor);
   padding: 0 3rem;
+
   position: fixed;
+  z-index: 11;
   top: 0;
-  z-index: 2;
 
   & > h1 {
     font-size: 2rem;
