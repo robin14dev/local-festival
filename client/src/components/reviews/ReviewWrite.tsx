@@ -7,7 +7,8 @@ import Toast from '../utilities/Toast';
 import cameraImg from '../../assets/camera.png';
 import { useRef } from 'react';
 import CountText from '../utilities/CountText';
-
+import Write from '../utilities/Write';
+import WriteCopy from './WriteCopy';
 const Wrapper = styled.div<{ isEdit?: boolean }>`
   width: 100%;
   height: auto;
@@ -155,6 +156,10 @@ const Button = styled.button<{ photo?: boolean; back?: boolean }>`
   }
 `;
 
+const style = {
+  Wrapper: `width : 90%;`,
+  CountText: `position : absolute`,
+};
 type ReviewWriteProps = {
   updateReviewList: (newReview: TReviewItem) => void;
   festivalId: number;
@@ -184,14 +189,25 @@ const ReviewWrite = ({
   };
   const [messages, setMessages] = useState<Message[]>([]);
 
-  const handleContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    console.log(e.target.value);
-    setContent(e.target.value);
-    if (e.target.value.length >= maxContentLength.current) {
+  // const handleContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  //   console.log(e.target.value);
+  //   setContent(e.target.value);
+  //   if (e.target.value.length >= maxContentLength.current) {
+  //     createNotification(
+  //       `${maxContentLength.current - 1}자 까지 입력할 수 있습니다.`
+  //     );
+  //     setContent(e.target.value.slice(0, -1));
+  //     return;
+  //   }
+  // };
+
+  const handleContent = (value: string) => {
+    setContent(value);
+    if (value.length >= maxContentLength.current) {
       createNotification(
         `${maxContentLength.current - 1}자 까지 입력할 수 있습니다.`
       );
-      setContent(e.target.value.slice(0, -1));
+      setContent(value.slice(0, -1));
       return;
     }
   };
@@ -217,7 +233,7 @@ const ReviewWrite = ({
     }, 2000);
   };
 
-  const handleSubmit = async () => {
+  const submitContent = async () => {
     if (!rating && content.length === 0) {
       return createNotification('후기와 별점을 작성해 주세요');
     }
@@ -269,7 +285,6 @@ const ReviewWrite = ({
         console.log(error);
       }
     }
-    // console.log('실행되??');
 
     //# Create
     axios
@@ -326,60 +341,65 @@ const ReviewWrite = ({
   };
 
   return (
-    <Wrapper isEdit={editItem?.isEdit}>
-      <div className="notifications">
-        {messages.map((message) => (
-          <Toast key={message.uuid} message={message} />
-        ))}
-      </div>
-      <Textarea
-        length={content.length}
-        spellCheck="false"
-        maxLength={maxContentLength.current}
-        value={content}
-        onChange={handleContent}
-        placeholder="후기를 남겨주세요."
-      />
+    // <Wrapper isEdit={editItem?.isEdit}>
+    //   <div className="notifications">
+    //     {messages.map((message) => (
+    //       <Toast key={message.uuid} message={message} />
+    //     ))}
+    //   </div>
+    //   <Textarea
+    //     length={content.length}
+    //     spellCheck="false"
+    //     maxLength={maxContentLength.current}
+    //     value={content}
+    //     onChange={handleContent}
+    //     placeholder="후기를 남겨주세요."
+    //   />
 
-      <CountText content={content} maxContentLength={300} />
-      <Controllers>
-        <Rating initialRating={rating} handleRating={handleRating} />
-        <div>
-          <Button photo>
-            <img src={cameraImg} alt="사진올리기"></img>
-          </Button>
-          {authState.loginStatus ? (
-            editItem ? (
-              <>
-                <Button
-                  back={true}
-                  onClick={() => {
-                    if (setEditItem) {
-                      setEditItem((prev) => ({ ...prev, isEdit: false }));
-                    }
-                  }}
-                >
-                  취소
-                </Button>
-                <Button onClick={handleSubmit}>수정하기</Button>
-              </>
-            ) : (
-              <Button onClick={handleSubmit}>올리기</Button>
-            )
-          ) : (
-            <Button
-              onClick={() => {
-                if (modalContext) {
-                  modalContext.setLoginModal(true);
-                }
-              }}
-            >
-              로그인
-            </Button>
-          )}
-        </div>
-      </Controllers>
-    </Wrapper>
+    //   <CountText content={content} maxContentLength={300} />
+    //   <Controllers>
+    //     <Rating initialRating={rating} handleRating={handleRating} />
+    //     <div>
+    //       <Button photo>
+    //         <img src={cameraImg} alt="사진올리기"></img>
+    //       </Button>
+    //       {authState.loginStatus ? (
+    //         editItem ? (
+    //           <>
+    //             <Button
+    //               back={true}
+    //               onClick={() => {
+    //                 if (setEditItem) {
+    //                   setEditItem((prev) => ({ ...prev, isEdit: false }));
+    //                 }
+    //               }}
+    //             >
+    //               취소
+    //             </Button>
+    //             <Button onClick={handleSubmit}>수정하기</Button>
+    //           </>
+    //         ) : (
+    //           <Button onClick={handleSubmit}>올리기</Button>
+    //         )
+    //       ) : (
+    //         <Button
+    //           onClick={() => {
+    //             if (modalContext) {
+    //               modalContext.setLoginModal(true);
+    //             }
+    //           }}
+    //         >
+    //           로그인
+    //         </Button>
+    //       )}
+    //     </div>
+    //   </Controllers>
+    // </Wrapper>
+    <WriteCopy
+      style={style}
+      submitContent={submitContent}
+      onChangeContent={handleContent}
+    ></WriteCopy>
   );
 };
 

@@ -273,11 +273,13 @@ const ReviewTab = ({ festival, authState }: ReviewTabProps) => {
       <h2>
         후기<span> {reviewsCount.current}</span>
       </h2>
+      {/* <section className="reviewWrite"> */}
       <ReviewWrite
         authState={authState}
         festivalId={festivalId}
         updateReviewList={updateReviewList}
       />
+      {/* </section> */}
       <ReviewList>
         {isLoading ? (
           <LoadingWrapper>

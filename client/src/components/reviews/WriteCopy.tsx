@@ -2,37 +2,51 @@ import React, { useState, useContext, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { UserContext } from '../../contexts/userContext';
 import profileImg from '../../assets/profile.png';
-import CountText from './CountText';
+import CountText from '../../components/utilities/CountText';
 import { mixin } from '../../styles/theme';
 
+type WriteStyle = {
+  Wrapper: string;
+  CountText: string;
+};
+
 type WriteProps = {
+  style: WriteStyle;
   commentToEdit?: TComment;
   commentToReply?: TComment;
   submitContent: () => Promise<void>;
   submitCancel?: () => void;
   onChangeContent: (content: string) => void;
   isLoading?: boolean;
-  wrapperStyle: string;
 };
 
-const wrapperFunc = (whole: string) => {
-  if (whole === 'default') {
-    return `
-        box-shadow: 0px 1px 0.2rem lightgrey;
-        padding: 1rem;
-        border-radius: 0.8rem;
-        display: flex;
-        flex-flow: column;
-        background-color: white;
-        margin: 0.5rem 0 0.5rem 3.5rem;
-        max-width: 50rem;`;
-  } else {
-    return whole;
-  }
-};
-const Wrapper = styled.div<{ wrapperStyle: string }>`
-  ${(props) => wrapperFunc(props.wrapperStyle)}
+// const wrapperFunc = (whole: string) => {
+//   if (whole === 'default') {
+//     return `
+//         box-shadow: 0px 1px 0.2rem lightgrey;
+//         padding: 1rem;
+//         border-radius: 0.8rem;
+//         display: flex;
+//         flex-flow: column;
+//         background-color: white;
+//         // margin: 0.5rem 0 0.5rem 3.5rem;
+//         //max-width: 50rem;
+//         `;
+//   } else {
+//     return whole;
+//   }
+// };
 
+const Wrapper = styled.div<{ custom: string }>`
+  box-shadow: 0px 1px 0.2rem lightgrey;
+  padding: 1rem;
+  border-radius: 0.8rem;
+  display: flex;
+  flex-flow: column;
+  background-color: white;
+  width: 100%;
+  // margin: 0.5rem 0 0.5rem 3.5rem;
+  //max-width: 50rem;
   .body {
     display: flex;
     align-items: center;
@@ -72,10 +86,12 @@ const Wrapper = styled.div<{ wrapperStyle: string }>`
       background-color: transparent;
       margin: 1rem;
       overflow: hidden;
+      position: relative;
     }
   }
 
   .footer {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -126,6 +142,7 @@ const Wrapper = styled.div<{ wrapperStyle: string }>`
       }
     }
   }
+  ${(props) => props.custom}
 
   @media screen and (max-width: 639px) {
     .body {
@@ -170,8 +187,8 @@ const Wrapper = styled.div<{ wrapperStyle: string }>`
   }
 `;
 
-export default function Write({
-  wrapperStyle,
+export default function WriteCopy({
+  style,
   commentToEdit,
   commentToReply,
   submitCancel,
@@ -201,9 +218,10 @@ export default function Write({
       textareaRef.current.focus();
     }
   }, []);
+  console.log(style);
 
   return (
-    <Wrapper wrapperStyle={wrapperStyle}>
+    <Wrapper custom={style.Wrapper ? style.Wrapper : ''}>
       <div className="body">
         {userContext?.authState.defaultPic ? (
           <img src={userContext?.authState.defaultPic} alt="프로필사진" />
@@ -238,7 +256,13 @@ export default function Write({
         </div>
       </div>
       <div className="footer">
-        {<CountText content={content} maxContentLength={200} />}
+        {
+          <CountText
+            style={style.CountText}
+            content={content}
+            maxContentLength={200}
+          />
+        }
 
         <div className="control">
           <button className="write-cancel" onClick={submitCancel}>
