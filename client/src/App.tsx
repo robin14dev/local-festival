@@ -14,8 +14,7 @@ import Main from './pages/Main';
 import Account from './pages/Account';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import LoginModal from './components/LoginModal';
-import SignupModal from './components/SignupModal';
+import Login from './components/Login';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -61,8 +60,7 @@ function App() {
   );
   const [filteredData, setFilteredData] =
     useState<FestivalItem[]>(festivalData);
-  const [openLoginModal, setLoginModal] = useState(false);
-  const [openSignupModal, setSignupModal] = useState(false);
+  const [isLoginModal, setIsLoginModal] = useState(false);
   const offset = useRef(0);
 
   const loginHandler: loginHandlerFunc = useCallback(
@@ -152,87 +150,26 @@ function App() {
     nextAuthState.nickname = nickname;
     setAuthState(nextAuthState);
   };
-  // const refreshData = async () => {
-  //   if (sessionStorage.getItem('accesstoken')) {
-  //     const authData = await axios.get(
-  //       `${process.env.REACT_APP_SERVER_URL}/users`,
-  //       {
-  //         headers: {
-  //           accesstoken: sessionStorage.getItem('accesstoken') ?? '',
-  //         },
-  //       }
-  //     );
-
-  //     const { userId, account, nickname, defaultPic } = authData.data.info;
-  //     const user: { [index: string]: number | boolean | string } = {
-  //       userId,
-  //       account,
-  //       nickname,
-  //       defaultPic,
-  //       loginStatus: true,
-  //     };
-  //     if (sessionStorage.getItem('user')) {
-  //       const storageUser = sessionStorage.getItem('user');
-
-  //       if (storageUser) {
-  //         const parsedUser = JSON.parse(storageUser);
-  //         for (const key in user) {
-  //           console.log(user[key], parsedUser[key]);
-  //           if (user[key] !== parsedUser[key]) {
-  //             break;
-  //           }
-  //         }
-  //         return;
-  //       }
-  //     }
-  //     console.log('업데이트간다');
-
-  //     setAuthState({
-  //       userId,
-  //       account,
-  //       nickname,
-  //       defaultPic,
-  //       loginStatus: true,
-  //     });
-
-  //     const pickedItems = await axios.get(
-  //       `${process.env.REACT_APP_SERVER_URL}/pick`,
-  //       {
-  //         headers: {
-  //           accesstoken: sessionStorage.getItem('accesstoken') ?? '',
-  //         },
-  //       }
-  //     );
-  //     setPickItems(pickedItems.data);
-  //   }
-  // };
 
   return (
     <ThemeProvider theme={theme}>
-      <ModalContext.Provider value={{ openLoginModal, setLoginModal }}>
+      <ModalContext.Provider value={{ isLoginModal, setIsLoginModal }}>
         <UserContext.Provider value={{ authState, setAuthState }}>
           <Wrapper>
             <Helmet>
               <title>이번주엔 어디로 가볼까? - LOCO</title>
             </Helmet>
-            {openLoginModal && (
-              <LoginModal
+            {isLoginModal && (
+              <Login
                 loginHandler={loginHandler}
-                setLoginModal={setLoginModal}
-                setSignupModal={setSignupModal}
-              />
-            )}
-            {openSignupModal && (
-              <SignupModal
-                setSignupModal={setSignupModal}
-                setLoginModal={setLoginModal}
+                setIsLoginModal={setIsLoginModal}
               />
             )}
 
             <Header
               authState={authState}
               setAuthState={setAuthState}
-              setLoginModal={setLoginModal}
+              setIsLoginModal={setIsLoginModal}
             />
             <Routes>
               <Route
@@ -284,7 +221,7 @@ function App() {
                 }
               ></Route>
             </Routes>
-            <Footer authState={authState} setLoginModal={setLoginModal} />
+            <Footer authState={authState} setIsLoginModal={setIsLoginModal} />
           </Wrapper>
         </UserContext.Provider>
       </ModalContext.Provider>

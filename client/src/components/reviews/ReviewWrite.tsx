@@ -370,7 +370,7 @@ const ReviewWrite = ({
             <Button
               onClick={() => {
                 if (modalContext) {
-                  modalContext.setLoginModal(true);
+                  modalContext.setIsLoginModal(true);
                 }
               }}
             >
