@@ -229,7 +229,7 @@ const Festival = ({ festival, togglePick, pickItems }: FestivalProps) => {
               } else {
                 e.stopPropagation();
                 if (modalContext) {
-                  modalContext.setLoginModal(true);
+                  modalContext.setIsLoginModal(true);
                 }
               }
             }
