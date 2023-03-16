@@ -1,219 +1,222 @@
-import axios from 'axios';
-import React, { useState, useContext } from 'react';
-import { ModalContext } from '../../contexts/modalContext';
-import styled, { css } from 'styled-components';
-import Rating from '../Rating';
-import Toast from '../utilities/Toast';
-import cameraImg from '../../assets/camera.png';
-import { useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
+import styled from 'styled-components';
+import { UserContext } from '../../contexts/userContext';
+import profileImg from '../../assets/profile.png';
 import CountText from '../utilities/CountText';
-import Write from '../utilities/Write';
-import WriteCopy from './WriteCopy';
-const Wrapper = styled.div<{ isEdit?: boolean }>`
-  width: 100%;
-  height: auto;
-  border: 1px solid #d9d9d9;
-  border-radius: 8px;
-  position: relative;
-  .notifications {
-    position: absolute;
-    top: -3rem;
-    right: 0rem;
-  }
-  ${(props) =>
-    props.isEdit &&
-    css`
-      border: none;
-    `}
+import { mixin } from '../../styles/theme';
+import Rating from '../utilities/Rating';
+import Toast from '../utilities/Toast';
+import { induceLogin, ModalContext } from '../../contexts/modalContext';
 
-  @media screen and (max-width: 1076px) {
-    width: 95%;
-  }
+type WriteStyle = {
+  Wrapper: string;
+  CountText: string;
+};
 
-  @media (max-width: 485px) {
-    margin: 0 1rem;
+type WriteProps = {
+  style?: WriteStyle;
+  submitContent: () => Promise<void>;
+  submitCancel?: () => void;
+  onChangeContent?: (content: string) => void;
+  isLoading?: boolean;
+  // messages: Message[];
+};
 
-    ${(props) =>
-      props.isEdit &&
-      css`
-        margin: 0;
-        width: 100%;
-        border: 1px solid #d9d9d9;
-        width: 100%;
-      `}
-  }
-
-  @media (max-width: 375px) {
-    ${(props) =>
-      props.isEdit &&
-      css`
-        border: 1px solid #d9d9d9;
-      `}
-  }
-`;
-
-const Textarea = styled.textarea<{ length: number }>`
-  width: 100%;
-  height: 7rem;
-  border: none;
-  resize: none;
-  border-radius: 8px 8px 0 0;
+const Wrapper = styled.div`
+  box-shadow: 0px 1px 0.2rem lightgrey;
   padding: 1rem;
-  transition: all 1s;
-
-  & + section {
-    margin-bottom: 0.5rem;
-    margin-left: 0.5rem;
-  }
-
-  @media screen and (max-width: 730px) {
-    height: ${(props) => props.length >= 150 && '9rem'};
-  }
-  @media screen and (max-width: 540px) {
-    height: ${(props) => props.length >= 150 && '12rem'};
-  }
-  @media screen and (max-width: 420px) {
-    height: ${(props) => props.length >= 150 && '13rem'};
-  }
-`;
-const Controllers = styled.div`
-  height: 3.5rem;
+  border-radius: 0.8rem;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 1rem;
-  border-top: 1px solid #d9d9d9;
-  border-radius: 0px 0px 0.5rem 0.5rem;
+  flex-flow: column;
+  background-color: white;
+  width: 100%;
 
-  & > div {
-    display: flex;
-  }
-
-  @media (max-width: 540px) {
-  }
-  @media (max-width: 485px) {
-    padding: 0 0.5rem;
-  }
-  @media (max-width: 375px) {
-    padding-left: 0;
-  }
-`;
-
-const Button = styled.button<{ photo?: boolean; back?: boolean }>`
-  background-color: ${(props) =>
-    props.photo ? 'white' : `var(--primaryPurple)`};
-  border: ${(props) => (props.photo ? '1px solid #D9D9D9' : 'none')};
-  border-radius: 4px;
-  color: white;
-  width: 4rem;
-  height: 33px;
-
-  font-weight: bold;
-  font-size: 1rem;
-
-  ${(props) =>
-    props.back &&
-    css`
+  .header {
+    position: relative;
+    .notifications {
       position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
+      right: -1rem;
+      top: -4rem;
+    }
+  }
+  .body {
+    display: flex;
+    align-items: center;
+    transition: all 1s;
+    margin-bottom: 1rem;
+
+    .text {
+      display: flex;
+      flex-flow: column;
+      flex: 1;
+      background-color: #eeeeeeb0;
+      border-radius: 0.8rem;
+
+      textarea {
+        transition: all 1s;
+        flex: 1 1 auto;
+        background-color: transparent;
+        margin: 1rem;
+        overflow: hidden;
+        position: relative;
+      }
+
+      section {
+        margin-left: auto;
+        margin-right: 1rem;
+        margin-bottom: 0.5rem;
+      }
+    }
+
+    img {
+      max-width: 3rem;
+      border-radius: 50%;
+      margin-right: 0.9rem;
+    }
+    .user-parent {
+      border-radius: 1rem;
+      margin-left: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      span {
+        background-color: white;
+        color: var(--primaryOrange);
+        font-weight: 600;
+        padding: 0.45rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 0 2px var(--primaryOrange);
+      }
+    }
+  }
+
+  .footer {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .control {
+      display: flex;
+    }
+
+    button {
+      min-width: 3.5rem;
+      color: white;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+      padding: 0.5rem 0.8rem;
+      background-color: var(--primaryOrange);
+      border-radius: 0.9rem;
+      :hover:enabled {
+        filter: brightness(95%);
+      }
+      :disabled {
+        background-color: lightgray;
+      }
+
+      & + button {
+        margin-left: 0.5rem;
+      }
+    }
+
+    .write-cancel {
+      color: black;
       background-color: white;
-      border: 1.5px solid #b7b9f8;
-      border-radius: 4px;
-      color: var(--primaryPurple);
-      width: 3rem;
-    `}
+    }
 
-  img {
-    height: 24px;
-    margin-top: 4px;
+    .write-submit {
+      :hover:enabled {
+        filter: brightness(103%);
+        box-shadow: 0px 1px 5px lightgray;
+      }
+    }
+
+    .write-submit.loading {
+      position: relative;
+      background: rgb(255 154 98 / 35%);
+
+      &::after {
+        ${mixin.spinner('4px solid antiquewhite', `var(--primaryOrange)`)}
+      }
+    }
   }
 
-  cursor: pointer;
-  outline: inherit;
-  transition: transform 0.2s ease-out;
-  &:hover {
-    transition: transform 0.2s ease-out;
-    transform: translateY(-5%);
+  @media screen and (max-width: 639px) {
+    .body {
+      .text {
+        flex-flow: column;
+        align-items: flex-start;
+        padding: 1rem;
+        .user-parent {
+          margin-left: 0;
+        }
+        textarea {
+          margin-top: 0.5rem;
+          margin-left: 0px;
+          width: 100%;
+          flex: 1 1 auto;
+        }
+      }
+    }
   }
 
-  & + & {
-    margin-left: 1rem;
-  }
+  @media screen and (max-width: 425px) {
+    padding: 1rem 0.5rem;
+    .body {
+      flex-flow: column;
 
-  @media (max-width: 485px) {
-    width: 4rem;
-    /* font-size: 0.8rem; */
-  }
-  @media (max-width: 375px) {
-    width: 3rem;
-    font-size: 0.8rem;
-    ${(props) =>
-      props.back &&
-      css`
-        font-size: 0.8rem;
-      `};
+      img {
+        align-self: start;
+        margin-bottom: 1rem;
+        position: relative;
+      }
+
+      .text {
+        width: 100%;
+
+        .user-parent {
+          position: absolute;
+          top: 2.1rem;
+          left: 4.7rem;
+        }
+      }
+    }
   }
 `;
 
-const style = {
-  Wrapper: `width : 90%;`,
-  CountText: `position : absolute`,
-};
-type ReviewWriteProps = {
-  updateReviewList: (newReview: TReviewItem) => void;
-  festivalId: number;
-  authState: AuthState;
-  editItem?: EditItem;
-  setEditItem?: React.Dispatch<React.SetStateAction<EditItem>>;
-  updateReview?: (updatedItem: TReviewItem) => void;
-};
-const ReviewWrite = ({
-  updateReviewList,
-  festivalId,
-  authState,
-  setEditItem,
-  editItem,
-  updateReview,
-}: ReviewWriteProps) => {
-  const modalContext = useContext(ModalContext);
-  const [content, setContent] = useState(editItem?.info.content || '');
-  const maxContentLength = useRef(301);
-  const [rating, setRating] = useState<number | null>(
-    editItem?.info.rating || null
-  );
-  type Message = {
-    text: string;
-    dismissTime: number;
-    uuid: number;
-  };
+export default function ReviewWrite({
+  style,
+  submitCancel,
+  submitContent,
+  onChangeContent,
+  isLoading,
+}: // messages,
+WriteProps) {
+  const [content, setContent] = useState('');
+  const [rating, setRating] = useState(0);
+  // const [content, setContent] = useState(() => {
+  //   return commentToEdit ? commentToEdit.content : '';
+  // });
+  const [isEdit, setIsEdit] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
 
-  // const handleContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-  //   console.log(e.target.value);
-  //   setContent(e.target.value);
-  //   if (e.target.value.length >= maxContentLength.current) {
-  //     createNotification(
-  //       `${maxContentLength.current - 1}자 까지 입력할 수 있습니다.`
-  //     );
-  //     setContent(e.target.value.slice(0, -1));
-  //     return;
-  //   }
-  // };
+  const userContext = useContext(UserContext);
+  const modalContext = useContext(ModalContext);
 
-  const handleContent = (value: string) => {
-    setContent(value);
-    if (value.length >= maxContentLength.current) {
-      createNotification(
-        `${maxContentLength.current - 1}자 까지 입력할 수 있습니다.`
-      );
-      setContent(value.slice(0, -1));
-      return;
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const submitBtnRef = useRef<HTMLButtonElement>(null);
+  const handleResizeHeight = () => {
+    if (textareaRef.current) {
+      console.log('Resize');
+
+      textareaRef.current.style.height = 'auto';
+      console.log(textareaRef.current.scrollHeight);
+
+      textareaRef.current.style.height =
+        textareaRef.current?.scrollHeight + 'px';
     }
-  };
-
-  const handleRating = (rating: number) => {
-    setRating(rating);
   };
 
   const createNotification = (text: string): void => {
@@ -233,174 +236,86 @@ const ReviewWrite = ({
     }, 2000);
   };
 
-  const submitContent = async () => {
-    if (!rating && content.length === 0) {
-      return createNotification('후기와 별점을 작성해 주세요');
-    }
-    if (!rating) {
-      return createNotification('별점을 입력해 주세요');
-    }
-    if (content.length === 0) {
-      return createNotification('후기를 작성해 주세요');
-    }
-
-    //# Update
-    if (editItem) {
-      // console.log('수정타임');
-      const updateSrc = {
-        id: {
-          review: editItem.info.id,
-          festival: festivalId,
-          user: editItem.info.userId,
-        },
-        content,
-        rating,
-      };
-      try {
-        let updated = await axios.put(
-          `${process.env.REACT_APP_SERVER_URL}/review`,
-          updateSrc,
-          {
-            headers: {
-              accesstoken: sessionStorage.getItem('accesstoken') ?? '',
-            },
-          }
-        );
-        // console.log(updated.data);
-        const updatedItem = updated.data[0];
-        if (updateReview) {
-          console.log('revewWrite');
-
-          updateReview(updatedItem);
-        }
-        if (setEditItem) {
-          setEditItem((prevEditItem) => ({
-            ...prevEditItem,
-            isEdit: false,
-          }));
-        }
-
-        return;
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    //# Create
-    axios
-      .post(
-        `${process.env.REACT_APP_SERVER_URL}/review`,
-        {
-          content: content,
-          rating: Number(rating),
-          festivalId: festivalId,
-        },
-        {
-          headers: {
-            accesstoken: sessionStorage.getItem('accesstoken') ?? '',
-          },
-        }
-      )
-      .then((response) => {
-        console.log(
-          'axios 보낸다음에 일시적으로 update하기 !! response???',
-          response
-        );
-
-        const {
-          content,
-          createdAt,
-          festivalId,
-          id,
-          rating,
-          updatedAt,
-          userId,
-        } = response.data;
-        //#작성한 리뷰 ReviewList에 올려지도록 하기
-        const newReview = {
-          userId,
-          content,
-          rating,
-          createdAt,
-          updatedAt,
-          festivalId,
-          id,
-          User: {
-            nickname: authState.nickname,
-            defaultPic: authState.defaultPic,
-          },
-          like_num: 0,
-        };
-        updateReviewList(newReview);
-        setRating(0);
-        setContent('');
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const ratingHandler = (rating: number) => {
+    setRating(rating);
   };
 
+  const submitHandler = () => {
+    if (!rating) createNotification('별점을 입력해 주세요');
+    /**
+     *
+     * validation이 통과하면 props로 받아온 submitContent 전송
+     */
+  };
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height =
+        textareaRef.current?.scrollHeight + 'px';
+      textareaRef.current.focus();
+    }
+  }, []);
+
   return (
-    // <Wrapper isEdit={editItem?.isEdit}>
-    //   <div className="notifications">
-    //     {messages.map((message) => (
-    //       <Toast key={message.uuid} message={message} />
-    //     ))}
-    //   </div>
-    //   <Textarea
-    //     length={content.length}
-    //     spellCheck="false"
-    //     maxLength={maxContentLength.current}
-    //     value={content}
-    //     onChange={handleContent}
-    //     placeholder="후기를 남겨주세요."
-    //   />
+    <Wrapper>
+      <div className="header">
+        <div className="notifications">
+          {messages.map((message) => (
+            <Toast key={message.uuid} message={message} />
+          ))}
+        </div>
+      </div>
+      <div className="body">
+        {userContext?.authState.defaultPic ? (
+          <img src={userContext?.authState.defaultPic} alt="프로필사진" />
+        ) : (
+          <img src={profileImg} alt="프로필사진" />
+        )}
+        <div className="text">
+          <textarea
+            ref={textareaRef}
+            placeholder="여기에 작성해 주세요"
+            spellCheck="false"
+            onChange={(e) => {
+              setContent(e.target.value);
+              setIsEdit(true);
+              handleResizeHeight();
+            }}
+            disabled={isLoading || !userContext?.authState.loginStatus}
+            maxLength={200}
+            value={content}
+          />
+          <CountText content={content} maxContentLength={200} />
+        </div>
+      </div>
+      <div className="footer">
+        <Rating handleRating={ratingHandler} />
 
-    //   <CountText content={content} maxContentLength={300} />
-    //   <Controllers>
-    //     <Rating initialRating={rating} handleRating={handleRating} />
-    //     <div>
-    //       <Button photo>
-    //         <img src={cameraImg} alt="사진올리기"></img>
-    //       </Button>
-    //       {authState.loginStatus ? (
-    //         editItem ? (
-    //           <>
-    //             <Button
-    //               back={true}
-    //               onClick={() => {
-    //                 if (setEditItem) {
-    //                   setEditItem((prev) => ({ ...prev, isEdit: false }));
-    //                 }
-    //               }}
-    //             >
-    //               취소
-    //             </Button>
-    //             <Button onClick={handleSubmit}>수정하기</Button>
-    //           </>
-    //         ) : (
-    //           <Button onClick={handleSubmit}>올리기</Button>
-    //         )
-    //       ) : (
-    //         <Button
-    //           onClick={() => {
-    //             if (modalContext) {
-    //               modalContext.setLoginModal(true);
-    //             }
-    //           }}
-    //         >
-    //           로그인
-    //         </Button>
-    //       )}
-    //     </div>
-    //   </Controllers>
-    // </Wrapper>
-    <WriteCopy
-      style={style}
-      submitContent={submitContent}
-      onChangeContent={handleContent}
-    ></WriteCopy>
+        <div className="control">
+          <button className="write-cancel" onClick={submitCancel}>
+            취소
+          </button>
+          {userContext?.authState.loginStatus && (
+            <button
+              ref={submitBtnRef}
+              className={isLoading ? 'write-submit loading' : 'write-submit'}
+              onClick={submitHandler}
+              disabled={content.length === 0 || isLoading || !isEdit}
+            >
+              {!isLoading && '올리기'}
+            </button>
+          )}
+          {!userContext?.authState.loginStatus && (
+            <button
+              onClick={() => {
+                induceLogin(modalContext);
+              }}
+            >
+              로그인
+            </button>
+          )}
+        </div>
+      </div>
+    </Wrapper>
   );
-};
-
-export default ReviewWrite;
+}

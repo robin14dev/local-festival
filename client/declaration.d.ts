@@ -116,3 +116,9 @@ type TComment = {
     defaultPic: string;
   };
 };
+
+type Message = {
+  text: string;
+  dismissTime: number;
+  uuid: number;
+};

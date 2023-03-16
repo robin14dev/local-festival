@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import ReviewWrite from './ReviewWrite';
+import ReviewWrite from './ReviewCreate';
 import ReviewItem from './ReviewItem';
 import axios from 'axios';
 import { useCallback } from 'react';

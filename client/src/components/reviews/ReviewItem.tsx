@@ -9,7 +9,7 @@ import { ReactComponent as Setting } from '../../assets/setting.svg';
 import { ReactComponent as Like } from '../../assets/heart-fill.svg';
 import { ReactComponent as Unlike } from '../../assets/heart-empty.svg';
 
-import ReviewWrite from './ReviewWrite';
+import ReviewWrite from './ReviewCreate';
 import CommentWrite from '../comments/CommentWrite';
 import CommentItem from '../comments/CommentItem';
 import { induceLogin, ModalContext } from '../../contexts/modalContext';
