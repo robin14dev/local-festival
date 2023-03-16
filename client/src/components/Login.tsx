@@ -1,8 +1,9 @@
 import axios from 'axios';
 import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
+import Signup from './Signup';
 
-const ModalBackdrop = styled.div`
+const Backdrop = styled.div<{ isHide: boolean }>`
   z-index: 20;
   position: fixed;
   left: 0;
@@ -10,8 +11,12 @@ const ModalBackdrop = styled.div`
   width: 100%;
   height: 100vh;
   background: rgba(0, 0, 0, 0.4);
+
+  animation-duration: 0.4s;
+  animation-name: ${(props) => (props.isHide ? 'bright-soft' : 'dark-soft')};
+  animation-fill-mode: forwards;
 `;
-const ModalContainer = styled.div`
+const Container = styled.div<{ isHide: boolean }>`
   z-index: 100;
   position: fixed;
   width: 400px;
@@ -27,6 +32,10 @@ const ModalContainer = styled.div`
   margin-left: -200px;
   left: 50%;
   top: 50%;
+
+  animation-duration: 0.4s;
+  animation-name: ${(props) => (props.isHide ? 'slide-up' : 'slide-down')};
+  animation-fill-mode: forwards;
 
   & > h1 {
     margin: 2rem 0;
@@ -126,20 +135,24 @@ const ModalContainer = styled.div`
   }
 `;
 
-type LoginModalProps = {
-  setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setSignupModal: React.Dispatch<React.SetStateAction<boolean>>;
+/*
+백드롭은 계속 어둡게 하고 
+로그인  => 회원가입 => 성공 => 실패
+
+*/
+
+type LoginProps = {
+  setIsLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
   loginHandler: loginHandlerFunc;
 };
 
-const LoginModal = ({
-  setLoginModal,
-  setSignupModal,
-  loginHandler,
-}: LoginModalProps) => {
+const Login = ({ setIsLoginModal, loginHandler }: LoginProps) => {
   const [userInfo, setUserInfo] = useState({ account: '', password: '' });
   const { account, password } = userInfo;
   const [errMessage, setErrMessage] = useState('');
+  const [isHide, setIsHide] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
+  const [isSignup, setIsSignup] = useState(false);
 
   const errMessages = [
     '사용자가 존재하지 않습니다',
@@ -199,59 +212,76 @@ const LoginModal = ({
     [account, password]
   );
   const modalClose = () => {
-    setLoginModal(false);
+    setIsHide(true);
+    setIsSignup(false);
+    setTimeout(() => {
+      setIsLoginModal(false);
+    }, 400);
   };
   return (
     <>
-      <ModalBackdrop onClick={modalClose} />
-      <ModalContainer>
-        <h1>Loco</h1>
-        <form onSubmit={handleSubmit}>
-          <input
-            name="account"
-            placeholder="email을 입력해 주세요"
-            onChange={handleUserInfo}
-            type="text"
-            value={account}
-            required
-          ></input>
-          <div>{errMessage === '사용자가 존재하지 않습니다' && errMessage}</div>
-          <input
-            name="password"
-            placeholder="비밀번호를 입력해 주세요"
-            onChange={handleUserInfo}
-            type="password"
-            value={password}
-            required
-          ></input>
-          <div>
-            {errMessage === '비밀번호가 일치하지 않습니다' && errMessage}
-          </div>
-          <button type="submit">로그인</button>
-        </form>
-        <div className="footer">
-          {/* <button>비밀번호 재설정</button> */}
-          <span>아직 계정이 없으신가요?</span>
-          <button
-            onClick={() => {
-              setLoginModal(false);
-              setSignupModal(true);
+      <Backdrop onClick={modalClose} isHide={isHide}>
+        {isLogin && (
+          <Container
+            isHide={isHide}
+            onClick={(e) => {
+              e.stopPropagation();
             }}
           >
-            회원가입
-          </button>
-        </div>
-        <button
-          className="modalClose"
-          onClick={() => {
-            setLoginModal(false);
-          }}
-        >
-          돌아가기
-        </button>
-      </ModalContainer>
+            <h1>Loco</h1>
+            <form onSubmit={handleSubmit}>
+              <input
+                name="account"
+                placeholder="email을 입력해 주세요"
+                onChange={handleUserInfo}
+                type="text"
+                value={account}
+                required
+              ></input>
+              <div>
+                {errMessage === '사용자가 존재하지 않습니다' && errMessage}
+              </div>
+              <input
+                name="password"
+                placeholder="비밀번호를 입력해 주세요"
+                onChange={handleUserInfo}
+                type="password"
+                value={password}
+                required
+              ></input>
+              <div>
+                {errMessage === '비밀번호가 일치하지 않습니다' && errMessage}
+              </div>
+              <button type="submit">로그인</button>
+            </form>
+            <div className="footer">
+              <span>아직 계정이 없으신가요?</span>
+              <button
+                onClick={() => {
+                  setIsLogin(false);
+                  setIsSignup(true);
+                }}
+              >
+                회원가입
+              </button>
+            </div>
+            <button
+              className="modalClose"
+              onClick={() => {
+                setIsLoginModal(false);
+              }}
+            >
+              돌아가기
+            </button>
+          </Container>
+        )}
+
+        {isSignup && (
+          <Signup setIsSignup={setIsSignup} setIsLogin={setIsLogin} />
+        )}
+      </Backdrop>
     </>
   );
 };
 
-export default LoginModal;
+export default Login;

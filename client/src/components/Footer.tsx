@@ -69,17 +69,17 @@ const Item = styled.div`
 
 type FooterProps = {
   authState: AuthState;
-  setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Footer = ({ authState, setLoginModal }: FooterProps) => {
+const Footer = ({ authState, setIsLoginModal }: FooterProps) => {
   let navigate = useNavigate();
   const goPage = useCallback(
     (path: string) => {
       if (authState.loginStatus) {
         navigate(`/${path}`);
       } else {
-        setLoginModal(true);
+        setIsLoginModal(true);
       }
     },
     [authState]

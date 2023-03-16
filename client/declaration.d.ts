@@ -73,8 +73,8 @@ type Summary = {
 };
 
 type ModalContext = {
-  openLoginModal: boolean;
-  setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoginModal: boolean;
+  setIsLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type UserContext = {

@@ -6,17 +6,7 @@ import { ReactComponent as ServerFail } from '../assets/server-fail.svg';
 import Loading, { Wrapper as W } from './Loading';
 import { useEffect } from 'react';
 
-const ModalBackdrop = styled.div`
-  position: fixed;
-  z-index: 20;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.4);
-`;
-
-const ModalContainer = styled.div`
+const ModalContainer = styled.div<{ isHide: boolean }>`
   z-index: 100;
   position: fixed;
   top: 0;
@@ -33,6 +23,10 @@ const ModalContainer = styled.div`
   border-radius: 10px;
   background-color: white;
   padding: 1rem;
+
+  animation-duration: 0.4s;
+  animation-name: ${(props) => (props.isHide ? 'slide-up' : 'slide-down')};
+  animation-fill-mode: forwards;
 
   h1 {
     font-size: 3rem;
@@ -233,7 +227,6 @@ export const ShowValid = styled.div<{
   isUnique?: boolean;
 }>`
   font-size: 0.8rem;
-  /* height: 0.8rem; */
   font-weight: bold;
   font-family: 'NanumSquareRound';
   word-break: normal;
@@ -252,8 +245,8 @@ export const ShowValid = styled.div<{
 `;
 
 type SignupModalProps = {
-  setSignupModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsSignup: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type Message = {
@@ -331,15 +324,12 @@ export function validate(
   if (rgx[type]) {
     return rgx[type].test(value) ? true : false;
   } else {
-    /* 계정페이지에서 현재 비밀번호와 같다면 해줄 필요 없으니깐 
-    account에서 이전비밀번호가 인자로 들어오면 이전번호와 같을 때 false
-    해당 */
     return password === value ? true : false;
   }
 }
 export type Progress = 'inProgress' | 'success' | 'failed';
 
-const SignupModal = ({ setSignupModal, setLoginModal }: SignupModalProps) => {
+const Signup = ({ setIsSignup, setIsLogin }: SignupModalProps) => {
   const [userInfo, setUserInfo] = useState<userInfo>({
     account: { text: '', isValid: false, isUnique: false },
     nickname: { text: '', isValid: false, isUnique: false },
@@ -354,6 +344,7 @@ const SignupModal = ({ setSignupModal, setLoginModal }: SignupModalProps) => {
   });
   const [isLoading, setLoading] = useState(false);
   const [progress, setProgress] = useState<Progress>('inProgress');
+  const [isHide, setIsHide] = useState(false);
   const { account, nickname, password, passwordCheck } = userInfo;
 
   const handleUserInfo = useCallback(
@@ -519,19 +510,8 @@ const SignupModal = ({ setSignupModal, setLoginModal }: SignupModalProps) => {
     }
   };
 
-  /*
-  회원가입 버튼 눌러서 유효성, 중복 다 통과하면 로딩 나오면서 서버로 보내기
-  서버에서 받아오면 isLoading false로 해주면서 끝 
-
-  회원가입 진행중이면 inProgress
-  회원가입 성공이면   completed
-  회원가입 실패면     failed
-  
-  */
-
   const Success = () => {
     const [count, setCount] = useState(3);
-    console.log(count);
 
     useEffect(() => {
       const timer = setInterval(() => {
@@ -539,8 +519,8 @@ const SignupModal = ({ setSignupModal, setLoginModal }: SignupModalProps) => {
       }, 1000);
 
       let closeModal = setTimeout(() => {
-        setSignupModal(false);
-        setLoginModal(true);
+        setIsSignup(false);
+        setIsLogin(true);
       }, 4000);
       return () => {
         clearInterval(timer);
@@ -571,154 +551,151 @@ const SignupModal = ({ setSignupModal, setLoginModal }: SignupModalProps) => {
   };
 
   return (
-    <>
-      <ModalBackdrop
-        onClick={() => {
-          setSignupModal(false);
-        }}
-      />
-      <ModalContainer
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-      >
-        {isLoading && (
-          <LoadingWrapper>
-            <h1>Loco</h1>
-            <Loading text={'Loading'} />
-          </LoadingWrapper>
-        )}
-        {!isLoading && progress === 'inProgress' ? (
-          <div className="signupForm">
-            <h1>LoCo</h1>
-            <form>
-              <div className="validInfo">
-                <label htmlFor="account">이메일 주소</label>{' '}
-                <ShowValid
-                  checkType={'account'}
-                  isValid={account.isValid}
-                  isUnique={account.isUnique}
-                >
-                  {validMsg.account}
-                </ShowValid>
-                <button
-                  name="account"
-                  onClick={duplicateCheck}
-                  disabled={!account.isValid || account.isUnique}
-                >
-                  중복 확인
-                </button>
-              </div>
-              <input
-                name="account"
-                type="text"
-                value={account.text}
-                required
-                onChange={handleUserInfo}
-              />
-              <div className="validInfo">
-                <label htmlFor="nickname">닉네임</label>
-                <ShowValid
-                  checkType={'nickname'}
-                  isValid={nickname.isValid}
-                  isUnique={nickname.isUnique}
-                >
-                  {validMsg.nickname}
-                </ShowValid>
-                <button
-                  name="nickname"
-                  onClick={duplicateCheck}
-                  disabled={!nickname.isValid || nickname.isUnique}
-                >
-                  중복 확인
-                </button>
-              </div>
-              <input
-                name="nickname"
-                type="text"
-                value={nickname.text}
-                required
-                onChange={handleUserInfo}
-              />
-              <div className="validInfo">
-                <label htmlFor="password">비밀번호</label>{' '}
-                <ShowValid checkType="password" isValid={password.isValid}>
-                  {validMsg.password}
-                </ShowValid>
-              </div>
-              <input
-                name="password"
-                type="password"
-                value={password.text}
-                required
-                onChange={handleUserInfo}
-              />
-              <div className="validInfo">
-                <label htmlFor="passwordCheck">비밀번호 확인</label>
-                <ShowValid
-                  checkType="passwordCheck"
-                  isValid={passwordCheck.isValid}
-                >
-                  {validMsg.passwordCheck}
-                </ShowValid>
-              </div>
-              <input
-                name="passwordCheck"
-                type="password"
-                value={passwordCheck.text}
-                required
-                onChange={handleUserInfo}
-              />
-              <button onClick={handleSubmit}>회원가입</button>
-            </form>
-
-            <LoginSection>
-              <p>이미 계정이 있으신가요?</p>
-              <button
-                onClick={() => {
-                  setSignupModal(false);
-                  setLoginModal(true);
-                }}
+    <ModalContainer
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
+      isHide={isHide}
+    >
+      {isLoading && (
+        <LoadingWrapper>
+          <h1>Loco</h1>
+          <Loading text={'Loading'} />
+        </LoadingWrapper>
+      )}
+      {!isLoading && progress === 'inProgress' ? (
+        <div className="signupForm">
+          <h1>LoCo</h1>
+          <form>
+            <div className="validInfo">
+              <label htmlFor="account">이메일 주소</label>{' '}
+              <ShowValid
+                checkType={'account'}
+                isValid={account.isValid}
+                isUnique={account.isUnique}
               >
-                로그인
+                {validMsg.account}
+              </ShowValid>
+              <button
+                name="account"
+                onClick={duplicateCheck}
+                disabled={!account.isValid || account.isUnique}
+              >
+                중복 확인
               </button>
-            </LoginSection>
-            <button
-              className="modalClose"
-              onClick={() => {
-                setSignupModal(false);
-              }}
-            >
-              돌아가기
-            </button>
-          </div>
-        ) : !isLoading && progress === 'success' ? (
-          <Success />
-        ) : !isLoading && progress === 'failed' ? (
-          <div className="errMessage">
-            <h1>
-              Let's{' '}
-              <span style={{ color: 'var(--primaryOrange)', fontSize: '5rem' }}>
-                LoCo
-              </span>
-            </h1>
-            <ServerFail />
-            <div>
-              <p>서버와의 연결이 끊어졌습니다</p>
-              <p>잠시 후에 다시 시도해 주세요</p>
             </div>
+            <input
+              name="account"
+              type="text"
+              value={account.text}
+              required
+              onChange={handleUserInfo}
+            />
+            <div className="validInfo">
+              <label htmlFor="nickname">닉네임</label>
+              <ShowValid
+                checkType={'nickname'}
+                isValid={nickname.isValid}
+                isUnique={nickname.isUnique}
+              >
+                {validMsg.nickname}
+              </ShowValid>
+              <button
+                name="nickname"
+                onClick={duplicateCheck}
+                disabled={!nickname.isValid || nickname.isUnique}
+              >
+                중복 확인
+              </button>
+            </div>
+            <input
+              name="nickname"
+              type="text"
+              value={nickname.text}
+              required
+              onChange={handleUserInfo}
+            />
+            <div className="validInfo">
+              <label htmlFor="password">비밀번호</label>{' '}
+              <ShowValid checkType="password" isValid={password.isValid}>
+                {validMsg.password}
+              </ShowValid>
+            </div>
+            <input
+              name="password"
+              type="password"
+              value={password.text}
+              required
+              onChange={handleUserInfo}
+            />
+            <div className="validInfo">
+              <label htmlFor="passwordCheck">비밀번호 확인</label>
+              <ShowValid
+                checkType="passwordCheck"
+                isValid={passwordCheck.isValid}
+              >
+                {validMsg.passwordCheck}
+              </ShowValid>
+            </div>
+            <input
+              name="passwordCheck"
+              type="password"
+              value={passwordCheck.text}
+              required
+              onChange={handleUserInfo}
+            />
+            <button onClick={handleSubmit}>회원가입</button>
+          </form>
+
+          <LoginSection>
+            <p>이미 계정이 있으신가요?</p>
             <button
               onClick={() => {
-                setSignupModal(false);
+                setIsHide(true);
+                setTimeout(() => {
+                  setIsSignup(false);
+                  setIsLogin(true);
+                }, 150);
               }}
             >
-              메인페이지로 돌아가기
+              로그인
             </button>
+          </LoginSection>
+          <button
+            className="modalClose"
+            onClick={() => {
+              setIsSignup(false);
+            }}
+          >
+            돌아가기
+          </button>
+        </div>
+      ) : !isLoading && progress === 'success' ? (
+        <Success />
+      ) : !isLoading && progress === 'failed' ? (
+        <div className="errMessage">
+          <h1>
+            Let's{' '}
+            <span style={{ color: 'var(--primaryOrange)', fontSize: '5rem' }}>
+              LoCo
+            </span>
+          </h1>
+          <ServerFail />
+          <div>
+            <p>서버와의 연결이 끊어졌습니다</p>
+            <p>잠시 후에 다시 시도해 주세요</p>
           </div>
-        ) : null}
-      </ModalContainer>
-    </>
+          <button
+            onClick={() => {
+              setIsSignup(false);
+            }}
+          >
+            메인페이지로 돌아가기
+          </button>
+        </div>
+      ) : null}
+    </ModalContainer>
   );
 };
 
-export default SignupModal;
+export default Signup;
