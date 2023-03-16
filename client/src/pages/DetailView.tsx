@@ -595,7 +595,7 @@ const DetailView = ({ togglePick, authState }: DetailViewProps) => {
                   } else {
                     e.stopPropagation();
                     if (modalContext) {
-                      modalContext.setLoginModal(true);
+                      modalContext.setIsLoginModal(true);
                     }
                   }
                 }}
@@ -701,7 +701,7 @@ const DetailView = ({ togglePick, authState }: DetailViewProps) => {
                 } else {
                   e.stopPropagation();
                   if (modalContext) {
-                    modalContext.setLoginModal(true);
+                    modalContext.setIsLoginModal(true);
                   }
                 }
               }}

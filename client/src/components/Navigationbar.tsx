@@ -7,13 +7,10 @@ import { CgProfile } from 'react-icons/cg';
 import { memo } from 'react';
 
 const Container = styled.section`
-  /* width: 30%; */
   height: 100%;
   display: flex;
-  /* background-color: yellow; */
 
   .message {
-    /* background-color: aliceblue; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -25,13 +22,10 @@ const Container = styled.section`
 
 const ButtonsWrapper = styled.div<{ isLogin: boolean; isPic: string }>`
   display: flex;
-  /* width: 100%; */
   height: 100%;
   z-index: 30;
   justify-content: center;
   align-items: center;
-  /* position: relative; */
-  /* background-color: white; */
   overflow: hidden;
   padding: 0.5rem;
   button {
@@ -58,15 +52,6 @@ const ButtonsWrapper = styled.div<{ isLogin: boolean; isPic: string }>`
       min-height: 1.5rem;
       color: var(--primaryPurple);
     }
-    /* ${(props) =>
-      props.isLogin === false &&
-      css`
-        background-color: transparent;
-        height: 100%;
-        padding: 0.5rem 1rem;
-        color: var(--primaryBlue);
-        font-weight: 500;
-      `} */
   }
 
   ${(props) =>
@@ -131,12 +116,12 @@ const ItemsWrapper = styled.ul`
 type NavigationbarProps = {
   authState: AuthState;
   setAuthState: React.Dispatch<React.SetStateAction<AuthState>>;
-  setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const Navigationbar = ({
   authState,
   setAuthState,
-  setLoginModal,
+  setIsLoginModal,
 }: NavigationbarProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -194,7 +179,7 @@ const Navigationbar = ({
       >
         <button
           onClick={() => {
-            !authState.loginStatus && setLoginModal(true);
+            !authState.loginStatus && setIsLoginModal(true);
           }}
         >
           {authState.loginStatus ? (

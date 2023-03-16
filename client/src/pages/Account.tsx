@@ -17,7 +17,7 @@ import {
   message,
   ShowValid,
   Progress,
-} from '../components/SignupModal';
+} from '../components/Signup';
 
 import { ReactComponent as Confirm } from '../assets/confirm.svg';
 import { ReactComponent as Fail } from '../assets/server-fail.svg';
