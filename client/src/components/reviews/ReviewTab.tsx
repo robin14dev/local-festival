@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import styled from 'styled-components';
-import ReviewWrite from './ReviewCreate';
-import ReviewItem from './ReviewItem';
 import axios from 'axios';
-import { useCallback } from 'react';
-import { useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { showRating } from './ReviewItem';
+
+import ReviewWrite from './ReviewCreate';
+import ReviewItem, { showRating } from './ReviewItem';
 import Loading, { Wrapper as W } from '../Loading';
 
 const LoadingWrapper = styled(W)`
@@ -14,6 +12,7 @@ const LoadingWrapper = styled(W)`
 `;
 
 const Wrapper = styled.div`
+  padding: 0 1rem;
   width: 100%;
   padding-bottom: 5rem;
   display: flex;

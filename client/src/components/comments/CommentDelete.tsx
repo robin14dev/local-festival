@@ -75,7 +75,6 @@ export default function CommentDelete({
           },
         }
       );
-      console.log(result);
       if (result.data.message === 'delete comment success') {
         if (setComments) {
           setComments((prevComments) => {

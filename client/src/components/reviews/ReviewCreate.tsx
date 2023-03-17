@@ -1,201 +1,193 @@
 import axios from 'axios';
-import React, { useState, useContext } from 'react';
-import { ModalContext } from '../../contexts/modalContext';
-import styled, { css } from 'styled-components';
-import Rating from '../utilities/Rating';
-import Toast from '../utilities/Toast';
-import cameraImg from '../../assets/camera.png';
-import { useRef } from 'react';
-import CountText from '../utilities/CountText';
-import Write from '../utilities/Write';
-import WriteCopy from './ReviewWrite';
+import React, { useState } from 'react';
+// import styled, { css } from 'styled-components';
+
 import ReviewWrite from './ReviewWrite';
-const Wrapper = styled.div<{ isEdit?: boolean }>`
-  width: 100%;
-  height: auto;
-  border: 1px solid #d9d9d9;
-  border-radius: 8px;
-  position: relative;
-  .notifications {
-    position: absolute;
-    top: -3rem;
-    right: 0rem;
-  }
-  ${(props) =>
-    props.isEdit &&
-    css`
-      border: none;
-    `}
+// const Wrapper = styled.div<{ isEdit?: boolean }>`
+//   width: 100%;
+//   height: auto;
+//   border: 1px solid #d9d9d9;
+//   border-radius: 8px;
+//   position: relative;
+//   .notifications {
+//     position: absolute;
+//     top: -3rem;
+//     right: 0rem;
+//   }
+//   ${(props) =>
+//     props.isEdit &&
+//     css`
+//       border: none;
+//     `}
 
-  @media screen and (max-width: 1076px) {
-    width: 95%;
-  }
+//   @media screen and (max-width: 1076px) {
+//     width: 95%;
+//   }
 
-  @media (max-width: 485px) {
-    margin: 0 1rem;
+//   @media (max-width: 485px) {
+//     margin: 0 1rem;
 
-    ${(props) =>
-      props.isEdit &&
-      css`
-        margin: 0;
-        width: 100%;
-        border: 1px solid #d9d9d9;
-        width: 100%;
-      `}
-  }
+//     ${(props) =>
+//       props.isEdit &&
+//       css`
+//         margin: 0;
+//         width: 100%;
+//         border: 1px solid #d9d9d9;
+//         width: 100%;
+//       `}
+//   }
 
-  @media (max-width: 375px) {
-    ${(props) =>
-      props.isEdit &&
-      css`
-        border: 1px solid #d9d9d9;
-      `}
-  }
-`;
+//   @media (max-width: 375px) {
+//     ${(props) =>
+//       props.isEdit &&
+//       css`
+//         border: 1px solid #d9d9d9;
+//       `}
+//   }
+// `;
 
-const Textarea = styled.textarea<{ length: number }>`
-  width: 100%;
-  height: 7rem;
-  border: none;
-  resize: none;
-  border-radius: 8px 8px 0 0;
-  padding: 1rem;
-  transition: all 1s;
+// const Textarea = styled.textarea<{ length: number }>`
+//   width: 100%;
+//   height: 7rem;
+//   border: none;
+//   resize: none;
+//   border-radius: 8px 8px 0 0;
+//   padding: 1rem;
+//   transition: all 1s;
 
-  & + section {
-    margin-bottom: 0.5rem;
-    margin-left: 0.5rem;
-  }
+//   & + section {
+//     margin-bottom: 0.5rem;
+//     margin-left: 0.5rem;
+//   }
 
-  @media screen and (max-width: 730px) {
-    height: ${(props) => props.length >= 150 && '9rem'};
-  }
-  @media screen and (max-width: 540px) {
-    height: ${(props) => props.length >= 150 && '12rem'};
-  }
-  @media screen and (max-width: 420px) {
-    height: ${(props) => props.length >= 150 && '13rem'};
-  }
-`;
-const Controllers = styled.div`
-  height: 3.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 1rem;
-  border-top: 1px solid #d9d9d9;
-  border-radius: 0px 0px 0.5rem 0.5rem;
+//   @media screen and (max-width: 730px) {
+//     height: ${(props) => props.length >= 150 && '9rem'};
+//   }
+//   @media screen and (max-width: 540px) {
+//     height: ${(props) => props.length >= 150 && '12rem'};
+//   }
+//   @media screen and (max-width: 420px) {
+//     height: ${(props) => props.length >= 150 && '13rem'};
+//   }
+// `;
+// const Controllers = styled.div`
+//   height: 3.5rem;
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   padding: 0 1rem;
+//   border-top: 1px solid #d9d9d9;
+//   border-radius: 0px 0px 0.5rem 0.5rem;
 
-  & > div {
-    display: flex;
-  }
+//   & > div {
+//     display: flex;
+//   }
 
-  @media (max-width: 540px) {
-  }
-  @media (max-width: 485px) {
-    padding: 0 0.5rem;
-  }
-  @media (max-width: 375px) {
-    padding-left: 0;
-  }
-`;
+//   @media (max-width: 540px) {
+//   }
+//   @media (max-width: 485px) {
+//     padding: 0 0.5rem;
+//   }
+//   @media (max-width: 375px) {
+//     padding-left: 0;
+//   }
+// `;
 
-const Button = styled.button<{ photo?: boolean; back?: boolean }>`
-  background-color: ${(props) =>
-    props.photo ? 'white' : `var(--primaryPurple)`};
-  border: ${(props) => (props.photo ? '1px solid #D9D9D9' : 'none')};
-  border-radius: 4px;
-  color: white;
-  width: 4rem;
-  height: 33px;
+// const Button = styled.button<{ photo?: boolean; back?: boolean }>`
+//   background-color: ${(props) =>
+//     props.photo ? 'white' : `var(--primaryPurple)`};
+//   border: ${(props) => (props.photo ? '1px solid #D9D9D9' : 'none')};
+//   border-radius: 4px;
+//   color: white;
+//   width: 4rem;
+//   height: 33px;
 
-  font-weight: bold;
-  font-size: 1rem;
+//   font-weight: bold;
+//   font-size: 1rem;
 
-  ${(props) =>
-    props.back &&
-    css`
-      position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      background-color: white;
-      border: 1.5px solid #b7b9f8;
-      border-radius: 4px;
-      color: var(--primaryPurple);
-      width: 3rem;
-    `}
+//   ${(props) =>
+//     props.back &&
+//     css`
+//       position: absolute;
+//       top: 0.5rem;
+//       right: 0.5rem;
+//       background-color: white;
+//       border: 1.5px solid #b7b9f8;
+//       border-radius: 4px;
+//       color: var(--primaryPurple);
+//       width: 3rem;
+//     `}
 
-  img {
-    height: 24px;
-    margin-top: 4px;
-  }
+//   img {
+//     height: 24px;
+//     margin-top: 4px;
+//   }
 
-  cursor: pointer;
-  outline: inherit;
-  transition: transform 0.2s ease-out;
-  &:hover {
-    transition: transform 0.2s ease-out;
-    transform: translateY(-5%);
-  }
+//   cursor: pointer;
+//   outline: inherit;
+//   transition: transform 0.2s ease-out;
+//   &:hover {
+//     transition: transform 0.2s ease-out;
+//     transform: translateY(-5%);
+//   }
 
-  & + & {
-    margin-left: 1rem;
-  }
+//   & + & {
+//     margin-left: 1rem;
+//   }
 
-  @media (max-width: 485px) {
-    width: 4rem;
-    /* font-size: 0.8rem; */
-  }
-  @media (max-width: 375px) {
-    width: 3rem;
-    font-size: 0.8rem;
-    ${(props) =>
-      props.back &&
-      css`
-        font-size: 0.8rem;
-      `};
-  }
-`;
+//   @media (max-width: 485px) {
+//     width: 4rem;
+//     /* font-size: 0.8rem; */
+//   }
+//   @media (max-width: 375px) {
+//     width: 3rem;
+//     font-size: 0.8rem;
+//     ${(props) =>
+//       props.back &&
+//       css`
+//         font-size: 0.8rem;
+//       `};
+//   }
+// `;
 
-const style = {
-  Wrapper: `width : 90%;`,
-  CountText: `position : absolute`,
-};
+// const style = {
+//   Wrapper: `width : 90%;`,
+//   CountText: `position : absolute`,
+// };
 
 type ReviewCreateProps = {
   updateReviewList: (newReview: TReviewItem) => void;
   festivalId: number;
   authState: AuthState;
-  editItem?: EditItem;
-  setEditItem?: React.Dispatch<React.SetStateAction<EditItem>>;
-  updateReview?: (updatedItem: TReviewItem) => void;
+  // editItem?: EditItem;
+  // setEditItem?: React.Dispatch<React.SetStateAction<EditItem>>;
+  // updateReview?: (updatedItem: TReviewItem) => void;
 };
 const ReviewCreate = ({
   updateReviewList,
   festivalId,
   authState,
-  setEditItem,
-  editItem,
-  updateReview,
-}: ReviewCreateProps) => {
-  // const modalContext = useContext(ModalContext);
-  const [content, setContent] = useState(editItem?.info.content || '');
-  const [rating, setRating] = useState<number | null>(
-    editItem?.info.rating || null
-  );
+}: // setEditItem,
+// editItem,
+// updateReview,
+ReviewCreateProps) => {
+  // const [content, setContent] = useState(editItem?.info.content || '');
+  // const [rating, setRating] = useState<number | null>(
+  //   editItem?.info.rating || null
+  // );
   const [isLoading, setIsLoading] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
+  // const [messages, setMessages] = useState<Message[]>([]);
 
-  const handleContent = (value: string) => {
-    setContent(value);
-    // if (value.length >= maxContentLength.current) {
-    //   createNotification(
-    //     `${maxContentLength.current - 1}자 까지 입력할 수 있습니다.`
-    //   );
-    //   setContent(value.slice(0, -1));
-    //   return;
-    // }
-  };
+  // const handleContent = (value: string) => {
+  //   // setContent(value);
+  //   // if (value.length >= maxContentLength.current) {
+  //   //   createNotification(
+  //   //     `${maxContentLength.current - 1}자 까지 입력할 수 있습니다.`
+  //   //   );
+  //   //   setContent(value.slice(0, -1));
+  //   //   return;
+  //   // }
+  // };
 
   // const handleRating = (rating: number) => {
   //   setRating(rating);
@@ -218,111 +210,47 @@ const ReviewCreate = ({
   //   }, 2000);
   // };
 
-  const submitContent = async () => {
-    // if (!rating && content.length === 0) {
-    //   return createNotification('후기와 별점을 작성해 주세요');
-    // }
-    // if (!rating) {
-    //   return createNotification('별점을 입력해 주세요');
-    // }
-    // if (content.length === 0) {
-    //   return createNotification('후기를 작성해 주세요');
-    // }
-
-    //# Update
-    // if (editItem) {
-    //   // console.log('수정타임');
-    //   const updateSrc = {
-    //     id: {
-    //       review: editItem.info.id,
-    //       festival: festivalId,
-    //       user: editItem.info.userId,
-    //     },
-    //     content,
-    //     rating,
-    //   };
-    //   try {
-    //     let updated = await axios.put(
-    //       `${process.env.REACT_APP_SERVER_URL}/review`,
-    //       updateSrc,
-    //       {
-    //         headers: {
-    //           accesstoken: sessionStorage.getItem('accesstoken') ?? '',
-    //         },
-    //       }
-    //     );
-    //     // console.log(updated.data);
-    //     const updatedItem = updated.data[0];
-    //     if (updateReview) {
-    //       console.log('revewWrite');
-
-    //       updateReview(updatedItem);
-    //     }
-    //     if (setEditItem) {
-    //       setEditItem((prevEditItem) => ({
-    //         ...prevEditItem,
-    //         isEdit: false,
-    //       }));
-    //     }
-
-    //     return;
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // }
-
-    //# Create
-    axios
-      .post(
-        `${process.env.REACT_APP_SERVER_URL}/review`,
-        {
-          content: content,
-          rating: Number(rating),
+  const submitContent = async (text: string, rateToSubmit: number) => {
+    try {
+      setIsLoading(true);
+      const createdRes = await axios({
+        method: 'post',
+        url: `${process.env.REACT_APP_SERVER_URL}/review`,
+        data: {
+          content: text,
+          rating: Number(rateToSubmit),
           festivalId: festivalId,
         },
-        {
-          headers: {
-            accesstoken: sessionStorage.getItem('accesstoken') ?? '',
-          },
-        }
-      )
-      .then((response) => {
-        console.log(
-          'axios 보낸다음에 일시적으로 update하기 !! response???',
-          response
-        );
-
-        const {
-          content,
-          createdAt,
-          festivalId,
-          id,
-          rating,
-          updatedAt,
-          userId,
-        } = response.data;
-        //#작성한 리뷰 ReviewList에 올려지도록 하기
-        const newReview = {
-          userId,
-          content,
-          rating,
-          createdAt,
-          updatedAt,
-          festivalId,
-          id,
-          User: {
-            nickname: authState.nickname,
-            defaultPic: authState.defaultPic,
-          },
-          like_num: 0,
-        };
-        updateReviewList(newReview);
-        setRating(0);
-        setContent('');
-      })
-      .catch((err) => {
-        console.log(err);
+        headers: {
+          accesstoken: sessionStorage.getItem('accesstoken') ?? '',
+        },
       });
+
+      const { content, createdAt, id, rating, updatedAt, userId } =
+        createdRes.data;
+
+      const newReview = {
+        userId,
+        content,
+        rating,
+        createdAt,
+        updatedAt,
+        festivalId,
+        id,
+        User: {
+          nickname: authState.nickname,
+          defaultPic: authState.defaultPic,
+        },
+        like_num: 0,
+      };
+      updateReviewList(newReview);
+      return 'success';
+    } catch (error) {
+      console.log(error);
+      return 'failure';
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

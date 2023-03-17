@@ -6,15 +6,13 @@ import axios from 'axios';
 import profileImg from '../../assets/profile.png';
 import { AiFillStar } from 'react-icons/ai';
 import { ReactComponent as Setting } from '../../assets/setting.svg';
-import { ReactComponent as Like } from '../../assets/heart-fill.svg';
-import { ReactComponent as Unlike } from '../../assets/heart-empty.svg';
 
-import ReviewWrite from './ReviewCreate';
 import CommentWrite from '../comments/CommentWrite';
 import CommentItem from '../comments/CommentItem';
 import { induceLogin, ModalContext } from '../../contexts/modalContext';
 import ReviewDropdown from './ReviewDropdown';
-
+import ReviewEdit from './ReviewEdit';
+import Confirm from '../utilities/Confirm';
 const CommentList = styled.div`
   z-index: 10;
   width: 100%;
@@ -27,12 +25,12 @@ const CommentList = styled.div`
   }
 `;
 const Wrapper = styled.div<{ editMode?: boolean }>`
-  ${(props) =>
+  /* ${(props) =>
     props.editMode &&
     css`
       display: flex;
       justify-content: center;
-    `}
+    `} */
   display: flex;
   flex-flow: column;
   justify-content: space-between;
@@ -43,6 +41,7 @@ const Wrapper = styled.div<{ editMode?: boolean }>`
   border-top: none;
   border-radius: 0.8rem;
   padding: 1rem;
+  position: relative;
   & + div {
     margin-top: 0.5rem;
   }
@@ -64,7 +63,7 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 0.3rem;
-  position: relative;
+  /* position: relative; */
 
   .dropdown {
     transition: transform 0.6s ease-in-out;
@@ -246,7 +245,7 @@ const Body = styled.div`
 const Bottom = styled.div`
   align-items: center;
 
-  position: relative;
+  /* position: relative; */
   .reaction-info {
     display: flex;
     align-items: center;
@@ -341,53 +340,27 @@ type ReviewProps = {
   authState: AuthState;
   deleteReview: (reviewId: number, festivalId: number) => void;
   updateReviewList: (newReview: TReviewItem) => void;
-  updateReview?: (updatedItem: TReviewItem) => void;
+  updateReview: (updatedItem: TReviewItem) => void;
 };
 
 const ReviewItem = ({
   review,
   authState,
   deleteReview,
-  updateReviewList,
   updateReview,
 }: ReviewProps) => {
   const [isDelete, setIsDelete] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
   const [isDrop, setIsDrop] = useState(false);
-  const [editItem, setEditItem] = useState<EditItem>({
-    isEdit: false,
-    info: {
-      User: {
-        nickname: '',
-        defaultPic: '',
-      },
-      content: '',
-      createdAt: '',
-      festivalId: 0,
-      id: 0,
-      rating: 0,
-      updatedAt: '',
-      userId: 0,
-      like_num: 0,
-    },
-  });
   const [commentWrite, setCommentWrite] = useState(false);
   const [comments, setComments] = useState<TComment[]>([]);
   const [commentToggle, setCommentToggle] = useState(false);
-  const [isLike, setIsLike] = useState(false);
-  const {
-    rating,
-    content,
-    createdAt,
-    updatedAt,
-    User,
-    festivalId,
-    id,
-    like_num,
-  } = review;
+  const { rating, content, createdAt, updatedAt, User, festivalId, id } =
+    review;
   const modalContext = useContext(ModalContext);
 
-  const onClickDelete = (reviewId: number, festivalId: number) => {
-    deleteReview(reviewId, festivalId);
+  const onClickDelete = () => {
+    deleteReview(review.id, festivalId);
   };
 
   const createComment = () => {
@@ -417,106 +390,120 @@ const ReviewItem = ({
     setCommentToggle(!commentToggle);
   };
 
+  const cancelDelete = () => {
+    setIsDelete(false);
+  };
+
   useEffect(() => {
     getComments(id);
   }, []);
 
+  const deleteConfirmText = {
+    alert: '리뷰를 정말 삭제하시겠습니까?',
+    cancel: '취소',
+    confirm: '삭제',
+  };
+
+  if (isEdit)
+    return (
+      <ReviewEdit
+        review={review}
+        setIsEdit={setIsEdit}
+        updateReview={updateReview}
+      />
+    );
+
   return (
     <>
       <Wrapper
-        editMode={editItem.isEdit}
         onClick={(e) => {
           if (isDrop) {
             setIsDrop(false);
           }
         }}
       >
-        {isDelete ? (
-          <Modal>
-            <h3>리뷰를 정말 삭제하시겠습니까?</h3>
-            <div>
-              <button onClick={() => setIsDelete(false)}>취소하기</button>
-              <button onClick={() => onClickDelete(id, festivalId)}>
-                삭제하기
-              </button>
-            </div>
-          </Modal>
-        ) : editItem?.isEdit ? (
-          <ReviewWrite
-            authState={authState}
-            festivalId={festivalId}
-            updateReviewList={updateReviewList}
-            editItem={editItem}
-            setEditItem={setEditItem}
-            updateReview={updateReview}
+        {isDelete && (
+          // <Modal>
+          //   <h3>리뷰를 정말 삭제하시겠습니까?</h3>
+          //   <div>
+          //     <button onClick={() => setIsDelete(false)}>취소하기</button>
+          //     <button onClick={() => onClickDelete(id, festivalId)}>
+          //       삭제하기
+          //     </button>
+          //   </div>
+          // </Modal>
+          <Confirm
+            text={deleteConfirmText}
+            cancelHandler={cancelDelete}
+            confirmHandler={onClickDelete}
           />
-        ) : (
-          <>
-            <Header>
-              {isDrop && (
-                <ReviewDropdown
-                  setEditItem={setEditItem}
-                  setIsDelete={setIsDelete}
-                  info={review}
-                />
-              )}
-              <Info>
-                <section className="left">
-                  {User.defaultPic ? (
-                    <img src={User.defaultPic} alt="프로필사진" />
-                  ) : (
-                    <img src={profileImg} alt="프로필사진" />
-                  )}
-                  <ul className="nicknameAndDate">
-                    <li id="nickname">
-                      {User ? User.nickname : '탈퇴한 회원입니다'}
-                    </li>
-                    <li id="date">
-                      {moment(createdAt).format('YYYY-MM-DD')}{' '}
-                      {createdAt !== updatedAt && '수정됨'}
-                    </li>
-                  </ul>
-                </section>
-                <div className="rating">{showRating(rating)}</div>
-                <div className="rating-mobile">
-                  <AiFillStar />
-                  <span>{rating}</span>
-                </div>
-              </Info>
-              {Number(review.userId) === Number(authState.userId) && (
-                <span className="setting">
-                  <Button onClick={() => setIsDrop(!isDrop)}>
-                    <Setting />
-                  </Button>
-                </span>
-              )}
-            </Header>
-            <Body>
-              <p>{content}</p>
-            </Body>
-            <Bottom>
-              <div className="reaction-info">
-                {authState.loginStatus ? (
-                  <button onClick={createComment}>댓글</button>
-                ) : (
-                  <button
-                    onClick={() => {
-                      induceLogin(modalContext);
-                    }}
-                  >
-                    댓글
-                  </button>
-                )}
-
-                {comments.length ? (
-                  <button id="comment-toggle" onClick={showComments}>
-                    댓글 {comments.length}개
-                  </button>
-                ) : null}
-              </div>
-            </Bottom>
-          </>
         )}
+
+        <>
+          <Header>
+            {isDrop && (
+              <ReviewDropdown
+                setIsDelete={setIsDelete}
+                setIsEdit={setIsEdit}
+                info={review}
+              />
+            )}
+            <Info>
+              <section className="left">
+                {User.defaultPic ? (
+                  <img src={User.defaultPic} alt="프로필사진" />
+                ) : (
+                  <img src={profileImg} alt="프로필사진" />
+                )}
+                <ul className="nicknameAndDate">
+                  <li id="nickname">
+                    {User ? User.nickname : '탈퇴한 회원입니다'}
+                  </li>
+                  <li id="date">
+                    {moment(createdAt).format('YYYY-MM-DD')}{' '}
+                    {createdAt !== updatedAt && '수정됨'}
+                  </li>
+                </ul>
+              </section>
+              <div className="rating">{showRating(rating)}</div>
+              <div className="rating-mobile">
+                <AiFillStar />
+                <span>{rating}</span>
+              </div>
+            </Info>
+            {Number(review.userId) === Number(authState.userId) && (
+              <span className="setting">
+                <Button onClick={() => setIsDrop(!isDrop)}>
+                  <Setting />
+                </Button>
+              </span>
+            )}
+          </Header>
+          <Body>
+            <p>{content}</p>
+          </Body>
+          <Bottom>
+            <div className="reaction-info">
+              {authState.loginStatus ? (
+                <button onClick={createComment}>댓글</button>
+              ) : (
+                <button
+                  onClick={() => {
+                    induceLogin(modalContext);
+                  }}
+                >
+                  댓글
+                </button>
+              )}
+
+              {comments.length ? (
+                <button id="comment-toggle" onClick={showComments}>
+                  댓글 {comments.length}개
+                </button>
+              ) : null}
+            </div>
+          </Bottom>
+        </>
       </Wrapper>
       {commentWrite && (
         <CommentWrite

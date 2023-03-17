@@ -1,12 +1,17 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
+
 import styled from 'styled-components';
-import { UserContext } from '../../contexts/userContext';
-import profileImg from '../../assets/profile.png';
-import CountText from '../utilities/CountText';
 import { mixin } from '../../styles/theme';
+
+import { UserContext } from '../../contexts/userContext';
+import { induceLogin, ModalContext } from '../../contexts/modalContext';
+
+import profileImg from '../../assets/profile.png';
+
+import CountText from '../utilities/CountText';
 import Rating from '../utilities/Rating';
 import Toast from '../utilities/Toast';
-import { induceLogin, ModalContext } from '../../contexts/modalContext';
+import ServerFailModal from '../utilities/ServerFailModal';
 
 type WriteStyle = {
   Wrapper: string;
@@ -15,17 +20,22 @@ type WriteStyle = {
 
 type WriteProps = {
   style?: WriteStyle;
-  submitContent: () => Promise<void>;
+  submitContent: (
+    text: string,
+    rating: number
+  ) => Promise<'success' | 'failure'>;
   submitCancel?: () => void;
   onChangeContent?: (content: string) => void;
   isLoading?: boolean;
-  // messages: Message[];
+  review?: TReviewItem;
 };
 
 const Wrapper = styled.div`
   box-shadow: 0px 1px 0.2rem lightgrey;
   padding: 1rem;
-  border-radius: 0.8rem;
+  padding-bottom: 0.8rem;
+  padding-top: 1.3rem;
+  border-radius: 1.5rem;
   display: flex;
   flex-flow: column;
   background-color: white;
@@ -69,7 +79,7 @@ const Wrapper = styled.div`
     }
 
     img {
-      max-width: 3rem;
+      max-width: 3.5rem;
       border-radius: 50%;
       margin-right: 0.9rem;
     }
@@ -95,6 +105,11 @@ const Wrapper = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    & > div:nth-child(1) {
+      margin-left: 3.5rem;
+      width: 9.5rem;
+    }
 
     .control {
       display: flex;
@@ -186,27 +201,29 @@ const Wrapper = styled.div`
   }
 `;
 
+type Progress = 'IDLE' | 'SUCCESS' | 'FAILURE';
+
 export default function ReviewWrite({
   style,
   submitCancel,
   submitContent,
   onChangeContent,
   isLoading,
+  review,
 }: // messages,
 WriteProps) {
-  const [content, setContent] = useState('');
-  const [rating, setRating] = useState(0);
-  // const [content, setContent] = useState(() => {
-  //   return commentToEdit ? commentToEdit.content : '';
-  // });
+  const [text, setText] = useState(review ? review.content : '');
+  const [rating, setRating] = useState(review ? review.rating : 0);
+
   const [isEdit, setIsEdit] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
 
   const userContext = useContext(UserContext);
   const modalContext = useContext(ModalContext);
-
+  const maxText = 300;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const submitBtnRef = useRef<HTMLButtonElement>(null);
+  const [progress, setProgress] = useState<Progress>('IDLE');
   const handleResizeHeight = () => {
     if (textareaRef.current) {
       console.log('Resize');
@@ -240,12 +257,19 @@ WriteProps) {
     setRating(rating);
   };
 
-  const submitHandler = () => {
-    if (!rating) createNotification('별점을 입력해 주세요');
-    /**
-     *
-     * validation이 통과하면 props로 받아온 submitContent 전송
-     */
+  const submitHandler = async () => {
+    if (!rating) return createNotification('별점을 입력해 주세요');
+    const result = await submitContent(text, rating);
+
+    if (result === 'success') {
+      setText('');
+      setRating(0);
+      setProgress('SUCCESS');
+    }
+
+    if (result === 'failure') {
+      return setProgress('FAILURE');
+    }
   };
 
   useEffect(() => {
@@ -257,65 +281,74 @@ WriteProps) {
   }, []);
 
   return (
-    <Wrapper>
-      <div className="header">
-        <div className="notifications">
-          {messages.map((message) => (
-            <Toast key={message.uuid} message={message} />
-          ))}
+    <>
+      {progress === 'FAILURE' && (
+        <ServerFailModal
+          confirmError={() => setProgress('IDLE')}
+        ></ServerFailModal>
+      )}
+      <Wrapper>
+        <div className="header">
+          <div className="notifications">
+            {messages.map((message) => (
+              <Toast key={message.uuid} message={message} />
+            ))}
+          </div>
         </div>
-      </div>
-      <div className="body">
-        {userContext?.authState.defaultPic ? (
-          <img src={userContext?.authState.defaultPic} alt="프로필사진" />
-        ) : (
-          <img src={profileImg} alt="프로필사진" />
-        )}
-        <div className="text">
-          <textarea
-            ref={textareaRef}
-            placeholder="여기에 작성해 주세요"
-            spellCheck="false"
-            onChange={(e) => {
-              setContent(e.target.value);
-              setIsEdit(true);
-              handleResizeHeight();
-            }}
-            disabled={isLoading || !userContext?.authState.loginStatus}
-            maxLength={200}
-            value={content}
-          />
-          <CountText content={content} maxContentLength={200} />
-        </div>
-      </div>
-      <div className="footer">
-        <Rating handleRating={ratingHandler} />
-
-        <div className="control">
-          <button className="write-cancel" onClick={submitCancel}>
-            취소
-          </button>
-          {userContext?.authState.loginStatus && (
-            <button
-              ref={submitBtnRef}
-              className={isLoading ? 'write-submit loading' : 'write-submit'}
-              onClick={submitHandler}
-              disabled={content.length === 0 || isLoading || !isEdit}
-            >
-              {!isLoading && '올리기'}
-            </button>
+        <div className="body">
+          {userContext?.authState.defaultPic ? (
+            <img src={userContext?.authState.defaultPic} alt="프로필사진" />
+          ) : (
+            <img src={profileImg} alt="프로필사진" />
           )}
-          {!userContext?.authState.loginStatus && (
-            <button
-              onClick={() => {
-                induceLogin(modalContext);
+          <div className="text">
+            <textarea
+              ref={textareaRef}
+              placeholder="여기에 작성해 주세요"
+              spellCheck="false"
+              onChange={(e) => {
+                setText(e.target.value);
+                setIsEdit(true);
+                handleResizeHeight();
               }}
-            >
-              로그인
-            </button>
-          )}
+              disabled={isLoading || !userContext?.authState.loginStatus}
+              maxLength={maxText}
+              value={text}
+            />
+            <CountText content={text} maxContentLength={maxText} />
+          </div>
         </div>
-      </div>
-    </Wrapper>
+        <div className="footer">
+          <Rating initialRating={rating} handleRating={ratingHandler} />
+
+          <div className="control">
+            {review && (
+              <button className="write-cancel" onClick={submitCancel}>
+                취소
+              </button>
+            )}
+            {userContext?.authState.loginStatus && (
+              <button
+                ref={submitBtnRef}
+                className={isLoading ? 'write-submit loading' : 'write-submit'}
+                onClick={submitHandler}
+                disabled={text.length === 0 || isLoading || !isEdit}
+              >
+                {!isLoading && '올리기'}
+              </button>
+            )}
+            {!userContext?.authState.loginStatus && (
+              <button
+                onClick={() => {
+                  induceLogin(modalContext);
+                }}
+              >
+                로그인
+              </button>
+            )}
+          </div>
+        </div>
+      </Wrapper>
+    </>
   );
 }
