@@ -36,7 +36,7 @@ const LoadingWrapper = styled(W)`
   margin-top: 50vh;
 `;
 
-const Wrapper = styled.section`
+const Wrapper = styled.main`
   flex: 1 1 auto;
   width: 81rem;
   max-width: 1296px;
@@ -236,7 +236,7 @@ const Wrapper = styled.section`
   }
 `;
 
-const Tab = styled.div`
+const Tab = styled.section`
   width: 65rem;
   display: flex;
   flex-direction: column;
@@ -284,7 +284,7 @@ const Menu = styled.nav`
   }
 `;
 
-const MobileWrapper = styled.section`
+const MobileWrapper = styled.main`
   padding-top: 5rem;
   display: none;
   @media (max-width: 768px) {
@@ -581,7 +581,7 @@ const DetailView = ({ togglePick, authState }: DetailViewProps) => {
           <title>{`${summary.festival.title} - LOCO `}</title>
         </Helmet>
 
-        <div className="figAndSummary">
+        <section className="figAndSummary">
           <figure>
             <img
               src={imageUrl || onErrorImage}
@@ -615,7 +615,7 @@ const DetailView = ({ togglePick, authState }: DetailViewProps) => {
               </div>
             </figcaption>
           </figure>
-          <section className="summary">
+          <article className="summary">
             <h1>{title}</h1>
             <ul>
               <li>{location}</li>
@@ -656,8 +656,8 @@ const DetailView = ({ togglePick, authState }: DetailViewProps) => {
                 <div className="noReview">2점 이하의 리뷰가 없습니다</div>
               )}
             </div>
-          </section>
-        </div>
+          </article>
+        </section>
         <Tab>
           <Menu ref={reviewRef}>
             {tabMenu.map((menu) => (

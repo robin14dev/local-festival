@@ -12,7 +12,7 @@ import CommentItem from '../comments/CommentItem';
 import { induceLogin, ModalContext } from '../../contexts/modalContext';
 import ReviewDropdown from './ReviewDropdown';
 import ReviewEdit from './ReviewEdit';
-import Confirm from '../utilities/Confirm';
+import ReviewDelete from './ReviewDelete';
 const CommentList = styled.div`
   z-index: 10;
   width: 100%;
@@ -24,13 +24,7 @@ const CommentList = styled.div`
     margin-bottom: 0.5rem;
   }
 `;
-const Wrapper = styled.div<{ editMode?: boolean }>`
-  /* ${(props) =>
-    props.editMode &&
-    css`
-      display: flex;
-      justify-content: center;
-    `} */
+const Wrapper = styled.li`
   display: flex;
   flex-flow: column;
   justify-content: space-between;
@@ -47,12 +41,6 @@ const Wrapper = styled.div<{ editMode?: boolean }>`
   }
 
   @media (max-width: 485px) {
-    ${(props) =>
-      props.editMode &&
-      css`
-        border: none;
-        padding: 0;
-      `}
   }
 
   @media screen and (max-width: 360px) {
@@ -63,7 +51,6 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 0.3rem;
-  /* position: relative; */
 
   .dropdown {
     transition: transform 0.6s ease-in-out;
@@ -244,8 +231,6 @@ const Body = styled.div`
 `;
 const Bottom = styled.div`
   align-items: center;
-
-  /* position: relative; */
   .reaction-info {
     display: flex;
     align-items: center;
@@ -274,51 +259,6 @@ const Button = styled.button`
   overflow: visible;
   cursor: pointer;
 `;
-const Modal = styled.div`
-  background-color: none;
-  opacity: 1;
-  height: 10rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-  border-radius: 0.5rem;
-  margin: 0.4rem;
-  padding: 0.3rem;
-
-  & > h3 {
-    position: relative;
-    top: 1.5rem;
-  }
-  & button {
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    padding: 0.2rem;
-    font-weight: bold;
-    transition: all 0.2s;
-    background-color: white;
-    color: #ff9a62;
-    line-height: 26px;
-    border: 1px solid #d9d9d9;
-    &:hover {
-      transform: translateY(-0.1rem);
-    }
-    &:active {
-      transform: translateY(0.1rem);
-    }
-    & + button {
-      margin-left: 0.5rem;
-    }
-  }
-
-  & button:nth-child(1) {
-    background: #ff9a62;
-    border: none;
-    color: white;
-  }
-  & button:nth-child(2) {
-  }
-`;
 
 export const showRating = (rating: number, size = 18) => {
   const ratingArr = [1, 2, 3, 4, 5];
@@ -338,30 +278,21 @@ export const showRating = (rating: number, size = 18) => {
 type ReviewProps = {
   review: TReviewItem;
   authState: AuthState;
-  deleteReview: (reviewId: number, festivalId: number) => void;
-  updateReviewList: (newReview: TReviewItem) => void;
-  updateReview: (updatedItem: TReviewItem) => void;
+  updateReviews: (
+    type: 'CREATE' | 'UPDATE' | 'DELETE',
+    reviewItem: TReviewItem
+  ) => void;
 };
 
-const ReviewItem = ({
-  review,
-  authState,
-  deleteReview,
-  updateReview,
-}: ReviewProps) => {
+const ReviewItem = ({ review, authState, updateReviews }: ReviewProps) => {
   const [isDelete, setIsDelete] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [isDrop, setIsDrop] = useState(false);
   const [commentWrite, setCommentWrite] = useState(false);
   const [comments, setComments] = useState<TComment[]>([]);
   const [commentToggle, setCommentToggle] = useState(false);
-  const { rating, content, createdAt, updatedAt, User, festivalId, id } =
-    review;
+  const { rating, content, createdAt, updatedAt, User, id } = review;
   const modalContext = useContext(ModalContext);
-
-  const onClickDelete = () => {
-    deleteReview(review.id, festivalId);
-  };
 
   const createComment = () => {
     setCommentWrite(!commentWrite);
@@ -390,26 +321,16 @@ const ReviewItem = ({
     setCommentToggle(!commentToggle);
   };
 
-  const cancelDelete = () => {
-    setIsDelete(false);
-  };
-
   useEffect(() => {
     getComments(id);
   }, []);
-
-  const deleteConfirmText = {
-    alert: '리뷰를 정말 삭제하시겠습니까?',
-    cancel: '취소',
-    confirm: '삭제',
-  };
 
   if (isEdit)
     return (
       <ReviewEdit
         review={review}
         setIsEdit={setIsEdit}
-        updateReview={updateReview}
+        updateReviews={updateReviews}
       />
     );
 
@@ -423,19 +344,10 @@ const ReviewItem = ({
         }}
       >
         {isDelete && (
-          // <Modal>
-          //   <h3>리뷰를 정말 삭제하시겠습니까?</h3>
-          //   <div>
-          //     <button onClick={() => setIsDelete(false)}>취소하기</button>
-          //     <button onClick={() => onClickDelete(id, festivalId)}>
-          //       삭제하기
-          //     </button>
-          //   </div>
-          // </Modal>
-          <Confirm
-            text={deleteConfirmText}
-            cancelHandler={cancelDelete}
-            confirmHandler={onClickDelete}
+          <ReviewDelete
+            review={review}
+            setIsDelete={setIsDelete}
+            updateReviews={updateReviews}
           />
         )}
 

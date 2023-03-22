@@ -1,13 +1,9 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
-
 import styled from 'styled-components';
 import { mixin } from '../../styles/theme';
-
 import { UserContext } from '../../contexts/userContext';
 import { induceLogin, ModalContext } from '../../contexts/modalContext';
-
 import profileImg from '../../assets/profile.png';
-
 import CountText from '../utilities/CountText';
 import Rating from '../utilities/Rating';
 import Toast from '../utilities/Toast';
@@ -23,14 +19,15 @@ type WriteProps = {
   submitContent: (
     text: string,
     rating: number
-  ) => Promise<'success' | 'failure'>;
+  ) => Promise<'SUCCESS' | 'FAILURE'>;
   submitCancel?: () => void;
-  onChangeContent?: (content: string) => void;
   isLoading?: boolean;
+  errorStatus: boolean;
+  onErrorFunc: () => void;
   review?: TReviewItem;
 };
 
-const Wrapper = styled.div`
+const Wrapper = styled.article`
   box-shadow: 0px 1px 0.2rem lightgrey;
   padding: 1rem;
   padding-bottom: 0.8rem;
@@ -41,7 +38,7 @@ const Wrapper = styled.div`
   background-color: white;
   width: 100%;
 
-  .header {
+  header {
     position: relative;
     .notifications {
       position: absolute;
@@ -49,7 +46,7 @@ const Wrapper = styled.div`
       top: -4rem;
     }
   }
-  .body {
+  main {
     display: flex;
     align-items: center;
     transition: all 1s;
@@ -100,7 +97,7 @@ const Wrapper = styled.div`
     }
   }
 
-  .footer {
+  footer {
     position: relative;
     display: flex;
     justify-content: space-between;
@@ -113,10 +110,11 @@ const Wrapper = styled.div`
 
     .control {
       display: flex;
+      min-height: 2.1rem;
     }
 
     button {
-      min-width: 3.5rem;
+      min-width: 4rem;
       color: white;
       font-weight: 500;
       font-size: 0.9rem;
@@ -159,7 +157,7 @@ const Wrapper = styled.div`
   }
 
   @media screen and (max-width: 639px) {
-    .body {
+    main {
       .text {
         flex-flow: column;
         align-items: flex-start;
@@ -179,7 +177,7 @@ const Wrapper = styled.div`
 
   @media screen and (max-width: 425px) {
     padding: 1rem 0.5rem;
-    .body {
+    main {
       flex-flow: column;
 
       img {
@@ -200,30 +198,27 @@ const Wrapper = styled.div`
     }
   }
 `;
-
-type Progress = 'IDLE' | 'SUCCESS' | 'FAILURE';
-
 export default function ReviewWrite({
-  style,
   submitCancel,
   submitContent,
-  onChangeContent,
   isLoading,
+  errorStatus,
+  onErrorFunc,
   review,
-}: // messages,
-WriteProps) {
+}: WriteProps) {
   const [text, setText] = useState(review ? review.content : '');
   const [rating, setRating] = useState(review ? review.rating : 0);
 
   const [isEdit, setIsEdit] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [isError, setIsError] = useState(false);
 
+  const [messages, setMessages] = useState<Message[]>([]);
   const userContext = useContext(UserContext);
   const modalContext = useContext(ModalContext);
   const maxText = 300;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const submitBtnRef = useRef<HTMLButtonElement>(null);
-  const [progress, setProgress] = useState<Progress>('IDLE');
+
   const handleResizeHeight = () => {
     if (textareaRef.current) {
       console.log('Resize');
@@ -261,15 +256,15 @@ WriteProps) {
     if (!rating) return createNotification('별점을 입력해 주세요');
     const result = await submitContent(text, rating);
 
-    if (result === 'success') {
+    if (result === 'SUCCESS') {
       setText('');
       setRating(0);
-      setProgress('SUCCESS');
     }
+  };
 
-    if (result === 'failure') {
-      return setProgress('FAILURE');
-    }
+  const onErrorHandler = () => {
+    onErrorFunc();
+    setIsError(false);
   };
 
   useEffect(() => {
@@ -280,22 +275,24 @@ WriteProps) {
     }
   }, []);
 
+  useEffect(() => {
+    setIsError(errorStatus);
+  }, [errorStatus]);
+
   return (
     <>
-      {progress === 'FAILURE' && (
-        <ServerFailModal
-          confirmError={() => setProgress('IDLE')}
-        ></ServerFailModal>
+      {isError && (
+        <ServerFailModal confirmError={onErrorHandler}></ServerFailModal>
       )}
       <Wrapper>
-        <div className="header">
+        <header>
           <div className="notifications">
             {messages.map((message) => (
               <Toast key={message.uuid} message={message} />
             ))}
           </div>
-        </div>
-        <div className="body">
+        </header>
+        <main>
           {userContext?.authState.defaultPic ? (
             <img src={userContext?.authState.defaultPic} alt="프로필사진" />
           ) : (
@@ -317,10 +314,9 @@ WriteProps) {
             />
             <CountText content={text} maxContentLength={maxText} />
           </div>
-        </div>
-        <div className="footer">
+        </main>
+        <footer>
           <Rating initialRating={rating} handleRating={ratingHandler} />
-
           <div className="control">
             {review && (
               <button className="write-cancel" onClick={submitCancel}>
@@ -347,7 +343,7 @@ WriteProps) {
               </button>
             )}
           </div>
-        </div>
+        </footer>
       </Wrapper>
     </>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import ServerFailModal from './ServerFailModal';
 import { mixin } from '../../styles/theme';
@@ -48,18 +48,24 @@ const Wrapper = styled.article`
 `;
 
 type ConfirmProps = {
+  errorStatus: boolean;
+  loadingStatus: boolean;
   text: { alert: string; cancel: string; confirm: string };
   cancelHandler: () => void;
   confirmHandler: () => void;
+  onErrorFunc: () => void;
 };
 
-export default function DeleteContent({
+export default function Confirm({
+  loadingStatus,
+  errorStatus,
+  onErrorFunc,
   text,
   cancelHandler,
   confirmHandler,
 }: ConfirmProps) {
-  const [onError, setOnError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(loadingStatus);
   const { alert, cancel, confirm } = text;
   const onClickCancel = () => {
     cancelHandler();
@@ -68,15 +74,24 @@ export default function DeleteContent({
   const onClickConfirm = () => {
     confirmHandler();
   };
+  const onErrorHandler = () => {
+    setIsError(false);
+    onErrorFunc();
+  };
 
-  const errorHandler = () => {};
+  useEffect(() => {
+    setIsError(errorStatus);
+  }, [errorStatus]);
+
+  useEffect(() => {
+    setIsLoading(loadingStatus);
+  }, [loadingStatus]);
 
   return (
     <>
-      {onError && (
-        <ServerFailModal confirmError={errorHandler}></ServerFailModal>
+      {isError && (
+        <ServerFailModal confirmError={onErrorHandler}></ServerFailModal>
       )}
-
       <Wrapper>
         <p>{alert}</p>
         <div>

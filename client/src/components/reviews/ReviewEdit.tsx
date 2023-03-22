@@ -4,21 +4,25 @@ import axios from 'axios';
 type ReviewEditProps = {
   review: TReviewItem;
   setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
-  updateReview: (updatedItem: TReviewItem) => void;
+  updateReviews: (
+    type: 'CREATE' | 'UPDATE' | 'DELETE',
+    reviewItem: TReviewItem
+  ) => void;
 };
 
 export default function ReviewEdit({
   review,
   setIsEdit,
-  updateReview,
+  updateReviews,
 }: ReviewEditProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const submitCancel = () => {
     setIsEdit(false);
   };
 
-  const submitContent = async (text: string, rateToSubmit: number) => {
+  const updateReview = async (text: string, rateToSubmit: number) => {
     const updateSrc = {
       id: {
         review: review.id,
@@ -30,7 +34,6 @@ export default function ReviewEdit({
     };
     try {
       setIsLoading(true);
-
       const updatedRes = await axios({
         method: 'put',
         url: `${process.env.REACT_APP_SERVER_URL}/review`,
@@ -39,23 +42,28 @@ export default function ReviewEdit({
           accesstoken: sessionStorage.getItem('accesstoken') ?? '',
         },
       });
-
       const updatedItem = updatedRes.data[0] as TReviewItem;
-
-      updateReview(updatedItem);
+      updateReviews('UPDATE', updatedItem);
       setIsEdit(false);
-      return 'success';
+      return 'SUCCESS';
     } catch (error) {
-      return 'failure';
+      setIsError(true);
+      return 'FAILURE';
     } finally {
       setIsLoading(false);
     }
   };
+
+  const onErrorHandler = () => {
+    setIsError(false);
+  };
   return (
     <ReviewWrite
-      submitCancel={submitCancel}
-      submitContent={submitContent}
       isLoading={isLoading}
+      errorStatus={isError}
+      onErrorFunc={onErrorHandler}
+      submitContent={updateReview}
+      submitCancel={submitCancel}
       review={review}
     ></ReviewWrite>
   );
