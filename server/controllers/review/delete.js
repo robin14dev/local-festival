@@ -2,8 +2,8 @@ const { Reviews } = require('../../models');
 const validateToken = require('../token-functions/validateToken');
 
 module.exports = async (req, res) => {
-  //console.log('delete------------',req.params); // { festivalId: '1307813' }
-  const { festivalId, reviewId } = req.params;
+  console.log('delete------------', req.params); // { festivalId: '1307813' }
+  const { festivalId, id } = req.params;
 
   const accessTokenData = validateToken(req);
 
@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
     where: {
       festivalId,
       userId,
-      id: reviewId,
+      id,
     },
   });
   console.log(result);

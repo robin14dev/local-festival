@@ -92,6 +92,15 @@ input:focus {
   font-style: normal;
 }
 
+@keyframes toast-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
 @keyframes button-loading-spinner {
   from {
     transform: rotate(0turn);

@@ -18,7 +18,7 @@ const Container = styled.ul`
   width: 8rem;
   height: 5rem;
   position: absolute;
-  right: 2.5rem;
+  right: 3rem;
   top: 1rem;
   line-height: 1.4;
   box-shadow: 1.5px 1.5px 3px lightgrey;

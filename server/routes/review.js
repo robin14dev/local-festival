@@ -8,7 +8,7 @@ const updateReview = require('../controllers/review/update');
 
 router.get('/:festivalId', getReview);
 router.post('/', addReview);
-router.delete('/:festivalId/:reviewId', deleteReview);
+router.delete('/:festivalId/:id', deleteReview);
 router.put('/', updateReview);
 
 module.exports = router;
