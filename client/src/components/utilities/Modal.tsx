@@ -31,15 +31,13 @@ const Container = styled.div<{ custom: string }>`
   ${(props) => props.custom}
 `;
 type Props = {
-  style: { container: string };
+  style?: { container: string };
   children: React.ReactNode;
 };
 export default function Modal({ style, children }: Props) {
-  const { container } = style;
-
   return (
     <Backdrop>
-      <Container custom={container}>{children}</Container>
+      <Container custom={style ? style?.container : ''}>{children}</Container>
     </Backdrop>
   );
 }

@@ -1,203 +1,234 @@
-import axios from 'axios';
-import React, { useState, useContext } from 'react';
-import { ModalContext } from '../../contexts/modalContext';
-import styled, { css } from 'styled-components';
-import Rating from '../Rating';
-import Toast from '../utilities/Toast';
-import cameraImg from '../../assets/camera.png';
-import { useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
+import styled from 'styled-components';
+import { mixin } from '../../styles/theme';
+import { UserContext } from '../../contexts/userContext';
+import { induceLogin, ModalContext } from '../../contexts/modalContext';
+import profileImg from '../../assets/profile.png';
 import CountText from '../utilities/CountText';
+import Rating from '../utilities/Rating';
+import Toast from '../utilities/Toast';
+import ServerFailModal from '../utilities/ServerFailModal';
 
-const Wrapper = styled.div<{ isEdit?: boolean }>`
-  width: 100%;
-  height: auto;
-  border: 1px solid #d9d9d9;
-  border-radius: 8px;
-  position: relative;
-  .notifications {
-    position: absolute;
-    top: -3rem;
-    right: 0rem;
-  }
-  ${(props) =>
-    props.isEdit &&
-    css`
-      border: none;
-    `}
-
-  @media screen and (max-width: 1076px) {
-    width: 95%;
-  }
-
-  @media (max-width: 485px) {
-    margin: 0 1rem;
-
-    ${(props) =>
-      props.isEdit &&
-      css`
-        margin: 0;
-        width: 100%;
-        border: 1px solid #d9d9d9;
-        width: 100%;
-      `}
-  }
-
-  @media (max-width: 375px) {
-    ${(props) =>
-      props.isEdit &&
-      css`
-        border: 1px solid #d9d9d9;
-      `}
-  }
-`;
-
-const Textarea = styled.textarea<{ length: number }>`
-  width: 100%;
-  height: 7rem;
-  border: none;
-  resize: none;
-  border-radius: 8px 8px 0 0;
-  padding: 1rem;
-  transition: all 1s;
-
-  & + section {
-    margin-bottom: 0.5rem;
-    margin-left: 0.5rem;
-  }
-
-  @media screen and (max-width: 730px) {
-    height: ${(props) => props.length >= 150 && '9rem'};
-  }
-  @media screen and (max-width: 540px) {
-    height: ${(props) => props.length >= 150 && '12rem'};
-  }
-  @media screen and (max-width: 420px) {
-    height: ${(props) => props.length >= 150 && '13rem'};
-  }
-`;
-const Controllers = styled.div`
-  height: 3.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 1rem;
-  border-top: 1px solid #d9d9d9;
-  border-radius: 0px 0px 0.5rem 0.5rem;
-
-  & > div {
-    display: flex;
-  }
-
-  @media (max-width: 540px) {
-  }
-  @media (max-width: 485px) {
-    padding: 0 0.5rem;
-  }
-  @media (max-width: 375px) {
-    padding-left: 0;
-  }
-`;
-
-const Button = styled.button<{ photo?: boolean; back?: boolean }>`
-  background-color: ${(props) =>
-    props.photo ? 'white' : `var(--primaryPurple)`};
-  border: ${(props) => (props.photo ? '1px solid #D9D9D9' : 'none')};
-  border-radius: 4px;
-  color: white;
-  width: 4rem;
-  height: 33px;
-
-  font-weight: bold;
-  font-size: 1rem;
-
-  ${(props) =>
-    props.back &&
-    css`
-      position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      background-color: white;
-      border: 1.5px solid #b7b9f8;
-      border-radius: 4px;
-      color: var(--primaryPurple);
-      width: 3rem;
-    `}
-
-  img {
-    height: 24px;
-    margin-top: 4px;
-  }
-
-  cursor: pointer;
-  outline: inherit;
-  transition: transform 0.2s ease-out;
-  &:hover {
-    transition: transform 0.2s ease-out;
-    transform: translateY(-5%);
-  }
-
-  & + & {
-    margin-left: 1rem;
-  }
-
-  @media (max-width: 485px) {
-    width: 4rem;
-    /* font-size: 0.8rem; */
-  }
-  @media (max-width: 375px) {
-    width: 3rem;
-    font-size: 0.8rem;
-    ${(props) =>
-      props.back &&
-      css`
-        font-size: 0.8rem;
-      `};
-  }
-`;
-
-type ReviewWriteProps = {
-  updateReviewList: (newReview: TReviewItem) => void;
-  festivalId: number;
-  authState: AuthState;
-  editItem?: EditItem;
-  setEditItem?: React.Dispatch<React.SetStateAction<EditItem>>;
-  updateReview?: (updatedItem: TReviewItem) => void;
+type WriteStyle = {
+  Wrapper: string;
+  CountText: string;
 };
-const ReviewWrite = ({
-  updateReviewList,
-  festivalId,
-  authState,
-  setEditItem,
-  editItem,
-  updateReview,
-}: ReviewWriteProps) => {
-  const modalContext = useContext(ModalContext);
-  const [content, setContent] = useState(editItem?.info.content || '');
-  const maxContentLength = useRef(301);
-  const [rating, setRating] = useState<number | null>(
-    editItem?.info.rating || null
-  );
-  type Message = {
-    text: string;
-    dismissTime: number;
-    uuid: number;
-  };
-  const [messages, setMessages] = useState<Message[]>([]);
 
-  const handleContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    console.log(e.target.value);
-    setContent(e.target.value);
-    if (e.target.value.length >= maxContentLength.current) {
-      createNotification(
-        `${maxContentLength.current - 1}자 까지 입력할 수 있습니다.`
-      );
-      setContent(e.target.value.slice(0, -1));
-      return;
+type WriteProps = {
+  style?: WriteStyle;
+  submitContent: (
+    text: string,
+    rating: number
+  ) => Promise<'SUCCESS' | 'FAILURE'>;
+  submitCancel?: () => void;
+  isLoading?: boolean;
+  errorStatus: boolean;
+  onErrorFunc: () => void;
+  review?: TReviewItem;
+};
+
+const Wrapper = styled.article`
+  box-shadow: 0px 1px 0.2rem lightgrey;
+  padding: 1rem;
+  padding-bottom: 0.8rem;
+  padding-top: 1.3rem;
+  border-radius: 1.5rem;
+  display: flex;
+  flex-flow: column;
+  background-color: white;
+  width: 100%;
+
+  header {
+    position: relative;
+    .notifications {
+      position: absolute;
+      right: -1rem;
+      top: -4rem;
     }
-  };
+  }
+  main {
+    display: flex;
+    align-items: center;
+    transition: all 1s;
+    margin-bottom: 1rem;
 
-  const handleRating = (rating: number) => {
-    setRating(rating);
+    .text {
+      display: flex;
+      flex-flow: column;
+      flex: 1;
+      background-color: #eeeeeeb0;
+      border-radius: 0.8rem;
+
+      textarea {
+        transition: all 1s;
+        flex: 1 1 auto;
+        background-color: transparent;
+        margin: 1rem;
+        overflow: hidden;
+        position: relative;
+      }
+
+      section {
+        margin-left: auto;
+        margin-right: 1rem;
+        margin-bottom: 0.5rem;
+      }
+    }
+
+    img {
+      max-width: 3.5rem;
+      border-radius: 50%;
+      margin-right: 0.9rem;
+    }
+    .user-parent {
+      border-radius: 1rem;
+      margin-left: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      span {
+        background-color: white;
+        color: var(--primaryOrange);
+        font-weight: 600;
+        padding: 0.45rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 0 2px var(--primaryOrange);
+      }
+    }
+  }
+
+  footer {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    & > div:nth-child(1) {
+      margin-left: 3.5rem;
+      width: 9.5rem;
+    }
+
+    .control {
+      display: flex;
+      min-height: 2.1rem;
+    }
+
+    button {
+      min-width: 4rem;
+      color: white;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+      padding: 0.5rem 0.8rem;
+      background-color: var(--primaryOrange);
+      border-radius: 0.9rem;
+      :hover:enabled {
+        filter: brightness(95%);
+      }
+      :disabled {
+        background-color: lightgray;
+      }
+
+      & + button {
+        margin-left: 0.5rem;
+      }
+    }
+
+    .write-cancel {
+      color: black;
+      background-color: white;
+    }
+
+    .write-submit {
+      :hover:enabled {
+        filter: brightness(103%);
+        box-shadow: 0px 1px 5px lightgray;
+      }
+    }
+
+    .write-submit.loading {
+      position: relative;
+      background: rgb(255 154 98 / 35%);
+
+      &::after {
+        ${mixin.spinner('4px solid antiquewhite', `var(--primaryOrange)`)}
+      }
+    }
+  }
+
+  @media screen and (max-width: 639px) {
+    main {
+      .text {
+        flex-flow: column;
+        align-items: flex-start;
+        padding: 1rem;
+        .user-parent {
+          margin-left: 0;
+        }
+        textarea {
+          margin-top: 0.5rem;
+          margin-left: 0px;
+          width: 100%;
+          flex: 1 1 auto;
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 425px) {
+    padding: 1rem 0.5rem;
+    main {
+      flex-flow: column;
+
+      img {
+        align-self: start;
+        margin-bottom: 1rem;
+        position: relative;
+      }
+
+      .text {
+        width: 100%;
+
+        .user-parent {
+          position: absolute;
+          top: 2.1rem;
+          left: 4.7rem;
+        }
+      }
+    }
+  }
+`;
+export default function ReviewWrite({
+  submitCancel,
+  submitContent,
+  isLoading,
+  errorStatus,
+  onErrorFunc,
+  review,
+}: WriteProps) {
+  const [text, setText] = useState(review ? review.content : '');
+  const [rating, setRating] = useState(review ? review.rating : 0);
+
+  const [isEdit, setIsEdit] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  const [messages, setMessages] = useState<Message[]>([]);
+  const userContext = useContext(UserContext);
+  const modalContext = useContext(ModalContext);
+  const maxText = 300;
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const submitBtnRef = useRef<HTMLButtonElement>(null);
+
+  const handleResizeHeight = () => {
+    if (textareaRef.current) {
+      console.log('Resize');
+
+      textareaRef.current.style.height = 'auto';
+      console.log(textareaRef.current.scrollHeight);
+
+      textareaRef.current.style.height =
+        textareaRef.current?.scrollHeight + 'px';
+    }
   };
 
   const createNotification = (text: string): void => {
@@ -217,170 +248,103 @@ const ReviewWrite = ({
     }, 2000);
   };
 
-  const handleSubmit = async () => {
-    if (!rating && content.length === 0) {
-      return createNotification('후기와 별점을 작성해 주세요');
-    }
-    if (!rating) {
-      return createNotification('별점을 입력해 주세요');
-    }
-    if (content.length === 0) {
-      return createNotification('후기를 작성해 주세요');
-    }
-
-    //# Update
-    if (editItem) {
-      // console.log('수정타임');
-      const updateSrc = {
-        id: {
-          review: editItem.info.id,
-          festival: festivalId,
-          user: editItem.info.userId,
-        },
-        content,
-        rating,
-      };
-      try {
-        let updated = await axios.put(
-          `${process.env.REACT_APP_SERVER_URL}/review`,
-          updateSrc,
-          {
-            headers: {
-              accesstoken: sessionStorage.getItem('accesstoken') ?? '',
-            },
-          }
-        );
-        // console.log(updated.data);
-        const updatedItem = updated.data[0];
-        if (updateReview) {
-          console.log('revewWrite');
-
-          updateReview(updatedItem);
-        }
-        if (setEditItem) {
-          setEditItem((prevEditItem) => ({
-            ...prevEditItem,
-            isEdit: false,
-          }));
-        }
-
-        return;
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    // console.log('실행되??');
-
-    //# Create
-    axios
-      .post(
-        `${process.env.REACT_APP_SERVER_URL}/review`,
-        {
-          content: content,
-          rating: Number(rating),
-          festivalId: festivalId,
-        },
-        {
-          headers: {
-            accesstoken: sessionStorage.getItem('accesstoken') ?? '',
-          },
-        }
-      )
-      .then((response) => {
-        console.log(
-          'axios 보낸다음에 일시적으로 update하기 !! response???',
-          response
-        );
-
-        const {
-          content,
-          createdAt,
-          festivalId,
-          id,
-          rating,
-          updatedAt,
-          userId,
-        } = response.data;
-        //#작성한 리뷰 ReviewList에 올려지도록 하기
-        const newReview = {
-          userId,
-          content,
-          rating,
-          createdAt,
-          updatedAt,
-          festivalId,
-          id,
-          User: {
-            nickname: authState.nickname,
-            defaultPic: authState.defaultPic,
-          },
-          like_num: 0,
-        };
-        updateReviewList(newReview);
-        setRating(0);
-        setContent('');
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const ratingHandler = (rating: number) => {
+    setRating(rating);
   };
 
+  const submitHandler = async () => {
+    if (!rating) return createNotification('별점을 입력해 주세요');
+    const result = await submitContent(text, rating);
+
+    if (result === 'SUCCESS') {
+      setText('');
+      setRating(0);
+    }
+  };
+
+  const onErrorHandler = () => {
+    onErrorFunc();
+    setIsError(false);
+  };
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height =
+        textareaRef.current?.scrollHeight + 'px';
+      textareaRef.current.focus();
+    }
+  }, []);
+
+  useEffect(() => {
+    setIsError(errorStatus);
+  }, [errorStatus]);
+
   return (
-    <Wrapper isEdit={editItem?.isEdit}>
-      <div className="notifications">
-        {messages.map((message) => (
-          <Toast key={message.uuid} message={message} />
-        ))}
-      </div>
-      <Textarea
-        length={content.length}
-        spellCheck="false"
-        maxLength={maxContentLength.current}
-        value={content}
-        onChange={handleContent}
-        placeholder="후기를 남겨주세요."
-      />
-
-      <CountText content={content} maxContentLength={300} />
-      <Controllers>
-        <Rating initialRating={rating} handleRating={handleRating} />
-        <div>
-          <Button photo>
-            <img src={cameraImg} alt="사진올리기"></img>
-          </Button>
-          {authState.loginStatus ? (
-            editItem ? (
-              <>
-                <Button
-                  back={true}
-                  onClick={() => {
-                    if (setEditItem) {
-                      setEditItem((prev) => ({ ...prev, isEdit: false }));
-                    }
-                  }}
-                >
-                  취소
-                </Button>
-                <Button onClick={handleSubmit}>수정하기</Button>
-              </>
-            ) : (
-              <Button onClick={handleSubmit}>올리기</Button>
-            )
+    <>
+      {isError && (
+        <ServerFailModal confirmError={onErrorHandler}></ServerFailModal>
+      )}
+      <Wrapper>
+        <header>
+          <div className="notifications">
+            {messages.map((message) => (
+              <Toast key={message.uuid} message={message} />
+            ))}
+          </div>
+        </header>
+        <main>
+          {userContext?.authState.defaultPic ? (
+            <img src={userContext?.authState.defaultPic} alt="프로필사진" />
           ) : (
-            <Button
-              onClick={() => {
-                if (modalContext) {
-                  modalContext.setIsLoginModal(true);
-                }
-              }}
-            >
-              로그인
-            </Button>
+            <img src={profileImg} alt="프로필사진" />
           )}
-        </div>
-      </Controllers>
-    </Wrapper>
+          <div className="text">
+            <textarea
+              ref={textareaRef}
+              placeholder="여기에 작성해 주세요"
+              spellCheck="false"
+              onChange={(e) => {
+                setText(e.target.value);
+                setIsEdit(true);
+                handleResizeHeight();
+              }}
+              disabled={isLoading || !userContext?.authState.loginStatus}
+              maxLength={maxText}
+              value={text}
+            />
+            <CountText content={text} maxContentLength={maxText} />
+          </div>
+        </main>
+        <footer>
+          <Rating initialRating={rating} handleRating={ratingHandler} />
+          <div className="control">
+            {review && (
+              <button className="write-cancel" onClick={submitCancel}>
+                취소
+              </button>
+            )}
+            {userContext?.authState.loginStatus && (
+              <button
+                ref={submitBtnRef}
+                className={isLoading ? 'write-submit loading' : 'write-submit'}
+                onClick={submitHandler}
+                disabled={text.length === 0 || isLoading || !isEdit}
+              >
+                {!isLoading && '올리기'}
+              </button>
+            )}
+            {!userContext?.authState.loginStatus && (
+              <button
+                onClick={() => {
+                  induceLogin(modalContext);
+                }}
+              >
+                로그인
+              </button>
+            )}
+          </div>
+        </footer>
+      </Wrapper>
+    </>
   );
-};
-
-export default ReviewWrite;
+}

@@ -205,7 +205,7 @@ const Festival = ({ festival, togglePick, pickItems }: FestivalProps) => {
         {showStatus(startDate, endDate)[1]}
       </Status>
       <img
-        src={imageUrl || onErrorImage}
+        src={`${imageUrl}?w=400&h=400&fit=crop` || onErrorImage}
         alt={`${title} : 이미지가 존재하지 않습니다`}
         onError={onErrorImg}
       />

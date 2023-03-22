@@ -9,9 +9,9 @@ type WriteProps = {
   commentToEdit?: TComment;
   commentToReply?: TComment;
   submitContent: () => Promise<void>;
-  submitCancel: () => void;
+  submitCancel?: () => void;
   onChangeContent: (content: string) => void;
-  isLoading: boolean;
+  isLoading?: boolean;
   wrapperStyle: string;
 };
 
@@ -202,16 +202,6 @@ export default function Write({
     }
   }, []);
 
-  // const autoResize: () => undefined = () => {
-  //   if (textareaRef.current) {
-  //     textareaRef.current.style.height = 'auto';
-  //     textareaRef.current.style.height =
-  //       textareaRef.current.scrollHeight + 'px';
-  //     return undefined;
-  //   }
-  //   return undefined;
-  // };
-
   return (
     <Wrapper wrapperStyle={wrapperStyle}>
       <div className="body">
@@ -235,7 +225,6 @@ export default function Write({
             ref={textareaRef}
             placeholder="여기에 작성해 주세요"
             spellCheck="false"
-            // onResize={autoResize()}
             onChange={(e) => {
               setContent(e.target.value);
               setIsEdit(true);

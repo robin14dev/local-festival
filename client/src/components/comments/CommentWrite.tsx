@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import Write from '../utilities/Write';
 import CommentError from './CommentError';
 
@@ -25,7 +25,6 @@ const CommentWrite = ({
   const [content, setContent] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [onError, setOnError] = useState(false);
-  // const tempComment = useRef(null);
 
   const submitComment = async () => {
     try {
@@ -93,18 +92,3 @@ const CommentWrite = ({
 };
 
 export default CommentWrite;
-
-/**
-
-- 댓글쓰기 (부모글 존재 x)
-ReviewItem => CommentWrite => Write   
-
-- 답글쓰기 (부모글 존재 o)
-CommentItem ={comment}=> CommentWrite => Write   
-
-- 댓글, 답글 수정하기
-
-- CommentItem => CommentEdit => Write  (부모글이 없는 '댓글' 수정)
-- CommentItem ={comment}=> CommentEdit => Write  (부모글이 있는 '답글' 수정)
-
- */

@@ -1,19 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import styled from 'styled-components';
-import ReviewWrite from './ReviewWrite';
-import ReviewItem from './ReviewItem';
 import axios from 'axios';
-import { useCallback } from 'react';
-import { useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { showRating } from './ReviewItem';
-import Loading, { Wrapper as W } from '../Loading';
+import ReviewCreate from './ReviewCreate';
+import ReviewList from './ReviewList';
 
-const LoadingWrapper = styled(W)`
-  margin-top: 0;
-`;
-
-const Wrapper = styled.div`
+const Wrapper = styled.section`
+  padding: 0 1rem;
   width: 100%;
   padding-bottom: 5rem;
   display: flex;
@@ -60,6 +54,19 @@ const Wrapper = styled.div`
     }
   }
 
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    button {
+      width: 2rem;
+      height: 2rem;
+      margin: 0 0.5rem;
+      border-radius: 0.5rem;
+      font-size: 1.2rem;
+    }
+  }
+
   @media screen and (max-width: 1076px) {
     .totalRating {
       padding: 0 38%;
@@ -82,47 +89,6 @@ const Wrapper = styled.div`
     }
   }
 `;
-
-const ReviewList = styled.section`
-  width: 100%;
-  margin-top: 2rem;
-  border-radius: 0.5rem;
-  display: flex;
-  flex-direction: column;
-
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  .noReview {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 1rem;
-    button {
-      width: 2rem;
-      height: 2rem;
-      margin: 0 0.5rem;
-      border-radius: 0.5rem;
-      font-size: 1.2rem;
-    }
-  }
-
-  @media screen and (max-width: 1076px) {
-    padding: 0 1.5rem;
-  }
-
-  @media (max-width: 490px) {
-    padding: 0 1rem;
-  }
-`;
 type ReviewTabProps = {
   festival: FestivalItem;
   authState: AuthState;
@@ -132,8 +98,9 @@ const ReviewTab = ({ festival, authState }: ReviewTabProps) => {
   let navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { festivalId } = festival;
-  const [reviews, setReviews] = useState<TReviewItem[]>([]);
+  const [reviews, setReviews] = useState<TReviewItem[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
   const [page, setPage] = useState(1);
   const [average, setAverage] = useState(0);
   let reviewsCount = useRef(0);
@@ -149,27 +116,22 @@ const ReviewTab = ({ festival, authState }: ReviewTabProps) => {
 
   const fetchReviews = useCallback(async () => {
     setIsLoading(true);
-    if (festivalId) {
-      try {
-        //# 리뷰만 불러오는거는 토큰 필요없음
-        let result = await axios.get(
-          `${process.env.REACT_APP_SERVER_URL}/review/${festivalId}`,
-          {
-            headers: {
-              accesstoken: sessionStorage.getItem('accesstoken') ?? '',
-            },
-            params: { limit: 5, offset },
-          }
-        );
+    try {
+      const reviewsRes = await axios({
+        method: 'get',
+        url: `${process.env.REACT_APP_SERVER_URL}/review/${festivalId}`,
+        params: { limit: 5, offset },
+      });
 
-        const { count, rows, average } = result.data;
-        setReviews(rows);
-        setAverage(average);
-        reviewsCount.current = count;
-        setIsLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
+      const { count, rows, average } = reviewsRes.data;
+      setReviews(rows);
+      setAverage(average);
+      reviewsCount.current = count;
+    } catch (error) {
+      console.log(error);
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
     }
   }, [festivalId, offset]);
 
@@ -183,63 +145,36 @@ const ReviewTab = ({ festival, authState }: ReviewTabProps) => {
     fetchReviews();
   }, [fetchReviews, searchParams]);
 
-  const updateReviewList = (newReview: TReviewItem) => {
-    setReviews((prevReviews) => {
-      /*
-      첫페이지에서 리뷰는 다섯개만 받아옴 첫페이지에서 리뷰가 다섯개니깐 다섯개씩 보여주려면 새로 리뷰를 등록할 때 하나 빼고 보여줘야함
-      */
-
-      if (prevReviews.length < 5) {
-        return [newReview, ...prevReviews];
-      } else {
-        return [newReview, ...prevReviews.slice(0, -1)];
-      }
-    });
-    reviewsCount.current++;
+  const updateReviews = (
+    type: 'CREATE' | 'UPDATE' | 'DELETE',
+    reviewItem: TReviewItem
+  ) => {
+    switch (type) {
+      case 'CREATE':
+        return setReviews(
+          (prevReviews) => prevReviews && [reviewItem, ...prevReviews]
+        );
+      case 'UPDATE':
+        return setReviews(
+          (prevReviews) =>
+            prevReviews &&
+            prevReviews.map((prevItem) =>
+              prevItem.id !== reviewItem.id ? prevItem : reviewItem
+            )
+        );
+      case 'DELETE':
+        return setReviews(
+          (prevReviews) =>
+            prevReviews &&
+            prevReviews.filter((prevItem) => prevItem.id !== reviewItem.id)
+        );
+      default:
+        break;
+    }
   };
 
-  const deleteReview = (reviewId: number, festivalId: number) => {
-    axios
-      .delete(
-        `${process.env.REACT_APP_SERVER_URL}/review/${festivalId}/${reviewId}`,
-        {
-          headers: {
-            accesstoken: sessionStorage.getItem('accesstoken') ?? '',
-          },
-        }
-      )
-      .then((response) => {
-        console.log(response.data.message);
-        if (response.data.message === 'delete review success') {
-          const nextReviewLists = reviews.filter(
-            (review) => Number(review.id) !== Number(reviewId)
-          );
-          setReviews(nextReviewLists);
-        } else {
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const updateReview = (updatedItem: TReviewItem) => {
-    /* reviewId를 찾아서 해당 리뷰를 업데이트된거로 바꿔쥐 */
-    console.log('여기까지와??');
-
-    setReviews((prevReviews) => {
-      return prevReviews.map((review) => {
-        if (review.id === updatedItem.id) {
-          console.log('같은거 발견');
-
-          return {
-            ...updatedItem,
-          };
-        } else {
-          return review;
-        }
-      });
-    });
+  const onErrorHandler = () => {
+    // setIsError(false);
   };
 
   const goToPage = (event: React.MouseEvent<HTMLElement>) => {
@@ -254,7 +189,7 @@ const ReviewTab = ({ festival, authState }: ReviewTabProps) => {
   };
   return (
     <Wrapper>
-      <div className="totalRating">
+      <article className="totalRating">
         <div className="re">
           <div className="star"> {showRating(0, 30)}</div>
           <div
@@ -269,81 +204,68 @@ const ReviewTab = ({ festival, authState }: ReviewTabProps) => {
           </div>
         </div>
         <span>{average.toFixed(1)}</span>
-      </div>
+      </article>
       <h2>
         후기<span> {reviewsCount.current}</span>
       </h2>
-      <ReviewWrite
+      <ReviewCreate
         authState={authState}
         festivalId={festivalId}
-        updateReviewList={updateReviewList}
+        updateReviews={updateReviews}
       />
-      <ReviewList>
-        {isLoading ? (
-          <LoadingWrapper>
-            <Loading text="리뷰를 불러오고 있습니다" />
-          </LoadingWrapper>
-        ) : reviews.length === 0 ? (
-          <div className="noReview">리뷰가 등록되어있지 않습니다.</div>
-        ) : (
-          <>
-            {reviews.map((review) => (
-              <ReviewItem
-                key={review.id}
-                deleteReview={deleteReview}
-                authState={authState}
-                review={review}
-                updateReviewList={updateReviewList}
-                updateReview={updateReview}
-              />
-            ))}
+      <ReviewList
+        isLoading={isLoading}
+        isError={isError}
+        onErrorHandler={onErrorHandler}
+        reviews={reviews}
+        authState={authState}
+        updateReviews={updateReviews}
+      />
+      {reviews && reviews.length !== 0 && (
+        <section className="pagination">
+          <button disabled={page === 1} onClick={goToPage}>
+            &lt;
+          </button>
 
-            <section className="pagination">
-              <button disabled={page === 1} onClick={goToPage}>
-                &lt;
-              </button>
-
-              {pageLength - (level - 1) * unit < 5
-                ? Array(pageLength - (level - 1) * unit)
-                    .fill(0)
-                    .map((ele, idx) => idx + 1 + unit * (level - 1))
-                    .map((ele) => (
-                      <button
-                        style={{
-                          color: `${ele === page ? `#FF9A62` : 'black'}`,
-                          fontWeight: `${ele === page ? 'bold' : 'normal'}`,
-                        }}
-                        onClick={goToPage}
-                        key={ele}
-                      >
-                        {ele}
-                      </button>
-                    ))
-                : [
-                    1 + 5 * (level - 1),
-                    2 + 5 * (level - 1),
-                    3 + 5 * (level - 1),
-                    4 + 5 * (level - 1),
-                    5 + 5 * (level - 1),
-                  ].map((ele) => (
-                    <button
-                      style={{
-                        color: `${ele === page ? '#FF9A62' : 'black'}`,
-                        fontWeight: `${ele === page ? 'bold' : 'normal'}`,
-                      }}
-                      onClick={goToPage}
-                      key={ele}
-                    >
-                      {ele}
-                    </button>
-                  ))}
-              <button disabled={page === pageLength} onClick={goToPage}>
-                &gt;
-              </button>
-            </section>
-          </>
-        )}
-      </ReviewList>
+          {pageLength - (level - 1) * unit < 5
+            ? Array(pageLength - (level - 1) * unit)
+                .fill(0)
+                .map((ele, idx) => idx + 1 + unit * (level - 1))
+                .map((ele) => (
+                  <button
+                    style={{
+                      color: `${ele === page ? `#FF9A62` : 'black'}`,
+                      fontWeight: `${ele === page ? 'bold' : 'normal'}`,
+                    }}
+                    onClick={goToPage}
+                    key={ele}
+                  >
+                    {ele}
+                  </button>
+                ))
+            : [
+                1 + 5 * (level - 1),
+                2 + 5 * (level - 1),
+                3 + 5 * (level - 1),
+                4 + 5 * (level - 1),
+                5 + 5 * (level - 1),
+              ].map((ele) => (
+                <button
+                  style={{
+                    color: `${ele === page ? '#FF9A62' : 'black'}`,
+                    fontWeight: `${ele === page ? 'bold' : 'normal'}`,
+                  }}
+                  onClick={goToPage}
+                  key={ele}
+                >
+                  {ele}
+                </button>
+              ))}
+          <button disabled={page === pageLength} onClick={goToPage}>
+            &gt;
+          </button>
+        </section>
+      )}
     </Wrapper>
   );
 };
