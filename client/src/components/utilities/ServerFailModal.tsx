@@ -1,8 +1,7 @@
 import React from 'react';
+import styled from 'styled-components';
 import Modal from '../utilities/Modal';
 import { ReactComponent as Failure } from '../../assets/server-fail.svg';
-import styled from 'styled-components';
-import { useState } from 'react';
 
 const Content = styled.div`
   width: 100%;
@@ -53,19 +52,22 @@ const customStyle = {
 
 type ServerFailProps = {
   confirmError: () => void;
+  hideStatus?: boolean;
 };
 
-export default function ServerFailModal({ confirmError }: ServerFailProps) {
-  const [isOpen, setIsOpen] = useState(true);
-  const onClickHandler = () => {
+export default function ServerFailModal({
+  confirmError,
+  hideStatus,
+}: ServerFailProps) {
+  // const [, setIsOpen] = useState(true);
+  const onClickHandler = async () => {
     confirmError();
-    setIsOpen(false);
+
+    // setIsOpen(false);
   };
 
-  if (!isOpen) return null;
-
   return (
-    <Modal style={customStyle}>
+    <Modal style={customStyle} hideStatus={hideStatus}>
       <Content>
         <Failure />
         <div>

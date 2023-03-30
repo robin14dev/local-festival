@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { UserContext } from '../../contexts/userContext';
+import { UserContext } from '../../../contexts/userContext';
 
 import styled from 'styled-components';
 
-import { ReactComponent as CameraRound } from '../../assets/camera-round.svg';
-import { ReactComponent as Profile } from '../../assets/profile-fill.svg';
+import { ReactComponent as CameraRound } from '../../../assets/camera-round.svg';
+import { ReactComponent as Profile } from '../../../assets/profile-fill.svg';
 
 import CurrentPic from './CurrentPic';
 
