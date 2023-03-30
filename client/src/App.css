@@ -12,6 +12,7 @@
   --primaryPurple: #6268ff;
   --mainColor: var(--primaryPurple);
   --primaryPink: #fb1039;
+  --lightBlack: #000000b3;
   --rem: 16;
 }
 
@@ -43,6 +44,16 @@ textarea {
 textarea:focus,
 input:focus {
   outline: none;
+}
+
+.container {
+  opacity: 1;
+  background-color: yellow;
+  transition: all 0.3s ease-out;
+}
+
+.container.unmount {
+  opacity: 0;
 }
 
 @font-face {

@@ -14,7 +14,7 @@ import Main from './pages/Main';
 import Account from './pages/Account';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import Login from './components/Login';
+import Login from './components/account/Login';
 
 const Wrapper = styled.div`
   width: 100%;

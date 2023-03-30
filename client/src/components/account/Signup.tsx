@@ -1,10 +1,9 @@
 import axios, { AxiosError } from 'axios';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
-import { ReactComponent as Confirm } from '../assets/confirm.svg';
-import { ReactComponent as ServerFail } from '../assets/server-fail.svg';
-import Loading, { Wrapper as W } from './Loading';
-import { useEffect } from 'react';
+import { ReactComponent as Confirm } from '../../assets/confirm.svg';
+import { ReactComponent as ServerFail } from '../../assets/server-fail.svg';
+import Loading, { Wrapper as W } from '../Loading';
 
 const ModalContainer = styled.div<{ isHide: boolean }>`
   z-index: 100;
@@ -215,8 +214,6 @@ const LoginSection = styled.div`
 
     &:hover {
       color: var(--primaryOrange);
-      /* padding: 0.1rem 0.2rem 0 0.2rem; */
-      /* border-bottom: 1px solid var(--primaryPurple); */
     }
   }
 `;
