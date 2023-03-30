@@ -2,9 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import axios, { AxiosError } from 'axios';
 import moment from 'moment';
-import Withdraw from '../components/Withdraw';
-import WithdrawDone from '../components/WithdrawDone';
-import DefaultPic from '../components/defaultPic/DefaultPic';
+import Withdraw from '../components/account/Withdraw';
+import DefaultPic from '../components/account/defaultPic/DefaultPic';
 import { useCallback } from 'react';
 import { Helmet } from 'react-helmet';
 import EditImg from '../assets/edit-mobile.png';
@@ -17,7 +16,7 @@ import {
   message,
   ShowValid,
   Progress,
-} from '../components/Signup';
+} from '../components/account/Signup';
 
 import { ReactComponent as Confirm } from '../assets/confirm.svg';
 import { ReactComponent as Fail } from '../assets/server-fail.svg';
@@ -271,8 +270,7 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
     passwordCheck: '',
     curPassword: '',
   });
-  const [openWithdrawModal, setWithdrawModal] = useState(false);
-  const [finishWithdrawModal, setFinishModal] = useState(false);
+  const [withdraw, setWithdraw] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [progress, setProgress] = useState<Progress>('inProgress');
   const [updatedAt, setUpdatedAt] = useState('');
@@ -699,13 +697,7 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
 
   return (
     <>
-      {openWithdrawModal && (
-        <Withdraw
-          setFinishModal={setFinishModal}
-          setWithdrawModal={setWithdrawModal}
-        />
-      )}
-      {finishWithdrawModal && <WithdrawDone setFinishModal={setFinishModal} />}
+      {withdraw && <Withdraw setWithdraw={setWithdraw} />}
       <Wrapper>
         <Helmet>
           <title>계정 관리 - LOCO</title>
@@ -867,13 +859,6 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
                 <span ref={errMessagePwd}></span>
               </Password>
             )}
-
-            {/* {!isOpen.password && (
-              <div style={{ color: 'gray' }}>
-                최종수정일 :{' '}
-                {moment(updatedAt).format('YYYY년 MM월 DD일 HH시 mm분')}
-              </div>
-            )} */}
           </Info>
           <Info>
             <Heading>
@@ -881,7 +866,8 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
               <Toggle>
                 <button
                   onClick={() => {
-                    setWithdrawModal(true);
+                    console.log('계정삭제');
+                    setWithdraw(true);
                   }}
                 >
                   <img src={DeleteImg} alt="삭제" />
