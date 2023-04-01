@@ -11,6 +11,8 @@ const defaultPic = require('../controllers/users/defaultPic');
 
 const validateToken = require('../controllers/token-functions/validateToken');
 
+const { config } = require('../models/index.js');
+
 const { S3Client, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
@@ -26,7 +28,7 @@ const s3 = new S3Client({
 const uploadS3 = multer({
   storage: multerS3({
     s3,
-    bucket: 'loco-gallery',
+    bucket: config.s3_gallery,
     key(req, file, cb) {
       cb(null, `users/${req.userId}/profile/${file.originalname}`);
     },
@@ -39,7 +41,7 @@ const deleteS3 = async (req, res, next) => {
     const urlKey = req.body.urlKey;
     await s3.send(
       new DeleteObjectCommand({
-        Bucket: 'loco-gallery',
+        Bucket: config.s3_gallery,
         Key: urlKey,
       })
     );

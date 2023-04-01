@@ -3,7 +3,7 @@ const app = express();
 const port = 4002;
 const cors = require('cors');
 const morgan = require('morgan');
-const db = require('./models');
+const { db } = require('./models');
 
 app.use(
   morgan(':method :url :status :res[content-length] - :response-time ms')

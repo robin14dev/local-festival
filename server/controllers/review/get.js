@@ -1,4 +1,4 @@
-const { Reviews, Users, sequelize } = require('../../models');
+const { Reviews, Users } = require('../../models');
 
 module.exports = async (req, res) => {
   // console.log('review : req.params-----------', req.params);
