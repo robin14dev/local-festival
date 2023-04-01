@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import moment from 'moment';
 import axios from 'axios';
 
@@ -7,12 +7,13 @@ import profileImg from '../../assets/profile.png';
 import { AiFillStar } from 'react-icons/ai';
 import { ReactComponent as Setting } from '../../assets/setting.svg';
 
+import { induceLogin, ModalContext } from '../../contexts/modalContext';
 import CommentWrite from '../comments/CommentWrite';
 import CommentItem from '../comments/CommentItem';
-import { induceLogin, ModalContext } from '../../contexts/modalContext';
 import ReviewDropdown from './ReviewDropdown';
 import ReviewEdit from './ReviewEdit';
 import ReviewDelete from './ReviewDelete';
+
 const CommentList = styled.div`
   z-index: 10;
   width: 100%;
@@ -362,7 +363,7 @@ const ReviewItem = ({ review, authState, updateReviews }: ReviewProps) => {
             )}
             <Info>
               <section className="left">
-                {User.defaultPic ? (
+                {User?.defaultPic ? (
                   <img src={User.defaultPic} alt="프로필사진" />
                 ) : (
                   <img src={profileImg} alt="프로필사진" />

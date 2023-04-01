@@ -1,4 +1,4 @@
-const { Festivals, Users, Reviews, Picks, sequelize } = require('../models/');
+const { Festivals, Reviews, Picks, sequelize } = require('../models');
 const { Op } = require('sequelize');
 
 module.exports = {
@@ -163,8 +163,10 @@ module.exports = {
         offset: Number(offset),
         order: [['startDate', 'asc']],
       });
+      // console.log(festivals);
       res.json(festivals);
     } catch (error) {
+      console.log(error);
       res.status(500).send('Internal Server Error');
     }
   },
