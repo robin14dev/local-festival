@@ -2,23 +2,22 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import ReviewWrite from './ReviewWrite';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { UserContext } from '../../contexts/userContext';
 
 type ReviewCreateProps = {
   festivalId: number;
-  authState: AuthState;
+
   updateReviews: (
     type: 'CREATE' | 'UPDATE' | 'DELETE',
     reviewItem: TReviewItem
   ) => void;
 };
-const ReviewCreate = ({
-  updateReviews,
-  festivalId,
-  authState,
-}: ReviewCreateProps) => {
+const ReviewCreate = ({ updateReviews, festivalId }: ReviewCreateProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const navigate = useNavigate();
+  const userContext = useContext(UserContext);
 
   const createReview = async (text: string, rateToSubmit: number) => {
     try {
@@ -46,8 +45,8 @@ const ReviewCreate = ({
         festivalId,
         id,
         User: {
-          nickname: authState.nickname,
-          defaultPic: authState.defaultPic,
+          nickname: userContext?.authState.nickname as string,
+          defaultPic: userContext?.authState.defaultPic as string,
         },
         like_num: 0,
       };
