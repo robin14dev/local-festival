@@ -13,6 +13,7 @@ import CommentItem from '../comments/CommentItem';
 import ReviewDropdown from './ReviewDropdown';
 import ReviewEdit from './ReviewEdit';
 import ReviewDelete from './ReviewDelete';
+import { UserContext } from '../../contexts/userContext';
 
 const CommentList = styled.div`
   z-index: 10;
@@ -278,14 +279,13 @@ export const showRating = (rating: number, size = 18) => {
 
 type ReviewProps = {
   review: TReviewItem;
-  authState: AuthState;
   updateReviews: (
     type: 'CREATE' | 'UPDATE' | 'DELETE',
     reviewItem: TReviewItem
   ) => void;
 };
 
-const ReviewItem = ({ review, authState, updateReviews }: ReviewProps) => {
+const ReviewItem = ({ review, updateReviews }: ReviewProps) => {
   const [isDelete, setIsDelete] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [isDrop, setIsDrop] = useState(false);
@@ -294,7 +294,7 @@ const ReviewItem = ({ review, authState, updateReviews }: ReviewProps) => {
   const [commentToggle, setCommentToggle] = useState(false);
   const { rating, content, createdAt, updatedAt, User, id } = review;
   const modalContext = useContext(ModalContext);
-
+  const userContext = useContext(UserContext);
   const createComment = () => {
     setCommentWrite(!commentWrite);
   };
@@ -310,7 +310,6 @@ const ReviewItem = ({ review, authState, updateReviews }: ReviewProps) => {
       } else {
         comments = result.data;
       }
-      console.log(comments);
 
       setComments(comments);
     } catch (error) {
@@ -384,7 +383,8 @@ const ReviewItem = ({ review, authState, updateReviews }: ReviewProps) => {
                 <span>{rating}</span>
               </div>
             </Info>
-            {Number(review.userId) === Number(authState.userId) && (
+            {Number(review.userId) ===
+              Number(userContext?.authState.userId) && (
               <span className="setting">
                 <Button onClick={() => setIsDrop(!isDrop)}>
                   <Setting />
@@ -397,7 +397,7 @@ const ReviewItem = ({ review, authState, updateReviews }: ReviewProps) => {
           </Body>
           <Bottom>
             <div className="reaction-info">
-              {authState.loginStatus ? (
+              {userContext?.authState.loginStatus ? (
                 <button onClick={createComment}>댓글</button>
               ) : (
                 <button
@@ -420,7 +420,6 @@ const ReviewItem = ({ review, authState, updateReviews }: ReviewProps) => {
       </Wrapper>
       {commentWrite && (
         <CommentWrite
-          authState={authState}
           commentWrite={commentWrite}
           setCommentWrite={setCommentWrite}
           setCommentToggle={setCommentToggle}
@@ -433,7 +432,7 @@ const ReviewItem = ({ review, authState, updateReviews }: ReviewProps) => {
           comments.map((comment) => (
             <CommentItem
               setComments={setComments}
-              authState={authState}
+              // authState={authState}
               key={comment.id}
               comment={comment}
             />

@@ -513,7 +513,7 @@ const DetailView = ({ togglePick, authState }: DetailViewProps) => {
 
   const tabMenu = [
     { name: 'info', text: '상세 정보' },
-    { name: 'reviews?page=1', text: '후기' },
+    { name: 'reviews', text: '후기' },
   ];
 
   const activeStyle = {
@@ -678,13 +678,12 @@ const DetailView = ({ togglePick, authState }: DetailViewProps) => {
             ></Route>
             <Route
               path="reviews/*"
-              element={
-                <ReviewTab festival={summary.festival} authState={authState} />
-              }
+              element={<ReviewTab festivalId={summary.festival.festivalId} />}
             ></Route>
           </Routes>
         </Tab>
       </Wrapper>
+      {/* 분리를 헤놔서 렌더링이 두번됨 이거 해결해야됨 */}
       <MobileWrapper>
         <div className="nav">
           <button onClick={() => navigate(-1)}>
@@ -803,7 +802,7 @@ const DetailView = ({ togglePick, authState }: DetailViewProps) => {
         <div className="header">
           <h2>축제 후기</h2>
         </div>
-        <ReviewTab festival={summary.festival} authState={authState} />
+        <ReviewTab festivalId={summary.festival.festivalId} />
       </MobileWrapper>
     </>
   );

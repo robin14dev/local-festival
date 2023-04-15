@@ -6,7 +6,6 @@ import ServerFailModal from '../utilities/ServerFailModal';
 import { ReactComponent as ServerFailIcon } from '../../assets/server-fail.svg';
 
 type ReviewListProps = {
-  authState: AuthState;
   isLoading: boolean;
   isError: boolean;
   onErrorHandler: () => void;
@@ -76,7 +75,6 @@ const Container = styled.ul`
 `;
 
 export default function ReviewList({
-  authState,
   isLoading,
   isError,
   onErrorHandler,
@@ -117,7 +115,6 @@ export default function ReviewList({
       {reviews.map((review: TReviewItem) => (
         <ReviewItem
           key={review.id}
-          authState={authState}
           review={review}
           updateReviews={updateReviews}
         />

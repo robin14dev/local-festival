@@ -4,7 +4,6 @@ import Write from '../utilities/Write';
 import CommentError from './CommentError';
 
 type CommentWriteProps = {
-  authState: AuthState;
   review?: TReviewItem;
   comment?: TComment;
   commentWrite?: boolean;
@@ -43,7 +42,6 @@ const CommentWrite = ({
         }
       );
 
-      // tempComment.current = result.data;
       if (setComments) {
         setComments(result.data);
         setContent('');
@@ -51,10 +49,6 @@ const CommentWrite = ({
         setCommentToggle && setCommentToggle(true);
         setReplying && setReplying(false);
       }
-
-      /*
-      작성창 닫히고 업데이트된 댓글 보여주기
-      */
     } catch (error) {
       setOnError(true);
       console.log(error);

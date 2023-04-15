@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { showRating } from './ReviewItem';
 import ReviewCreate from './ReviewCreate';
 import ReviewList from './ReviewList';
+import Pagination from './Pagination';
+import { useCallback } from 'react';
 
 const Wrapper = styled.section`
   padding: 0 1rem;
@@ -90,60 +92,76 @@ const Wrapper = styled.section`
   }
 `;
 type ReviewTabProps = {
-  festival: FestivalItem;
-  authState: AuthState;
+  festivalId: number;
 };
 
-const ReviewTab = ({ festival, authState }: ReviewTabProps) => {
-  let navigate = useNavigate();
+const ReviewTab = ({ festivalId }: ReviewTabProps) => {
   const [searchParams] = useSearchParams();
-  const { festivalId } = festival;
+
   const [reviews, setReviews] = useState<TReviewItem[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [page, setPage] = useState(1);
   const [average, setAverage] = useState(0);
+
+  const [page, setPage] = useState(1);
   let reviewsCount = useRef(0);
   const unit = 5;
-  const pageLength = reviewsCount.current
-    ? reviewsCount.current % unit === 0
-      ? reviewsCount.current / unit
-      : Math.floor(reviewsCount.current / unit) + 1
-    : 0;
+  let offset = useMemo(() => (page - 1) * unit, [page]);
 
-  let offset = (page - 1) * unit;
-  let level = page % 5 === 0 ? page / 5 : Math.floor(page / 5) + 1;
+  /*
+  !리뷰탭(부모)에 있어야 할 것들 (필수)
+  offset : fetchReview에서 사용해야됨
+  page : offset에서 사용됨
+  reviewsCount : fetchReview로 업데이트됨
+  unit : offset 계산에 사용됨
+  */
 
-  const fetchReviews = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const reviewsRes = await axios({
-        method: 'get',
-        url: `${process.env.REACT_APP_SERVER_URL}/review/${festivalId}`,
-        params: { limit: 5, offset },
-      });
+  // console.log(
+  //   'searchParams',
+  //   searchParams,
+  //   'reviews',
+  //   reviews,
+  //   'isLoading',
+  //   isLoading,
+  //   'page',
+  //   page
+  // );
 
-      const { count, rows, average } = reviewsRes.data;
-      setReviews(rows);
-      setAverage(average);
-      reviewsCount.current = count;
-    } catch (error) {
-      console.log(error);
-      setIsError(true);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [festivalId, offset]);
+  /*
+    @현재 페이지 번호를 클릭 => url 변경 => useEffect 호출 => setPage, fetchReviews
+  
+  */
 
   useEffect(() => {
-    //# 특정 축제에 대한 리뷰글들을 불러온다.
-    //* api 수정 특정 글의 리뷰로 전달
-
     Number(searchParams.get('page'))
       ? setPage(Number(searchParams.get('page')))
       : setPage(1);
-    fetchReviews();
-  }, [fetchReviews, searchParams]);
+  }, [searchParams]);
+
+  useEffect(() => {
+    const fetchReviews = async (festivalId: number, offset: number) => {
+      setIsLoading(true);
+      try {
+        const reviewsRes = await axios({
+          method: 'get',
+          url: `${process.env.REACT_APP_SERVER_URL}/review/${festivalId}`,
+          params: { limit: 5, offset },
+        });
+
+        const { count, rows, average } = reviewsRes.data;
+        setReviews(rows);
+        setAverage(average);
+
+        reviewsCount.current = count;
+      } catch (error) {
+        console.log(error);
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchReviews(festivalId, offset);
+  }, [offset, festivalId]);
 
   const updateReviews = (
     type: 'CREATE' | 'UPDATE' | 'DELETE',
@@ -173,20 +191,10 @@ const ReviewTab = ({ festival, authState }: ReviewTabProps) => {
     }
   };
 
-  const onErrorHandler = () => {
-    // setIsError(false);
-  };
+  const onErrorHandler = useCallback(() => {
+    setIsError(false);
+  }, []);
 
-  const goToPage = (event: React.MouseEvent<HTMLElement>) => {
-    const navTo = (event.target as HTMLElement).textContent;
-    if (navTo === '<') {
-      navigate(`.?page=${page - 1}`);
-    } else if (navTo === '>') {
-      navigate(`.?page=${page + 1}`);
-    } else {
-      navigate(`.?page=${navTo}`);
-    }
-  };
   return (
     <Wrapper>
       <article className="totalRating">
@@ -208,63 +216,21 @@ const ReviewTab = ({ festival, authState }: ReviewTabProps) => {
       <h2>
         후기<span> {reviewsCount.current}</span>
       </h2>
-      <ReviewCreate
-        authState={authState}
-        festivalId={festivalId}
-        updateReviews={updateReviews}
-      />
+      <ReviewCreate festivalId={festivalId} updateReviews={updateReviews} />
       <ReviewList
         isLoading={isLoading}
         isError={isError}
         onErrorHandler={onErrorHandler}
         reviews={reviews}
-        authState={authState}
         updateReviews={updateReviews}
       />
-      {reviews && reviews.length !== 0 && (
-        <section className="pagination">
-          <button disabled={page === 1} onClick={goToPage}>
-            &lt;
-          </button>
 
-          {pageLength - (level - 1) * unit < 5
-            ? Array(pageLength - (level - 1) * unit)
-                .fill(0)
-                .map((ele, idx) => idx + 1 + unit * (level - 1))
-                .map((ele) => (
-                  <button
-                    style={{
-                      color: `${ele === page ? `#FF9A62` : 'black'}`,
-                      fontWeight: `${ele === page ? 'bold' : 'normal'}`,
-                    }}
-                    onClick={goToPage}
-                    key={ele}
-                  >
-                    {ele}
-                  </button>
-                ))
-            : [
-                1 + 5 * (level - 1),
-                2 + 5 * (level - 1),
-                3 + 5 * (level - 1),
-                4 + 5 * (level - 1),
-                5 + 5 * (level - 1),
-              ].map((ele) => (
-                <button
-                  style={{
-                    color: `${ele === page ? '#FF9A62' : 'black'}`,
-                    fontWeight: `${ele === page ? 'bold' : 'normal'}`,
-                  }}
-                  onClick={goToPage}
-                  key={ele}
-                >
-                  {ele}
-                </button>
-              ))}
-          <button disabled={page === pageLength} onClick={goToPage}>
-            &gt;
-          </button>
-        </section>
+      {reviews && reviews.length !== 0 && (
+        <Pagination
+          page={page}
+          reviewsCount={reviewsCount.current}
+          unit={unit}
+        />
       )}
     </Wrapper>
   );

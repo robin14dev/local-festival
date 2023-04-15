@@ -6,6 +6,7 @@ import profileImg from '../../assets/profile.png';
 import { ReactComponent as Setting } from '../../assets/setting.svg';
 
 import { induceLogin, ModalContext } from '../../contexts/modalContext';
+import { UserContext } from '../../contexts/userContext';
 import CommentWrite from './CommentWrite';
 import CommentDelete from './CommentDelete';
 import CommentEdit from '../comments/CommentEdit';
@@ -167,17 +168,18 @@ const Wrapper = styled.div<{ isEdit: boolean }>`
 
 type CommentItemProps = {
   comment: TComment;
-  authState: AuthState;
+  // authState: AuthState;
   setComments: React.Dispatch<React.SetStateAction<TComment[]>>;
 };
 
-const CommentItem = ({ comment, authState, setComments }: CommentItemProps) => {
+const CommentItem = ({ comment, setComments }: CommentItemProps) => {
   const { content, is_edit, createdAt, User, parent_nickname } = comment;
   const [isReplying, setReplying] = useState(false);
   const [isDrop, setIsDrop] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
 
+  const userContext = useContext(UserContext);
   const modalContext = useContext(ModalContext);
   const createComment = () => {
     setReplying(!isReplying);
@@ -217,7 +219,7 @@ const CommentItem = ({ comment, authState, setComments }: CommentItemProps) => {
                   </span>
                 </div>
               </div>
-              {authState.userId === comment.userId && (
+              {userContext?.authState.userId === comment.userId && (
                 <button
                   className="setting"
                   onClick={(e) => {
@@ -242,11 +244,11 @@ const CommentItem = ({ comment, authState, setComments }: CommentItemProps) => {
             </div>
             <div className="content-bottom">
               <div className="controller">
-                {authState.loginStatus &&
-                  authState.userId !== comment.userId && (
+                {userContext?.authState.loginStatus &&
+                  userContext?.authState.userId !== comment.userId && (
                     <button onClick={createComment}>답글</button>
                   )}
-                {!authState.loginStatus && (
+                {!userContext?.authState.loginStatus && (
                   <button
                     onClick={() => {
                       induceLogin(modalContext);
@@ -264,7 +266,7 @@ const CommentItem = ({ comment, authState, setComments }: CommentItemProps) => {
         <CommentWrite
           setComments={setComments}
           comment={comment}
-          authState={authState}
+          // authState={authState}
           setReplying={setReplying}
         />
       )}
