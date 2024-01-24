@@ -155,7 +155,7 @@ module.exports = {
       // 진행중이랑 진행 예정인것 까지 나오도록
       let festivals = await Festivals.findAll({
         where: {
-          endDate: { [Op.gte]: date },
+          // endDate: { [Op.gte]: date }, 옵션 일단 해제!!
           // startDate: { [Op.lte]: date },
         },
 
@@ -163,7 +163,7 @@ module.exports = {
         offset: Number(offset),
         order: [['startDate', 'asc']],
       });
-      // console.log(festivals);
+      console.log(festivals.length);
       res.json(festivals);
     } catch (error) {
       console.log(error);

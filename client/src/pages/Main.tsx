@@ -140,6 +140,8 @@ const Main = ({
     setIsLoading(true);
 
     try {
+      console.log(process.env);
+      
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/festivals`,
         { params: { limit: 8, offset: offset.current, query } }
