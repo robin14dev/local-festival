@@ -1,0 +1,111 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Loading /> renders with the provided text 1`] = `
+.c0 {
+  margin-left: auto;
+  margin-right: auto;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column;
+  -ms-flex-flow: column;
+  flex-flow: column;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c0 video {
+  width: 20%;
+}
+
+.c0 div {
+  color: gray;
+  font-size: 1.2rem;
+}
+
+<div>
+  <article
+    class="c0"
+  >
+    <video
+      autoplay=""
+      data-testid="loading-video"
+      height="100%"
+      loop=""
+      playsinline=""
+      width="100%"
+    >
+      <source
+        src="loading.mp4"
+        type="video/mp4"
+      />
+    </video>
+    <div>
+      Loading...
+    </div>
+    .
+  </article>
+</div>
+`;
+
+exports[`<Loading /> 텍스트를 포함하여 컴포넌트를 렌더링합니다 1`] = `
+.c0 {
+  margin-left: auto;
+  margin-right: auto;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column;
+  -ms-flex-flow: column;
+  flex-flow: column;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c0 video {
+  width: 20%;
+}
+
+.c0 div {
+  color: gray;
+  font-size: 1.2rem;
+}
+
+<div>
+  <article
+    class="c0"
+  >
+    <video
+      autoplay=""
+      data-testid="loading-video"
+      height="100%"
+      loop=""
+      playsinline=""
+      width="100%"
+    >
+      <source
+        src="loading.mp4"
+        type="video/mp4"
+      />
+    </video>
+    <div>
+      Loading...
+    </div>
+    .
+  </article>
+</div>
+`;

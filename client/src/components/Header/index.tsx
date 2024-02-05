@@ -1,5 +1,5 @@
 import React from 'react';
-import Navigationbar from './Navigationbar';
+import Navigationbar from '../Navigationbar';
 import styled from 'styled-components';
 import { memo } from 'react';
 
