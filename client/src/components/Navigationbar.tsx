@@ -166,7 +166,7 @@ const Navigationbar = ({
   //! img onerror!!!
 
   return (
-    <Container>
+    <Container data-testid="navigationbar">
       <ButtonsWrapper
         isLogin={authState.loginStatus}
         isPic={authState.defaultPic}
