@@ -1,7 +1,7 @@
-import axios from 'axios';
-import React, { useCallback, useState } from 'react';
-import styled from 'styled-components';
-import Signup from './Signup';
+import axios from "axios";
+import React, { useCallback, useState } from "react";
+import styled from "styled-components";
+import Signup from "./Signup";
 
 const Backdrop = styled.div<{ isHide: boolean }>`
   z-index: 20;
@@ -13,7 +13,7 @@ const Backdrop = styled.div<{ isHide: boolean }>`
   background: rgba(0, 0, 0, 0.4);
 
   animation-duration: 0.4s;
-  animation-name: ${(props) => (props.isHide ? 'bright-soft' : 'dark-soft')};
+  animation-name: ${(props) => (props.isHide ? "bright-soft" : "dark-soft")};
   animation-fill-mode: forwards;
 `;
 const Container = styled.div<{ isHide: boolean }>`
@@ -34,7 +34,7 @@ const Container = styled.div<{ isHide: boolean }>`
   top: 50%;
 
   animation-duration: 0.4s;
-  animation-name: ${(props) => (props.isHide ? 'slide-up' : 'slide-down')};
+  animation-name: ${(props) => (props.isHide ? "slide-up" : "slide-down")};
   animation-fill-mode: forwards;
 
   & > h1 {
@@ -42,7 +42,7 @@ const Container = styled.div<{ isHide: boolean }>`
     font-size: 3rem;
     cursor: pointer;
     font-style: italic;
-    font-family: 'HS-Regular';
+    font-family: "HS-Regular";
     color: var(--mainColor);
   }
 
@@ -57,7 +57,7 @@ const Container = styled.div<{ isHide: boolean }>`
       padding: 0.5rem;
       width: 80%;
       height: 3rem;
-      font-family: 'NanumSquareRound';
+      font-family: "NanumSquareRound";
       &::placeholder {
         opacity: 0.5;
       }
@@ -78,7 +78,7 @@ const Container = styled.div<{ isHide: boolean }>`
       font-size: 1rem;
 
       color: #fff;
-      font-family: 'NanumSquareRound';
+      font-family: "NanumSquareRound";
       font-weight: bold;
       background: var(--mainColor);
       border-radius: 6px;
@@ -95,7 +95,7 @@ const Container = styled.div<{ isHide: boolean }>`
     font-weight: 500;
 
     button {
-      font-family: 'NanumSquareRound';
+      font-family: "NanumSquareRound";
       margin-left: 1rem;
       font-size: 1rem;
       /* background-color: yellowgreen; */
@@ -130,7 +130,7 @@ const Container = styled.div<{ isHide: boolean }>`
       display: block;
       margin-top: 2rem;
       color: gray;
-      font-family: 'NanumSquareRound';
+      font-family: "NanumSquareRound";
     }
   }
 `;
@@ -146,22 +146,22 @@ type LoginProps = {
   loginHandler: loginHandlerFunc;
 };
 
-const Login = ({ setIsLoginModal, loginHandler }: LoginProps) => {
-  const [userInfo, setUserInfo] = useState({ account: '', password: '' });
+const LoginModal = ({ setIsLoginModal, loginHandler }: LoginProps) => {
+  const [userInfo, setUserInfo] = useState({ account: "", password: "" });
   const { account, password } = userInfo;
-  const [errMessage, setErrMessage] = useState('');
+  const [errMessage, setErrMessage] = useState("");
   const [isHide, setIsHide] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [isSignup, setIsSignup] = useState(false);
 
   const errMessages = [
-    '사용자가 존재하지 않습니다',
-    '비밀번호가 일치하지 않습니다',
+    "사용자가 존재하지 않습니다",
+    "비밀번호가 일치하지 않습니다",
   ];
 
   const handleUserInfo = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (e.target.value.length > 0) setErrMessage('');
+      if (e.target.value.length > 0) setErrMessage("");
       setUserInfo((prevInfo) => ({
         ...prevInfo,
         [e.target.name]: e.target.value,
@@ -188,8 +188,8 @@ const Login = ({ setIsLoginModal, loginHandler }: LoginProps) => {
             defaultPic,
             loginStatus: true,
           };
-          sessionStorage.setItem('user', JSON.stringify(user));
-          sessionStorage.setItem('accesstoken', response.data.info.token);
+          sessionStorage.setItem("user", JSON.stringify(user));
+          sessionStorage.setItem("accesstoken", response.data.info.token);
 
           loginHandler(userId, account, nickname, defaultPic, true);
 
@@ -199,13 +199,13 @@ const Login = ({ setIsLoginModal, loginHandler }: LoginProps) => {
           console.log(err.response.data.message);
           if (
             err.response.data.message ===
-            'Wrong account And Password Combination'
+            "Wrong account And Password Combination"
           ) {
             setErrMessage(errMessages[1]);
           } else if (err.response.data.message === "User Doesn't Exist") {
             setErrMessage(errMessages[0]);
           } else {
-            console.log('그밖에에러');
+            console.log("그밖에에러");
           }
         });
     },
@@ -223,6 +223,7 @@ const Login = ({ setIsLoginModal, loginHandler }: LoginProps) => {
       <Backdrop onClick={modalClose} isHide={isHide}>
         {isLogin && (
           <Container
+            data-testid="LoginModal"
             isHide={isHide}
             onClick={(e) => {
               e.stopPropagation();
@@ -239,7 +240,7 @@ const Login = ({ setIsLoginModal, loginHandler }: LoginProps) => {
                 required
               ></input>
               <div>
-                {errMessage === '사용자가 존재하지 않습니다' && errMessage}
+                {errMessage === "사용자가 존재하지 않습니다" && errMessage}
               </div>
               <input
                 name="password"
@@ -250,7 +251,7 @@ const Login = ({ setIsLoginModal, loginHandler }: LoginProps) => {
                 required
               ></input>
               <div>
-                {errMessage === '비밀번호가 일치하지 않습니다' && errMessage}
+                {errMessage === "비밀번호가 일치하지 않습니다" && errMessage}
               </div>
               <button type="submit">로그인</button>
             </form>
@@ -284,4 +285,4 @@ const Login = ({ setIsLoginModal, loginHandler }: LoginProps) => {
   );
 };
 
-export default Login;
+export default LoginModal;

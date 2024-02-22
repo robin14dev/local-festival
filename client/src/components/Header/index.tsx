@@ -1,7 +1,6 @@
-import React from "react";
-import Navigationbar from "../DropdownMenu";
+import React, { memo } from "react";
+import DropdownMenu from "../DropdownMenu";
 import styled from "styled-components";
-import { memo } from "react";
 
 const Wrapper = styled.header`
   display: flex;
@@ -28,11 +27,7 @@ const Wrapper = styled.header`
   }
 `;
 
-type HeaderProps = {
-  setIsLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-const Header = ({ setIsLoginModal }: HeaderProps) => {
+const Header = () => {
   const onClickReload = () => {
     window.location.replace("/");
   };
@@ -40,7 +35,7 @@ const Header = ({ setIsLoginModal }: HeaderProps) => {
   return (
     <Wrapper>
       <h1 onClick={onClickReload}>LoCo</h1>
-      <Navigationbar setIsLoginModal={setIsLoginModal} />
+      <DropdownMenu />
     </Wrapper>
   );
 };

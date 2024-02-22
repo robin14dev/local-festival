@@ -1,9 +1,8 @@
-    <div : isLogin과 isPic에 따라 UI 변경되고 마우스 호버 이벤트 있고 마우스 호버시 모달 뜨게 되고>
-    <button 클릭시 로그인 안되어 있으면 모달 뜨도록 >
-    이미지 (프로필) : 로그인 되고 프로필 있으면 해당 이미지 나머지는 기본
-    </button>
-    </div>
-
-Menu 컨테이너에 호버에서 드롭다운 생기는거랑
-
-제일 최상에 호버에서 드롭다운 생기는거 하나로 줄이기
+<CONTEXT>
+<div>
+isLogin && LoginModal
+    - Heaeder
+        - Dropdown (여기서 테스트가 불가능한가? )
+          클릭시(setIsLoginModal 호출 ) =>  isLogin 렌더링
+</div>
+</CONTEXT>

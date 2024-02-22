@@ -14,7 +14,7 @@ import Main from "./pages/Main";
 import Account from "./pages/Account";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import Login from "./components/account/Login";
+import LoginModal from "./components/account/LoginModal";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -160,13 +160,13 @@ function App() {
               <title>이번주엔 어디로 가볼까? - LOCO</title>
             </Helmet>
             {isLoginModal && (
-              <Login
+              <LoginModal
                 loginHandler={loginHandler}
                 setIsLoginModal={setIsLoginModal}
               />
             )}
 
-            <Header setIsLoginModal={setIsLoginModal} />
+            <Header />
             <Routes>
               <Route
                 path="/"
