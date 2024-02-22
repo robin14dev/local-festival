@@ -1,20 +1,20 @@
-import './App.css';
-import '../src/styles/common.scss';
-import theme from './styles/theme';
-import React, { useState, useRef, useCallback } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
-import styled, { ThemeProvider } from 'styled-components';
-import axios from 'axios';
-import { UserContext } from './contexts/userContext';
-import { ModalContext } from './contexts/modalContext';
-import Wishlist from './pages/Wishlist';
-import DetailView from './pages/DetailView';
-import Main from './pages/Main';
-import Account from './pages/Account';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import Login from './components/account/Login';
+import "./App.css";
+import "../src/styles/common.scss";
+import theme from "./styles/theme";
+import React, { useState, useRef, useCallback } from "react";
+import { Routes, Route } from "react-router-dom";
+import { Helmet } from "react-helmet";
+import styled, { ThemeProvider } from "styled-components";
+import axios from "axios";
+import { UserContext } from "./contexts/userContext";
+import { ModalContext } from "./contexts/modalContext";
+import Wishlist from "./pages/Wishlist";
+import DetailView from "./pages/DetailView";
+import Main from "./pages/Main";
+import Account from "./pages/Account";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Login from "./components/account/Login";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -26,24 +26,24 @@ const Wrapper = styled.div`
 `;
 
 const getUserInfoFromStorage: () => AuthState = () => {
-  if (sessionStorage.getItem('user')) {
-    const user = sessionStorage.getItem('user');
+  if (sessionStorage.getItem("user")) {
+    const user = sessionStorage.getItem("user");
     if (user) {
       return JSON.parse(user);
     }
   } else {
     return {
       userId: 0,
-      account: '',
-      nickname: '',
-      defaultPic: '',
+      account: "",
+      nickname: "",
+      defaultPic: "",
       loginStatus: false,
     };
   }
 };
 const getUserPicksFromStorage: () => FestivalItem[] = () => {
-  if (sessionStorage.getItem('picks')) {
-    const picks = sessionStorage.getItem('picks');
+  if (sessionStorage.getItem("picks")) {
+    const picks = sessionStorage.getItem("picks");
     if (picks) {
       return JSON.parse(picks);
     }
@@ -81,13 +81,13 @@ function App() {
           `${process.env.REACT_APP_SERVER_URL}/pick`,
           {
             headers: {
-              accesstoken: sessionStorage.getItem('accesstoken') ?? '',
+              accesstoken: sessionStorage.getItem("accesstoken") ?? "",
             },
           }
         );
 
         setPickItems(result.data);
-        sessionStorage.setItem('picks', JSON.stringify(result.data));
+        sessionStorage.setItem("picks", JSON.stringify(result.data));
       } catch (error) {
         console.log(error);
       }
@@ -108,14 +108,14 @@ function App() {
           await axios.delete(`${process.env.REACT_APP_SERVER_URL}/pick`, {
             data: { festivalId: newPick.festivalId },
             headers: {
-              accesstoken: sessionStorage.getItem('accesstoken') ?? '',
+              accesstoken: sessionStorage.getItem("accesstoken") ?? "",
             },
           });
           const nextPicks = pickItems.filter(
             (item) => item.festivalId !== newPick.festivalId
           );
           setPickItems(nextPicks);
-          sessionStorage.setItem('picks', JSON.stringify(nextPicks));
+          sessionStorage.setItem("picks", JSON.stringify(nextPicks));
         } catch (error) {
           console.log(error);
         }
@@ -129,14 +129,14 @@ function App() {
             },
             {
               headers: {
-                accesstoken: sessionStorage.getItem('accesstoken') ?? '',
+                accesstoken: sessionStorage.getItem("accesstoken") ?? "",
               },
             }
           );
           const nextPicks = [newPick, ...pickItems];
 
           setPickItems(nextPicks);
-          sessionStorage.setItem('picks', JSON.stringify(nextPicks));
+          sessionStorage.setItem("picks", JSON.stringify(nextPicks));
         } catch (error) {
           console.log(error);
         }
@@ -166,11 +166,7 @@ function App() {
               />
             )}
 
-            <Header
-              authState={authState}
-              setAuthState={setAuthState}
-              setIsLoginModal={setIsLoginModal}
-            />
+            <Header setIsLoginModal={setIsLoginModal} />
             <Routes>
               <Route
                 path="/"
