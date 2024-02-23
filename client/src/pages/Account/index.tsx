@@ -1,279 +1,64 @@
-import React, { useEffect, useRef, useState } from 'react';
-import styled, { css } from 'styled-components';
-import axios, { AxiosError } from 'axios';
-import moment from 'moment';
-import Withdraw from '../components/account/Withdraw';
-import DefaultPic from '../components/account/defaultPic/DefaultPic';
-import { useCallback } from 'react';
-import { Helmet } from 'react-helmet';
-import EditImg from '../assets/edit-mobile.png';
-import DeleteImg from '../assets/delete-mobile.png';
-import { ReactComponent as Cancel } from '../assets/cancel.svg';
+import React, {
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+} from "react";
+import axios, { AxiosError } from "axios";
+import moment from "moment";
+import Withdraw from "../../components/account/Withdraw";
+import DefaultPic from "../../components/account/defaultPic/DefaultPic";
+import { Helmet } from "react-helmet";
+import EditImg from "../../assets/edit-mobile.png";
+import DeleteImg from "../../assets/delete-mobile.png";
+import { ReactComponent as Confirm } from "../../assets/confirm.svg";
+import { ReactComponent as Fail } from "../../assets/server-fail.svg";
+import { ReactComponent as Cancel } from "../../assets/cancel.svg";
 import {
   userInfo,
   validate,
   rgx,
   message,
-  ShowValid,
   Progress,
-} from '../components/account/Signup';
+} from "../../components/account/Signup";
 
-import { ReactComponent as Confirm } from '../assets/confirm.svg';
-import { ReactComponent as Fail } from '../assets/server-fail.svg';
+import Modal from "../../components/Modal";
+import { UserContext } from "../../contexts/userContext";
+import {
+  Wrapper,
+  List,
+  Info,
+  Heading,
+  Toggle,
+  Nickname,
+  Button,
+  ValidMsg,
+  Password,
+} from "./styled";
 
-import Modal from '../components/Modal';
-const Wrapper = styled.div`
-  margin: 8rem 5rem;
-  h1 {
-    font-size: 2rem;
-    margin-bottom: 2rem;
-  }
-
-  .logout {
-    display: none;
-  }
-  #last-modified {
-    color: gray;
-    margin: 1rem;
-    margin-left: 0.5rem;
-  }
-  @media (max-width: 700px) {
-    margin: 8rem 2rem;
-  }
-  @media (max-width: 485px) {
-    & > h1 {
-      padding-left: 1rem;
-    }
-
-    .logout {
-      display: inline-block;
-      margin: 1rem;
-      text-decoration: underline;
-    }
-  }
-  @media (max-width: 385px) {
-    margin: 8rem 1rem;
-    #last-modified {
-      font-size: 0.8rem;
-    }
-  }
-`;
-
-const List = styled.div`
-  transition: all 1s;
-  margin-left: 0.5rem;
-
-  @media (max-width: 485px) {
-    margin: 0;
-  }
-`;
-
-const Info = styled.div`
-  transition: all 1s;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  width: 100%;
-  border-bottom: 1px solid #f2ebeb;
-  padding-bottom: 2rem;
-
-  @media (max-width: 485px) {
-    padding: 0 1rem;
-    min-height: 5rem;
-  } ;
-`;
-
-const Heading = styled.div`
-  display: flex;
-  justify-content: space-between;
-  & > div {
-    line-height: 1.5rem;
-  }
-
-  & > h4 {
-    margin: 0.5rem 0;
-  }
-
-  padding-top: 0.8rem;
-`;
-const Toggle = styled.div`
-  & > button {
-    text-decoration: underline;
-  }
-
-  img {
-    width: 1.5rem;
-    height: auto;
-  }
-  svg {
-    width: 1.8rem;
-    height: auto;
-  }
-`;
-const Accordion = styled.div`
-  line-height: 1.5rem;
-  margin-bottom: 1rem;
-  form {
-    width: 50%;
-    max-width: 25rem;
-
-    .input-valid {
-      transition: all 0.3s;
-      height: 2rem;
-      border-radius: 0.3rem;
-      border: 1px solid #ebebeb;
-      padding-left: 0.5rem;
-      width: 100%;
-      &.valid {
-        box-shadow: 0 0 3px var(--primaryPurple);
-      }
-      &.not-valid {
-        box-shadow: 0 0 5px var(--primaryPink);
-      }
-    }
-    @media screen and (max-width: 590px) {
-      width: 100%;
-      max-width: none;
-    }
-  }
-
-  label {
-    color: #7a7777;
-  }
-`;
-
-const Button = styled.button<{ isLoading: boolean }>`
-  background-color: var(--mainColor);
-  color: white;
-  height: 2rem;
-  border-radius: 0.3rem;
-  padding: 0 1rem;
-  font-weight: 550;
-  position: relative;
-  transition: all 0.3s;
-
-  ${(props) =>
-    props.isLoading === true &&
-    css`
-      span {
-        visibility: hidden;
-        opacity: 0.5;
-        transition: all 0.2s;
-      }
-
-      &:active {
-        background: #007a63;
-      }
-      &::after {
-        content: '';
-        position: absolute;
-        width: 16px;
-        height: 16px;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        margin: auto;
-        border: 4px solid transparent;
-        border-top-color: #ffffff;
-        border-radius: 50%;
-        animation: button-loading-spinner 1s ease infinite;
-      }
-    `}
-
-  @keyframes button-loading-spinner {
-    from {
-      transform: rotate(0turn);
-    }
-
-    to {
-      transform: rotate(1turn);
-    }
-  }
-
-  &:disabled {
-    background-color: darkgray;
-    &:hover {
-      background-color: darkgray;
-    }
-
-    /*
-   loading일 때 스피너 뜨게 하기
-   
-   */
-  }
-`;
-const Nickname = styled(Accordion)`
-  .updated-nickname {
-    margin-bottom: 1rem;
-  }
-  label {
-    margin-bottom: 1rem;
-  }
-  & button {
-    /* margin-left: 1rem; */
-
-    /* &:hover {
-      box-shadow: 1px 3px 1px rgba(217, 220, 224, 0.901);
-    } */
-  }
-`;
-const ValidMsg = styled(ShowValid)`
-  padding-left: 0;
-  margin: 0.5rem 0;
-  height: 1rem;
-
-  @media screen and (max-width: 320px) {
-    font-size: 0.7rem;
-  }
-`;
-const Password = styled(Accordion)`
-  margin-top: 0.5rem;
-
-  & > input {
-    margin: 0.2rem 0;
-    height: 1.8rem;
-  }
-
-  & button {
-    margin-top: 1rem;
-    &:hover {
-      box-shadow: 1px 3px 1px rgba(217, 220, 224, 0.901);
-    }
-  }
-
-  & > span {
-    margin-left: 1rem;
-    color: red;
-  }
-`;
-
-type AccountProps = {
-  authState: AuthState;
-  handleAuthState: (nickname: string) => void;
-};
-
-export default function Account({ authState, handleAuthState }: AccountProps) {
+export default function Account() {
+  const { authState, setAuthState } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState({
     nickname: false,
     password: false,
   });
   const [userInfo, setUserInfo] = useState<userInfo>({
-    nickname: { text: '', isValid: false, isUnique: false },
-    password: { text: '', isValid: false },
-    passwordCheck: { text: '', isValid: false },
-    curPassword: { text: '', isValid: true },
+    nickname: { text: "", isValid: false, isUnique: false },
+    password: { text: "", isValid: false },
+    passwordCheck: { text: "", isValid: false },
+    curPassword: { text: "", isValid: true },
   });
   const [validMsg, setValidMsg] = useState({
-    nickname: '',
-    password: '',
-    passwordCheck: '',
-    curPassword: '',
+    nickname: "",
+    password: "",
+    passwordCheck: "",
+    curPassword: "",
   });
   const [withdraw, setWithdraw] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const [progress, setProgress] = useState<Progress>('inProgress');
-  const [updatedAt, setUpdatedAt] = useState('');
+  const [progress, setProgress] = useState<Progress>("inProgress");
+  const [updatedAt, setUpdatedAt] = useState("");
 
   const editType = useRef<null | string>(null);
   const inputhere = useRef<HTMLInputElement | null>(null);
@@ -285,27 +70,30 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
   const { nickname, password, passwordCheck, curPassword } = userInfo;
 
   useEffect(() => {
-    console.log('accountSetting!!');
+    console.log("accountSetting!!");
     axios
       .get(`${process.env.REACT_APP_SERVER_URL}/users/edit`, {
-        headers: { accesstoken: sessionStorage.getItem('accesstoken') ?? '' },
+        headers: { accesstoken: sessionStorage.getItem("accesstoken") ?? "" },
       })
       .then((response) => {
         console.log(response);
         setUpdatedAt(response.data.updatedAt);
       });
   }, []);
+  const changeNickname = (nickname: string) => {
+    setAuthState((prevAuth) => ({ ...prevAuth, nickname }));
+  };
   const duplicateCheck = async (type: string, value: string) => {
     const checkType = type;
 
-    console.log('duplicaatecheck');
+    console.log("duplicaatecheck");
     console.log(value, checkType, userInfo);
 
     // if (userInfo[checkType].isValid === false) {
     //   console.log('중복확인 누를 때 유효성 검사가 통과되지 않은경우');
     //   return;
     // }
-    console.log('중복확인 누를 때 유효성 검사가 통과된경우');
+    console.log("중복확인 누를 때 유효성 검사가 통과된경우");
 
     try {
       await axios.get(`${process.env.REACT_APP_SERVER_URL}/users/signup`, {
@@ -327,14 +115,14 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
       // 중복 메시지 색깔 styled-componnet로 해결
     } catch (err: unknown) {
       if (err instanceof AxiosError) {
-        if (err.message === 'Network Error') {
-          setProgress('failed');
+        if (err.message === "Network Error") {
+          setProgress("failed");
           setLoading(false);
         }
 
         console.log(err.response);
         if (err.response?.data === `Already ${checkType}`) {
-          console.log('here!!');
+          console.log("here!!");
 
           setUserInfo((prevInfo) => ({
             ...prevInfo,
@@ -358,13 +146,13 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
       const checkType = e.target.name;
       const value = e.target.value;
 
-      if (progress === 'success' || progress === 'failed') {
-        console.log('here');
+      if (progress === "success" || progress === "failed") {
+        console.log("here");
 
-        setProgress('inProgress');
+        setProgress("inProgress");
       }
 
-      if (checkType === 'curPassword') {
+      if (checkType === "curPassword") {
         setUserInfo((prevInfo) => ({
           ...prevInfo,
           [checkType]: { ...prevInfo[checkType], text: value, isValid: true },
@@ -372,7 +160,7 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
         if (value.length !== 0)
           return setValidMsg((prevMsg) => ({
             ...prevMsg,
-            [checkType]: '',
+            [checkType]: "",
           }));
       }
 
@@ -385,7 +173,7 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
             ...prevInfo,
             [checkType]: { ...prevInfo[checkType], text: value, isValid: true },
           };
-          if (checkType === 'nickname') {
+          if (checkType === "nickname") {
             console.log(checkType);
 
             Object.assign(nextInfo[checkType], { isUnique: false });
@@ -395,10 +183,10 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
         // - 메시지 변경 (유효성 통과)
         setValidMsg((prevMsg) => ({
           ...prevMsg,
-          [checkType]: '',
+          [checkType]: "",
         }));
 
-        if (checkType === 'nickname') {
+        if (checkType === "nickname") {
           duplicateCheck(checkType, value);
         }
       } else {
@@ -412,7 +200,7 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
               isValid: false,
             },
           };
-          if (checkType === 'account' || checkType === 'nickname') {
+          if (checkType === "account" || checkType === "nickname") {
             Object.assign(nextInfo[checkType], { isUnique: false });
           }
           return nextInfo;
@@ -422,7 +210,7 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
         if (value.length === 0) {
           setValidMsg((prevMsg) => ({
             ...prevMsg,
-            [checkType]: '',
+            [checkType]: "",
           }));
         } else {
           //빈값이 아닌 입력값이 유효성에  실패한 경우
@@ -438,7 +226,7 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
   const accordionHandler = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       const target = e.currentTarget as HTMLButtonElement;
-      const checkType = target.name as 'nickname' | 'password';
+      const checkType = target.name as "nickname" | "password";
 
       if (isOpen[checkType] === false) {
         // 닫혀있으면 열고
@@ -453,12 +241,12 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
         setUserInfo((prevInfo) => {
           const nextInfo = {
             ...prevInfo,
-            [checkType]: { ...[checkType], text: '', isValid: false },
+            [checkType]: { ...[checkType], text: "", isValid: false },
           };
-          if (checkType === 'password') {
+          if (checkType === "password") {
             Object.assign(nextInfo, {
-              passwordCheck: { text: '', isValid: false },
-              curPassword: { text: '', isValid: true },
+              passwordCheck: { text: "", isValid: false },
+              curPassword: { text: "", isValid: true },
             });
           }
 
@@ -468,10 +256,10 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
         setValidMsg((prevMsg) => {
           const nextMsg = {
             ...prevMsg,
-            [checkType]: '',
+            [checkType]: "",
           };
-          if (checkType === 'password') {
-            Object.assign(nextMsg, { passwordCheck: '', curPassword: '' });
+          if (checkType === "password") {
+            Object.assign(nextMsg, { passwordCheck: "", curPassword: "" });
           }
           return nextMsg;
         });
@@ -491,8 +279,8 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
         if (userInfo[type].isValid === false) return false;
         /* //!isUnique 있으면 true인지도 확인 false면 바로 false */
         if (
-          userInfo[type].hasOwnProperty('isUnique') &&
-          userInfo[type]['isUnique'] === false
+          userInfo[type].hasOwnProperty("isUnique") &&
+          userInfo[type]["isUnique"] === false
         )
           return false;
       }
@@ -500,11 +288,11 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
     };
 
     if (validUserInfo(typeList) === false) return;
-    if (progress === 'success' || progress === 'failed') {
-      setProgress('inProgress');
+    if (progress === "success" || progress === "failed") {
+      setProgress("inProgress");
     }
-    if (typeList[0] === 'nickname') {
-      const checkType = 'nickname';
+    if (typeList[0] === "nickname") {
+      const checkType = "nickname";
       setLoading(true);
       try {
         const response = await axios.put(
@@ -512,18 +300,18 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
           { nickname: userInfo.nickname.text },
           {
             headers: {
-              accesstoken: sessionStorage.getItem('accesstoken') ?? '',
+              accesstoken: sessionStorage.getItem("accesstoken") ?? "",
             },
           }
         );
         const nextNickname = response.data.data.nickname;
 
         // 젼역정보수정
-        handleAuthState(nextNickname);
+        changeNickname(nextNickname);
 
         // 모달메시지 세팅
-        editType.current = '닉네임이';
-        setProgress('success');
+        editType.current = "닉네임이";
+        setProgress("success");
         setLoading(false);
         // 아코디언 닫기
         setIsOpen((prev) => ({ ...prev, [typeList[0]]: false }));
@@ -532,7 +320,7 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
         setValidMsg((prevMsg) => {
           const nextMsg = {
             ...prevMsg,
-            [checkType]: '',
+            [checkType]: "",
           };
 
           return nextMsg;
@@ -543,7 +331,7 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
             [checkType]: {
               ...prevInfo[checkType],
               isValid: false,
-              text: '',
+              text: "",
               isUnique: false,
             },
           };
@@ -554,15 +342,15 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
 
         // 기본 상태로 바꾸기
         setTimeout(() => {
-          setProgress('inProgress');
+          setProgress("inProgress");
         }, 3000);
       } catch (error) {
         setLoading(false);
-        setProgress('failed');
+        setProgress("failed");
       }
     }
 
-    if (typeList[0] === 'password') {
+    if (typeList[0] === "password") {
       const { curPassword, password, passwordCheck } = userInfo;
       const pwdForm = {
         currentPassword: curPassword.text,
@@ -573,7 +361,7 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
       try {
         //# 비밀번호칸 입력하고 비밀번호 확인칸 입력하고 비밀번호칸을 수정했을 때 에러 체크
         if (password.text !== passwordCheck.text)
-          throw new Error('passwordCheck is not valid');
+          throw new Error("passwordCheck is not valid");
 
         setLoading(true);
         const response = await axios.put(
@@ -581,7 +369,7 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
           pwdForm,
           {
             headers: {
-              accesstoken: sessionStorage.getItem('accesstoken') ?? '',
+              accesstoken: sessionStorage.getItem("accesstoken") ?? "",
             },
           }
         );
@@ -591,28 +379,28 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
         // input값들 초기화
         setUserInfo((prevInfo) => ({
           ...prevInfo,
-          password: { ...password, text: '', isValid: false },
-          passwordCheck: { ...passwordCheck, text: '', isValid: false },
-          curPassword: { ...password, text: '' },
+          password: { ...password, text: "", isValid: false },
+          passwordCheck: { ...passwordCheck, text: "", isValid: false },
+          curPassword: { ...password, text: "" },
         }));
 
         //모달메시지 준비
-        editType.current = '비밀번호가';
+        editType.current = "비밀번호가";
 
         // 아코디언 닫으면서 최종수정일 업데이트
         setUpdatedAt(updatedAt);
         setIsOpen((prev) => ({ ...prev, [typeList[0]]: false }));
 
         //모달 띄우기
-        setProgress('success');
+        setProgress("success");
         setLoading(false);
 
         setTimeout(() => {
-          setProgress('inProgress');
+          setProgress("inProgress");
         }, 3000);
       } catch (err: unknown) {
         if (err instanceof Error) {
-          if (err.message === 'passwordCheck is not valid') {
+          if (err.message === "passwordCheck is not valid") {
             setUserInfo((prevInfo) => ({
               ...prevInfo,
               passwordCheck: { ...passwordCheck, isValid: false },
@@ -630,17 +418,17 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
 
         //! 아래 지우면 안됨
         if (err instanceof AxiosError) {
-          if (err.message === 'Network Error') {
-            setProgress('failed');
+          if (err.message === "Network Error") {
+            setProgress("failed");
             setLoading(false);
           }
 
           if (
             err.response?.data.message ===
-            'New password cannot be the same as the current password'
+            "New password cannot be the same as the current password"
           ) {
             setLoading(false);
-            const checkType = 'password';
+            const checkType = "password";
 
             setUserInfo((prevInfo) => ({
               ...prevInfo,
@@ -661,9 +449,9 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
             return;
           }
 
-          if (err.response?.data.message === 'Wrong Password') {
+          if (err.response?.data.message === "Wrong Password") {
             setLoading(false);
-            const checkType = 'curPassword';
+            const checkType = "curPassword";
             setUserInfo((prevInfo) => {
               const nextInfo = {
                 ...prevInfo,
@@ -692,7 +480,7 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
   };
   const onClickLogout = useCallback(() => {
     sessionStorage.clear();
-    window.location.replace('/');
+    window.location.replace("/");
   }, []);
 
   return (
@@ -724,14 +512,14 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
                 <label htmlFor="nickname">변경할 닉네임을 입력해 주세요</label>
                 <br></br>
 
-                <form onSubmit={(e) => handleSubmit(e, 'nickname')}>
+                <form onSubmit={(e) => handleSubmit(e, "nickname")}>
                   <input
                     className={`input-valid ${
                       nickname.text
                         ? nickname.isValid
-                          ? 'valid'
-                          : 'not-valid'
-                        : ''
+                          ? "valid"
+                          : "not-valid"
+                        : ""
                     }`}
                     ref={inputhere}
                     onChange={handleUserInfo}
@@ -740,7 +528,7 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
                     value={nickname.text}
                   ></input>
                   <ValidMsg
-                    checkType={'nickname'}
+                    checkType={"nickname"}
                     isValid={nickname.isValid}
                     isUnique={nickname.isUnique}
                   >
@@ -757,7 +545,7 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
                 </form>
               </Nickname>
             ) : (
-              <div className="updated-nickname" style={{ color: 'gray' }}>
+              <div className="updated-nickname" style={{ color: "gray" }}>
                 {authState.nickname}
               </div>
             )}
@@ -780,7 +568,7 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
             {isOpen.password && (
               <Password>
                 <form
-                  onSubmit={(e) => handleSubmit(e, 'password', 'passwordCheck')}
+                  onSubmit={(e) => handleSubmit(e, "password", "passwordCheck")}
                 >
                   <label htmlFor="curPassword">현재 비밀번호</label>
                   <br />
@@ -789,18 +577,18 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
                     className={`input-valid ${
                       curPassword.text
                         ? curPassword.isValid
-                          ? 'valid'
-                          : 'not-valid'
-                        : ''
+                          ? "valid"
+                          : "not-valid"
+                        : ""
                     }`}
                     required
-                    type={'password'}
+                    type={"password"}
                     onChange={handleUserInfo}
                     name="curPassword"
                     value={curPassword.text}
                   />
                   <ValidMsg
-                    checkType={'curPassword'}
+                    checkType={"curPassword"}
                     isValid={curPassword.isValid}
                   >
                     {validMsg.curPassword}
@@ -812,17 +600,17 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
                     className={`input-valid ${
                       password.text
                         ? password.isValid
-                          ? 'valid'
-                          : 'not-valid'
-                        : ''
+                          ? "valid"
+                          : "not-valid"
+                        : ""
                     }`}
                     required
-                    type={'password'}
+                    type={"password"}
                     onChange={handleUserInfo}
                     name="password"
                     value={password.text}
                   />
-                  <ValidMsg checkType={'password'} isValid={password.isValid}>
+                  <ValidMsg checkType={"password"} isValid={password.isValid}>
                     {validMsg.password}
                   </ValidMsg>
                   <label htmlFor="passwordCheck">비밀번호 확인</label>
@@ -832,21 +620,21 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
                     className={`input-valid ${
                       passwordCheck.text
                         ? passwordCheck.isValid
-                          ? 'valid'
-                          : 'not-valid'
-                        : ''
+                          ? "valid"
+                          : "not-valid"
+                        : ""
                     }`}
                     required
-                    type={'password'}
+                    type={"password"}
                     onChange={handleUserInfo}
                     name="passwordCheck"
                     value={passwordCheck.text}
                   />
                   <ValidMsg
-                    checkType={'passwordCheck'}
+                    checkType={"passwordCheck"}
                     isValid={passwordCheck.isValid}
                   >
-                    {validMsg.passwordCheck}{' '}
+                    {validMsg.passwordCheck}{" "}
                   </ValidMsg>
                   <Button
                     isLoading={isLoading}
@@ -866,7 +654,7 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
               <Toggle>
                 <button
                   onClick={() => {
-                    console.log('계정삭제');
+                    console.log("계정삭제");
                     setWithdraw(true);
                   }}
                 >
@@ -877,22 +665,22 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
           </Info>
         </List>
         <div id="last-modified">
-          최종수정일 : {moment(updatedAt).format('YYYY년 MM월 DD일 HH시 mm분')}
+          최종수정일 : {moment(updatedAt).format("YYYY년 MM월 DD일 HH시 mm분")}
         </div>
         <span className="logout" onClick={onClickLogout}>
           로그아웃
         </span>
       </Wrapper>
-      {!isLoading && progress === 'success' && (
+      {!isLoading && progress === "success" && (
         <Modal
           timer={{ time: 3000 }}
-          containerStyle={{ color: 'black', width: '50vw', height: '' }}
+          containerStyle={{ color: "black", width: "50vw", height: "" }}
           clickOption={{ back: false }}
           btnOption={{
-            text: '확인',
+            text: "확인",
             style: {
-              color: 'white',
-              backGroundColor: 'var(--primaryPurple)',
+              color: "white",
+              backGroundColor: "var(--primaryPurple)",
             },
           }}
         >
@@ -903,16 +691,16 @@ export default function Account({ authState, handleAuthState }: AccountProps) {
           </div>
         </Modal>
       )}
-      {!isLoading && progress === 'failed' && (
+      {!isLoading && progress === "failed" && (
         <Modal
           timer={null}
-          containerStyle={{ color: 'black', width: '50vw', height: '' }}
+          containerStyle={{ color: "black", width: "50vw", height: "" }}
           clickOption={{ back: false }}
           btnOption={{
-            text: '확인',
+            text: "확인",
             style: {
-              color: 'white',
-              backGroundColor: 'var(--primaryPurple)',
+              color: "white",
+              backGroundColor: "var(--primaryPurple)",
             },
           }}
         >

@@ -113,12 +113,7 @@ describe("DropdownMenu Component", () => {
           >
             <div>
               //! 얘는 무조건 있게 되는디...?
-              {isLoginModal && (
-                <LoginModal
-                  loginHandler={jest.fn()}
-                  setIsLoginModal={jest.fn()}
-                />
-              )}
+              {/* {isLoginModal && <LoginModal setIsLoginModal={jest.fn()} />} */}
               <DropdownMenu />
             </div>
           </UserContext.Provider>

@@ -6,7 +6,7 @@ import { Routes, Route } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import styled, { ThemeProvider } from "styled-components";
 import axios from "axios";
-import { UserContext } from "./contexts/userContext";
+import { UserProvider } from "./contexts/userContext";
 import { ModalContext } from "./contexts/modalContext";
 import Wishlist from "./pages/Wishlist";
 import DetailView from "./pages/DetailView";
@@ -25,22 +25,6 @@ const Wrapper = styled.div`
   padding: 0;
 `;
 
-const getUserInfoFromStorage: () => AuthState = () => {
-  if (sessionStorage.getItem("user")) {
-    const user = sessionStorage.getItem("user");
-    if (user) {
-      return JSON.parse(user);
-    }
-  } else {
-    return {
-      userId: 0,
-      account: "",
-      nickname: "",
-      defaultPic: "",
-      loginStatus: false,
-    };
-  }
-};
 const getUserPicksFromStorage: () => FestivalItem[] = () => {
   if (sessionStorage.getItem("picks")) {
     const picks = sessionStorage.getItem("picks");
@@ -53,7 +37,6 @@ const getUserPicksFromStorage: () => FestivalItem[] = () => {
 };
 
 function App() {
-  const [authState, setAuthState] = useState(getUserInfoFromStorage());
   const [festivalData, setFestivalData] = useState<FestivalItem[]>([]);
   const [pickItems, setPickItems] = useState<FestivalItem[]>(
     getUserPicksFromStorage()
@@ -62,38 +45,6 @@ function App() {
     useState<FestivalItem[]>(festivalData);
   const [isLoginModal, setIsLoginModal] = useState(false);
   const offset = useRef(0);
-
-  const loginHandler: loginHandlerFunc = useCallback(
-    async (userId, account, nickname, defaultPic, loginStatus) => {
-      //* 로그인한 후의 유저정보 상태변경입니다.
-      const nextState = {
-        userId,
-        account,
-        nickname,
-        defaultPic,
-        loginStatus,
-      };
-      setAuthState(nextState);
-      //# 유저별 찜한 축제 가져오기
-
-      try {
-        const result = await axios.get(
-          `${process.env.REACT_APP_SERVER_URL}/pick`,
-          {
-            headers: {
-              accesstoken: sessionStorage.getItem("accesstoken") ?? "",
-            },
-          }
-        );
-
-        setPickItems(result.data);
-        sessionStorage.setItem("picks", JSON.stringify(result.data));
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    []
-  );
 
   const togglePick: togglePick = useCallback(
     async (newPick) => {
@@ -144,27 +95,32 @@ function App() {
     },
     [pickItems]
   );
+  const getPickedItems = async () => {
+    try {
+      const result = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/pick`,
+        {
+          headers: {
+            accesstoken: sessionStorage.getItem("accesstoken") ?? "",
+          },
+        }
+      );
 
-  const handleAuthState = (nickname: string) => {
-    const nextAuthState = authState;
-    nextAuthState.nickname = nickname;
-    setAuthState(nextAuthState);
+      setPickItems(result.data);
+      sessionStorage.setItem("picks", JSON.stringify(result.data));
+    } catch (error) {
+      console.log(error);
+    }
   };
-
   return (
     <ThemeProvider theme={theme}>
       <ModalContext.Provider value={{ isLoginModal, setIsLoginModal }}>
-        <UserContext.Provider value={{ authState, setAuthState }}>
+        <UserProvider>
           <Wrapper>
             <Helmet>
               <title>이번주엔 어디로 가볼까? - LOCO</title>
             </Helmet>
-            {isLoginModal && (
-              <LoginModal
-                loginHandler={loginHandler}
-                setIsLoginModal={setIsLoginModal}
-              />
-            )}
+            {isLoginModal && <LoginModal setIsLoginModal={setIsLoginModal} />}
 
             <Header />
             <Routes>
@@ -203,23 +159,13 @@ function App() {
               ></Route>
               <Route
                 path="/Detail/:festivalId/*"
-                element={
-                  <DetailView togglePick={togglePick} authState={authState} />
-                }
+                element={<DetailView togglePick={togglePick} />}
               ></Route>
-              <Route
-                path="/Account"
-                element={
-                  <Account
-                    handleAuthState={handleAuthState}
-                    authState={authState}
-                  />
-                }
-              ></Route>
+              <Route path="/Account" element={<Account />}></Route>
             </Routes>
-            <Footer authState={authState} setIsLoginModal={setIsLoginModal} />
+            <Footer setIsLoginModal={setIsLoginModal} />
           </Wrapper>
-        </UserContext.Provider>
+        </UserProvider>
       </ModalContext.Provider>
     </ThemeProvider>
   );

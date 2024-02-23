@@ -1,7 +1,8 @@
-import axios from "axios";
-import React, { useCallback, useState } from "react";
+import axios, { AxiosError } from "axios";
+import React, { useCallback, useContext, useState } from "react";
 import styled from "styled-components";
 import Signup from "./Signup";
+import { UserContext } from "../../contexts/userContext";
 
 const Backdrop = styled.div<{ isHide: boolean }>`
   z-index: 20;
@@ -143,10 +144,10 @@ const Container = styled.div<{ isHide: boolean }>`
 
 type LoginProps = {
   setIsLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
-  loginHandler: loginHandlerFunc;
 };
 
-const LoginModal = ({ setIsLoginModal, loginHandler }: LoginProps) => {
+const LoginModal = ({ setIsLoginModal }: LoginProps) => {
+  const { setAuthState } = useContext(UserContext);
   const [userInfo, setUserInfo] = useState({ account: "", password: "" });
   const { account, password } = userInfo;
   const [errMessage, setErrMessage] = useState("");
@@ -169,48 +170,56 @@ const LoginModal = ({ setIsLoginModal, loginHandler }: LoginProps) => {
     },
     []
   );
-
-  const handleSubmit = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    try {
       e.preventDefault();
-      axios
-        .post(`${process.env.REACT_APP_SERVER_URL}/users/signin`, {
-          account,
-          password,
-        })
-        .then((response) => {
-          //# 토큰과 유저정보를 받아온다.
-          const { nickname, userId, account, defaultPic } = response.data.info;
-          const user = {
-            account,
-            nickname,
-            userId,
-            defaultPic,
-            loginStatus: true,
-          };
-          sessionStorage.setItem("user", JSON.stringify(user));
-          sessionStorage.setItem("accesstoken", response.data.info.token);
+      const response = await axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/users/signin`,
+        {
+          account: userInfo.account,
+          password: userInfo.password,
+        }
+      );
+      const { nickname, userId, account, defaultPic } = response.data.info;
+      const user = {
+        account,
+        nickname,
+        userId,
+        defaultPic,
+        loginStatus: true,
+      };
+      setAuthState(user);
+      sessionStorage.setItem("user", JSON.stringify(user));
+      sessionStorage.setItem("accesstoken", response.data.info.token);
 
-          loginHandler(userId, account, nickname, defaultPic, true);
+      /**
+       * loginHandler 안에 로그인 성공시, 찜 데이터를 가져 와야 하는데 분리해 주어함
+       *
+       * 로그인버튼 누른다
+       * 로그인을 성공해서 유저정보를 가져온다.
+       * 가져온 유저정보로 authState를 업데이트 한다
+       * 해당 유저정보로 다시 찜 정보를 가져오기 위해 pick api를 보낸다.
+       */
 
-          modalClose();
-        })
-        .catch((err) => {
-          console.log(err.response.data.message);
-          if (
-            err.response.data.message ===
-            "Wrong account And Password Combination"
-          ) {
-            setErrMessage(errMessages[1]);
-          } else if (err.response.data.message === "User Doesn't Exist") {
-            setErrMessage(errMessages[0]);
-          } else {
-            console.log("그밖에에러");
-          }
-        });
-    },
-    [account, password]
-  );
+      modalClose();
+    } catch (err: unknown) {
+      if (err instanceof AxiosError) {
+        console.log(err.response?.data.message);
+        if (
+          err.response?.data.message ===
+          "Wrong account And Password Combination"
+        ) {
+          setErrMessage(errMessages[1]);
+        } else if (err.response?.data.message === "User Doesn't Exist") {
+          setErrMessage(errMessages[0]);
+        } else {
+          console.log("그밖에에러");
+        }
+      } else {
+        console.log(err);
+      }
+    }
+  };
   const modalClose = () => {
     setIsHide(true);
     setIsSignup(false);

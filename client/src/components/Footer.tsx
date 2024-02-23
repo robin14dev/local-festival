@@ -1,12 +1,13 @@
-import React from 'react';
-import peachmong from '../assets/peachmong.png';
-import styled from 'styled-components';
+import React, { useContext } from "react";
+import peachmong from "../assets/peachmong.png";
+import styled from "styled-components";
 
-import { useNavigate } from 'react-router-dom';
-import { useCallback } from 'react';
-import { ReactComponent as Account } from '../assets/profile.svg';
-import { ReactComponent as Wishlist } from '../assets/heart-empty.svg';
-import { ReactComponent as Main } from '../assets/search.svg';
+import { useNavigate } from "react-router-dom";
+import { useCallback } from "react";
+import { ReactComponent as Account } from "../assets/profile.svg";
+import { ReactComponent as Wishlist } from "../assets/heart-empty.svg";
+import { ReactComponent as Main } from "../assets/search.svg";
+import { UserContext } from "../contexts/userContext";
 const Wrapper = styled.footer`
   z-index: 10;
   width: 100%;
@@ -68,12 +69,12 @@ const Item = styled.div`
 `;
 
 type FooterProps = {
-  authState: AuthState;
   setIsLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Footer = ({ authState, setIsLoginModal }: FooterProps) => {
+const Footer = ({ setIsLoginModal }: FooterProps) => {
   let navigate = useNavigate();
+  const { authState } = useContext(UserContext);
   const goPage = useCallback(
     (path: string) => {
       if (authState.loginStatus) {
@@ -92,17 +93,17 @@ const Footer = ({ authState, setIsLoginModal }: FooterProps) => {
         <div>Copyright © 2022 Peachmong All rights reserved.</div>
       </Wrapper>
       <WrapperMobile>
-        <Item onClick={() => navigate('/')}>
-          <Main width={23} height={23} fill={'#FF9A62'} />
+        <Item onClick={() => navigate("/")}>
+          <Main width={23} height={23} fill={"#FF9A62"} />
 
           <div>둘러보기</div>
         </Item>
-        <Item onClick={() => goPage('Wishlist')}>
-          <Wishlist width={23} height={23} fill={'#FF9A62'} />
+        <Item onClick={() => goPage("Wishlist")}>
+          <Wishlist width={23} height={23} fill={"#FF9A62"} />
           <div>위시리스트</div>
         </Item>
-        <Item onClick={() => goPage('Account')}>
-          <Account width={23} height={23} fill={'#FF9A62'} />
+        <Item onClick={() => goPage("Account")}>
+          <Account width={23} height={23} fill={"#FF9A62"} />
           <div>프로필</div>
         </Item>
       </WrapperMobile>
