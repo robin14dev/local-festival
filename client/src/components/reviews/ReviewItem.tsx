@@ -1,19 +1,19 @@
-import React, { useState, useEffect, useContext } from 'react';
-import styled from 'styled-components';
-import moment from 'moment';
-import axios from 'axios';
+import React, { useState, useEffect, useContext } from "react";
+import styled from "styled-components";
+import moment from "moment";
+import axios from "axios";
 
-import profileImg from '../../assets/profile.png';
-import { AiFillStar } from 'react-icons/ai';
-import { ReactComponent as Setting } from '../../assets/setting.svg';
+import profileImg from "../../assets/profile.png";
+import { AiFillStar } from "react-icons/ai";
+import { ReactComponent as Setting } from "../../assets/setting.svg";
 
-import { induceLogin, ModalContext } from '../../contexts/modalContext';
-import CommentWrite from '../comments/CommentWrite';
-import CommentItem from '../comments/CommentItem';
-import ReviewDropdown from './ReviewDropdown';
-import ReviewEdit from './ReviewEdit';
-import ReviewDelete from './ReviewDelete';
-import { UserContext } from '../../contexts/userContext';
+import { LoginModalContext } from "../../contexts/LoginModalContext";
+import CommentWrite from "../comments/CommentWrite";
+import CommentItem from "../comments/CommentItem";
+import ReviewDropdown from "./ReviewDropdown";
+import ReviewEdit from "./ReviewEdit";
+import ReviewDelete from "./ReviewDelete";
+import { UserContext } from "../../contexts/userContext";
 
 const CommentList = styled.div`
   z-index: 10;
@@ -271,7 +271,7 @@ export const showRating = (rating: number, size = 18) => {
         className="starr"
         key={ele}
         size={size}
-        color={ratingValue <= rating ? `var(--mainColor)` : '#c6c6c6'}
+        color={ratingValue <= rating ? `var(--mainColor)` : "#c6c6c6"}
       />
     );
   });
@@ -280,7 +280,7 @@ export const showRating = (rating: number, size = 18) => {
 type ReviewProps = {
   review: TReviewItem;
   updateReviews: (
-    type: 'CREATE' | 'UPDATE' | 'DELETE',
+    type: "CREATE" | "UPDATE" | "DELETE",
     reviewItem: TReviewItem
   ) => void;
 };
@@ -293,7 +293,7 @@ const ReviewItem = ({ review, updateReviews }: ReviewProps) => {
   const [comments, setComments] = useState<TComment[]>([]);
   const [commentToggle, setCommentToggle] = useState(false);
   const { rating, content, createdAt, updatedAt, User, id } = review;
-  const modalContext = useContext(ModalContext);
+  const { setIsLoginModal } = useContext(LoginModalContext);
   const userContext = useContext(UserContext);
   const createComment = () => {
     setCommentWrite(!commentWrite);
@@ -305,7 +305,7 @@ const ReviewItem = ({ review, updateReviews }: ReviewProps) => {
         `${process.env.REACT_APP_SERVER_URL}/comments/${reviewId}`
       );
       let comments;
-      if (result.status === 204 && result.statusText === 'No Content') {
+      if (result.status === 204 && result.statusText === "No Content") {
         comments = [];
       } else {
         comments = result.data;
@@ -369,11 +369,11 @@ const ReviewItem = ({ review, updateReviews }: ReviewProps) => {
                 )}
                 <ul className="nicknameAndDate">
                   <li id="nickname">
-                    {User ? User.nickname : '탈퇴한 회원입니다'}
+                    {User ? User.nickname : "탈퇴한 회원입니다"}
                   </li>
                   <li id="date">
-                    {moment(createdAt).format('YYYY-MM-DD')}{' '}
-                    {createdAt !== updatedAt && '수정됨'}
+                    {moment(createdAt).format("YYYY-MM-DD")}{" "}
+                    {createdAt !== updatedAt && "수정됨"}
                   </li>
                 </ul>
               </section>
@@ -400,13 +400,7 @@ const ReviewItem = ({ review, updateReviews }: ReviewProps) => {
               {userContext?.authState.loginStatus ? (
                 <button onClick={createComment}>댓글</button>
               ) : (
-                <button
-                  onClick={() => {
-                    induceLogin(modalContext);
-                  }}
-                >
-                  댓글
-                </button>
+                <button onClick={() => setIsLoginModal(true)}>댓글</button>
               )}
 
               {comments.length ? (

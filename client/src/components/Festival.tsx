@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
-import moment from 'moment';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import onErrorImage from '../assets/noimage.png';
-import { UserContext } from '../contexts/userContext';
-import { ModalContext } from '../contexts/modalContext';
-import HeartImg from '../assets/heart.png';
-import EmptyHeartImg from '../assets/empty-heart.png';
-import '../styles/common.scss';
-import { useCallback } from 'react';
+import React, { useContext, useEffect, useState } from "react";
+import moment from "moment";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import onErrorImage from "../assets/noimage.png";
+import { UserContext } from "../contexts/userContext";
+import HeartImg from "../assets/heart.png";
+import EmptyHeartImg from "../assets/empty-heart.png";
+import "../styles/common.scss";
+import { useCallback } from "react";
+import { LoginModalContext } from "../contexts/LoginModalContext";
 export const Wrapper = styled.article`
   /* background-color: aliceblue; */
   width: 25%;
@@ -102,11 +102,11 @@ const Status = styled.div<{ status: string }>`
   border-radius: 0.5rem 0.1rem 0.4rem 0.1rem;
 
   background-color: ${({ status }) =>
-    status === 'scheduled'
+    status === "scheduled"
       ? `var(--primaryBlue)`
-      : status === 'completed'
-      ? '#4e4d4d'
-      : `var(--primaryOrange)`};
+      : status === "completed"
+        ? "#4e4d4d"
+        : `var(--primaryOrange)`};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -121,7 +121,7 @@ type FestivalProps = {
 
 const Festival = ({ festival, togglePick, pickItems }: FestivalProps) => {
   const userContext = useContext(UserContext);
-  const modalContext = useContext(ModalContext);
+  const { setIsLoginModal } = useContext(LoginModalContext);
   const { festivalId, title, imageUrl, startDate, endDate, location } =
     festival;
   const [like, setLike] = useState(false);
@@ -156,12 +156,12 @@ const Festival = ({ festival, togglePick, pickItems }: FestivalProps) => {
     let date = now.getDate();
 
     if (month < 10) {
-      convertMonth = '0' + month;
+      convertMonth = "0" + month;
     } else {
       convertMonth = month;
     }
     if (date < 10) {
-      convertDate = '0' + date;
+      convertDate = "0" + date;
     } else {
       convertDate = date;
     }
@@ -171,9 +171,9 @@ const Festival = ({ festival, togglePick, pickItems }: FestivalProps) => {
 
   const showStatus = useCallback((startDate: number, endDate: number) => {
     const status = {
-      scheduled: '예정',
-      completed: '종료',
-      inProgress: '진행중',
+      scheduled: "예정",
+      completed: "종료",
+      inProgress: "진행중",
     };
 
     const today = todayFunc();
@@ -216,8 +216,8 @@ const Festival = ({ festival, togglePick, pickItems }: FestivalProps) => {
           <ul>
             <li>{location}</li>
             <li>
-              {moment(startDate, 'YYYY.MM.DD').format('YYYY.MM.DD')} ~{' '}
-              {moment(endDate, 'YYYY.MM.DD').format('YYYY.MM.DD')}
+              {moment(startDate, "YYYY.MM.DD").format("YYYY.MM.DD")} ~{" "}
+              {moment(endDate, "YYYY.MM.DD").format("YYYY.MM.DD")}
             </li>
           </ul>
         </div>
@@ -228,9 +228,7 @@ const Festival = ({ festival, togglePick, pickItems }: FestivalProps) => {
                 onClickPick(e, festival);
               } else {
                 e.stopPropagation();
-                if (modalContext) {
-                  modalContext.setIsLoginModal(true);
-                }
+                setIsLoginModal(true);
               }
             }
           }}

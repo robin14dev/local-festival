@@ -1,13 +1,13 @@
-import React, { useState, useContext, useRef, useEffect } from 'react';
-import styled from 'styled-components';
-import { mixin } from '../../styles/theme';
-import { UserContext } from '../../contexts/userContext';
-import { induceLogin, ModalContext } from '../../contexts/modalContext';
-import profileImg from '../../assets/profile.png';
-import CountText from '../utilities/CountText';
-import Rating from '../utilities/Rating';
-import Toast from '../utilities/Toast';
-import ServerFailModal from '../utilities/ServerFailModal';
+import React, { useState, useContext, useRef, useEffect } from "react";
+import styled from "styled-components";
+import { mixin } from "../../styles/theme";
+import { UserContext } from "../../contexts/userContext";
+import profileImg from "../../assets/profile.png";
+import CountText from "../utilities/CountText";
+import Rating from "../utilities/Rating";
+import Toast from "../utilities/Toast";
+import ServerFailModal from "../utilities/ServerFailModal";
+import { LoginModalContext } from "../../contexts/LoginModalContext";
 
 type WriteStyle = {
   Wrapper: string;
@@ -19,7 +19,7 @@ type WriteProps = {
   submitContent: (
     text: string,
     rating: number
-  ) => Promise<'SUCCESS' | 'FAILURE'>;
+  ) => Promise<"SUCCESS" | "FAILURE">;
   submitCancel?: () => void;
   isLoading?: boolean;
   errorStatus: boolean;
@@ -151,7 +151,7 @@ const Wrapper = styled.article`
       background: rgb(255 154 98 / 35%);
 
       &::after {
-        ${mixin.spinner('4px solid antiquewhite', `var(--primaryOrange)`)}
+        ${mixin.spinner("4px solid antiquewhite", `var(--primaryOrange)`)}
       }
     }
   }
@@ -206,7 +206,7 @@ export default function ReviewWrite({
   onErrorFunc,
   review,
 }: WriteProps) {
-  const [text, setText] = useState(review ? review.content : '');
+  const [text, setText] = useState(review ? review.content : "");
   const [rating, setRating] = useState(review ? review.rating : 0);
 
   const [isEdit, setIsEdit] = useState(false);
@@ -214,20 +214,20 @@ export default function ReviewWrite({
 
   const [messages, setMessages] = useState<Message[]>([]);
   const userContext = useContext(UserContext);
-  const modalContext = useContext(ModalContext);
+  const { setIsLoginModal } = useContext(LoginModalContext);
   const maxText = 300;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const submitBtnRef = useRef<HTMLButtonElement>(null);
 
   const handleResizeHeight = () => {
     if (textareaRef.current) {
-      console.log('Resize');
+      console.log("Resize");
 
-      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = "auto";
       console.log(textareaRef.current.scrollHeight);
 
       textareaRef.current.style.height =
-        textareaRef.current?.scrollHeight + 'px';
+        textareaRef.current?.scrollHeight + "px";
     }
   };
 
@@ -253,11 +253,11 @@ export default function ReviewWrite({
   };
 
   const submitHandler = async () => {
-    if (!rating) return createNotification('별점을 입력해 주세요');
+    if (!rating) return createNotification("별점을 입력해 주세요");
     const result = await submitContent(text, rating);
 
-    if (result === 'SUCCESS') {
-      setText('');
+    if (result === "SUCCESS") {
+      setText("");
       setRating(0);
     }
   };
@@ -270,7 +270,7 @@ export default function ReviewWrite({
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height =
-        textareaRef.current?.scrollHeight + 'px';
+        textareaRef.current?.scrollHeight + "px";
       textareaRef.current.focus();
     }
   }, []);
@@ -326,21 +326,15 @@ export default function ReviewWrite({
             {userContext?.authState.loginStatus && (
               <button
                 ref={submitBtnRef}
-                className={isLoading ? 'write-submit loading' : 'write-submit'}
+                className={isLoading ? "write-submit loading" : "write-submit"}
                 onClick={submitHandler}
                 disabled={text.length === 0 || isLoading || !isEdit}
               >
-                {!isLoading && '올리기'}
+                {!isLoading && "올리기"}
               </button>
             )}
             {!userContext?.authState.loginStatus && (
-              <button
-                onClick={() => {
-                  induceLogin(modalContext);
-                }}
-              >
-                로그인
-              </button>
+              <button onClick={() => setIsLoginModal(true)}>로그인</button>
             )}
           </div>
         </footer>

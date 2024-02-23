@@ -72,7 +72,7 @@ type Summary = {
   reviewCount: number;
 };
 
-type ModalContext = {
+type LoginModalContext = {
   isLoginModal: boolean;
   setIsLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
 };

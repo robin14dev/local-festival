@@ -8,6 +8,7 @@ import { ReactComponent as Account } from "../assets/profile.svg";
 import { ReactComponent as Wishlist } from "../assets/heart-empty.svg";
 import { ReactComponent as Main } from "../assets/search.svg";
 import { UserContext } from "../contexts/userContext";
+import { LoginModalContext } from "../contexts/LoginModalContext";
 const Wrapper = styled.footer`
   z-index: 10;
   width: 100%;
@@ -68,13 +69,10 @@ const Item = styled.div`
   }
 `;
 
-type FooterProps = {
-  setIsLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-const Footer = ({ setIsLoginModal }: FooterProps) => {
+const Footer = () => {
   let navigate = useNavigate();
   const { authState } = useContext(UserContext);
+  const { setIsLoginModal } = useContext(LoginModalContext);
   const goPage = useCallback(
     (path: string) => {
       if (authState.loginStatus) {

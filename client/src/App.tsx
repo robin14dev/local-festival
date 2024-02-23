@@ -1,13 +1,12 @@
 import "./App.css";
 import "../src/styles/common.scss";
 import theme from "./styles/theme";
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useContext } from "react";
 import { Routes, Route } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import styled, { ThemeProvider } from "styled-components";
 import axios from "axios";
-import { UserProvider } from "./contexts/userContext";
-import { ModalContext } from "./contexts/modalContext";
+import { LoginModalContext } from "./contexts/LoginModalContext";
 import Wishlist from "./pages/Wishlist";
 import DetailView from "./pages/DetailView";
 import Main from "./pages/Main";
@@ -37,13 +36,13 @@ const getUserPicksFromStorage: () => FestivalItem[] = () => {
 };
 
 function App() {
+  const { isLoginModal, setIsLoginModal } = useContext(LoginModalContext);
   const [festivalData, setFestivalData] = useState<FestivalItem[]>([]);
   const [pickItems, setPickItems] = useState<FestivalItem[]>(
     getUserPicksFromStorage()
   );
   const [filteredData, setFilteredData] =
     useState<FestivalItem[]>(festivalData);
-  const [isLoginModal, setIsLoginModal] = useState(false);
   const offset = useRef(0);
 
   const togglePick: togglePick = useCallback(
@@ -114,59 +113,52 @@ function App() {
   };
   return (
     <ThemeProvider theme={theme}>
-      <ModalContext.Provider value={{ isLoginModal, setIsLoginModal }}>
-        <UserProvider>
-          <Wrapper>
-            <Helmet>
-              <title>이번주엔 어디로 가볼까? - LOCO</title>
-            </Helmet>
-            {isLoginModal && <LoginModal setIsLoginModal={setIsLoginModal} />}
+      <Wrapper>
+        <Helmet>
+          <title>이번주엔 어디로 가볼까? - LOCO</title>
+        </Helmet>
+        {isLoginModal && <LoginModal setIsLoginModal={setIsLoginModal} />}
+        <Header />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Main
+                togglePick={togglePick}
+                filteredData={filteredData}
+                pickItems={pickItems}
+                setFestivalData={setFestivalData}
+                setFilteredData={setFilteredData}
+                offset={offset}
+              />
+            }
+          ></Route>
+          <Route
+            path=":search"
+            element={
+              <Main
+                togglePick={togglePick}
+                filteredData={filteredData}
+                pickItems={pickItems}
+                setFestivalData={setFestivalData}
+                setFilteredData={setFilteredData}
+                offset={offset}
+              />
+            }
+          ></Route>
 
-            <Header />
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  <Main
-                    togglePick={togglePick}
-                    filteredData={filteredData}
-                    pickItems={pickItems}
-                    setFestivalData={setFestivalData}
-                    setFilteredData={setFilteredData}
-                    offset={offset}
-                  />
-                }
-              ></Route>
-              <Route
-                path=":search"
-                element={
-                  <Main
-                    togglePick={togglePick}
-                    filteredData={filteredData}
-                    pickItems={pickItems}
-                    setFestivalData={setFestivalData}
-                    setFilteredData={setFilteredData}
-                    offset={offset}
-                  />
-                }
-              ></Route>
-
-              <Route
-                path="/Wishlist"
-                element={
-                  <Wishlist pickItems={pickItems} togglePick={togglePick} />
-                }
-              ></Route>
-              <Route
-                path="/Detail/:festivalId/*"
-                element={<DetailView togglePick={togglePick} />}
-              ></Route>
-              <Route path="/Account" element={<Account />}></Route>
-            </Routes>
-            <Footer setIsLoginModal={setIsLoginModal} />
-          </Wrapper>
-        </UserProvider>
-      </ModalContext.Provider>
+          <Route
+            path="/Wishlist"
+            element={<Wishlist pickItems={pickItems} togglePick={togglePick} />}
+          ></Route>
+          <Route
+            path="/Detail/:festivalId/*"
+            element={<DetailView togglePick={togglePick} />}
+          ></Route>
+          <Route path="/Account" element={<Account />}></Route>
+        </Routes>
+        <Footer />
+      </Wrapper>
     </ThemeProvider>
   );
 }

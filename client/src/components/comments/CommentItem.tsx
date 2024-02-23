@@ -1,16 +1,16 @@
-import React, { useState, useContext } from 'react';
-import styled from 'styled-components';
-import moment from 'moment';
+import React, { useState, useContext } from "react";
+import styled from "styled-components";
+import moment from "moment";
 
-import profileImg from '../../assets/profile.png';
-import { ReactComponent as Setting } from '../../assets/setting.svg';
+import profileImg from "../../assets/profile.png";
+import { ReactComponent as Setting } from "../../assets/setting.svg";
 
-import { induceLogin, ModalContext } from '../../contexts/modalContext';
-import { UserContext } from '../../contexts/userContext';
-import CommentWrite from './CommentWrite';
-import CommentDelete from './CommentDelete';
-import CommentEdit from '../comments/CommentEdit';
-import CommentDropDown from './CommentDropDown';
+import { LoginModalContext } from "../../contexts/LoginModalContext";
+import { UserContext } from "../../contexts/userContext";
+import CommentWrite from "./CommentWrite";
+import CommentDelete from "./CommentDelete";
+import CommentEdit from "../comments/CommentEdit";
+import CommentDropDown from "./CommentDropDown";
 
 const Wrapper = styled.div<{ isEdit: boolean }>`
   border-radius: 0.5rem;
@@ -180,7 +180,7 @@ const CommentItem = ({ comment, setComments }: CommentItemProps) => {
   const [isEdit, setIsEdit] = useState(false);
 
   const userContext = useContext(UserContext);
-  const modalContext = useContext(ModalContext);
+  const { setIsLoginModal } = useContext(LoginModalContext);
   const createComment = () => {
     setReplying(!isReplying);
   };
@@ -214,7 +214,7 @@ const CommentItem = ({ comment, setComments }: CommentItemProps) => {
                 <div className="nicknameAndDate">
                   <span className="nickname">{User.nickname}</span>
                   <span className="createdAt">
-                    {moment(createdAt).format('YYYY-MM-DD-h:mm')}
+                    {moment(createdAt).format("YYYY-MM-DD-h:mm")}
                     {is_edit && <span>(수정됨)</span>}
                   </span>
                 </div>
@@ -249,13 +249,7 @@ const CommentItem = ({ comment, setComments }: CommentItemProps) => {
                     <button onClick={createComment}>답글</button>
                   )}
                 {!userContext?.authState.loginStatus && (
-                  <button
-                    onClick={() => {
-                      induceLogin(modalContext);
-                    }}
-                  >
-                    답글
-                  </button>
+                  <button onClick={() => setIsLoginModal(true)}>답글</button>
                 )}
               </div>
             </div>
@@ -266,7 +260,6 @@ const CommentItem = ({ comment, setComments }: CommentItemProps) => {
         <CommentWrite
           setComments={setComments}
           comment={comment}
-          // authState={authState}
           setReplying={setReplying}
         />
       )}

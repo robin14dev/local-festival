@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { ModalContext } from "../../contexts/modalContext";
 import moment from "moment";
 import DescTab from "../../components/DescTab";
 import {
@@ -32,13 +31,14 @@ import { showRating } from "../../components/reviews/ReviewItem";
 import Loading from "../../components/Loading";
 import { UserContext } from "../../contexts/userContext";
 import { LoadingWrapper, Wrapper, MobileWrapper, Tab, Menu } from "./styled";
+import { LoginModalContext } from "../../contexts/LoginModalContext";
 
 type DetailViewProps = {
   togglePick: togglePick;
 };
 
 const DetailView = ({ togglePick }: DetailViewProps) => {
-  const modalContext = useContext(ModalContext);
+  const { setIsLoginModal } = useContext(LoginModalContext);
   const { authState } = useContext(UserContext);
   const [like, setLike] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -216,9 +216,8 @@ const DetailView = ({ togglePick }: DetailViewProps) => {
                     onClickPick(e, summary.festival);
                   } else {
                     e.stopPropagation();
-                    if (modalContext) {
-                      modalContext.setIsLoginModal(true);
-                    }
+
+                    setIsLoginModal(true);
                   }
                 }}
               >
@@ -321,9 +320,8 @@ const DetailView = ({ togglePick }: DetailViewProps) => {
                   onClickPick(e, summary.festival);
                 } else {
                   e.stopPropagation();
-                  if (modalContext) {
-                    modalContext.setIsLoginModal(true);
-                  }
+
+                  setIsLoginModal(true);
                 }
               }}
             >

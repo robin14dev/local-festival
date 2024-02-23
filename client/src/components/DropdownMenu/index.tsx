@@ -1,7 +1,7 @@
 import React, { useContext, useState, memo } from "react";
 import { IoPersonCircleOutline as DefaultProfileImg } from "react-icons/io5";
 import { UserContext } from "../../contexts/userContext";
-import { ModalContext } from "../../contexts/modalContext";
+import { LoginModalContext } from "../../contexts/LoginModalContext";
 import Menu from "./Menu";
 import { Container } from "./styled";
 
@@ -11,7 +11,7 @@ const DropdownMenu = () => {
     authState: { loginStatus, defaultPic },
     setAuthState,
   } = useContext(UserContext);
-  const { setIsLoginModal } = useContext(ModalContext);
+  const { setIsLoginModal } = useContext(LoginModalContext);
   const showLoginModal = () => {
     !loginStatus && setIsLoginModal(true);
   };

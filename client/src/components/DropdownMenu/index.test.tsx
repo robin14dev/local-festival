@@ -9,7 +9,7 @@ import DropdownMenu from "./index";
 import { MemoryRouter } from "react-router-dom";
 import { UserContext } from "../../contexts/userContext";
 import LoginModal from "../account/LoginModal";
-import { ModalContext } from "../../contexts/modalContext";
+import { LoginModalContext } from "../../contexts/LoginModalContext";
 
 const mockAuthState = {
   login: {
@@ -102,7 +102,7 @@ describe("DropdownMenu Component", () => {
     // const isLoginModal = ModalContext.Consumer
     render(
       <MemoryRouter initialEntries={["/"]}>
-        <ModalContext.Provider
+        <LoginModalContext.Provider
           value={{ isLoginModal: false, setIsLoginModal: jest.fn() }}
         >
           <UserContext.Provider
@@ -117,7 +117,7 @@ describe("DropdownMenu Component", () => {
               <DropdownMenu />
             </div>
           </UserContext.Provider>
-        </ModalContext.Provider>
+        </LoginModalContext.Provider>
       </MemoryRouter>
     );
     /**

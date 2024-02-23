@@ -32,7 +32,7 @@ const getUserInfoFromStorage: () => AuthState = () => {
   }
 };
 
-const UserProvider = ({ children }: Props) => {
+const UserContextProvider = ({ children }: Props) => {
   const [authState, setAuthState] = useState(getUserInfoFromStorage());
 
   return (
@@ -42,4 +42,4 @@ const UserProvider = ({ children }: Props) => {
   );
 };
 
-export { UserContext, UserProvider };
+export { UserContext, UserContextProvider };
