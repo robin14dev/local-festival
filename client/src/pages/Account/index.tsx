@@ -486,7 +486,7 @@ export default function Account() {
   return (
     <>
       {withdraw && <Withdraw setWithdraw={setWithdraw} />}
-      <Wrapper>
+      <Wrapper data-testid="AccountPage">
         <Helmet>
           <title>계정 관리 - LOCO</title>
         </Helmet>
