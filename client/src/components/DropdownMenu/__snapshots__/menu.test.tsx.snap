@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Menu 컴포넌트  Menu 컴포넌트를 성공적으로 렌더링 합니다.  1`] = `
+<div>
+  <ul
+    class="sc-bcXHqe jMtBuy"
+    data-testid="Menu"
+  >
+    <li
+      data-testid="Menu-AccountPage"
+    >
+      계정
+    </li>
+    <li
+      data-testid="Menu-WishlistPage"
+    >
+      위시리스트
+    </li>
+    <li
+      data-testid="Menu-Logout"
+    >
+      로그아웃
+    </li>
+  </ul>
+</div>
+`;

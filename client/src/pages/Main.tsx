@@ -1,16 +1,16 @@
-import React from 'react';
-import Hashtag from '../components/Hashtag';
-import Search from '../components/Search';
-import styled from 'styled-components';
-import Festival from '../components/Festival';
-import { useRef } from 'react';
-import { useEffect } from 'react';
-import axios from 'axios';
-import { useState } from 'react';
-import { useCallback } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { ReactComponent as NoData } from '../assets/noData.svg';
-import Loading, { Wrapper as W } from '../components/Loading';
+import React from "react";
+import Hashtag from "../components/Hashtag";
+import Search from "../components/Search";
+import styled from "styled-components";
+import Festival from "../components/Festival";
+import { useRef } from "react";
+import { useEffect } from "react";
+import axios from "axios";
+import { useState } from "react";
+import { useCallback } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { ReactComponent as NoData } from "../assets/noData.svg";
+import Loading, { Wrapper as W } from "../components/Loading";
 const Wrapper = styled.div`
   margin: 0 auto 5rem auto;
   width: 100%;
@@ -75,7 +75,7 @@ const ErrorMsg = styled.section`
   }
 
   h1 {
-    font-family: 'Inter';
+    font-family: "Inter";
     font-style: normal;
     font-weight: 700;
     font-size: 2rem;
@@ -85,7 +85,7 @@ const ErrorMsg = styled.section`
   }
 
   p {
-    font-family: 'Inter';
+    font-family: "Inter";
     font-style: normal;
     font-weight: 600;
     font-size: 1.2rem;
@@ -133,7 +133,7 @@ const Main = ({
   const observerTargetEl = useRef(null);
   const [hasNextPage, setHasNextPage] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [query, setQuery] = useState(searchParams.get('query'));
+  const [query, setQuery] = useState(searchParams.get("query"));
   const [isTag, setIsTag] = useState(false);
   const navigate = useNavigate();
   const fetchData = useCallback(async () => {
@@ -141,7 +141,7 @@ const Main = ({
 
     try {
       console.log(process.env);
-      
+
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/festivals`,
         { params: { limit: 8, offset: offset.current, query } }
@@ -156,7 +156,7 @@ const Main = ({
 
       if (festivals.length) {
         offset.current += 8;
-        sessionStorage.setItem('offset', offset.current.toString());
+        sessionStorage.setItem("offset", offset.current.toString());
       }
 
       setIsLoading(false);
@@ -169,7 +169,7 @@ const Main = ({
   const onSearch: onSearchFunc = (searchText) => {
     try {
       offset.current = 0;
-      setSearchParams({ query: '' });
+      setSearchParams({ query: "" });
 
       navigate(`/search?query=${searchText}`);
       setQuery(searchText);
@@ -188,7 +188,7 @@ const Main = ({
       }
 
       if (entries[0].isIntersecting) {
-        console.log('isInterSecting!!');
+        console.log("isInterSecting!!");
 
         fetchData();
       }
@@ -203,7 +203,7 @@ const Main = ({
   }, [hasNextPage, fetchData, query]);
 
   return (
-    <Wrapper>
+    <Wrapper data-testid="MainPage">
       <SearchAndTag>
         <Search isTag={isTag} setIsTag={setIsTag} onSearch={onSearch} />
         <Hashtag setIsTag={setIsTag} query={query} onSearch={onSearch} />
@@ -236,7 +236,7 @@ const Main = ({
           <Loading text="축제들을 불러오고 있습니다." />
         </LoadingWrapper>
       ) : null}
-      <div style={{ height: '1rem' }} ref={observerTargetEl}></div>
+      <div style={{ height: "1rem" }} ref={observerTargetEl}></div>
     </Wrapper>
   );
 };

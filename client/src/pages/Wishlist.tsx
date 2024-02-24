@@ -1,7 +1,7 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Helmet } from 'react-helmet';
-import Pick from '../components/Pick';
+import React from "react";
+import styled from "styled-components";
+import { Helmet } from "react-helmet";
+import Pick from "../components/Pick";
 
 const Wrapper = styled.div`
   margin: 0 auto 5rem auto;
@@ -53,7 +53,7 @@ type WishlistProps = {
 };
 const Wishlist = ({ pickItems, togglePick }: WishlistProps) => {
   return (
-    <Wrapper>
+    <Wrapper data-testid="WishlistPage">
       <Helmet>
         <title>나의 위시리스트 - LOCO</title>
       </Helmet>

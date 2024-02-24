@@ -7,9 +7,12 @@ import React, { useContext } from "react";
 import { render, fireEvent, screen } from "@testing-library/react";
 import DropdownMenu from "./index";
 import { MemoryRouter } from "react-router-dom";
-import { UserContext } from "../../contexts/userContext";
+import { UserContext, UserContextProvider } from "../../contexts/userContext";
 import LoginModal from "../account/LoginModal";
-import { LoginModalContext } from "../../contexts/LoginModalContext";
+import {
+  LoginModalContext,
+  LoginModalContextProvider,
+} from "../../contexts/LoginModalContext";
 
 const mockAuthState = {
   login: {
@@ -39,9 +42,8 @@ describe("DropdownMenu Component", () => {
     const dropdownMenu = screen.getByTestId("DropdownMenu");
     expect(dropdownMenu).toBeInTheDocument();
   });
-
   it("로그인 상태시, 마우스를 올려놓으면 드롭다운 메뉴가 렌더링 됩니다.", () => {
-    render(
+    const { container } = render(
       <MemoryRouter initialEntries={["/"]}>
         <UserContext.Provider
           value={{
@@ -57,8 +59,8 @@ describe("DropdownMenu Component", () => {
     fireEvent.mouseEnter(dropdownMenu);
     const menu = screen.getByTestId("Menu");
     expect(menu).toBeInTheDocument();
+    expect(container).toMatchSnapshot();
   });
-
   it("로그인 상태시, 마우스가 요소에서 벗어나면 드롭다운 메뉴가 사라집니다.", () => {
     render(
       <MemoryRouter initialEntries={["/"]}>
@@ -78,7 +80,6 @@ describe("DropdownMenu Component", () => {
     const menu = screen.queryByTestId("Menu");
     expect(menu).not.toBeInTheDocument();
   });
-
   it("로그아웃 상태시, 마우스를 올려놓으면 드롭다운 메뉴가 렌더링 되지 않습니다.", () => {
     render(
       <MemoryRouter initialEntries={["/"]}>
@@ -95,39 +96,35 @@ describe("DropdownMenu Component", () => {
     const dropdownMenu = screen.getByTestId("DropdownMenu");
     fireEvent.mouseEnter(dropdownMenu);
     const menu = screen.queryByTestId("Menu");
-    expect(menu).not.toBeInTheDocument();
+    expect(menu).toBeNull();
   });
   it("로그아웃 상태시, 해당 요소를 클릭하면 로그인 모달이 렌더링 됩니다.", () => {
-    //Todo : 로그인 모달을 여기서 넣어줘야함
-    // const isLoginModal = ModalContext.Consumer
+    const MockApp = () => {
+      const { isLoginModal } = useContext(LoginModalContext);
+
+      return (
+        <>
+          {isLoginModal && <LoginModal setIsLoginModal={jest.fn()} />}
+          <DropdownMenu />
+        </>
+      );
+    };
     render(
       <MemoryRouter initialEntries={["/"]}>
-        <LoginModalContext.Provider
-          value={{ isLoginModal: false, setIsLoginModal: jest.fn() }}
-        >
-          <UserContext.Provider
-            value={{
-              authState: mockAuthState.logout,
-              setAuthState: mockSetAuthState,
-            }}
-          >
-            <div>
-              //! 얘는 무조건 있게 되는디...?
-              {/* {isLoginModal && <LoginModal setIsLoginModal={jest.fn()} />} */}
-              <DropdownMenu />
-            </div>
-          </UserContext.Provider>
-        </LoginModalContext.Provider>
+        <LoginModalContextProvider>
+          <UserContextProvider>
+            <MockApp />
+          </UserContextProvider>
+        </LoginModalContextProvider>
       </MemoryRouter>
     );
-    /**
-     * 시나리오
-     * 처음엔 로그인 모달 안뜬 상태인데 누르고 나면 모달이 뜨게 되는 걸로 스토리 만들어야 됨
-     */
-    const loginModal = screen.getByTestId("LoginModal");
-    expect(loginModal).not.toBeInTheDocument();
+
+    const loginModal = screen.queryByTestId("LoginModal");
+    expect(loginModal).toBeNull();
     const button = screen.getByTestId("DropdownButton");
+
     fireEvent.click(button);
-    expect(loginModal).toBeInTheDocument();
+    const renderedLoginModal = screen.getByTestId("LoginModal");
+    expect(renderedLoginModal).toBeInTheDocument();
   });
 });

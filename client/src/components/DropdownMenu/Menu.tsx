@@ -6,20 +6,20 @@ export default function Menu() {
   let navigate = useNavigate();
   const onClickLogout = () => {
     sessionStorage.clear();
-    window.location.replace("/");
+    navigate("/", { replace: true });
   };
 
-  const onClickMyPage = () => {
-    navigate("/Wishlist ");
-  };
-  const onClickAccount = () => {
-    navigate("/Account");
-  };
   return (
     <Ul data-testid="Menu">
-      <li onClick={onClickAccount}>계정</li>
-      <li onClick={onClickMyPage}>위시리스트</li>
-      <li onClick={onClickLogout}>로그아웃</li>
+      <li data-testid="Menu-AccountPage" onClick={() => navigate("/Account")}>
+        계정
+      </li>
+      <li data-testid="Menu-WishlistPage" onClick={() => navigate("/Wishlist")}>
+        위시리스트
+      </li>
+      <li data-testid="Menu-Logout" onClick={onClickLogout}>
+        로그아웃
+      </li>
     </Ul>
   );
 }
