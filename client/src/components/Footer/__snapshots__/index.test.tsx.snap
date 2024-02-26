@@ -1,0 +1,70 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Footer/> 테스트 데스크탑 너비에 따라 컴포넌트가 성공적으로 렌더링 됩니다 1`] = `
+<div>
+  <footer
+    class="sc-eKJbhj kRfbjm"
+    data-testid="Footer"
+  >
+    <img
+      alt="peachmong"
+      src="peachmong.png"
+    />
+    <div>
+      Copyright © 2022 Peachmong All rights reserved.
+    </div>
+  </footer>
+</div>
+`;
+
+exports[`<Footer/> 테스트 모바일 너비에 따라 컴포넌트가 성공적으로 렌더링 됩니다 1`] = `
+<div>
+  <footer
+    class="sc-bTTELM gupAap"
+    data-testid="Footer-mobile"
+  >
+    <div
+      class="sc-kImNAt iPooDO"
+    >
+      <svg
+        fill="#FF9A62"
+        height="23"
+        width="23"
+      >
+        search.svg
+      </svg>
+      <div>
+        둘러보기
+      </div>
+    </div>
+    <div
+      class="sc-kImNAt iPooDO"
+    >
+      <svg
+        fill="#FF9A62"
+        height="23"
+        width="23"
+      >
+        heart-empty.svg
+      </svg>
+      <div>
+        위시리스트
+      </div>
+    </div>
+    <div
+      class="sc-kImNAt iPooDO"
+    >
+      <svg
+        fill="#FF9A62"
+        height="23"
+        width="23"
+      >
+        profile.svg
+      </svg>
+      <div>
+        프로필
+      </div>
+    </div>
+  </footer>
+</div>
+`;
