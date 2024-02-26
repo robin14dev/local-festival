@@ -76,6 +76,15 @@ describe("Menu 컴포넌트", () => {
     expect(pathName.textContent).toBe("pathname is /Wishlist");
   });
   it("[로그아웃] 메뉴 클릭시 로그아웃 후, 메인페이지로 이동합니다.", () => {
+    /**
+     * TODO : 로그아웃이 되었는지 넣어야 할것 같음 => 이건 넣어야함 (있는 상태에서 하는거니깐)
+     * - 로그인한 목업 상태 만들고
+     * - 클릭한 후에 로그아웃 상태인지 확인
+     * -
+     *
+     * TODO : 계정이랑 위시리스트 눌렀을 때 로그인 상태 아니면 이동 안하는거 추가해야 되지 않나?? => 이건 기능을 추가해야 되는거니깐 일단 보류
+     *
+     */
     const URLTestComponent = (): JSX.Element => {
       const { pathname } = useLocation();
       return <div>pathname is {pathname}</div>;
