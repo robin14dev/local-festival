@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<DescTab /> 데스크탑 환경에서 성공적으로 렌더링 됩니다 1`] = `
+<div>
+  <section
+    class="sc-bcXHqe jjzluj"
+    data-testid="DescTab"
+  >
+    <h1>
+      축제 제목
+    </h1>
+    <h2>
+       
+      위치 정보
+    </h2>
+    <h2>
+      <span>
+        2024년 01월 01일
+      </span>
+      <span>
+        ~
+      </span>
+      <span>
+        2024년 12월 31일
+      </span>
+    </h2>
+    <p
+      class="sc-gswNZR fPbIZH"
+    >
+      축제 개요
+    </p>
+    <div
+      class="sc-dkrFOg rPElY"
+    >
+      <div>
+        <a
+          href="tel:010-1234-5678"
+        >
+          <svg>
+            phone.svg
+          </svg>
+          010-1234-5678
+        </a>
+      </div>
+      <div
+        class="sc-hLBbgP eLcdkS"
+      >
+        <a
+          href="https://www.google.com"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <svg>
+            homepage.svg
+          </svg>
+           공식 홈페이지
+        </a>
+        <a
+          href="https://www.instagram.com/sefes"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <svg>
+            instagram.svg
+          </svg>
+           인스타그램 계정
+        </a>
+        <a
+          href="https://www.youtube.com/efse"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <svg>
+            youtube.svg
+          </svg>
+           유튜브 채널
+        </a>
+      </div>
+    </div>
+  </section>
+</div>
+`;

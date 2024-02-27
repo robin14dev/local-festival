@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
+import axios from "axios";
 import moment from "moment";
-import DescTab from "../../components/DescTab";
 import {
   Routes,
   Route,
@@ -8,9 +8,15 @@ import {
   NavLink,
   useNavigate,
 } from "react-router-dom";
-import ReviewTab from "../../components/reviews/ReviewTab";
-import onErrorImage from "../../assets/noimage.png";
 import { Helmet } from "react-helmet";
+import ReviewTab from "../../components/reviews/ReviewTab";
+import DescTab from "../../components/DescTab";
+import { showRating } from "../../components/reviews/ReviewItem";
+import Loading from "../../components/Loading";
+import { UserContext } from "../../contexts/userContext";
+import { LoginModalContext } from "../../contexts/LoginModalContext";
+import { LoadingWrapper, Wrapper, MobileWrapper, Tab, Menu } from "./styled";
+import onErrorImage from "../../assets/noimage.png";
 import BackImg from "../../assets/back-mobile.png";
 import ShareImg from "../../assets/share-mobile.png";
 import HeartImg from "../../assets/heart-mobile.png";
@@ -25,13 +31,6 @@ import { ReactComponent as EmojiBad } from "../../assets/emojiBad.svg";
 import { ReactComponent as Instagram } from "../../assets/instagram.svg";
 import { ReactComponent as Youtube } from "../../assets/youtube.svg";
 import { ReactComponent as Homepage } from "../../assets/homepage.svg";
-
-import axios from "axios";
-import { showRating } from "../../components/reviews/ReviewItem";
-import Loading from "../../components/Loading";
-import { UserContext } from "../../contexts/userContext";
-import { LoadingWrapper, Wrapper, MobileWrapper, Tab, Menu } from "./styled";
-import { LoginModalContext } from "../../contexts/LoginModalContext";
 
 type DetailViewProps = {
   togglePick: togglePick;

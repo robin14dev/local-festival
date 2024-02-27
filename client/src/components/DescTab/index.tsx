@@ -1,51 +1,67 @@
 import React from "react";
 import moment from "moment";
 
-import { ReactComponent as Instagram } from "../assets/instagram.svg";
-import { ReactComponent as Youtube } from "../assets/youtube.svg";
-import { ReactComponent as Homepage } from "../assets/homepage.svg";
-import { ReactComponent as Phone } from "../assets/phone.svg";
+import { ReactComponent as InstagramIcon } from "../../assets/instagram.svg";
+import { ReactComponent as YoutubeIcon } from "../../assets/youtube.svg";
+import { ReactComponent as HomepageIcon } from "../../assets/homepage.svg";
+import { ReactComponent as PhoneIcon } from "../../assets/phone.svg";
 import { Contacts, Container, Links, Overview } from "./styled";
+import { Link } from "react-router-dom";
 
 type DescTabProps = {
   festival: FestivalItem;
 };
+type RegexObj = { [key: string]: RegExp };
+
+const regex: { [key: string]: RegExp } = {
+  official: /https?:\/\/(?!www.instagram\.com|www.youtube\.com)[\w\-\./]+/g,
+  instagram: /https?:\/\/(www.instagram\.com)[\w\-\.\/]+/g,
+  youtube: /https?:\/\/(www.youtube\.com)[\w\-\.\/]+/g,
+};
 
 const DescTab = ({ festival }: DescTabProps) => {
-  const { location, overview, tel, title, homepageUrl, startDate, endDate } =
-    festival;
+  const { location, overview, tel, title, startDate, endDate } = festival;
 
-  const urlCollection = {
+  const homepageUrl =
+    "https://www.google.com   https://www.instagram.com/sefes   https://www.youtube.com/efse";
+
+  const urlCollection: { [key: string]: string } = {
     official: "",
     instagram: "",
     youtube: "",
   };
+  const getMatchedUrl = (homepageUrl: string, regexObj: RegexObj) => {
+    for (const url in regexObj) {
+      const urlRegex = regexObj[url];
+      if (urlRegex.test(homepageUrl)) {
+        const matchedUrl = homepageUrl.match(urlRegex) as string[];
+        urlCollection[url] = matchedUrl[0];
+      }
+    }
+  };
+  const openLink = (url: string): void => {
+    window.open(url);
+  };
   if (homepageUrl) {
-    const regex = {
-      official: /http(s)?:\/\/[a-zA-Z\\d`~!@#$%^&*()-_=+]+/g,
-      instagram: /(https?:\/\/www.instagram.com\/[a-zA-Z0-9]+)/g,
-      youtube: /(https?:\/\/www.youtube.com\/[a-zA-Z0-9]+)/g,
-    };
-
-    if (homepageUrl.match(regex.official)) {
-      urlCollection["official"] = homepageUrl.match(regex.official)![0];
-    }
-    if (homepageUrl.match(regex.instagram)) {
-      urlCollection["official"] = homepageUrl.match(regex.instagram)![0];
-    }
-
-    if (homepageUrl.match(regex.youtube)) {
-      urlCollection["youtube"] = homepageUrl.match(regex.youtube)![0];
-    }
+    getMatchedUrl(homepageUrl, regex);
   }
 
+  const {
+    official: officialLink,
+    instagram: instagramLink,
+    youtube: youtubeLink,
+  } = urlCollection;
+
   return (
-    <Container>
+    <Container data-testid="DescTab">
       <h1>{title}</h1>
       <h2> {location}</h2>
       <h2>
-        {moment(startDate, "YYYY.MM.DD").format("YYYY년 MM월 DD일")} ~{" "}
-        {moment(endDate, "YYYY.MM.DD").format("YYYY년 MM월 DD일")}
+        <span>
+          {moment(startDate, "YYYY.MM.DD").format("YYYY년 MM월 DD일")}
+        </span>
+        <span>~</span>
+        <span>{moment(endDate, "YYYY.MM.DD").format("YYYY년 MM월 DD일")}</span>
       </h2>
 
       <Overview>
@@ -55,45 +71,33 @@ const DescTab = ({ festival }: DescTabProps) => {
           .replace(/&gt;/gi, ">")}
       </Overview>
 
+      {/**
+       * Link가 url를 상대적인 주소로 인식하기 때문에 https도 빼주어야되고 www.google.com으로만 넣어줘야됨
+       */}
+
       <Contacts>
         <div>
-          <button
-            onClick={() => {
-              document.location.href = `tel:${tel}`;
-            }}
-          >
-            <Phone />
+          <a href={`tel:${tel}`}>
+            <PhoneIcon />
             {tel}
-          </button>
+          </a>
         </div>
 
         <Links>
-          {!!urlCollection.official && (
-            <button
-              onClick={() => {
-                window.open(urlCollection.official);
-              }}
-            >
-              <Homepage /> 공식 홈페이지
-            </button>
+          {officialLink && (
+            <a href={officialLink} target="_blank" rel="noopener noreferrer">
+              <HomepageIcon /> 공식 홈페이지
+            </a>
           )}
-          {!!urlCollection.instagram && (
-            <button
-              onClick={() => {
-                window.open(urlCollection.instagram);
-              }}
-            >
-              <Instagram /> 인스타그램 계정
-            </button>
+          {instagramLink && (
+            <a href={instagramLink} target="_blank" rel="noopener noreferrer">
+              <InstagramIcon /> 인스타그램 계정
+            </a>
           )}
-          {!!urlCollection.youtube && (
-            <button
-              onClick={() => {
-                window.open(urlCollection.youtube);
-              }}
-            >
-              <Youtube /> 유튜브 채널
-            </button>
+          {youtubeLink && (
+            <a href={youtubeLink} target="_blank" rel="noopener noreferrer">
+              <YoutubeIcon /> 유튜브 채널
+            </a>
           )}
         </Links>
       </Contacts>
