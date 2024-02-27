@@ -15,12 +15,26 @@ type FestivalProps = {
   pickItems: FestivalItem[];
 };
 
+function getCurrentDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  let month: string | number = today.getMonth() + 1;
+  let day: string | number = today.getDate();
+
+  month = month < 10 ? "0" + month : month;
+  day = day < 10 ? "0" + day : day;
+
+  return Number(`${year}${month}${day}`);
+}
+
 const Festival = ({ festival, togglePick, pickItems }: FestivalProps) => {
-  const userContext = useContext(UserContext);
+  const { authState: loginStatus } = useContext(UserContext);
   const { setIsLoginModal } = useContext(LoginModalContext);
   const { festivalId, title, imageUrl, startDate, endDate, location } =
     festival;
-  const [like, setLike] = useState(false);
+  const [like, setLike] = useState(
+    pickItems.some((pick) => pick.festivalId === festivalId)
+  );
   let navigate = useNavigate();
 
   const onErrorImg = (e: React.ChangeEvent<HTMLImageElement>) => {
@@ -30,82 +44,61 @@ const Festival = ({ festival, togglePick, pickItems }: FestivalProps) => {
   const onClickMoveDVP = (festivalId: number) => {
     navigate(`/Detail/${festivalId}`);
   };
-  const toggleLike = () => {
-    setLike(!like);
-  };
 
-  const onClickPick = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    festival: FestivalItem
-  ) => {
+  const onClickHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    togglePick(festival);
-    toggleLike();
+    if (loginStatus) {
+      togglePick(festival);
+      setLike((prevLike) => !prevLike);
+    } else {
+      setIsLoginModal(true);
+    }
+
+    /**
+     * 로그인 되어 있으면 찜, 로그인 안되어 있으면 로그인 모달
+     */
   };
+  const today = getCurrentDate();
 
-  const todayFunc = useCallback((): number => {
-    let now = new Date();
-    let year = now.getFullYear().toString();
-    let month = now.getMonth() + 1;
-    let convertMonth;
-    let convertDate;
-    let date = now.getDate();
-
-    if (month < 10) {
-      convertMonth = "0" + month;
-    } else {
-      convertMonth = month;
-    }
-    if (date < 10) {
-      convertDate = "0" + date;
-    } else {
-      convertDate = date;
-    }
-
-    return Number(year + convertMonth + convertDate);
-  }, []);
-
-  const showStatus = useCallback((startDate: number, endDate: number) => {
-    const status = {
+  const getStatus = (
+    today: number,
+    startDate: number,
+    endDate: number
+  ): [string, string] => {
+    const statusMap = {
       scheduled: "예정",
       completed: "종료",
       inProgress: "진행중",
     };
 
-    const today = todayFunc();
+    const entries = Object.entries(statusMap);
 
     // 순서 중요
-    if (today < startDate) {
+    if (startDate > today) {
       // 예정
-      return Object.entries(status)[0];
+      return entries[0];
     }
     if (today > endDate) {
-      return Object.entries(status)[1];
+      return entries[1];
     }
-    return Object.entries(status)[2];
-  }, []);
+    return entries[2];
+  };
 
-  useEffect(() => {
-    const isPicked = pickItems.some((ele) => ele.festivalId === festivalId);
-    setLike(isPicked);
-  }, [pickItems, festivalId]);
+  const [statusKey, statusText] = getStatus(today, startDate, endDate);
+
+  // useEffect(() => {
+  //   const isPicked = pickItems.some((ele) => ele.festivalId === festivalId);
+  //   setLike(isPicked);
+  // }, [pickItems, festivalId]);
 
   return (
-    <Container
-      key={festivalId}
-      onClick={() => {
-        onClickMoveDVP(festivalId);
-      }}
-    >
-      <Status status={showStatus(startDate, endDate)[0]}>
-        {showStatus(startDate, endDate)[1]}
-      </Status>
+    <Container key={festivalId} onClick={() => onClickMoveDVP(festivalId)}>
+      <Status status={statusKey}>{statusText}</Status>
       <img
         src={`${imageUrl}?w=400&h=400&fit=crop` || onErrorImage}
         alt={`${title} : 이미지가 존재하지 않습니다`}
         onError={onErrorImg}
       />
-
       <section>
         <div>
           <h1>{title}</h1>
@@ -117,18 +110,7 @@ const Festival = ({ festival, togglePick, pickItems }: FestivalProps) => {
             </li>
           </ul>
         </div>
-        <button
-          onClick={(e) => {
-            if (userContext) {
-              if (userContext.authState.loginStatus) {
-                onClickPick(e, festival);
-              } else {
-                e.stopPropagation();
-                setIsLoginModal(true);
-              }
-            }
-          }}
-        >
+        <button onClick={onClickHandler}>
           <img alt="heart" src={like ? HeartImg : EmptyHeartImg} />
         </button>
       </section>
