@@ -5,7 +5,7 @@ import onErrorImage from "../assets/noimage.png";
 import moment from "moment";
 import HeartImg from "../assets/heart.png";
 import EmptyHeartImg from "../assets/empty-heart.png";
-import { Wrapper } from "./Festival";
+import { Container } from "./Festival/styled";
 
 type PickProps = {
   festival: FestivalItem;
@@ -13,7 +13,7 @@ type PickProps = {
   togglePick: (festival: FestivalItem) => void;
 };
 
-const FestivalWrapper = styled(Wrapper)``;
+const FestivalWrapper = styled(Container)``;
 const Pick = ({ festival, togglePick }: PickProps) => {
   const [like] = useState(true);
 

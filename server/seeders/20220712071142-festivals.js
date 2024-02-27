@@ -1,7 +1,7 @@
-'use strict';
-const axios = require('axios');
-const { Festivals } = require('../models');
-require('dotenv').config();
+"use strict";
+const axios = require("axios");
+const { Festivals } = require("../models");
+require("dotenv").config();
 
 //*추가해야할것
 //# 에러가 생기면 에러 생기기 전까지 db에 넣어놓고 에러다루게 하기
@@ -22,7 +22,7 @@ module.exports = {
     try {
       //#1 현재 있는 축제 id 목록 추출
       let festivalIdObj = {};
-      let arr = await Festivals.findAll({ attributes: ['festivalId'] });
+      let arr = await Festivals.findAll({ attributes: ["festivalId"] });
 
       arr.forEach((ele) => {
         festivalIdObj[ele.festivalId] = ele.festivalId;
@@ -41,7 +41,7 @@ module.exports = {
             '2759260': 2759260,
             '2819403': 2819403
           } */
-      console.log('현재 DB에 저장된 축제 수', arr.length);
+      console.log("현재 DB에 저장된 축제 수", arr.length);
       //#2 api1으로 공공데이터 목록 받아오기 (한번요청)) total count : 1060
 
       let result = [];
@@ -49,7 +49,7 @@ module.exports = {
         `http://api.visitkorea.or.kr/openapi/service/rest/KorService/searchFestival?ServiceKey=${process.env.API_KEY}&eventStartDate=20170101&arrange=A&listYN=Y&numOfRows=400&MobileOS=ETC&MobileApp=AppTesting&_type=json`
       );
       let festivalList = api1.data.response.body.items.item;
-      console.log('api1 받아온 데이터 개수 : ', festivalList.length);
+      console.log("api1 받아온 데이터 개수 : ", festivalList.length);
       //#3 받아온 1060개 배열 돌기
       for await (const ele of festivalList) {
         try {
@@ -64,7 +64,9 @@ module.exports = {
             tel,
           } = ele;
           if (festivalIdObj.hasOwnProperty(contentid)) continue;
+          if (eventenddate === "" || eventstartdate === "") continue;
           //#4-2 없으면 obj 만들어서 추가하기
+
           let api2 = await axios.get(
             `http://api.visitkorea.or.kr/openapi/service/rest/KorService/detailCommon?ServiceKey=${
               process.env.API_KEY
@@ -92,16 +94,16 @@ module.exports = {
           console.log(result.length, obj.festivalId);
         } catch (error) {
           //# 4-3 에러날 경우에 에러나기 직전 데이터만 result에 넣은 채로 for문 끊기
-          console.log('for문안에서 error', error);
+          console.log("for문안에서 error", error);
           break;
         }
       }
 
-      console.log('최종 결과??', result.length);
+      console.log("최종 결과??", result.length);
       //#5 for문 종료 후, bulkInsert하기
-      await queryInterface.bulkInsert('Festivals', result, {});
+      await queryInterface.bulkInsert("Festivals", result, {});
     } catch (error) {
-      console.log('try~catch 에러다루기 ', error);
+      console.log("try~catch 에러다루기 ", error);
     }
   },
 
