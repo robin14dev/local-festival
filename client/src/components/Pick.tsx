@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import onErrorImage from '../assets/noimage.png';
-import moment from 'moment';
-import HeartImg from '../assets/heart.png';
-import EmptyHeartImg from '../assets/empty-heart.png';
-import { Wrapper } from './Festival';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import onErrorImage from "../assets/noimage.png";
+import moment from "moment";
+import HeartImg from "../assets/heart.png";
+import EmptyHeartImg from "../assets/empty-heart.png";
+import { Wrapper } from "./Festival";
 
 type PickProps = {
   festival: FestivalItem;
@@ -43,8 +43,8 @@ const Pick = ({ festival, togglePick }: PickProps) => {
           <ul>
             <li>{location}</li>
             <li>
-              {moment(startDate, 'YYYY.MM.DD').format('YYYY.MM.DD')} ~{' '}
-              {moment(endDate, 'YYYY.MM.DD').format('YYYY.MM.DD')}
+              {moment(startDate, "YYYY.MM.DD").format("YYYY.MM.DD")} ~{" "}
+              {moment(endDate, "YYYY.MM.DD").format("YYYY.MM.DD")}
             </li>
           </ul>
         </div>
