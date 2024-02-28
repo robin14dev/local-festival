@@ -1,7 +1,7 @@
-import axios from 'axios';
-import React, { useState } from 'react';
-import Write from '../utilities/Write';
-import CommentError from './CommentError';
+import axios from "axios";
+import React, { useState } from "react";
+import Write from "../utilities/Write";
+import CommentError from "./CommentError";
 
 type CommentWriteProps = {
   review?: TReviewItem;
@@ -21,7 +21,7 @@ const CommentWrite = ({
   setCommentToggle,
   setComments,
 }: CommentWriteProps) => {
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [onError, setOnError] = useState(false);
 
@@ -37,14 +37,14 @@ const CommentWrite = ({
         },
         {
           headers: {
-            accesstoken: sessionStorage.getItem('accesstoken') ?? '',
+            accesstoken: sessionStorage.getItem("accesstoken") ?? "",
           },
-        }
+        },
       );
 
       if (setComments) {
         setComments(result.data);
-        setContent('');
+        setContent("");
         setCommentWrite && setCommentWrite(false);
         setCommentToggle && setCommentToggle(true);
         setReplying && setReplying(false);

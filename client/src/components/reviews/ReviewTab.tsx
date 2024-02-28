@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import styled from 'styled-components';
-import axios from 'axios';
-import { useSearchParams } from 'react-router-dom';
-import { showRating } from './ReviewItem';
-import ReviewCreate from './ReviewCreate';
-import ReviewList from './ReviewList';
-import Pagination from './Pagination';
-import { useCallback } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import styled from "styled-components";
+import axios from "axios";
+import { useSearchParams } from "react-router-dom";
+import { showRating } from "./ReviewItem";
+import ReviewCreate from "./ReviewCreate";
+import ReviewList from "./ReviewList";
+import Pagination from "./Pagination";
+import { useCallback } from "react";
 
 const Wrapper = styled.section`
   padding: 0 1rem;
@@ -133,8 +133,8 @@ const ReviewTab = ({ festivalId }: ReviewTabProps) => {
   */
 
   useEffect(() => {
-    Number(searchParams.get('page'))
-      ? setPage(Number(searchParams.get('page')))
+    Number(searchParams.get("page"))
+      ? setPage(Number(searchParams.get("page")))
       : setPage(1);
   }, [searchParams]);
 
@@ -143,7 +143,7 @@ const ReviewTab = ({ festivalId }: ReviewTabProps) => {
       setIsLoading(true);
       try {
         const reviewsRes = await axios({
-          method: 'get',
+          method: "get",
           url: `${process.env.REACT_APP_SERVER_URL}/review/${festivalId}`,
           params: { limit: 5, offset },
         });
@@ -164,27 +164,27 @@ const ReviewTab = ({ festivalId }: ReviewTabProps) => {
   }, [offset, festivalId]);
 
   const updateReviews = (
-    type: 'CREATE' | 'UPDATE' | 'DELETE',
-    reviewItem: TReviewItem
+    type: "CREATE" | "UPDATE" | "DELETE",
+    reviewItem: TReviewItem,
   ) => {
     switch (type) {
-      case 'CREATE':
+      case "CREATE":
         return setReviews(
-          (prevReviews) => prevReviews && [reviewItem, ...prevReviews]
+          (prevReviews) => prevReviews && [reviewItem, ...prevReviews],
         );
-      case 'UPDATE':
+      case "UPDATE":
         return setReviews(
           (prevReviews) =>
             prevReviews &&
             prevReviews.map((prevItem) =>
-              prevItem.id !== reviewItem.id ? prevItem : reviewItem
-            )
+              prevItem.id !== reviewItem.id ? prevItem : reviewItem,
+            ),
         );
-      case 'DELETE':
+      case "DELETE":
         return setReviews(
           (prevReviews) =>
             prevReviews &&
-            prevReviews.filter((prevItem) => prevItem.id !== reviewItem.id)
+            prevReviews.filter((prevItem) => prevItem.id !== reviewItem.id),
         );
       default:
         break;
@@ -204,8 +204,8 @@ const ReviewTab = ({ festivalId }: ReviewTabProps) => {
             className="star"
             style={{
               width: `${(average / 5) * 150}px`,
-              overflow: 'hidden',
-              whiteSpace: 'nowrap',
+              overflow: "hidden",
+              whiteSpace: "nowrap",
             }}
           >
             {showRating(5, 30)}

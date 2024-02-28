@@ -1,5 +1,5 @@
-const { Comments } = require('../../models');
-const { Users } = require('../../models');
+const { Comments } = require("../../models");
+const { Users } = require("../../models");
 module.exports = {
   getComments: async (reviewId, res) => {
     try {
@@ -18,23 +18,23 @@ module.exports = {
         include: [
           {
             model: Users,
-            attributes: ['nickname'],
+            attributes: ["nickname"],
           },
         ],
         order: [
-          ['ref', 'ASC'],
-          ['ref_order', 'ASC'],
+          ["ref", "ASC"],
+          ["ref_order", "ASC"],
         ],
       });
       if (comments.length === 0) {
-        return res.status(204).send('No content');
+        return res.status(204).send("No content");
       }
 
       for (let comment of comments) {
         if (comment.dataValues.parent_id) {
           const parentComment = await Comments.findOne({
             where: { id: comment.parent_id },
-            include: [{ model: Users, attributes: ['nickname'] }],
+            include: [{ model: Users, attributes: ["nickname"] }],
           });
 
           comment.dataValues = Object.assign(comment.dataValues, {

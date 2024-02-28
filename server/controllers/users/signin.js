@@ -1,6 +1,6 @@
-const { Users } = require('../../models');
-const bcrypt = require('bcrypt');
-const { sign } = require('jsonwebtoken');
+const { Users } = require("../../models");
+const bcrypt = require("bcrypt");
+const { sign } = require("jsonwebtoken");
 
 module.exports = async (req, res) => {
   const { account, password } = req.body;
@@ -9,18 +9,19 @@ module.exports = async (req, res) => {
   if (user.length === 0) {
     return res.status(409).json({ message: "User Doesn't Exist" });
   } else {
-    //console.log("userExist--------", user);
+    console.log("userExist--------", user);
     const { id, account, nickname, defaultPic } = user[0];
+    console.log(account, password);
     bcrypt.compare(password, user[0].password).then(async (match) => {
       if (!match) {
         return res
           .status(401)
-          .json({ message: 'Wrong account And Password Combination' });
+          .json({ message: "Wrong account And Password Combination" });
       }
 
       const accessToken = sign(
         { account: `${account}`, id: `${id}` },
-        process.env.ACCESS_SECRET
+        process.env.ACCESS_SECRET,
       );
       res.json({
         info: {
@@ -30,7 +31,7 @@ module.exports = async (req, res) => {
           nickname,
           defaultPic,
         },
-        message: 'login success',
+        message: "login success",
       });
     });
   }

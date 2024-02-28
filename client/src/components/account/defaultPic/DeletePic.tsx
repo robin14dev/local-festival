@@ -1,13 +1,13 @@
-import React, { useState, useContext } from 'react';
-import axios from 'axios';
-import styled from 'styled-components';
+import React, { useState, useContext } from "react";
+import axios from "axios";
+import styled from "styled-components";
 
-import { ReactComponent as Back } from '../../../assets/arrow-left.svg';
-import { ReactComponent as Profile } from '../../../assets/profile-fill.svg';
+import { ReactComponent as Back } from "../../../assets/arrow-left.svg";
+import { ReactComponent as Profile } from "../../../assets/profile-fill.svg";
 
-import { UserContext } from '../../../contexts/userContext';
+import { UserContext } from "../../../contexts/userContext";
 
-import { Backdrop as B, Modal as M } from '../../../styles/StyledCurrentPic';
+import { Backdrop as B, Modal as M } from "../../../styles/StyledCurrentPic";
 const Backdrop = styled(B)``;
 const Modal = styled(M)``;
 
@@ -26,41 +26,41 @@ export default function DeletePic({
   setIsOpen,
   setIsDelete,
 }: DeletePicProps) {
-  console.log('deletePic');
+  console.log("deletePic");
 
   const [isLoading, setIsLoading] = useState(false);
-  const [progress, setProgress] = useState('');
+  const [progress, setProgress] = useState("");
   const userContext = useContext(UserContext);
 
   const deletePic = async () => {
     const parsedUrl = parsingUrl(picUrl);
     try {
       setIsLoading(true);
-      setProgress('');
+      setProgress("");
 
       await axios({
         url: `${process.env.REACT_APP_SERVER_URL}/users/defaultPic`,
-        method: 'delete',
+        method: "delete",
         data: { urlKey: parsedUrl },
         headers: {
-          accesstoken: sessionStorage.getItem('accesstoken') ?? '',
+          accesstoken: sessionStorage.getItem("accesstoken") ?? "",
         },
       });
 
       userContext?.setAuthState((prevAuth) => ({
         ...prevAuth,
-        defaultPic: '',
+        defaultPic: "",
       }));
       sessionStorage.setItem(
-        'user',
+        "user",
         JSON.stringify({
           ...userContext?.authState,
-          defaultPic: '',
-        })
+          defaultPic: "",
+        }),
       );
-      setProgress('success');
+      setProgress("success");
     } catch (error) {
-      setProgress('failure');
+      setProgress("failure");
     } finally {
       setIsLoading(false);
     }
@@ -73,21 +73,21 @@ export default function DeletePic({
             <Back />
           </button>
         </div>
-        <div className={isLoading ? 'body isLoading' : 'body'}>
+        <div className={isLoading ? "body isLoading" : "body"}>
           <div className="img-container">
             <Profile />
           </div>
         </div>
 
         <section className="alert">
-          {progress === 'success' && '프로필 사진이 업데이트 되었습니다'}
-          {progress === 'failure' && (
+          {progress === "success" && "프로필 사진이 업데이트 되었습니다"}
+          {progress === "failure" && (
             <>
-              <p>서버와의 문제가 발생했습니다</p>{' '}
+              <p>서버와의 문제가 발생했습니다</p>{" "}
               <p>잠시후에 다시 시도해 주세요</p>
             </>
           )}
-          {progress === '' && (
+          {progress === "" && (
             <>
               <p>프로필 사진을 삭제하시겠습니까?</p>
               <p>기본 이미지로 변경됩니다</p>
@@ -95,16 +95,16 @@ export default function DeletePic({
           )}
         </section>
         <div className="footer">
-          {progress === '' && (
+          {progress === "" && (
             <>
-              {' '}
+              {" "}
               <button onClick={() => setIsDelete(false)}>취소</button>
               <button disabled={isLoading} onClick={deletePic}>
                 삭제
               </button>
             </>
           )}
-          {(progress === 'success' || progress === 'failure') && (
+          {(progress === "success" || progress === "failure") && (
             <button onClick={() => setIsOpen(false)}>확인 </button>
           )}
         </div>

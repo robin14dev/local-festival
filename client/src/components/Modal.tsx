@@ -1,6 +1,6 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import styled, { css } from 'styled-components';
+import React from "react";
+import { useState, useEffect } from "react";
+import styled, { css } from "styled-components";
 
 export const ModalBackdrop = styled.div`
   z-index: 10;
@@ -38,7 +38,7 @@ export const ModalContainer = styled.div<{
   align-items: center;
   justify-content: space-evenly;
   color: ${({ custom }) => custom?.color};
-  width: ${({ custom }) => custom?.width || '40vw'};
+  width: ${({ custom }) => custom?.width || "40vw"};
   height: ${({ custom }) => custom?.height};
   box-shadow: 0 1rem 1rem grey;
 
@@ -73,8 +73,8 @@ export const ModalContainer = styled.div<{
   button {
     position: absolute;
     bottom: 2rem;
-    color: ${({ btnStyle }) => btnStyle?.color || 'black'};
-    background-color: ${({ btnStyle }) => btnStyle?.backGroundColor || 'white'};
+    color: ${({ btnStyle }) => btnStyle?.color || "black"};
+    background-color: ${({ btnStyle }) => btnStyle?.backGroundColor || "white"};
 
     padding: 0.3rem;
     border-radius: 0.3rem;
@@ -129,9 +129,12 @@ export default function Modal({
 
   useEffect(() => {
     if (count) {
-      setTimeout(() => {
-        setTransition(false);
-      }, count * 1000 - 200);
+      setTimeout(
+        () => {
+          setTransition(false);
+        },
+        count * 1000 - 200,
+      );
     }
   }, []);
 

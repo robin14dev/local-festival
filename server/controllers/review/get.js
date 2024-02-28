@@ -1,4 +1,4 @@
-const { Reviews, Users } = require('../../models');
+const { Reviews, Users } = require("../../models");
 
 module.exports = async (req, res) => {
   // console.log('review : req.params-----------', req.params);
@@ -11,18 +11,18 @@ module.exports = async (req, res) => {
       include: [
         {
           model: Users,
-          attributes: ['nickname', 'defaultPic'],
+          attributes: ["nickname", "defaultPic"],
         },
       ],
       where: { festivalId },
-      order: [['createdAt', 'DESC']],
+      order: [["createdAt", "DESC"]],
       offset: Number(offset),
       limit: Number(limit),
     });
     // console.log(rows, 'rows!!!');
 
     // 특정 축제 평균평점
-    const reviewSum = await Reviews.sum('rating', { where: { festivalId } });
+    const reviewSum = await Reviews.sum("rating", { where: { festivalId } });
     let average = 0;
     if (count !== 0) {
       average = Number((reviewSum / count).toFixed(1));

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import styled, { css } from 'styled-components';
+import React, { useEffect, useState } from "react";
+import styled, { css } from "styled-components";
 const Backdrop = styled.div<{ isHide: boolean }>`
   z-index: 100;
   position: fixed;
@@ -13,7 +13,7 @@ const Backdrop = styled.div<{ isHide: boolean }>`
   align-items: center;
 
   animation-duration: 0.4s;
-  animation-name: ${(props) => (props.isHide ? 'bright-soft' : 'dark-soft')};
+  animation-name: ${(props) => (props.isHide ? "bright-soft" : "dark-soft")};
   animation-fill-mode: forwards;
 `;
 
@@ -34,7 +34,7 @@ const Container = styled.div<{ custom: string; isHide: boolean }>`
   box-shadow: 0 4px 5px dimgrey;
   background-color: white;
 
-  animation-name: ${(props) => (props.isHide ? 'slide-up' : 'slide-down')};
+  animation-name: ${(props) => (props.isHide ? "slide-up" : "slide-down")};
   animation-duration: 0.4s;
   animation-fill-mode: forwards;
 
@@ -56,7 +56,7 @@ type Props = {
 export default function Modal({ style, children, hideStatus }: Props) {
   const [isHide, setIsHide] = useState(false);
   console.log(
-    `rendering!, isHide : ${isHide}, props인 hideStatus : ${hideStatus}`
+    `rendering!, isHide : ${isHide}, props인 hideStatus : ${hideStatus}`,
   );
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export default function Modal({ style, children, hideStatus }: Props) {
 
   return (
     <Backdrop isHide={isHide}>
-      <Container isHide={isHide} custom={style ? style?.container : ''}>
+      <Container isHide={isHide} custom={style ? style?.container : ""}>
         {children}
       </Container>
     </Backdrop>

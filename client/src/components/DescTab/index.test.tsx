@@ -13,7 +13,7 @@ describe("<DescTab />", () => {
     const { container } = render(
       <MemoryRouter initialEntries={["/"]}>
         <DescTab festival={mockFestivalItem} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(screen.getByTestId("DescTab")).toBeInTheDocument();
     expect(screen.getByText("축제 제목")).toBeInTheDocument();
@@ -34,7 +34,7 @@ describe("<DescTab />", () => {
             homepageUrl: "https://www.instagram.com/seoul",
           }}
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(screen.getByText("인스타그램 계정")).toBeInTheDocument();
   });

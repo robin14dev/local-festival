@@ -1,7 +1,7 @@
-import React from 'react';
-import styled from 'styled-components';
-import Modal from '../utilities/Modal';
-import { ReactComponent as Failure } from '../../assets/server-fail.svg';
+import React from "react";
+import styled from "styled-components";
+import Modal from "../utilities/Modal";
+import { ReactComponent as Failure } from "../../assets/server-fail.svg";
 
 const Content = styled.div`
   width: 100%;

@@ -39,7 +39,7 @@ function App() {
   const { isLoginModal, setIsLoginModal } = useContext(LoginModalContext);
   const [festivalData, setFestivalData] = useState<FestivalItem[]>([]);
   const [pickItems, setPickItems] = useState<FestivalItem[]>(
-    getUserPicksFromStorage()
+    getUserPicksFromStorage(),
   );
   const [filteredData, setFilteredData] =
     useState<FestivalItem[]>(festivalData);
@@ -49,7 +49,7 @@ function App() {
     async (newPick) => {
       //#1. 픽했는지 아닌지 부터 확인
       const found = pickItems.filter(
-        (el) => el.festivalId === newPick.festivalId
+        (el) => el.festivalId === newPick.festivalId,
       );
       if (found.length !== 0) {
         // 이미 찜목록에 있으면 해제를 시켜줘야됨
@@ -62,7 +62,7 @@ function App() {
             },
           });
           const nextPicks = pickItems.filter(
-            (item) => item.festivalId !== newPick.festivalId
+            (item) => item.festivalId !== newPick.festivalId,
           );
           setPickItems(nextPicks);
           sessionStorage.setItem("picks", JSON.stringify(nextPicks));
@@ -81,7 +81,7 @@ function App() {
               headers: {
                 accesstoken: sessionStorage.getItem("accesstoken") ?? "",
               },
-            }
+            },
           );
           const nextPicks = [newPick, ...pickItems];
 
@@ -92,7 +92,7 @@ function App() {
         }
       }
     },
-    [pickItems]
+    [pickItems],
   );
   const getPickedItems = async () => {
     try {
@@ -102,7 +102,7 @@ function App() {
           headers: {
             accesstoken: sessionStorage.getItem("accesstoken") ?? "",
           },
-        }
+        },
       );
 
       setPickItems(result.data);

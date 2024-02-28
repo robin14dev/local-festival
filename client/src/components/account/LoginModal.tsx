@@ -170,7 +170,7 @@ const LoginModal = ({ setIsLoginModal }: LoginProps) => {
         [e.target.name]: e.target.value,
       }));
     },
-    []
+    [],
   );
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
@@ -180,7 +180,7 @@ const LoginModal = ({ setIsLoginModal }: LoginProps) => {
         {
           account: userInfo.account,
           password: userInfo.password,
-        }
+        },
       );
       const { nickname, userId, account, defaultPic } = response.data.info;
       const user = {

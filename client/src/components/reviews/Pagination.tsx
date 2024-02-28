@@ -1,7 +1,7 @@
-import React, { useCallback, useMemo } from 'react';
-import { memo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled, { css } from 'styled-components';
+import React, { useCallback, useMemo } from "react";
+import { memo } from "react";
+import { useNavigate } from "react-router-dom";
+import styled, { css } from "styled-components";
 
 type PaginationProps = { page: number; reviewsCount: number; unit: number };
 // page가 바뀔 때  마다 리렌더링
@@ -54,15 +54,15 @@ function Pagination({ page, reviewsCount, unit }: PaginationProps) {
   const routingPage = useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
       const navTo = (event.target as HTMLElement).textContent;
-      if (navTo === '<') {
+      if (navTo === "<") {
         navigate(`.?page=${page - 1}`);
-      } else if (navTo === '>') {
+      } else if (navTo === ">") {
         navigate(`.?page=${page + 1}`);
       } else {
         navigate(`.?page=${navTo}`);
       }
     },
-    [navigate, page]
+    [navigate, page],
   );
 
   return (

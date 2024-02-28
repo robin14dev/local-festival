@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { AiFillStar } from 'react-icons/ai';
-import styled from 'styled-components';
+import React, { useState, useEffect } from "react";
+import { AiFillStar } from "react-icons/ai";
+import styled from "styled-components";
 
 const Wrapper = styled.div`
   display: flex;
@@ -16,7 +16,7 @@ const Wrapper = styled.div`
       height: 100%;
     }
   }
-  & input[type='radio'] {
+  & input[type="radio"] {
     display: none;
   }
 
@@ -58,8 +58,8 @@ const Rating = ({ handleRating, initialRating }: RatingProps) => {
               className="star" // 각각 ratingValue : 1 2 3 4 5
               color={
                 ele <= ((hover as number) || (click as number))
-                  ? 'var(--mainColor)'
-                  : 'lightgray'
+                  ? "var(--mainColor)"
+                  : "lightgray"
               }
               size={100}
               onMouseEnter={() => setHover(ele)}

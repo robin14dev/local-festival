@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { UserContext } from '../../../contexts/userContext';
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from "../../../contexts/userContext";
 
-import styled from 'styled-components';
+import styled from "styled-components";
 
-import { ReactComponent as CameraRound } from '../../../assets/camera-round.svg';
-import { ReactComponent as Profile } from '../../../assets/profile-fill.svg';
+import { ReactComponent as CameraRound } from "../../../assets/camera-round.svg";
+import { ReactComponent as Profile } from "../../../assets/profile-fill.svg";
 
-import CurrentPic from './CurrentPic';
+import CurrentPic from "./CurrentPic";
 
 export const Backdrop = styled.div`
   z-index: 10;
@@ -55,7 +55,7 @@ export const Modal = styled.div`
   }
   .isLoading {
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       width: 105%;
       height: 105%;
@@ -207,10 +207,10 @@ function DefaultPic({ initialUrl }: DefaultPicProps) {
   }, [initialUrl]);
 
   const imgOnError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    e.currentTarget.style.display = 'none';
+    e.currentTarget.style.display = "none";
     userContext?.setAuthState((prevState) => ({
       ...prevState,
-      defaultPic: '',
+      defaultPic: "",
     }));
   };
   return (

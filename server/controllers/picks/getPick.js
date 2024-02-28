@@ -1,11 +1,11 @@
-const { Users, Picks, sequelize } = require('../../models');
-const validateToken = require('../token-functions/validateToken');
+const { Users, Picks, sequelize } = require("../../models");
+const validateToken = require("../token-functions/validateToken");
 
 module.exports = async (req, res) => {
-  console.log('get pick!!');
+  console.log("get pick!!");
   const accessTokenData = validateToken(req);
   if (!accessTokenData) {
-    return res.status(404).json({ data: null, message: 'User not logged in' });
+    return res.status(404).json({ data: null, message: "User not logged in" });
   }
 
   //픽한 데이터 축제정보 다가져오기
@@ -26,7 +26,7 @@ On F.festivalId = Picks.festivalId
 inner join Users 
 On Picks.userId = Users.id 
 where Users.id = ${Number(id)}`,
-    { type: sequelize.QueryTypes.SELECT }
+    { type: sequelize.QueryTypes.SELECT },
   );
 
   //console.log('what is test', test);

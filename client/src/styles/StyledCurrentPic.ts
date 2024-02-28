@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const Backdrop = styled.div`
   z-index: 10;
@@ -48,7 +48,7 @@ export const Modal = styled.div`
   .isLoading {
     position: relative;
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       width: 105%;
       height: 105%;

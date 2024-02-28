@@ -1,14 +1,14 @@
-const { Reviews, Users } = require('../../models');
-const validateToken = require('../token-functions/validateToken');
+const { Reviews, Users } = require("../../models");
+const validateToken = require("../token-functions/validateToken");
 
 module.exports = async (req, res) => {
   const accessTokenData = validateToken(req);
 
   if (!accessTokenData) {
-    return res.status(404).json({ data: null, message: 'User not logged in' });
+    return res.status(404).json({ data: null, message: "User not logged in" });
   }
 
-  console.log(req.body, 'update review!!!');
+  console.log(req.body, "update review!!!");
   /* //#req.body
 
 {
@@ -24,13 +24,13 @@ module.exports = async (req, res) => {
   try {
     await Reviews.update(
       { content, rating },
-      { where: { festivalId: festival, userId: user, id: review } }
+      { where: { festivalId: festival, userId: user, id: review } },
     );
     let updatedReview = await Reviews.findAndCountAll({
       include: [
         {
           model: Users,
-          attributes: ['nickname', 'defaultPic'],
+          attributes: ["nickname", "defaultPic"],
         },
       ],
       where: { festivalId: festival, userId: user, id: review },

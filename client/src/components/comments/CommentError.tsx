@@ -1,7 +1,7 @@
-import React from 'react';
-import Modal from '../utilities/Modal';
-import { ReactComponent as Failure } from '../../assets/server-fail.svg';
-import styled from 'styled-components';
+import React from "react";
+import Modal from "../utilities/Modal";
+import { ReactComponent as Failure } from "../../assets/server-fail.svg";
+import styled from "styled-components";
 type CommentErrorProps = {
   setOnError: React.Dispatch<React.SetStateAction<boolean>>;
 };

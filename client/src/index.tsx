@@ -8,7 +8,7 @@ import { UserContextProvider } from "./contexts/userContext";
 import { LoginModalContextProvider } from "./contexts/LoginModalContext";
 
 const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
+  document.getElementById("root") as HTMLElement,
 );
 
 root.render(
@@ -20,5 +20,5 @@ root.render(
         </LoginModalContextProvider>
       </UserContextProvider>
     </BrowserRouter>
-  </StrictMode>
+  </StrictMode>,
 );

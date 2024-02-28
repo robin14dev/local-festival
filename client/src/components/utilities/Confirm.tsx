@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import ServerFailModal from './ServerFailModal';
-import { mixin } from '../../styles/theme';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import ServerFailModal from "./ServerFailModal";
+import { mixin } from "../../styles/theme";
 
 const Wrapper = styled.article`
   position: absolute;
@@ -42,7 +42,7 @@ const Wrapper = styled.article`
     transition: all 0.2s;
     background-color: rgb(255 154 98 / 35%);
     &::after {
-      ${mixin.spinner('4px solid antiquewhite', `var(--primaryOrange)`)}
+      ${mixin.spinner("4px solid antiquewhite", `var(--primaryOrange)`)}
     }
   }
 `;
@@ -97,7 +97,7 @@ export default function Confirm({
         <div>
           <button onClick={onClickCancel}>{cancel}</button>
           <button
-            className={isLoading ? 'loading' : undefined}
+            className={isLoading ? "loading" : undefined}
             onClick={onClickConfirm}
           >
             {confirm}

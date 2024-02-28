@@ -18,7 +18,7 @@ type WriteProps = {
   style?: WriteStyle;
   submitContent: (
     text: string,
-    rating: number
+    rating: number,
   ) => Promise<"SUCCESS" | "FAILURE">;
   submitCancel?: () => void;
   isLoading?: boolean;

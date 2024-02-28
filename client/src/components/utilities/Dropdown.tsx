@@ -1,6 +1,6 @@
-import React from 'react';
-import { ReactNode } from 'react';
-import styled from 'styled-components';
+import React from "react";
+import { ReactNode } from "react";
+import styled from "styled-components";
 
 const Container = styled.ul`
   transition: transform 0.6s ease-in-out;

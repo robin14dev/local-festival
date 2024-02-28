@@ -1,9 +1,9 @@
-import React, { useState, useContext, useRef, useEffect } from 'react';
-import styled from 'styled-components';
-import { UserContext } from '../../contexts/userContext';
-import profileImg from '../../assets/profile.png';
-import CountText from './CountText';
-import { mixin } from '../../styles/theme';
+import React, { useState, useContext, useRef, useEffect } from "react";
+import styled from "styled-components";
+import { UserContext } from "../../contexts/userContext";
+import profileImg from "../../assets/profile.png";
+import CountText from "./CountText";
+import { mixin } from "../../styles/theme";
 
 type WriteProps = {
   commentToEdit?: TComment;
@@ -16,7 +16,7 @@ type WriteProps = {
 };
 
 const wrapperFunc = (whole: string) => {
-  if (whole === 'default') {
+  if (whole === "default") {
     return `
         box-shadow: 0px 1px 0.2rem lightgrey;
         padding: 1rem;
@@ -122,7 +122,7 @@ const Wrapper = styled.div<{ wrapperStyle: string }>`
       background: rgb(255 154 98 / 35%);
 
       &::after {
-        ${mixin.spinner('4px solid antiquewhite', `var(--primaryOrange)`)}
+        ${mixin.spinner("4px solid antiquewhite", `var(--primaryOrange)`)}
       }
     }
   }
@@ -180,7 +180,7 @@ export default function Write({
   isLoading,
 }: WriteProps) {
   const [content, setContent] = useState(() => {
-    return commentToEdit ? commentToEdit.content : '';
+    return commentToEdit ? commentToEdit.content : "";
   });
   const [isEdit, setIsEdit] = useState(false);
   const userContext = useContext(UserContext);
@@ -188,16 +188,16 @@ export default function Write({
   const submitBtnRef = useRef<HTMLButtonElement>(null);
   const handleResizeHeight = () => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = "auto";
       textareaRef.current.style.height =
-        textareaRef.current?.scrollHeight + 'px';
+        textareaRef.current?.scrollHeight + "px";
     }
   };
 
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height =
-        textareaRef.current?.scrollHeight + 'px';
+        textareaRef.current?.scrollHeight + "px";
       textareaRef.current.focus();
     }
   }, []);
@@ -246,11 +246,11 @@ export default function Write({
           </button>
           <button
             ref={submitBtnRef}
-            className={isLoading ? 'write-submit loading' : 'write-submit'}
+            className={isLoading ? "write-submit loading" : "write-submit"}
             onClick={submitContent}
             disabled={content.length === 0 || isLoading || !isEdit}
           >
-            {!isLoading && '답글'}
+            {!isLoading && "답글"}
           </button>
         </div>
       </div>

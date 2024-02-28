@@ -281,7 +281,7 @@ type ReviewProps = {
   review: TReviewItem;
   updateReviews: (
     type: "CREATE" | "UPDATE" | "DELETE",
-    reviewItem: TReviewItem
+    reviewItem: TReviewItem,
   ) => void;
 };
 
@@ -302,7 +302,7 @@ const ReviewItem = ({ review, updateReviews }: ReviewProps) => {
   const getComments = async (reviewId: number) => {
     try {
       const result = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/comments/${reviewId}`
+        `${process.env.REACT_APP_SERVER_URL}/comments/${reviewId}`,
       );
       let comments;
       if (result.status === 204 && result.statusText === "No Content") {

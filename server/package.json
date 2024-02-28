@@ -31,5 +31,8 @@
     "request": "^2.88.2",
     "sequelize": "^6.21.3",
     "sequelize-cli": "^6.4.1"
+  },
+  "devDependencies": {
+    "prettier": "3.2.5"
   }
 }

@@ -50,7 +50,7 @@ type loginHandlerFunc = (
   account: string,
   nickname: string,
   defaultPic: string,
-  loginStatus: boolean
+  loginStatus: boolean,
 ) => void;
 
 type ReviewSummary = {

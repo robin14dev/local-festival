@@ -1,7 +1,7 @@
-import React from 'react';
-import Dropdown from '../utilities/Dropdown';
-import { ReactComponent as Edit } from '../../assets/edit.svg';
-import { ReactComponent as Delete } from '../../assets/delete.svg';
+import React from "react";
+import Dropdown from "../utilities/Dropdown";
+import { ReactComponent as Edit } from "../../assets/edit.svg";
+import { ReactComponent as Delete } from "../../assets/delete.svg";
 type Props = {
   setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
   setIsDelete: React.Dispatch<React.SetStateAction<boolean>>;

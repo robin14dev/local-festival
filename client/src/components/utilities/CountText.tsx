@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 const Container = styled.section<{ custom: string }>`
   height: 1.5rem;
@@ -33,7 +33,7 @@ export default function CountText({
   style,
 }: CountTextProps) {
   return (
-    <Container custom={style ? style : ''}>
+    <Container custom={style ? style : ""}>
       <span className="count">{content.length}</span>/
       <span className="max">{maxContentLength}</span>
     </Container>

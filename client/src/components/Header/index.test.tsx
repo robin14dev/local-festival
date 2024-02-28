@@ -8,7 +8,7 @@ describe("<Header />", () => {
     render(
       <MemoryRouter initialEntries={["/"]}>
         <Header />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     const logoElement = screen.getByText("LoCo");
     expect(logoElement).toBeInTheDocument();
@@ -19,7 +19,7 @@ describe("<Header />", () => {
     render(
       <MemoryRouter initialEntries={["/"]}>
         <Header />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const logoElement = screen.getByText("LoCo");

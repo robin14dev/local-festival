@@ -1,6 +1,6 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
-import styled, { css } from 'styled-components';
+import React from "react";
+import { useEffect, useState } from "react";
+import styled, { css } from "styled-components";
 
 const Wrapper = styled.div`
   height: 3rem;
@@ -61,13 +61,13 @@ const Hashtag = ({ onSearch, query, setIsTag }: HashtagProps) => {
   const [curTag, setCurTag] = useState(query);
   const tagsArr = [
     {
-      text: '봄나들이',
+      text: "봄나들이",
     },
     {
-      text: '불빛축제',
+      text: "불빛축제",
     },
     {
-      text: '역사탐방',
+      text: "역사탐방",
     },
   ];
 

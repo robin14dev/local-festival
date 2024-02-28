@@ -221,7 +221,7 @@ export default function Account() {
         }
       }
     },
-    [userInfo, message, progress]
+    [userInfo, message, progress],
   );
   const accordionHandler = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -265,7 +265,7 @@ export default function Account() {
         });
       }
     },
-    [isOpen]
+    [isOpen],
   );
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>,
@@ -302,7 +302,7 @@ export default function Account() {
             headers: {
               accesstoken: sessionStorage.getItem("accesstoken") ?? "",
             },
-          }
+          },
         );
         const nextNickname = response.data.data.nickname;
 
@@ -371,7 +371,7 @@ export default function Account() {
             headers: {
               accesstoken: sessionStorage.getItem("accesstoken") ?? "",
             },
-          }
+          },
         );
 
         const { updatedAt } = response.data;

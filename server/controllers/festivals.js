@@ -1,5 +1,5 @@
-const { Festivals, Reviews, Picks, sequelize } = require('../models');
-const { Op } = require('sequelize');
+const { Festivals, Reviews, Picks, sequelize } = require("../models");
+const { Op } = require("sequelize");
 
 module.exports = {
   festivals: async (req, res) => {
@@ -14,10 +14,10 @@ module.exports = {
       let month = now.getMonth() + 1;
       let date = now.getDate();
       if (month < 10) {
-        month = '0' + month;
+        month = "0" + month;
       }
       if (date < 10) {
-        date = '0' + date;
+        date = "0" + date;
       }
 
       return year + month + date;
@@ -27,25 +27,25 @@ module.exports = {
 
     const tagsArr = [
       {
-        text: '눈꽃축제',
-        query: ['눈꽃'],
+        text: "눈꽃축제",
+        query: ["눈꽃"],
       },
       {
-        text: '불빛축제',
-        query: ['라이팅', '드론', '별빛', '불빛', '달빛'],
+        text: "불빛축제",
+        query: ["라이팅", "드론", "별빛", "불빛", "달빛"],
       },
       {
-        text: '역사탐방',
-        query: ['민속', '수문장', '근현대사', '화성', '역사'],
+        text: "역사탐방",
+        query: ["민속", "수문장", "근현대사", "화성", "역사"],
       },
-      { text: '크리스마스', query: ['성탄', '크리스마스', '산타'] },
-      { text: '봄나들이', query: ['봄', '꽃', '나들이', '연꽃', '벚꽃'] },
+      { text: "크리스마스", query: ["성탄", "크리스마스", "산타"] },
+      { text: "봄나들이", query: ["봄", "꽃", "나들이", "연꽃", "벚꽃"] },
     ];
 
     function tagCheck(query) {
       for (const tag of tagsArr) {
-        if (tag['text'] === query) {
-          return tag['query'];
+        if (tag["text"] === query) {
+          return tag["query"];
         }
       }
       return false;
@@ -68,17 +68,17 @@ module.exports = {
                   [Op.or]: [
                     {
                       title: {
-                        [Op.like]: '%' + item + '%',
+                        [Op.like]: "%" + item + "%",
                       },
                     },
                     {
                       location: {
-                        [Op.like]: '%' + item + '%',
+                        [Op.like]: "%" + item + "%",
                       },
                     },
                     {
                       overview: {
-                        [Op.like]: '%' + item + '%',
+                        [Op.like]: "%" + item + "%",
                       },
                     },
                   ],
@@ -88,7 +88,7 @@ module.exports = {
 
             limit: Number(limit),
             offset: Number(offset),
-            order: [['endDate', 'desc']],
+            order: [["endDate", "desc"]],
           });
 
           total = total.concat(festivals);
@@ -121,17 +121,17 @@ module.exports = {
                 [Op.or]: [
                   {
                     title: {
-                      [Op.like]: '%' + query + '%',
+                      [Op.like]: "%" + query + "%",
                     },
                   },
                   {
                     location: {
-                      [Op.like]: '%' + query + '%',
+                      [Op.like]: "%" + query + "%",
                     },
                   },
                   {
                     overview: {
-                      [Op.like]: '%' + query + '%',
+                      [Op.like]: "%" + query + "%",
                     },
                   },
                 ],
@@ -141,7 +141,7 @@ module.exports = {
 
           limit: Number(limit),
           offset: Number(offset),
-          order: [['endDate', 'desc']],
+          order: [["endDate", "desc"]],
         });
         console.log(festivals.length);
 
@@ -161,13 +161,13 @@ module.exports = {
 
         limit: Number(limit),
         offset: Number(offset),
-        order: [['startDate', 'asc']],
+        order: [["startDate", "asc"]],
       });
       console.log(festivals.length);
       res.json(festivals);
     } catch (error) {
       console.log(error);
-      res.status(500).send('Internal Server Error');
+      res.status(500).send("Internal Server Error");
     }
   },
   festival: async (req, res) => {
@@ -197,7 +197,7 @@ module.exports = {
 
       isPicked = isPicked === 1 ? true : false;
       //별점 평균
-      const sum = await Reviews.sum('rating', { where: { festivalId } });
+      const sum = await Reviews.sum("rating", { where: { festivalId } });
       let average = 0;
 
       if (reviewCount !== 0) {

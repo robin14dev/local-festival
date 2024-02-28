@@ -1,4 +1,4 @@
-require('dotenv').config();
+require("dotenv").config();
 const {
   DB_SCHEMA_DEV,
   DB_HOST_DEV,

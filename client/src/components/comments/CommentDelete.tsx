@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import styled from 'styled-components';
-import { mixin } from '../../styles/theme';
-import CommentError from './CommentError';
+import React, { useState } from "react";
+import axios from "axios";
+import styled from "styled-components";
+import { mixin } from "../../styles/theme";
+import CommentError from "./CommentError";
 
 type CommentDeleteProps = {
   setIsDelete: React.Dispatch<React.SetStateAction<boolean>>;
@@ -49,7 +49,7 @@ const Wrapper = styled.article`
     transition: all 0.2s;
     background-color: rgb(255 154 98 / 35%);
     &::after {
-      ${mixin.spinner('4px solid antiquewhite', `var(--primaryOrange)`)}
+      ${mixin.spinner("4px solid antiquewhite", `var(--primaryOrange)`)}
     }
   }
 `;
@@ -71,11 +71,11 @@ export default function CommentDelete({
         {
           data: { id },
           headers: {
-            accesstoken: sessionStorage.getItem('accesstoken') ?? '',
+            accesstoken: sessionStorage.getItem("accesstoken") ?? "",
           },
-        }
+        },
       );
-      if (result.data.message === 'delete comment success') {
+      if (result.data.message === "delete comment success") {
         if (setComments) {
           setComments((prevComments) => {
             return prevComments.filter((comment) => comment.id !== id);
@@ -104,7 +104,7 @@ export default function CommentDelete({
             취소
           </button>
           <button
-            className={isLoading ? 'loading' : undefined}
+            className={isLoading ? "loading" : undefined}
             onClick={deleteComment}
           >
             삭제

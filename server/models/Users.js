@@ -2,7 +2,7 @@ module.exports = (sequelize, DataTypes) => {
   //객체를 리턴하는 함수를 export? 얘도 함수인데??
   //sequelize.define함수에 3가지 params가 들어감 (모델(테이블)명, 컬럼속성, 모델옵션)
   const Users = sequelize.define(
-    'Users',
+    "Users",
     {
       id: {
         type: DataTypes.INTEGER,
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       account: {
         type: DataTypes.STRING(60),
-        comment: '비밀번호',
+        comment: "비밀번호",
       },
       nickname: {
         type: DataTypes.STRING(72),
@@ -24,12 +24,12 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      charset: 'utf8', // 한국어 설정
-      collate: 'utf8_general_ci', // 한국어 설정
-      tableName: 'Users', // 테이블 이름
+      charset: "utf8", // 한국어 설정
+      collate: "utf8_general_ci", // 한국어 설정
+      tableName: "Users", // 테이블 이름
       timestamps: true, // createAt & updateAt 활성화
       paranoid: true, // timestamps 가 활성화 되어야 사용 가능 > deleteAt 옵션 on
-    }
+    },
   );
   // console.log("what is typeof Users in Users.js", typeof Users);
 
@@ -39,9 +39,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     // Users.hasOne(models.UserInfo, {foreignKey: "userId", sourceKey: 'id'});
     // Users.belongsTo(models.CompanyInformation, {foreignKey: "company_id", sourceKey: "id"});
-    Users.hasMany(models.Picks, { foreignKey: 'userId', sourceKey: 'id' });
-    Users.hasMany(models.Reviews, { foreignKey: 'userId', sourceKey: 'id' });
-    Users.hasMany(models.Comments, { foreignKey: 'userId', sourceKey: 'id' });
+    Users.hasMany(models.Picks, { foreignKey: "userId", sourceKey: "id" });
+    Users.hasMany(models.Reviews, { foreignKey: "userId", sourceKey: "id" });
+    Users.hasMany(models.Comments, { foreignKey: "userId", sourceKey: "id" });
   };
   return Users;
 };

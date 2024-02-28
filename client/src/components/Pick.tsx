@@ -22,7 +22,7 @@ const Pick = ({ festival, togglePick }: PickProps) => {
     festival;
   const onClickRemove = (
     e: React.MouseEvent<HTMLButtonElement>,
-    item: FestivalItem
+    item: FestivalItem,
   ) => {
     e.stopPropagation();
     togglePick(item);

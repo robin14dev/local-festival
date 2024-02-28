@@ -1,9 +1,9 @@
-import React from 'react';
-import styled from 'styled-components';
-import ReviewItem from './ReviewItem';
-import Loading, { Wrapper as W } from '../Loading';
-import ServerFailModal from '../utilities/ServerFailModal';
-import { ReactComponent as ServerFailIcon } from '../../assets/server-fail.svg';
+import React from "react";
+import styled from "styled-components";
+import ReviewItem from "./ReviewItem";
+import Loading, { Wrapper as W } from "../Loading";
+import ServerFailModal from "../utilities/ServerFailModal";
+import { ReactComponent as ServerFailIcon } from "../../assets/server-fail.svg";
 
 type ReviewListProps = {
   isLoading: boolean;
@@ -11,8 +11,8 @@ type ReviewListProps = {
   onErrorHandler: () => void;
   reviews: TReviewItem[] | null;
   updateReviews: (
-    type: 'CREATE' | 'UPDATE' | 'DELETE',
-    reviewItem: TReviewItem
+    type: "CREATE" | "UPDATE" | "DELETE",
+    reviewItem: TReviewItem,
   ) => void;
 };
 const LoadingWrapper = styled(W)`

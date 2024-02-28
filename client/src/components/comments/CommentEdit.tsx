@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import Write from '../utilities/Write';
-import CommentError from './CommentError';
+import React, { useState } from "react";
+import axios from "axios";
+import Write from "../utilities/Write";
+import CommentError from "./CommentError";
 
 type EditModeProps = {
   setComments: React.Dispatch<React.SetStateAction<TComment[]>>;
@@ -36,16 +36,16 @@ export default function CommentEdit({
         { id, content: editContent },
         {
           headers: {
-            accesstoken: sessionStorage.getItem('accesstoken') ?? '',
+            accesstoken: sessionStorage.getItem("accesstoken") ?? "",
           },
-        }
+        },
       );
 
       const { content, is_edit } = result.data;
-      setEditContent('');
+      setEditContent("");
       setComments((prevComments) => {
         return prevComments.map((comment) =>
-          comment.id === id ? { ...comment, content, is_edit } : comment
+          comment.id === id ? { ...comment, content, is_edit } : comment,
         );
       });
       setIsEdit(false);

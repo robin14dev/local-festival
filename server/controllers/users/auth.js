@@ -1,12 +1,12 @@
-const { Users } = require('../../models');
-const validateToken = require('../token-functions/validateToken');
+const { Users } = require("../../models");
+const validateToken = require("../token-functions/validateToken");
 
 module.exports = async (req, res) => {
   try {
     const accessTokenData = validateToken(req);
 
     if (!accessTokenData) {
-      return res.status(404).json({ data: null, message: 'No access Token' });
+      return res.status(404).json({ data: null, message: "No access Token" });
     }
 
     const { account } = accessTokenData;

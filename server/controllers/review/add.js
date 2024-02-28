@@ -1,12 +1,12 @@
-const { Reviews } = require('../../models');
-const validateToken = require('../token-functions/validateToken');
+const { Reviews } = require("../../models");
+const validateToken = require("../token-functions/validateToken");
 
 module.exports = async (req, res) => {
   const accessTokenData = validateToken(req);
 
-  console.log('hereefe!!');
+  console.log("hereefe!!");
   if (!accessTokenData) {
-    return res.status(404).json({ data: null, message: 'User not logged in' });
+    return res.status(404).json({ data: null, message: "User not logged in" });
   }
 
   const { content, rating, festivalId } = req.body;

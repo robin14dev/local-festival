@@ -1,16 +1,16 @@
-import axios from 'axios';
-import React, { useState } from 'react';
-import ReviewWrite from './ReviewWrite';
-import { useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
-import { UserContext } from '../../contexts/userContext';
+import axios from "axios";
+import React, { useState } from "react";
+import ReviewWrite from "./ReviewWrite";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "../../contexts/userContext";
 
 type ReviewCreateProps = {
   festivalId: number;
 
   updateReviews: (
-    type: 'CREATE' | 'UPDATE' | 'DELETE',
-    reviewItem: TReviewItem
+    type: "CREATE" | "UPDATE" | "DELETE",
+    reviewItem: TReviewItem,
   ) => void;
 };
 const ReviewCreate = ({ updateReviews, festivalId }: ReviewCreateProps) => {
@@ -23,7 +23,7 @@ const ReviewCreate = ({ updateReviews, festivalId }: ReviewCreateProps) => {
     try {
       setIsLoading(true);
       const createdRes = await axios({
-        method: 'post',
+        method: "post",
         url: `${process.env.REACT_APP_SERVER_URL}/review`,
         data: {
           content: text,
@@ -31,7 +31,7 @@ const ReviewCreate = ({ updateReviews, festivalId }: ReviewCreateProps) => {
           festivalId: festivalId,
         },
         headers: {
-          accesstoken: sessionStorage.getItem('accesstoken') ?? '',
+          accesstoken: sessionStorage.getItem("accesstoken") ?? "",
         },
       });
       const { content, createdAt, id, rating, updatedAt, userId } =
@@ -50,12 +50,12 @@ const ReviewCreate = ({ updateReviews, festivalId }: ReviewCreateProps) => {
         },
         like_num: 0,
       };
-      updateReviews('CREATE', newReview);
-      navigate('.?page=1');
-      return 'SUCCESS';
+      updateReviews("CREATE", newReview);
+      navigate(".?page=1");
+      return "SUCCESS";
     } catch (error) {
       setIsError(true);
-      return 'FAILURE';
+      return "FAILURE";
     } finally {
       setIsLoading(false);
     }

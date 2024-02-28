@@ -91,7 +91,7 @@ const DetailView = ({ togglePick }: DetailViewProps) => {
         setIsLoading(true);
         let result = await axios.get(
           `${process.env.REACT_APP_SERVER_URL}/festivals/${params.festivalId}`,
-          { params: { userId: authState.userId } }
+          { params: { userId: authState.userId } },
         );
         setSummary(result.data);
         const isPicked = result.data.isPicked;
@@ -124,7 +124,7 @@ const DetailView = ({ togglePick }: DetailViewProps) => {
   };
   const onClickPick = (
     e: React.MouseEvent<HTMLButtonElement>,
-    festival: FestivalItem
+    festival: FestivalItem,
   ) => {
     e.stopPropagation();
 

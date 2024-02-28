@@ -27,8 +27,8 @@ export const mixin = {
   spinner: (
     circleBorder: string,
     topBorderColor: string,
-    width: string = '1rem',
-    height: string = '1rem'
+    width: string = "1rem",
+    height: string = "1rem",
   ) =>
     `content: '';
     position: absolute;

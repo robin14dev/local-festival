@@ -33,7 +33,7 @@ const Festival = ({ festival, togglePick, pickItems }: FestivalProps) => {
   const { festivalId, title, imageUrl, startDate, endDate, location } =
     festival;
   const [like, setLike] = useState(
-    pickItems.some((pick) => pick.festivalId === festivalId)
+    pickItems.some((pick) => pick.festivalId === festivalId),
   );
   let navigate = useNavigate();
 
@@ -63,7 +63,7 @@ const Festival = ({ festival, togglePick, pickItems }: FestivalProps) => {
   const getStatus = (
     today: number,
     startDate: number,
-    endDate: number
+    endDate: number,
   ): [string, string] => {
     const statusMap = {
       scheduled: "예정",

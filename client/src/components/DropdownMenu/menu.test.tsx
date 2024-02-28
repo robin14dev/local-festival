@@ -19,7 +19,7 @@ describe("Menu 컴포넌트", () => {
     const { container } = render(
       <MemoryRouter initialEntries={["/"]}>
         <Menu />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     const menu = screen.getByTestId("Menu");
     expect(menu).toBeInTheDocument();
@@ -36,7 +36,7 @@ describe("Menu 컴포넌트", () => {
         <URLTestComponent />
         <App />
         <Menu />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const accountBtn = screen.getByTestId("Menu-AccountPage");
@@ -61,7 +61,7 @@ describe("Menu 컴포넌트", () => {
         <URLTestComponent />
         <App />
         <Menu />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const wishListBtn = screen.getByTestId("Menu-WishlistPage");
@@ -122,7 +122,7 @@ describe("Menu 컴포넌트", () => {
           <App />
           <Menu />
         </UserContext.Provider>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const logoutBtn = screen.getByTestId("Menu-Logout");

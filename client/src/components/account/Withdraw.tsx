@@ -1,13 +1,13 @@
-import React, { useState, useCallback, useRef } from 'react';
-import styled from 'styled-components';
-import axios, { AxiosError } from 'axios';
+import React, { useState, useCallback, useRef } from "react";
+import styled from "styled-components";
+import axios, { AxiosError } from "axios";
 
-import Modal from '../utilities/Modal';
-import ServerFailModal from '../utilities/ServerFailModal';
-import { mixin } from '../../styles/theme';
-import { ReactComponent as Auth } from '../../assets/auth.svg';
-import { ReactComponent as Confirm } from '../../assets/confirm.svg';
-import { ReactComponent as Invalid } from '../../assets/cancel.svg';
+import Modal from "../utilities/Modal";
+import ServerFailModal from "../utilities/ServerFailModal";
+import { mixin } from "../../styles/theme";
+import { ReactComponent as Auth } from "../../assets/auth.svg";
+import { ReactComponent as Confirm } from "../../assets/confirm.svg";
+import { ReactComponent as Invalid } from "../../assets/cancel.svg";
 const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -86,7 +86,7 @@ const Container = styled.div`
       transition: all 0.2s;
       background-color: rgb(255 154 98 / 35%);
       &::after {
-        ${mixin.spinner('4px solid antiquewhite', `var(--primaryOrange)`)}
+        ${mixin.spinner("4px solid antiquewhite", `var(--primaryOrange)`)}
       }
     }
   }
@@ -132,14 +132,14 @@ type WithdrawProps = {
   setWithdraw: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-type Progress = 'IDLE' | 'SUCCESS' | 'FAILURE';
+type Progress = "IDLE" | "SUCCESS" | "FAILURE";
 
 const errText = {
-  empty: '비밀번호를 입력해 주세요',
-  inValid: '비밀번호가 일치하지 않습니다',
+  empty: "비밀번호를 입력해 주세요",
+  inValid: "비밀번호가 일치하지 않습니다",
 };
 const Withdraw = ({ setWithdraw }: WithdrawProps) => {
-  const [inputVal, setInputVal] = useState('');
+  const [inputVal, setInputVal] = useState("");
   const [isInvalid, setIsInvalid] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isHide, setIsHide] = useState({
@@ -147,8 +147,8 @@ const Withdraw = ({ setWithdraw }: WithdrawProps) => {
     success: false,
     failure: false,
   });
-  const [progress, setProgress] = useState<Progress>('IDLE');
-  const [errMessage, setErrorMessage] = useState('');
+  const [progress, setProgress] = useState<Progress>("IDLE");
+  const [errMessage, setErrorMessage] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleInput = useCallback(
@@ -156,45 +156,45 @@ const Withdraw = ({ setWithdraw }: WithdrawProps) => {
       setInputVal(e.target.value);
       if (inputVal.length === 0) setIsInvalid(false);
     },
-    [inputVal]
+    [inputVal],
   );
 
   const deleteAccount = useCallback(async () => {
     //# 빈값일 때 비밀번호를 입력해 주세요
     if (inputVal.length === 0) {
       setIsInvalid(true);
-      setErrorMessage(errText['empty']);
+      setErrorMessage(errText["empty"]);
       return;
     }
 
     try {
       setIsLoading(true);
       setIsInvalid(false);
-      setErrorMessage('');
+      setErrorMessage("");
       await axios({
-        method: 'delete',
+        method: "delete",
         url: `${process.env.REACT_APP_SERVER_URL}/users`,
         data: { passwordCheck: inputVal },
-        headers: { accesstoken: sessionStorage.getItem('accesstoken') ?? '' },
+        headers: { accesstoken: sessionStorage.getItem("accesstoken") ?? "" },
       });
       sessionStorage.clear();
 
       setIsHide((prevHide) => ({ ...prevHide, idle: true }));
       setTimeout(() => {
-        setProgress('SUCCESS');
+        setProgress("SUCCESS");
       }, 400);
     } catch (err: unknown) {
       if (err instanceof AxiosError) {
         // 서버가 꺼졌을 때
         if (err.response?.data === undefined && err.response?.status === 0) {
-          return setProgress('FAILURE');
+          return setProgress("FAILURE");
         } else if (
           err.response?.status === 403 &&
-          err.response.data.message === 'Wrong account And Password Combination'
+          err.response.data.message === "Wrong account And Password Combination"
         ) {
           // 비번이 틀렸을 때
           setIsInvalid(true);
-          setErrorMessage(errText['inValid']);
+          setErrorMessage(errText["inValid"]);
           inputRef.current?.focus();
           return;
         }
@@ -212,7 +212,7 @@ const Withdraw = ({ setWithdraw }: WithdrawProps) => {
   };
 
   const confirmHandler = () => {
-    window.location.replace('/');
+    window.location.replace("/");
   };
 
   const cancelHandler = () => {
@@ -240,7 +240,7 @@ const Withdraw = ({ setWithdraw }: WithdrawProps) => {
     button: `width: 100%; background-color: var(--primaryPurple); padding: 0.8rem 0; color: white; border-radius: 0.8rem;font-size: 1rem;font-weight: 600;`,
   };
 
-  if (progress === 'SUCCESS') {
+  if (progress === "SUCCESS") {
     return (
       <Modal style={successModalStyle}>
         <Wrapper>
@@ -256,7 +256,7 @@ const Withdraw = ({ setWithdraw }: WithdrawProps) => {
     );
   }
 
-  if (progress === 'FAILURE') {
+  if (progress === "FAILURE") {
     return (
       <ServerFailModal
         hideStatus={isHide.failure}
@@ -293,7 +293,7 @@ const Withdraw = ({ setWithdraw }: WithdrawProps) => {
             돌아가기
           </button>
           <button
-            className={`delete ${isLoading && 'loading'}`}
+            className={`delete ${isLoading && "loading"}`}
             disabled={inputVal.length === 0}
             onClick={deleteAccount}
           >

@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import ReviewWrite from './ReviewWrite';
-import axios from 'axios';
+import React, { useState } from "react";
+import ReviewWrite from "./ReviewWrite";
+import axios from "axios";
 type ReviewEditProps = {
   review: TReviewItem;
   setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
   updateReviews: (
-    type: 'CREATE' | 'UPDATE' | 'DELETE',
-    reviewItem: TReviewItem
+    type: "CREATE" | "UPDATE" | "DELETE",
+    reviewItem: TReviewItem,
   ) => void;
 };
 
@@ -35,20 +35,20 @@ export default function ReviewEdit({
     try {
       setIsLoading(true);
       const updatedRes = await axios({
-        method: 'put',
+        method: "put",
         url: `${process.env.REACT_APP_SERVER_URL}/review`,
         data: updateSrc,
         headers: {
-          accesstoken: sessionStorage.getItem('accesstoken') ?? '',
+          accesstoken: sessionStorage.getItem("accesstoken") ?? "",
         },
       });
       const updatedItem = updatedRes.data[0] as TReviewItem;
-      updateReviews('UPDATE', updatedItem);
+      updateReviews("UPDATE", updatedItem);
       setIsEdit(false);
-      return 'SUCCESS';
+      return "SUCCESS";
     } catch (error) {
       setIsError(true);
-      return 'FAILURE';
+      return "FAILURE";
     } finally {
       setIsLoading(false);
     }

@@ -1,4 +1,4 @@
-const { Users } = require('../../models');
+const { Users } = require("../../models");
 module.exports = {
   upload: async (req, res) => {
     try {
@@ -7,20 +7,20 @@ module.exports = {
       if (!defaultPic) return;
       await Users.update({ defaultPic }, { where: { id: userId } });
 
-      res.status(201).json({ message: 'upload success', url: defaultPic });
+      res.status(201).json({ message: "upload success", url: defaultPic });
     } catch (error) {
-      console.log('error', error);
-      res.status(500).send('Internal Server Error');
+      console.log("error", error);
+      res.status(500).send("Internal Server Error");
     }
   },
   delete: async (req, res) => {
     try {
       const userId = req.userId;
-      await Users.update({ defaultPic: '' }, { where: { id: userId } });
-      res.status(204).send('No Content');
+      await Users.update({ defaultPic: "" }, { where: { id: userId } });
+      res.status(204).send("No Content");
     } catch (error) {
       console.log(error);
-      res.status(500).send('Internal Server Error');
+      res.status(500).send("Internal Server Error");
     }
   },
 };

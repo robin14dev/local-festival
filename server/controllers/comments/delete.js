@@ -1,12 +1,12 @@
-const { Comments } = require('../../models');
-const validateToken = require('../token-functions/validateToken');
+const { Comments } = require("../../models");
+const validateToken = require("../token-functions/validateToken");
 
 module.exports = async (req, res) => {
   const { id } = req.body;
   const accessTokenData = validateToken(req);
 
   if (!accessTokenData) {
-    return res.status(404).json({ data: null, message: 'User not logged in' });
+    return res.status(404).json({ data: null, message: "User not logged in" });
   }
 
   try {
@@ -17,9 +17,9 @@ module.exports = async (req, res) => {
     });
 
     if (result === 1) {
-      return res.json({ message: 'delete comment success' });
+      return res.json({ message: "delete comment success" });
     } else {
-      return res.status(503).json({ message: 'delete comment fail' });
+      return res.status(503).json({ message: "delete comment fail" });
     }
   } catch (error) {
     console.log(error);

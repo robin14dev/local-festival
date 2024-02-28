@@ -1,15 +1,15 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from "react";
 
-import styled from 'styled-components';
-import { Backdrop as B, Modal as M } from '../../../styles/StyledCurrentPic';
+import styled from "styled-components";
+import { Backdrop as B, Modal as M } from "../../../styles/StyledCurrentPic";
 
-import { ReactComponent as CameraFill } from '../../../assets/camera-fill.svg';
-import { ReactComponent as Profile } from '../../../assets/profile-fill.svg';
-import { ReactComponent as Delete } from '../../../assets/delete.svg';
-import { ReactComponent as Escape } from '../../../assets/escape.svg';
+import { ReactComponent as CameraFill } from "../../../assets/camera-fill.svg";
+import { ReactComponent as Profile } from "../../../assets/profile-fill.svg";
+import { ReactComponent as Delete } from "../../../assets/delete.svg";
+import { ReactComponent as Escape } from "../../../assets/escape.svg";
 
-import DeletePic from './DeletePic';
-import PreviewPic from './PreviewPic';
+import DeletePic from "./DeletePic";
+import PreviewPic from "./PreviewPic";
 const Backdrop = styled(B)``;
 const Modal = styled(M)``;
 
@@ -29,12 +29,12 @@ function CurrentPic({ picUrl, setIsOpen, setPicUrl }: CurrentPicProps) {
     const fileReader = new FileReader();
     if (e.target.files?.length === 1) {
       const formData = new FormData();
-      formData.set('file', e.target.files[0]);
+      formData.set("file", e.target.files[0]);
 
       fileReader.readAsDataURL(e.target.files[0]);
       fileReader.onload = function (e) {
-        if (typeof e.target?.result === 'string') {
-          formData.append('url', e.target.result);
+        if (typeof e.target?.result === "string") {
+          formData.append("url", e.target.result);
           setPreview(formData);
         }
       };
@@ -76,7 +76,7 @@ function CurrentPic({ picUrl, setIsOpen, setPicUrl }: CurrentPicProps) {
           </button>
         </div>
         <div className="body">
-          <div className={picUrl ? 'img-container picUrl' : 'img-container'}>
+          <div className={picUrl ? "img-container picUrl" : "img-container"}>
             {picUrl ? <img src={picUrl} alt="프로필 사진" /> : <Profile />}
           </div>
         </div>
@@ -84,7 +84,7 @@ function CurrentPic({ picUrl, setIsOpen, setPicUrl }: CurrentPicProps) {
           <button
             onClick={() => {
               inputRef.current?.click();
-              console.log('click!!', inputRef.current);
+              console.log("click!!", inputRef.current);
             }}
           >
             <CameraFill />

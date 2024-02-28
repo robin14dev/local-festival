@@ -1,9 +1,9 @@
-import axios, { AxiosError } from 'axios';
-import React, { useState, useCallback, useEffect } from 'react';
-import styled from 'styled-components';
-import { ReactComponent as Confirm } from '../../assets/confirm.svg';
-import { ReactComponent as ServerFail } from '../../assets/server-fail.svg';
-import Loading, { Wrapper as W } from '../Loading';
+import axios, { AxiosError } from "axios";
+import React, { useState, useCallback, useEffect } from "react";
+import styled from "styled-components";
+import { ReactComponent as Confirm } from "../../assets/confirm.svg";
+import { ReactComponent as ServerFail } from "../../assets/server-fail.svg";
+import Loading, { Wrapper as W } from "../Loading";
 
 const ModalContainer = styled.div<{ isHide: boolean }>`
   z-index: 100;
@@ -24,14 +24,14 @@ const ModalContainer = styled.div<{ isHide: boolean }>`
   padding: 1rem;
 
   animation-duration: 0.4s;
-  animation-name: ${(props) => (props.isHide ? 'slide-up' : 'slide-down')};
+  animation-name: ${(props) => (props.isHide ? "slide-up" : "slide-down")};
   animation-fill-mode: forwards;
 
   h1 {
     font-size: 3rem;
     cursor: pointer;
     font-style: italic;
-    font-family: 'HS-Regular';
+    font-family: "HS-Regular";
     color: var(--mainColor);
     margin-bottom: 0.5rem;
     text-align: center;
@@ -131,7 +131,7 @@ const ModalContainer = styled.div<{ isHide: boolean }>`
       align-items: center;
       p {
         font-size: 1.2rem;
-        font-family: 'NanumSquareRound';
+        font-family: "NanumSquareRound";
         line-height: 1.8;
         &:nth-child(1) {
           font-weight: bold;
@@ -159,7 +159,7 @@ const ModalContainer = styled.div<{ isHide: boolean }>`
     button {
       color: var(--primaryPurple);
       border-radius: 0.5rem;
-      font-family: 'NanumSquareRound';
+      font-family: "NanumSquareRound";
       font-size: 1.1rem;
       border: 1.7px dashed var(--primaryPurple);
       padding: 0.3rem;
@@ -225,7 +225,7 @@ export const ShowValid = styled.div<{
 }>`
   font-size: 0.8rem;
   font-weight: bold;
-  font-family: 'NanumSquareRound';
+  font-family: "NanumSquareRound";
   word-break: normal;
   padding-left: 0.5rem;
   flex: 1;
@@ -234,11 +234,11 @@ export const ShowValid = styled.div<{
   justify-content: flex-start;
   color: ${({ isValid, checkType }) =>
     isValid === false
-      ? 'var(--primaryPink)'
-      : checkType === 'nickname' || checkType === 'account'
-      ? 'orange'
-      : 'var(--primaryBlue)'};
-  color: ${({ isUnique }) => isUnique && 'var(--primaryBlue)'};
+      ? "var(--primaryPink)"
+      : checkType === "nickname" || checkType === "account"
+        ? "orange"
+        : "var(--primaryBlue)"};
+  color: ${({ isUnique }) => isUnique && "var(--primaryBlue)"};
 `;
 
 type SignupModalProps = {
@@ -278,28 +278,28 @@ export const rgx: Rgx = {
 };
 export const message: Message = {
   account: {
-    success: '중복 확인을 눌러주세요',
-    fail: '유효하지 않은 이메일 형식 입니다',
-    exist: '이미 사용중인 이메일 입니다.',
-    unique: '가입이 가능한 이메일입니다',
+    success: "중복 확인을 눌러주세요",
+    fail: "유효하지 않은 이메일 형식 입니다",
+    exist: "이미 사용중인 이메일 입니다.",
+    unique: "가입이 가능한 이메일입니다",
   },
   nickname: {
-    success: '중복 확인을 눌러주세요',
-    fail: '영문, 한글, 숫자 포함 4자에서 8자 이하여야 합니다',
-    exist: '이미 사용중인 닉네임 입니다.',
-    unique: '사용이 가능한 닉네임입니다',
+    success: "중복 확인을 눌러주세요",
+    fail: "영문, 한글, 숫자 포함 4자에서 8자 이하여야 합니다",
+    exist: "이미 사용중인 닉네임 입니다.",
+    unique: "사용이 가능한 닉네임입니다",
   },
   password: {
-    success: '사용이 가능한 비밀번호 입니다',
-    fail: '영문, 숫자, 특수문자 조합으로 최소 8자리 이상이여야 합니다',
-    exist: '새로운 비밀번호는 이전의 비밀번호와 같을 수 없습니다',
+    success: "사용이 가능한 비밀번호 입니다",
+    fail: "영문, 숫자, 특수문자 조합으로 최소 8자리 이상이여야 합니다",
+    exist: "새로운 비밀번호는 이전의 비밀번호와 같을 수 없습니다",
   },
   passwordCheck: {
-    success: '비밀번호가 일치합니다',
-    fail: '비밀번호가 일치하지 않습니다',
+    success: "비밀번호가 일치합니다",
+    fail: "비밀번호가 일치하지 않습니다",
   },
   curPassword: {
-    fail: '기존 비밀번호가 일치하지 않습니다',
+    fail: "기존 비밀번호가 일치하지 않습니다",
   },
 };
 
@@ -307,12 +307,12 @@ export function validate(
   type: string,
   value: string,
   rgx: Rgx,
-  password: string
+  password: string,
 ) {
   // userInfo의 전체 키를 타입으로 하고 싶을 때
 
   //#1 빈값일때는 메시지 안보이게하고 return false
-  if (value === '') {
+  if (value === "") {
     return false;
   }
 
@@ -324,23 +324,23 @@ export function validate(
     return password === value ? true : false;
   }
 }
-export type Progress = 'inProgress' | 'success' | 'failed';
+export type Progress = "inProgress" | "success" | "failed";
 
 const Signup = ({ setIsSignup, setIsLogin }: SignupModalProps) => {
   const [userInfo, setUserInfo] = useState<userInfo>({
-    account: { text: '', isValid: false, isUnique: false },
-    nickname: { text: '', isValid: false, isUnique: false },
-    password: { text: '', isValid: false },
-    passwordCheck: { text: '', isValid: false },
+    account: { text: "", isValid: false, isUnique: false },
+    nickname: { text: "", isValid: false, isUnique: false },
+    password: { text: "", isValid: false },
+    passwordCheck: { text: "", isValid: false },
   });
   const [validMsg, setValidMsg] = useState({
-    account: '',
-    nickname: '',
-    password: '',
-    passwordCheck: '',
+    account: "",
+    nickname: "",
+    password: "",
+    passwordCheck: "",
   });
   const [isLoading, setLoading] = useState(false);
-  const [progress, setProgress] = useState<Progress>('inProgress');
+  const [progress, setProgress] = useState<Progress>("inProgress");
   const [isHide, setIsHide] = useState(false);
   const { account, nickname, password, passwordCheck } = userInfo;
 
@@ -358,7 +358,7 @@ const Signup = ({ setIsSignup, setIsLogin }: SignupModalProps) => {
             ...prevInfo,
             [checkType]: { ...prevInfo[checkType], text: value, isValid: true },
           };
-          if (checkType === 'account' || checkType === 'nickname') {
+          if (checkType === "account" || checkType === "nickname") {
             console.log(checkType);
 
             Object.assign(nextInfo[checkType], { isUnique: false });
@@ -383,7 +383,7 @@ const Signup = ({ setIsSignup, setIsLogin }: SignupModalProps) => {
               isValid: false,
             },
           };
-          if (checkType === 'account' || checkType === 'nickname') {
+          if (checkType === "account" || checkType === "nickname") {
             Object.assign(nextInfo[checkType], { isUnique: false });
           }
           return nextInfo;
@@ -392,7 +392,7 @@ const Signup = ({ setIsSignup, setIsLogin }: SignupModalProps) => {
         if (value.length === 0) {
           setValidMsg((prevMsg) => ({
             ...prevMsg,
-            [checkType]: '',
+            [checkType]: "",
           }));
         } else {
           //빈값이 아닌 입력값이 유효성에  실패한 경우
@@ -406,21 +406,21 @@ const Signup = ({ setIsSignup, setIsLogin }: SignupModalProps) => {
         }
       }
     },
-    [userInfo, message]
+    [userInfo, message],
   );
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      console.log('submit');
+      console.log("submit");
 
       const validUserInfo = (): boolean => {
         for (const info in userInfo) {
           if (userInfo[info].isValid === false) return false;
           /* //!isUnique 있으면 true인지도 확인 false면 바로 false */
           if (
-            userInfo[info].hasOwnProperty('isUnique') &&
-            userInfo[info]['isUnique'] === false
+            userInfo[info].hasOwnProperty("isUnique") &&
+            userInfo[info]["isUnique"] === false
           )
             return false;
         }
@@ -439,27 +439,27 @@ const Signup = ({ setIsSignup, setIsLogin }: SignupModalProps) => {
           password: password.text,
           nickname: nickname.text,
         });
-        console.log('success!!');
+        console.log("success!!");
 
         //# 회원가입 성공시, 성공메시지와 함께 3초 뒤 로그인 모달로 이동
 
-        setProgress('success');
+        setProgress("success");
         setLoading(false);
       } catch (error) {
-        console.log('fail!!');
+        console.log("fail!!");
         console.log(error);
-        setProgress('failed');
+        setProgress("failed");
         setLoading(false);
       }
     },
-    [userInfo]
+    [userInfo],
   );
 
   const duplicateCheck = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const checkType = e.currentTarget.name;
 
-    console.log('duplicaatecheck');
+    console.log("duplicaatecheck");
 
     if (userInfo[checkType].isValid === false) {
       //console.log('중복확인 누를 때 유효성 검사가 통과되지 않은경우');
@@ -489,7 +489,7 @@ const Signup = ({ setIsSignup, setIsLogin }: SignupModalProps) => {
       if (err instanceof AxiosError) {
         console.log(err.response);
         if (err.response?.data === `Already ${checkType}`) {
-          console.log('here!!');
+          console.log("here!!");
 
           setUserInfo((prevInfo) => ({
             ...prevInfo,
@@ -527,8 +527,8 @@ const Signup = ({ setIsSignup, setIsLogin }: SignupModalProps) => {
     return (
       <div className="signupSuccess">
         <h1>
-          Let's{' '}
-          <span style={{ color: 'var(--primaryOrange)', fontSize: '5rem' }}>
+          Let's{" "}
+          <span style={{ color: "var(--primaryOrange)", fontSize: "5rem" }}>
             LoCo
           </span>
         </h1>
@@ -539,7 +539,7 @@ const Signup = ({ setIsSignup, setIsLogin }: SignupModalProps) => {
           </p>
           <p>회원 가입이 완료되었습니다</p>
           <p>
-            <span style={{ color: 'var(--primaryPurple)' }}>{count}</span>초
+            <span style={{ color: "var(--primaryPurple)" }}>{count}</span>초
             뒤에 <span>로그인</span>화면으로 넘어갑니다
           </p>
         </div>
@@ -557,17 +557,17 @@ const Signup = ({ setIsSignup, setIsLogin }: SignupModalProps) => {
       {isLoading && (
         <LoadingWrapper>
           <h1>Loco</h1>
-          <Loading text={'Loading'} />
+          <Loading text={"Loading"} />
         </LoadingWrapper>
       )}
-      {!isLoading && progress === 'inProgress' ? (
+      {!isLoading && progress === "inProgress" ? (
         <div className="signupForm">
           <h1>LoCo</h1>
           <form>
             <div className="validInfo">
-              <label htmlFor="account">이메일 주소</label>{' '}
+              <label htmlFor="account">이메일 주소</label>{" "}
               <ShowValid
-                checkType={'account'}
+                checkType={"account"}
                 isValid={account.isValid}
                 isUnique={account.isUnique}
               >
@@ -591,7 +591,7 @@ const Signup = ({ setIsSignup, setIsLogin }: SignupModalProps) => {
             <div className="validInfo">
               <label htmlFor="nickname">닉네임</label>
               <ShowValid
-                checkType={'nickname'}
+                checkType={"nickname"}
                 isValid={nickname.isValid}
                 isUnique={nickname.isUnique}
               >
@@ -613,7 +613,7 @@ const Signup = ({ setIsSignup, setIsLogin }: SignupModalProps) => {
               onChange={handleUserInfo}
             />
             <div className="validInfo">
-              <label htmlFor="password">비밀번호</label>{' '}
+              <label htmlFor="password">비밀번호</label>{" "}
               <ShowValid checkType="password" isValid={password.isValid}>
                 {validMsg.password}
               </ShowValid>
@@ -667,13 +667,13 @@ const Signup = ({ setIsSignup, setIsLogin }: SignupModalProps) => {
             돌아가기
           </button>
         </div>
-      ) : !isLoading && progress === 'success' ? (
+      ) : !isLoading && progress === "success" ? (
         <Success />
-      ) : !isLoading && progress === 'failed' ? (
+      ) : !isLoading && progress === "failed" ? (
         <div className="errMessage">
           <h1>
-            Let's{' '}
-            <span style={{ color: 'var(--primaryOrange)', fontSize: '5rem' }}>
+            Let's{" "}
+            <span style={{ color: "var(--primaryOrange)", fontSize: "5rem" }}>
               LoCo
             </span>
           </h1>

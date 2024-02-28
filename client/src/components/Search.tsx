@@ -1,6 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import styled from 'styled-components';
-import SearchImage from '../assets/search-mobile.png';
+import React, { useState, useCallback, useEffect } from "react";
+import styled from "styled-components";
+import SearchImage from "../assets/search-mobile.png";
 
 const Form = styled.form`
   width: 90%;
@@ -73,7 +73,7 @@ const Search = ({ onSearch, isTag, setIsTag }: onSearchProps) => {
   태그를 클릭할 때 isTag를 true로 만들어주고
   search는 isTag를 props로 받아서 isTag가 true면 검색창을 비워준다.
   */
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
 
   const onClickHandler = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -81,18 +81,18 @@ const Search = ({ onSearch, isTag, setIsTag }: onSearchProps) => {
       onSearch(searchText);
       setIsTag(false);
     },
-    [searchText]
+    [searchText],
   );
   const onChangeHandler = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setSearchText(e.target.value);
     },
-    []
+    [],
   );
 
   useEffect(() => {
     if (isTag) {
-      setSearchText('');
+      setSearchText("");
     }
   }, [isTag]);
   return (
