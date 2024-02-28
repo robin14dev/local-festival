@@ -31,13 +31,19 @@ exports[`DropdownMenu Component 로그인 상태시, 마우스를 올려놓으�
     class="sc-bcXHqe jMtBuy"
     data-testid="Menu"
   >
-    <li>
+    <li
+      data-testid="Menu-AccountPage"
+    >
       계정
     </li>
-    <li>
+    <li
+      data-testid="Menu-WishlistPage"
+    >
       위시리스트
     </li>
-    <li>
+    <li
+      data-testid="Menu-Logout"
+    >
       로그아웃
     </li>
   </ul>

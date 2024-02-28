@@ -3,7 +3,7 @@
 exports[`<Footer/> 테스트 데스크탑 너비에 따라 컴포넌트가 성공적으로 렌더링 됩니다 1`] = `
 <div>
   <footer
-    class="sc-hOzowv coYCTd"
+    class="sc-dsHJmm dhTnQP"
     data-testid="Footer"
   >
     <img
@@ -20,11 +20,11 @@ exports[`<Footer/> 테스트 데스크탑 너비에 따라 컴포넌트가 성�
 exports[`<Footer/> 테스트 모바일 너비에 따라 컴포넌트가 성공적으로 렌더링 됩니다 1`] = `
 <div>
   <footer
-    class="sc-dsHJmm iyhVxG"
+    class="sc-cZFQFd hkLmQD"
     data-testid="Footer-mobile"
   >
     <div
-      class="sc-cZFQFd gISiGu"
+      class="sc-jTjUTQ VPFIK"
     >
       <svg
         fill="#FF9A62"
@@ -38,7 +38,7 @@ exports[`<Footer/> 테스트 모바일 너비에 따라 컴포넌트가 성공�
       </div>
     </div>
     <div
-      class="sc-cZFQFd gISiGu"
+      class="sc-jTjUTQ VPFIK"
     >
       <svg
         fill="#FF9A62"
@@ -52,7 +52,7 @@ exports[`<Footer/> 테스트 모바일 너비에 따라 컴포넌트가 성공�
       </div>
     </div>
     <div
-      class="sc-cZFQFd gISiGu"
+      class="sc-jTjUTQ VPFIK"
     >
       <svg
         fill="#FF9A62"

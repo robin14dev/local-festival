@@ -30,22 +30,24 @@ exports[`<DescTab /> 데스크탑 환경에서 성공적으로 렌더링 됩니�
       축제 개요
     </p>
     <div
-      class="sc-dkrFOg rPElY"
+      class="sc-dkrFOg ldklsL"
     >
-      <div>
-        <a
-          href="tel:010-1234-5678"
-        >
-          <svg>
-            phone.svg
-          </svg>
+      <a
+        class="sc-eDvSVe gLpoHg"
+        href="tel:010-1234-5678"
+      >
+        <svg>
+          phone.svg
+        </svg>
+        <span>
           010-1234-5678
-        </a>
-      </div>
+        </span>
+      </a>
       <div
-        class="sc-hLBbgP eLcdkS"
+        class="sc-hLBbgP NpIXf"
       >
         <a
+          class="sc-eDvSVe gLpoHg"
           href="https://www.google.com"
           rel="noopener noreferrer"
           target="_blank"
@@ -53,27 +55,38 @@ exports[`<DescTab /> 데스크탑 환경에서 성공적으로 렌더링 됩니�
           <svg>
             homepage.svg
           </svg>
-           공식 홈페이지
+           
+          <span>
+            공식 홈페이지
+          </span>
         </a>
         <a
-          href="https://www.instagram.com/sefes"
+          class="sc-eDvSVe gLpoHg"
+          href="https://www.instagram.com/ssf"
           rel="noopener noreferrer"
           target="_blank"
         >
           <svg>
             instagram.svg
           </svg>
-           인스타그램 계정
+           
+          <span>
+            인스타그램 계정
+          </span>
         </a>
         <a
-          href="https://www.youtube.com/efse"
+          class="sc-eDvSVe gLpoHg"
+          href="https://www.youtube.com/sef"
           rel="noopener noreferrer"
           target="_blank"
         >
           <svg>
             youtube.svg
           </svg>
-           유튜브 채널
+           
+          <span>
+            유튜브 채널
+          </span>
         </a>
       </div>
     </div>
