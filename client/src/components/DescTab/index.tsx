@@ -5,8 +5,7 @@ import { ReactComponent as InstagramIcon } from "../../assets/instagram.svg";
 import { ReactComponent as YoutubeIcon } from "../../assets/youtube.svg";
 import { ReactComponent as HomepageIcon } from "../../assets/homepage.svg";
 import { ReactComponent as PhoneIcon } from "../../assets/phone.svg";
-import { Contacts, Container, Links, Overview } from "./styled";
-import { Link } from "react-router-dom";
+import { Contacts, Container, Link, Links, Overview } from "./styled";
 
 type DescTabProps = {
   festival: FestivalItem;
@@ -14,17 +13,15 @@ type DescTabProps = {
 type RegexObj = { [key: string]: RegExp };
 
 const regex: { [key: string]: RegExp } = {
-  official: /https?:\/\/(?!www.instagram\.com|www.youtube\.com)[\w\-\./]+/g,
-  instagram: /https?:\/\/(www.instagram\.com)[\w\-\.\/]+/g,
-  youtube: /https?:\/\/(www.youtube\.com)[\w\-\.\/]+/g,
+  official: /https?:\/\/(?!www.instagram\.com|www.youtube\.com)[\w\-./]+/g,
+  instagram: /https?:\/\/(www.instagram\.com)[\w\-./]+/g,
+  youtube: /https?:\/\/(www.youtube\.com)[\w\-./]+/g,
 };
 
 const DescTab = ({ festival }: DescTabProps) => {
   const { location, overview, tel, title, startDate, endDate } = festival;
-
   const homepageUrl =
-    "https://www.google.com   https://www.instagram.com/sefes   https://www.youtube.com/efse";
-
+    "https://www.google.com    https://www.instagram.com/ssf   https://www.youtube.com/sef";
   const urlCollection: { [key: string]: string } = {
     official: "",
     instagram: "",
@@ -39,9 +36,7 @@ const DescTab = ({ festival }: DescTabProps) => {
       }
     }
   };
-  const openLink = (url: string): void => {
-    window.open(url);
-  };
+
   if (homepageUrl) {
     getMatchedUrl(homepageUrl, regex);
   }
@@ -70,34 +65,31 @@ const DescTab = ({ festival }: DescTabProps) => {
           .replace(/&lt;/gi, "<")
           .replace(/&gt;/gi, ">")}
       </Overview>
-
-      {/**
-       * Link가 url를 상대적인 주소로 인식하기 때문에 https도 빼주어야되고 www.google.com으로만 넣어줘야됨
-       */}
-
       <Contacts>
-        <div>
-          <a href={`tel:${tel}`}>
-            <PhoneIcon />
-            {tel}
-          </a>
-        </div>
+        <Link href={`tel:${tel}`}>
+          <PhoneIcon />
+          <span>{tel}</span>
+        </Link>
 
         <Links>
           {officialLink && (
-            <a href={officialLink} target="_blank" rel="noopener noreferrer">
-              <HomepageIcon /> 공식 홈페이지
-            </a>
+            <Link href={officialLink} target="_blank" rel="noopener noreferrer">
+              <HomepageIcon /> <span>공식 홈페이지</span>
+            </Link>
           )}
           {instagramLink && (
-            <a href={instagramLink} target="_blank" rel="noopener noreferrer">
-              <InstagramIcon /> 인스타그램 계정
-            </a>
+            <Link
+              href={instagramLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <InstagramIcon /> <span>인스타그램 계정</span>
+            </Link>
           )}
           {youtubeLink && (
-            <a href={youtubeLink} target="_blank" rel="noopener noreferrer">
-              <YoutubeIcon /> 유튜브 채널
-            </a>
+            <Link href={youtubeLink} target="_blank" rel="noopener noreferrer">
+              <YoutubeIcon /> <span>유튜브 채널</span>
+            </Link>
           )}
         </Links>
       </Contacts>

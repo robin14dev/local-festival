@@ -46,28 +46,31 @@ export const Overview = styled.p`
   white-space: "pre-line";
 `;
 export const Contacts = styled.div`
-  svg {
-    height: 100%;
-    width: auto;
-    margin-right: 0.5rem;
-  }
-  button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: 500;
-    font-size: 1rem;
-
-    color: #878585;
-  }
-  button + button {
-    margin-left: 1rem;
-  }
-  div {
-    height: 1.8rem;
-  }
+  display: flex;
+  flex-direction: column;
+  margin-top: 1rem;
 `;
 export const Links = styled.div`
   display: flex;
-  margin-top: 1.5rem;
+  align-items: center;
+  margin-top: 1rem;
+`;
+export const Link = styled.a`
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  color: gray;
+
+  & + a {
+    margin-left: 1rem;
+  }
+
+  & > svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  & > span {
+    margin-left: 0.25rem;
+  }
 `;
