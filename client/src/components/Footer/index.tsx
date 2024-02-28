@@ -1,4 +1,4 @@
-import React, { useContext, useCallback, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import peachmong from "../../assets/peachmong.png";
 import { useNavigate } from "react-router-dom";
 import { ReactComponent as Account } from "../../assets/profile.svg";
@@ -13,16 +13,14 @@ const Footer = () => {
   let navigate = useNavigate();
   const { authState } = useContext(UserContext);
   const { setIsLoginModal } = useContext(LoginModalContext);
-  const goPage = useCallback(
-    (path: string) => {
-      if (authState.loginStatus) {
-        navigate(`/${path}`);
-      } else {
-        setIsLoginModal(true);
-      }
-    },
-    [authState]
-  );
+  const goPage = (path: string) => {
+    if (authState.loginStatus) {
+      navigate(`/${path}`);
+    } else {
+      setIsLoginModal(true);
+    }
+  };
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 480);

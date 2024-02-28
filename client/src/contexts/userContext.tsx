@@ -1,4 +1,4 @@
-import React, { createContext, useState, useCallback } from "react";
+import React, { createContext, useState } from "react";
 
 const UserContext = createContext<UserContext>({
   authState: {
