@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { Ul } from "./styled";
 import { UserContext } from "../../contexts/userContext";
 
-export default function Menu() {
+type Props = {
+  toggleDropdownMenu: (instruction: "show" | "hide") => void;
+};
+export default function Menu({ toggleDropdownMenu }: Props) {
   const { setAuthState } = useContext(UserContext);
   let navigate = useNavigate();
   const onClickLogout = () => {
@@ -15,6 +18,7 @@ export default function Menu() {
       defaultPic: "",
       loginStatus: false,
     });
+    toggleDropdownMenu("hide");
     navigate("/", { replace: true });
   };
 
@@ -25,7 +29,11 @@ export default function Menu() {
    */
 
   return (
-    <Ul data-testid="Menu">
+    <Ul
+      data-testid="Menu"
+      onMouseEnter={() => toggleDropdownMenu("show")}
+      onMouseLeave={() => toggleDropdownMenu("hide")}
+    >
       <li data-testid="Menu-AccountPage" onClick={() => navigate("/Account")}>
         계정
       </li>

@@ -1,9 +1,12 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { MemoryRouter, useLocation } from "react-router-dom";
+import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
 import Menu from "./Menu";
-import App from "../../App";
 import { UserContext, UserContextProvider } from "../../contexts/userContext";
+import { mockFestivalItem } from "../../test/mock";
+import Wishlist from "../../pages/Wishlist";
+import Main from "../../pages/Main";
+import Account from "../../pages/Account";
 beforeEach(() => {
   const intersectionObserverMock = () => ({
     observe: () => null,
@@ -14,11 +17,33 @@ beforeEach(() => {
     .mockImplementation(intersectionObserverMock);
 });
 
+const TestComponent = (): JSX.Element => {
+  const { pathname } = useLocation();
+  const {
+    authState: { loginStatus },
+  } = useContext(UserContext);
+  const [showDropdown, setShowDropdown] = useState(true);
+  const toggleDropdownMenu = (instruction: "show" | "hide"): void => {
+    if (loginStatus) {
+      return instruction === "show"
+        ? setShowDropdown(true)
+        : setShowDropdown(false);
+    }
+  };
+  return (
+    <>
+      <div>pathname is {pathname}</div>
+      <div>{loginStatus ? "로그인" : "로그아웃"}</div>
+      {showDropdown && <Menu toggleDropdownMenu={toggleDropdownMenu} />}
+    </>
+  );
+};
+
 describe("Menu 컴포넌트", () => {
   it(" Menu 컴포넌트를 성공적으로 렌더링 합니다. ", () => {
     const { container } = render(
       <MemoryRouter initialEntries={["/"]}>
-        <Menu />
+        <Menu toggleDropdownMenu={jest.fn()} />
       </MemoryRouter>
     );
     const menu = screen.getByTestId("Menu");
@@ -26,16 +51,27 @@ describe("Menu 컴포넌트", () => {
     expect(container).toMatchSnapshot();
   });
   it("[계정] 메뉴 클릭시 계정 페이지로 이동합니다.", () => {
-    const URLTestComponent = (): JSX.Element => {
-      const { pathname } = useLocation();
-      return <div>pathname is {pathname}</div>;
-    };
-
     render(
       <MemoryRouter initialEntries={["/"]}>
-        <URLTestComponent />
-        <App />
-        <Menu />
+        <UserContextProvider>
+          <TestComponent />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Main
+                  togglePick={jest.fn()}
+                  filteredData={[mockFestivalItem]}
+                  pickItems={[mockFestivalItem]}
+                  offset={{ current: 0 }}
+                  setFestivalData={jest.fn()}
+                  setFilteredData={jest.fn()}
+                />
+              }
+            />
+            <Route path="/Account" element={<Account />} />
+          </Routes>
+        </UserContextProvider>
       </MemoryRouter>
     );
 
@@ -51,16 +87,35 @@ describe("Menu 컴포넌트", () => {
     expect(pathName.textContent).toBe("pathname is /Account");
   });
   it("[위시리스트] 메뉴 클릭시, 위시리스트 페이지로 이동합니다.", () => {
-    const URLTestComponent = (): JSX.Element => {
-      const { pathname } = useLocation();
-      return <div>pathname is {pathname}</div>;
-    };
-
     render(
       <MemoryRouter initialEntries={["/"]}>
-        <URLTestComponent />
-        <App />
-        <Menu />
+        <UserContextProvider>
+          <TestComponent />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Main
+                  togglePick={jest.fn()}
+                  filteredData={[mockFestivalItem]}
+                  pickItems={[mockFestivalItem]}
+                  offset={{ current: 0 }}
+                  setFestivalData={jest.fn()}
+                  setFilteredData={jest.fn()}
+                />
+              }
+            />
+            <Route
+              path="/Wishlist"
+              element={
+                <Wishlist
+                  pickItems={[mockFestivalItem]}
+                  togglePick={jest.fn()}
+                />
+              }
+            />
+          </Routes>
+        </UserContextProvider>
       </MemoryRouter>
     );
 
@@ -76,21 +131,6 @@ describe("Menu 컴포넌트", () => {
     expect(pathName.textContent).toBe("pathname is /Wishlist");
   });
   it("[로그아웃] 메뉴 클릭시 로그아웃 후, 메인페이지로 이동합니다.", () => {
-    const URLTest = (): JSX.Element => {
-      const { pathname } = useLocation();
-      return <div>pathname is {pathname}</div>;
-    };
-    const UserContextTest = (): JSX.Element => {
-      const {
-        authState: { loginStatus },
-      } = useContext(UserContext);
-      return (
-        <>
-          <div>{loginStatus ? "로그인" : "로그아웃"}</div>
-        </>
-      );
-    };
-
     const mockUser = {
       account: "123@gmail.com",
       nickname: "efwf",
@@ -102,15 +142,37 @@ describe("Menu 컴포넌트", () => {
     render(
       <MemoryRouter initialEntries={["/Wishlist"]}>
         <UserContextProvider>
-          <UserContextTest />
-          <URLTest />
-          <App />
-          <Menu />
+          <TestComponent />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Main
+                  togglePick={jest.fn()}
+                  filteredData={[mockFestivalItem]}
+                  pickItems={[mockFestivalItem]}
+                  offset={{ current: 0 }}
+                  setFestivalData={jest.fn()}
+                  setFilteredData={jest.fn()}
+                />
+              }
+            />
+            <Route
+              path="/Wishlist"
+              element={
+                <Wishlist
+                  pickItems={[mockFestivalItem]}
+                  togglePick={jest.fn()}
+                />
+              }
+            />
+          </Routes>
         </UserContextProvider>
       </MemoryRouter>
     );
 
     const logoutBtn = screen.getByTestId("Menu-Logout");
+    expect(logoutBtn).toBeInTheDocument();
     const wishListPage = screen.getByTestId("WishlistPage");
     const pathName = screen.getByText("pathname is /Wishlist");
     const loginStatus = screen.getByText("로그인");
@@ -120,6 +182,7 @@ describe("Menu 컴포넌트", () => {
     expect(loginStatus).toBeInTheDocument();
 
     fireEvent.click(logoutBtn);
+    expect(logoutBtn).not.toBeInTheDocument();
     const mainPage = screen.getByTestId("MainPage");
     expect(mainPage).toBeInTheDocument();
     expect(pathName.textContent).toBe("pathname is /");

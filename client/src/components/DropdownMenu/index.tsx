@@ -51,7 +51,7 @@ const DropdownMenu = () => {
           )}
         </button>
       </Container>
-      {showDropdown && <Menu />}
+      {showDropdown && <Menu toggleDropdownMenu={toggleDropdownMenu} />}
     </>
   );
 };
