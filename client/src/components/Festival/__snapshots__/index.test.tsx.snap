@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Festival/> 컴포넌트가 성공적으로 렌더링 됩니다 1`] = `
+<div>
+  <article
+    class="sc-bcXHqe bCLAuK"
+    data-testid="Festival"
+  >
+    <div
+      class="sc-gswNZR eQdOYC"
+    >
+      진행중
+    </div>
+    <img
+      alt="축제 제목"
+      src="https://images.unsplash.com/photo-1707343843344-011332037abb?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=400&h=400&fit=crop"
+    />
+    <section>
+      <div>
+        <h1>
+          축제 제목
+        </h1>
+        <ul>
+          <li>
+            위치 정보
+          </li>
+          <li>
+            2024.01.01
+             ~
+             
+            2024.12.31
+          </li>
+        </ul>
+      </div>
+      <button>
+        <img
+          alt="heart"
+          src="heart.png"
+        />
+      </button>
+    </section>
+  </article>
+</div>
+`;

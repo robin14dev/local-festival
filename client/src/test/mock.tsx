@@ -1,5 +1,6 @@
 import { useLocation } from "react-router-dom";
 import React from "react";
+import { getCurrentDate } from "../components/Festival";
 
 export const mockAuthState = {
   login: {
@@ -35,11 +36,29 @@ export const mockFestivalItem: FestivalItem = {
   endDate: 20241231,
   festivalId: 1,
   homepageUrl: "https://www.locoloco.pl",
-  imageUrl: "",
+  imageUrl:
+    "https://images.unsplash.com/photo-1707343843344-011332037abb?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   location: "위치 정보",
   overview: "축제 개요",
   startDate: 20240101,
   tel: "010-1234-5678",
   title: "축제 제목",
   updatedAt: "",
+};
+
+/**
+ *   const statusMap = {
+      scheduled: "예정",
+      completed: "종료",
+      inProgress: "진행중",
+    };
+
+ */
+
+const today = getCurrentDate();
+
+export const mockFestivalItems = {
+  inProgress: { ...mockFestivalItem, startDate: today - 1, endDate: today + 1 },
+  scheduled: { ...mockFestivalItem, startDate: today + 1, endDate: today + 2 },
+  completed: { ...mockFestivalItem, startDate: today - 2, endDate: today - 1 },
 };

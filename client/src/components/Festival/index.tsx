@@ -15,7 +15,7 @@ type FestivalProps = {
   pickItems: FestivalItem[];
 };
 
-function getCurrentDate() {
+export function getCurrentDate() {
   const today = new Date();
   const year = today.getFullYear();
   let month: string | number = today.getMonth() + 1;
@@ -28,12 +28,14 @@ function getCurrentDate() {
 }
 
 const Festival = ({ festival, togglePick, pickItems }: FestivalProps) => {
-  const { authState: loginStatus } = useContext(UserContext);
+  const {
+    authState: { loginStatus },
+  } = useContext(UserContext);
   const { setIsLoginModal } = useContext(LoginModalContext);
   const { festivalId, title, imageUrl, startDate, endDate, location } =
     festival;
   const [like, setLike] = useState(
-    pickItems.some((pick) => pick.festivalId === festivalId),
+    pickItems.some((pick) => pick.festivalId === festivalId)
   );
   let navigate = useNavigate();
 
@@ -47,6 +49,8 @@ const Festival = ({ festival, togglePick, pickItems }: FestivalProps) => {
 
   const onClickHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
+    console.log("heart clicked!!!!!!!", loginStatus);
+
     if (loginStatus) {
       togglePick(festival);
       setLike((prevLike) => !prevLike);
@@ -63,7 +67,7 @@ const Festival = ({ festival, togglePick, pickItems }: FestivalProps) => {
   const getStatus = (
     today: number,
     startDate: number,
-    endDate: number,
+    endDate: number
   ): [string, string] => {
     const statusMap = {
       scheduled: "예정",
@@ -92,11 +96,15 @@ const Festival = ({ festival, togglePick, pickItems }: FestivalProps) => {
   // }, [pickItems, festivalId]);
 
   return (
-    <Container key={festivalId} onClick={() => onClickMoveDVP(festivalId)}>
+    <Container
+      data-testid="Festival"
+      key={festivalId}
+      onClick={() => onClickMoveDVP(festivalId)}
+    >
       <Status status={statusKey}>{statusText}</Status>
       <img
         src={`${imageUrl}?w=400&h=400&fit=crop` || onErrorImage}
-        alt={`${title} : 이미지가 존재하지 않습니다`}
+        alt={title}
         onError={onErrorImg}
       />
       <section>

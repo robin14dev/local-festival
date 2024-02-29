@@ -144,7 +144,7 @@ const Main = ({
 
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/festivals`,
-        { params: { limit: 8, offset: offset.current, query } },
+        { params: { limit: 8, offset: offset.current, query } }
       );
 
       const festivals = response.data;
