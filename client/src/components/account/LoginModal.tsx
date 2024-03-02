@@ -170,7 +170,7 @@ const LoginModal = ({ setIsLoginModal }: LoginProps) => {
         [e.target.name]: e.target.value,
       }));
     },
-    [],
+    []
   );
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
@@ -180,9 +180,10 @@ const LoginModal = ({ setIsLoginModal }: LoginProps) => {
         {
           account: userInfo.account,
           password: userInfo.password,
-        },
+        }
       );
-      const { nickname, userId, account, defaultPic } = response.data.info;
+      const { nickname, userId, account, defaultPic, token } =
+        response.data.info;
       const user = {
         account,
         nickname,
@@ -190,9 +191,14 @@ const LoginModal = ({ setIsLoginModal }: LoginProps) => {
         defaultPic,
         loginStatus: true,
       };
+
+      /**
+       * getPickItems를 여기서 할 수 없잖아, setPickItems를 여기서 할 수 없으니깐 => context를 만들어야겠고 상태관리 툴 사용해야겠네
+       */
+
       setAuthState(user);
       sessionStorage.setItem("user", JSON.stringify(user));
-      sessionStorage.setItem("accesstoken", response.data.info.token);
+      sessionStorage.setItem("accesstoken", token);
 
       /**
        * loginHandler 안에 로그인 성공시, 찜 데이터를 가져 와야 하는데 분리해 주어함
@@ -201,6 +207,8 @@ const LoginModal = ({ setIsLoginModal }: LoginProps) => {
        * 로그인을 성공해서 유저정보를 가져온다.
        * 가져온 유저정보로 authState를 업데이트 한다
        * 해당 유저정보로 다시 찜 정보를 가져오기 위해 pick api를 보낸다.
+       *
+       * 분리시킨다고 일단 이렇게 했나보네 아 픽 보낼때 accesstoken 넣어서 보내줘야 하니깐.
        */
 
       modalClose();

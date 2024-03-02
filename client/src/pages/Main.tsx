@@ -113,18 +113,16 @@ const ErrorMsg = styled.section`
 `;
 
 type MainProps = {
-  togglePick: togglePick;
   filteredData: FestivalItem[];
-  pickItems: FestivalItem[];
+
   offset: React.MutableRefObject<number>;
   setFestivalData: React.Dispatch<React.SetStateAction<FestivalItem[]>>;
   setFilteredData: React.Dispatch<React.SetStateAction<FestivalItem[]>>;
 };
 
 const Main = ({
-  togglePick,
   filteredData,
-  pickItems,
+
   offset,
   setFestivalData,
   setFilteredData,
@@ -211,12 +209,7 @@ const Main = ({
       <FestivalList>
         {filteredData.length > 0 &&
           filteredData.map((festival) => (
-            <Festival
-              togglePick={togglePick}
-              key={festival.festivalId}
-              festival={festival}
-              pickItems={pickItems}
-            />
+            <Festival key={festival.festivalId} festival={festival} />
           ))}
         {isLoading === false && filteredData.length === 0 && (
           <ErrorMsg>

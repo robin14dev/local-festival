@@ -50,7 +50,7 @@ type loginHandlerFunc = (
   account: string,
   nickname: string,
   defaultPic: string,
-  loginStatus: boolean,
+  loginStatus: boolean
 ) => void;
 
 type ReviewSummary = {
@@ -88,6 +88,13 @@ type UserContext = {
       loginStatus: boolean;
     }>
   >;
+};
+
+type PickItemsContext = {
+  pickItems: FestivalItem[] | [];
+  setPickItems: React.Dispatch<React.SetStateAction<FestivalItem[]>>;
+  togglePick: (item: FestivalItem) => void;
+  getPickItems: () => void;
 };
 
 type EditItem = {

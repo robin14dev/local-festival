@@ -31,14 +31,12 @@ import { ReactComponent as EmojiBad } from "../../assets/emojiBad.svg";
 import { ReactComponent as Instagram } from "../../assets/instagram.svg";
 import { ReactComponent as Youtube } from "../../assets/youtube.svg";
 import { ReactComponent as Homepage } from "../../assets/homepage.svg";
+import { PickItemsContext } from "../../contexts/PickItemsContext";
 
-type DetailViewProps = {
-  togglePick: togglePick;
-};
-
-const DetailView = ({ togglePick }: DetailViewProps) => {
+const DetailView = () => {
   const { setIsLoginModal } = useContext(LoginModalContext);
   const { authState } = useContext(UserContext);
+  const { togglePick } = useContext(PickItemsContext);
   const [like, setLike] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [summary, setSummary] = useState<Summary>({

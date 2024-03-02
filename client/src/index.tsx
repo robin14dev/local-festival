@@ -6,9 +6,10 @@ import { BrowserRouter } from "react-router-dom";
 import { StrictMode } from "react";
 import { UserContextProvider } from "./contexts/userContext";
 import { LoginModalContextProvider } from "./contexts/LoginModalContext";
+import { PickItemsContextProvider } from "./contexts/PickItemsContext";
 
 const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement,
+  document.getElementById("root") as HTMLElement
 );
 
 root.render(
@@ -16,9 +17,11 @@ root.render(
     <BrowserRouter>
       <UserContextProvider>
         <LoginModalContextProvider>
-          <App />
+          <PickItemsContextProvider>
+            <App />
+          </PickItemsContextProvider>
         </LoginModalContextProvider>
       </UserContextProvider>
     </BrowserRouter>
-  </StrictMode>,
+  </StrictMode>
 );

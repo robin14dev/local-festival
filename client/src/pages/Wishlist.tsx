@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { Helmet } from "react-helmet";
 import Pick from "../components/Pick";
+import { PickItemsContext } from "../contexts/PickItemsContext";
 
 const Wrapper = styled.div`
   margin: 0 auto 5rem auto;
@@ -47,11 +48,8 @@ const PickList = styled.section`
   }
 `;
 
-type WishlistProps = {
-  pickItems: FestivalItem[];
-  togglePick: togglePick;
-};
-const Wishlist = ({ pickItems, togglePick }: WishlistProps) => {
+const Wishlist = () => {
+  const { pickItems, togglePick } = useContext(PickItemsContext);
   return (
     <Wrapper data-testid="WishlistPage">
       <Helmet>

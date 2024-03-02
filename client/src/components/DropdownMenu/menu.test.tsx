@@ -60,9 +60,7 @@ describe("Menu 컴포넌트", () => {
               path="/"
               element={
                 <Main
-                  togglePick={jest.fn()}
                   filteredData={[mockFestivalItem]}
-                  pickItems={[mockFestivalItem]}
                   offset={{ current: 0 }}
                   setFestivalData={jest.fn()}
                   setFilteredData={jest.fn()}
@@ -96,24 +94,14 @@ describe("Menu 컴포넌트", () => {
               path="/"
               element={
                 <Main
-                  togglePick={jest.fn()}
                   filteredData={[mockFestivalItem]}
-                  pickItems={[mockFestivalItem]}
                   offset={{ current: 0 }}
                   setFestivalData={jest.fn()}
                   setFilteredData={jest.fn()}
                 />
               }
             />
-            <Route
-              path="/Wishlist"
-              element={
-                <Wishlist
-                  pickItems={[mockFestivalItem]}
-                  togglePick={jest.fn()}
-                />
-              }
-            />
+            <Route path="/Wishlist" element={<Wishlist />} />
           </Routes>
         </UserContextProvider>
       </MemoryRouter>
@@ -148,24 +136,14 @@ describe("Menu 컴포넌트", () => {
               path="/"
               element={
                 <Main
-                  togglePick={jest.fn()}
                   filteredData={[mockFestivalItem]}
-                  pickItems={[mockFestivalItem]}
                   offset={{ current: 0 }}
                   setFestivalData={jest.fn()}
                   setFilteredData={jest.fn()}
                 />
               }
             />
-            <Route
-              path="/Wishlist"
-              element={
-                <Wishlist
-                  pickItems={[mockFestivalItem]}
-                  togglePick={jest.fn()}
-                />
-              }
-            />
+            <Route path="/Wishlist" element={<Wishlist />} />
           </Routes>
         </UserContextProvider>
       </MemoryRouter>

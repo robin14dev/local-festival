@@ -35,7 +35,7 @@ exports[`<Festival/> 컴포넌트가 성공적으로 렌더링 됩니다 1`] = `
       <button>
         <img
           alt="heart"
-          src="heart.png"
+          src="empty-heart.png"
         />
       </button>
     </section>

@@ -8,11 +8,10 @@ import HeartImg from "../../assets/heart.png";
 import onErrorImage from "../../assets/noimage.png";
 import EmptyHeartImg from "../../assets/empty-heart.png";
 import "../../styles/common.scss";
+import { PickItemsContext } from "../../contexts/PickItemsContext";
 
 type FestivalProps = {
   festival: FestivalItem;
-  togglePick: togglePick;
-  pickItems: FestivalItem[];
 };
 
 export function getCurrentDate() {
@@ -27,11 +26,12 @@ export function getCurrentDate() {
   return Number(`${year}${month}${day}`);
 }
 
-const Festival = ({ festival, togglePick, pickItems }: FestivalProps) => {
+const Festival = ({ festival }: FestivalProps) => {
   const {
     authState: { loginStatus },
   } = useContext(UserContext);
   const { setIsLoginModal } = useContext(LoginModalContext);
+  const { pickItems, togglePick } = useContext(PickItemsContext);
   const { festivalId, title, imageUrl, startDate, endDate, location } =
     festival;
   const [like, setLike] = useState(
