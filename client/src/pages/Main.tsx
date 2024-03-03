@@ -127,6 +127,8 @@ const Main = ({
   setFestivalData,
   setFilteredData,
 }: MainProps) => {
+  console.log("Main render");
+
   const [searchParams, setSearchParams] = useSearchParams();
   const observerTargetEl = useRef(null);
   const [hasNextPage, setHasNextPage] = useState(true);
@@ -234,4 +236,4 @@ const Main = ({
   );
 };
 
-export default Main;
+export default React.memo(Main);

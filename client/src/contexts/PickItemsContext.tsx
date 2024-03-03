@@ -113,8 +113,11 @@ const PickItemsContextProvider = ({ children }: Props) => {
     }
   };
   useEffect(() => {
-    getPickItems();
-  }, []);
+    if (loginStatus) {
+      console.log("getPicks");
+      getPickItems();
+    }
+  }, [loginStatus]);
 
   return (
     <PickItemsContext.Provider

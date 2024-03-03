@@ -34,9 +34,10 @@ const Festival = ({ festival }: FestivalProps) => {
   const { pickItems, togglePick } = useContext(PickItemsContext);
   const { festivalId, title, imageUrl, startDate, endDate, location } =
     festival;
-  const [like, setLike] = useState(
-    pickItems.some((pick) => pick.festivalId === festivalId)
-  );
+  const [like, setLike] = useState(false);
+
+  console.log("Festival Render", loginStatus, pickItems);
+
   let navigate = useNavigate();
 
   const onErrorImg = (e: React.ChangeEvent<HTMLImageElement>) => {
@@ -89,6 +90,48 @@ const Festival = ({ festival }: FestivalProps) => {
   };
 
   const [statusKey, statusText] = getStatus(today, startDate, endDate);
+
+  /**
+   * TODO : useEffect가 필요한 이유
+   *
+   * 로그인 안했을 때
+   * 각 축제는 하트가 활성화 되지 않음
+   *
+   * 로그인을 했을 때 각 축제는 해당 축제가 로그인한 유저가 찜을 햇는지 파악해야됨
+   *
+   *
+   * 문제가
+   *
+   * 메인페이지에서 로그인했을 때 Festival의 useEffect가 작동하지 않는 것 같음
+   */
+
+  useEffect(() => {
+    /**
+     * 초기화시
+     * 로그인 안했으니깐 like는 무조건 false
+     *
+     * 로그인시, 업데이트된 pickItems를 참조하여 like update
+     * TODO : 원했던 것은 loginStatus 바뀌면 그때 알아서 업데이트되게 하는건데 로그인 => 축제 리렌더링 => 찜목록 받아오고  => 축제 리렌더링
+     *
+     *
+     *
+     * 로그인이 안되어 있다면 그냥 return
+     *
+     * 로그인이 되어 있다면 참조
+     *
+     * 로그인 하면 userContext 업데이트 되서 렌더링 된 다음에 찜정보를 업데이트하는데, 로그인이 되면 축제정보 useEffect가 발생되고
+     *
+     */
+
+    console.log("Festival useEffect", loginStatus, pickItems, festivalId);
+
+    if (loginStatus) {
+      const isPicked = pickItems.some((pick) => pick.festivalId === festivalId);
+      if (isPicked) {
+        setLike(true);
+      }
+    }
+  }, [pickItems]);
 
   // useEffect(() => {
   //   const isPicked = pickItems.some((ele) => ele.festivalId === festivalId);

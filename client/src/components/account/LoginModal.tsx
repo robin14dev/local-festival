@@ -147,8 +147,6 @@ type LoginProps = {
 };
 
 const LoginModal = ({ setIsLoginModal }: LoginProps) => {
-  console.log("logimModal!!!");
-
   const { setAuthState } = useContext(UserContext);
   const [userInfo, setUserInfo] = useState({ account: "", password: "" });
   const { account, password } = userInfo;

@@ -16,3 +16,9 @@ export const LoginModalContextProvider = ({ children }: Props) => {
     </LoginModalContext.Provider>
   );
 };
+
+/**
+ *
+ * TODO : isLoginModal 상태애 따라 모달이 렌더링
+ * isLoginModal 상태에 따라서 하위 컴포넌트 리렌더링
+ */

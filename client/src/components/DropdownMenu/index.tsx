@@ -12,7 +12,6 @@ const DropdownMenu = () => {
     setAuthState,
   } = useContext(UserContext);
   const { setIsLoginModal } = useContext(LoginModalContext);
-  console.log(loginStatus);
 
   const showLoginModal = () => {
     console.log("클릭했다!!");
