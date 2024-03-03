@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState, useCallback } from "react";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
-import { LoginModalContext } from "../../contexts/LoginModalContext";
+import { LoginModalDispatchContext } from "../../contexts/LoginModalContext";
 import { UserContext } from "../../contexts/userContext";
 import { Container, Status } from "./styled";
 import HeartImg from "../../assets/heart.png";
@@ -30,7 +30,7 @@ const Festival = ({ festival }: FestivalProps) => {
   const {
     authState: { loginStatus },
   } = useContext(UserContext);
-  const { setIsLoginModal } = useContext(LoginModalContext);
+  const setIsLoginModal = useContext(LoginModalDispatchContext);
   const { pickItems, togglePick } = useContext(PickItemsContext);
   const { festivalId, title, imageUrl, startDate, endDate, location } =
     festival;

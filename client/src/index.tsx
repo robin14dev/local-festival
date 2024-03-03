@@ -7,6 +7,7 @@ import { StrictMode } from "react";
 import { UserContextProvider } from "./contexts/userContext";
 import { LoginModalContextProvider } from "./contexts/LoginModalContext";
 import { PickItemsContextProvider } from "./contexts/PickItemsContext";
+import LoginModal from "./components/account/LoginModal";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -18,6 +19,7 @@ root.render(
       <UserContextProvider>
         <LoginModalContextProvider>
           <PickItemsContextProvider>
+            <LoginModal />
             <App />
           </PickItemsContextProvider>
         </LoginModalContextProvider>

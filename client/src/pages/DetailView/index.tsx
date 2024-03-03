@@ -14,7 +14,7 @@ import DescTab from "../../components/DescTab";
 import { showRating } from "../../components/reviews/ReviewItem";
 import Loading from "../../components/Loading";
 import { UserContext } from "../../contexts/userContext";
-import { LoginModalContext } from "../../contexts/LoginModalContext";
+import { LoginModalDispatchContext } from "../../contexts/LoginModalContext";
 import { LoadingWrapper, Wrapper, MobileWrapper, Tab, Menu } from "./styled";
 import onErrorImage from "../../assets/noimage.png";
 import BackImg from "../../assets/back-mobile.png";
@@ -34,7 +34,7 @@ import { ReactComponent as Homepage } from "../../assets/homepage.svg";
 import { PickItemsContext } from "../../contexts/PickItemsContext";
 
 const DetailView = () => {
-  const { setIsLoginModal } = useContext(LoginModalContext);
+  const setIsLoginModal = useContext(LoginModalDispatchContext);
   const { authState } = useContext(UserContext);
   const { togglePick } = useContext(PickItemsContext);
   const [like, setLike] = useState(false);

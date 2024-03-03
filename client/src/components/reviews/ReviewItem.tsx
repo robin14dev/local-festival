@@ -7,7 +7,7 @@ import profileImg from "../../assets/profile.png";
 import { AiFillStar } from "react-icons/ai";
 import { ReactComponent as Setting } from "../../assets/setting.svg";
 
-import { LoginModalContext } from "../../contexts/LoginModalContext";
+import { LoginModalDispatchContext } from "../../contexts/LoginModalContext";
 import CommentWrite from "../comments/CommentWrite";
 import CommentItem from "../comments/CommentItem";
 import ReviewDropdown from "./ReviewDropdown";
@@ -281,7 +281,7 @@ type ReviewProps = {
   review: TReviewItem;
   updateReviews: (
     type: "CREATE" | "UPDATE" | "DELETE",
-    reviewItem: TReviewItem,
+    reviewItem: TReviewItem
   ) => void;
 };
 
@@ -293,7 +293,7 @@ const ReviewItem = ({ review, updateReviews }: ReviewProps) => {
   const [comments, setComments] = useState<TComment[]>([]);
   const [commentToggle, setCommentToggle] = useState(false);
   const { rating, content, createdAt, updatedAt, User, id } = review;
-  const { setIsLoginModal } = useContext(LoginModalContext);
+  const setIsLoginModal = useContext(LoginModalDispatchContext);
   const userContext = useContext(UserContext);
   const createComment = () => {
     setCommentWrite(!commentWrite);
@@ -302,7 +302,7 @@ const ReviewItem = ({ review, updateReviews }: ReviewProps) => {
   const getComments = async (reviewId: number) => {
     try {
       const result = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/comments/${reviewId}`,
+        `${process.env.REACT_APP_SERVER_URL}/comments/${reviewId}`
       );
       let comments;
       if (result.status === 204 && result.statusText === "No Content") {

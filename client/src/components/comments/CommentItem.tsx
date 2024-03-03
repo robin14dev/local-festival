@@ -5,7 +5,7 @@ import moment from "moment";
 import profileImg from "../../assets/profile.png";
 import { ReactComponent as Setting } from "../../assets/setting.svg";
 
-import { LoginModalContext } from "../../contexts/LoginModalContext";
+import { LoginModalDispatchContext } from "../../contexts/LoginModalContext";
 import { UserContext } from "../../contexts/userContext";
 import CommentWrite from "./CommentWrite";
 import CommentDelete from "./CommentDelete";
@@ -180,7 +180,7 @@ const CommentItem = ({ comment, setComments }: CommentItemProps) => {
   const [isEdit, setIsEdit] = useState(false);
 
   const userContext = useContext(UserContext);
-  const { setIsLoginModal } = useContext(LoginModalContext);
+  const setIsLoginModal = useContext(LoginModalDispatchContext);
   const createComment = () => {
     setReplying(!isReplying);
   };

@@ -6,7 +6,10 @@ import { Routes, Route } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import styled, { ThemeProvider } from "styled-components";
 import axios from "axios";
-import { LoginModalContext } from "./contexts/LoginModalContext";
+import {
+  LoginModalDispatchContext,
+  LoginModalStateContext,
+} from "./contexts/LoginModalContext";
 import Wishlist from "./pages/Wishlist";
 import DetailView from "./pages/DetailView";
 import Main from "./pages/Main";
@@ -25,7 +28,7 @@ const Wrapper = styled.div`
 `;
 
 function App() {
-  const { isLoginModal, setIsLoginModal } = useContext(LoginModalContext);
+  console.log("App render");
   const [festivalData, setFestivalData] = useState<FestivalItem[]>([]);
 
   const [filteredData, setFilteredData] =
@@ -38,7 +41,7 @@ function App() {
         <Helmet>
           <title>이번주엔 어디로 가볼까? - LOCO</title>
         </Helmet>
-        {isLoginModal && <LoginModal setIsLoginModal={setIsLoginModal} />}
+
         <Header />
         <Routes>
           <Route

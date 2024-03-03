@@ -7,7 +7,7 @@ import CountText from "../utilities/CountText";
 import Rating from "../utilities/Rating";
 import Toast from "../utilities/Toast";
 import ServerFailModal from "../utilities/ServerFailModal";
-import { LoginModalContext } from "../../contexts/LoginModalContext";
+import { LoginModalDispatchContext } from "../../contexts/LoginModalContext";
 
 type WriteStyle = {
   Wrapper: string;
@@ -18,7 +18,7 @@ type WriteProps = {
   style?: WriteStyle;
   submitContent: (
     text: string,
-    rating: number,
+    rating: number
   ) => Promise<"SUCCESS" | "FAILURE">;
   submitCancel?: () => void;
   isLoading?: boolean;
@@ -214,7 +214,7 @@ export default function ReviewWrite({
 
   const [messages, setMessages] = useState<Message[]>([]);
   const userContext = useContext(UserContext);
-  const { setIsLoginModal } = useContext(LoginModalContext);
+  const setIsLoginModal = useContext(LoginModalDispatchContext);
   const maxText = 300;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const submitBtnRef = useRef<HTMLButtonElement>(null);

@@ -5,14 +5,14 @@ import { ReactComponent as Account } from "../../assets/profile.svg";
 import { ReactComponent as Wishlist } from "../../assets/heart-empty.svg";
 import { ReactComponent as Main } from "../../assets/search.svg";
 import { UserContext } from "../../contexts/userContext";
-import { LoginModalContext } from "../../contexts/LoginModalContext";
+import { LoginModalDispatchContext } from "../../contexts/LoginModalContext";
 import { Container, MobileContainer, Item } from "./styled";
 
 const Footer = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
   let navigate = useNavigate();
   const { authState } = useContext(UserContext);
-  const { setIsLoginModal } = useContext(LoginModalContext);
+  const setIsLoginModal = useContext(LoginModalDispatchContext);
   const goPage = (path: string) => {
     if (authState.loginStatus) {
       navigate(`/${path}`);

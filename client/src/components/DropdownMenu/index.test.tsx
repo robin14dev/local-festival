@@ -37,7 +37,7 @@ describe("DropdownMenu Component", () => {
     render(
       <MemoryRouter initialEntries={["/"]}>
         <DropdownMenu />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
     const dropdownMenu = screen.getByTestId("DropdownMenu");
     expect(dropdownMenu).toBeInTheDocument();
@@ -53,7 +53,7 @@ describe("DropdownMenu Component", () => {
         >
           <DropdownMenu />
         </UserContext.Provider>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
     const dropdownMenu = screen.getByTestId("DropdownMenu");
     fireEvent.mouseEnter(dropdownMenu);
@@ -72,7 +72,7 @@ describe("DropdownMenu Component", () => {
         >
           <DropdownMenu />
         </UserContext.Provider>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
     const dropdownMenu = screen.getByTestId("DropdownMenu");
     fireEvent.mouseEnter(dropdownMenu);
@@ -91,7 +91,7 @@ describe("DropdownMenu Component", () => {
         >
           <DropdownMenu />
         </UserContext.Provider>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
     const dropdownMenu = screen.getByTestId("DropdownMenu");
     fireEvent.mouseEnter(dropdownMenu);
@@ -116,7 +116,7 @@ describe("DropdownMenu Component", () => {
             <MockApp />
           </UserContextProvider>
         </LoginModalContextProvider>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     const loginModal = screen.queryByTestId("LoginModal");
