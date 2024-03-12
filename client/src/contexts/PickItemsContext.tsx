@@ -15,6 +15,8 @@ const PickItemsContext = createContext<PickItemsContext>({
 });
 
 const getPickItemsFromStorage: () => FestivalItem[] = () => {
+  console.log("getPick오니????");
+
   if (sessionStorage.getItem("picks")) {
     const picks = sessionStorage.getItem("picks");
     if (picks) {
@@ -52,6 +54,8 @@ const PickItemsContextProvider = ({ children }: Props) => {
   const togglePick: togglePick = useCallback(
     async (newPick: FestivalItem) => {
       //#1. 픽했는지 아닌지 부터 확인
+      console.log("togglePick!!");
+
       const found = pickItems.filter(
         (el) => el.festivalId === newPick.festivalId
       );
@@ -68,6 +72,8 @@ const PickItemsContextProvider = ({ children }: Props) => {
           const nextPicks = pickItems.filter(
             (item) => item.festivalId !== newPick.festivalId
           );
+          console.log("여기까지옴??????");
+
           setPickItems(nextPicks);
           sessionStorage.setItem("picks", JSON.stringify(nextPicks));
         } catch (error) {
@@ -87,6 +93,7 @@ const PickItemsContextProvider = ({ children }: Props) => {
               },
             }
           );
+
           const nextPicks = [newPick, ...pickItems];
 
           setPickItems(nextPicks);
@@ -100,6 +107,8 @@ const PickItemsContextProvider = ({ children }: Props) => {
   );
 
   const getPickItems = async () => {
+    console.log("getPickItems!!");
+
     if (loginStatus) {
       let nextPickItems;
       if (window.sessionStorage.getItem("picks")) {
@@ -113,8 +122,9 @@ const PickItemsContextProvider = ({ children }: Props) => {
     }
   };
   useEffect(() => {
+    console.log("useEffect!!! 픽아이템 컨텍스트", loginStatus);
+
     if (loginStatus) {
-      console.log("getPicks");
       getPickItems();
     }
   }, [loginStatus]);

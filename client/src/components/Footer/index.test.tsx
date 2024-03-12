@@ -10,7 +10,7 @@ import {
   intersectionObserverMock,
   mockAuthState,
   mockSetAuthState,
-} from "../../test/mock";
+} from "../../test/mocks/mockData";
 
 beforeEach(() => {
   window.IntersectionObserver = jest
@@ -26,7 +26,7 @@ describe("<Footer/> 테스트", () => {
     const { container } = render(
       <MemoryRouter initialEntries={["/"]}>
         <Footer />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
     expect(screen.getByTestId("Footer-mobile")).toBeInTheDocument();
     expect(container).toMatchSnapshot();
@@ -36,7 +36,7 @@ describe("<Footer/> 테스트", () => {
     const { container } = render(
       <MemoryRouter initialEntries={["/"]}>
         <Footer />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     expect(screen.getByTestId("Footer")).toBeInTheDocument();
@@ -56,7 +56,7 @@ describe("<Footer/> 테스트", () => {
           <URLTestComponent />
           <App />
         </UserContext.Provider>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
     expect(screen.getByTestId("WishlistPage")).toBeInTheDocument();
     const gotoMainpageBtn = screen.getByText("둘러보기");
@@ -80,7 +80,7 @@ describe("<Footer/> 테스트", () => {
           <URLTestComponent />
           <App />
         </UserContext.Provider>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     expect(screen.getByTestId("MainPage")).toBeInTheDocument();
@@ -106,7 +106,7 @@ describe("<Footer/> 테스트", () => {
           <URLTestComponent />
           <App />
         </UserContext.Provider>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     expect(screen.getByTestId("MainPage")).toBeInTheDocument();
@@ -134,7 +134,7 @@ describe("<Footer/> 테스트", () => {
             <App />
           </UserContext.Provider>
         </LoginModalContextProvider>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     expect(screen.getByTestId("MainPage")).toBeInTheDocument();

@@ -7,47 +7,6 @@ export const Container = styled.article`
   flex-direction: column;
   cursor: pointer;
 
-  & > img {
-    max-width: 100%;
-    aspect-ratio: 1/1;
-    border-radius: 10px;
-  }
-  section {
-    display: flex;
-    justify-content: space-between;
-    padding: 0 0.5rem;
-
-    div {
-      width: 85%;
-    }
-
-    h1 {
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 17px;
-      margin: 0.4rem 0 0.18rem 0;
-    }
-
-    li {
-      font-weight: 400;
-      font-size: 14px;
-      line-height: 17px;
-      color: #797979;
-    }
-
-    h1,
-    li {
-      white-space: nowrap;
-      overflow: hidden;
-      width: 11rem;
-      text-overflow: ellipsis;
-    }
-  }
-
-  button {
-    /* background-color: white; */
-  }
-
   button > img {
     height: 1.5rem;
     width: auto;
@@ -82,7 +41,37 @@ export const Container = styled.article`
     }
   }
 `;
+export const Section = styled.section`
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0.5rem;
 
+  div {
+    width: 85%;
+  }
+
+  h1 {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 17px;
+    margin: 0.4rem 0 0.18rem 0;
+  }
+
+  li {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    color: #797979;
+  }
+
+  h1,
+  li {
+    white-space: nowrap;
+    overflow: hidden;
+    width: 11rem;
+    text-overflow: ellipsis;
+  }
+`;
 export const Status = styled.div<{ status: string }>`
   position: absolute;
   width: 52px;
@@ -99,4 +88,12 @@ export const Status = styled.div<{ status: string }>`
   justify-content: center;
   align-items: center;
   color: white;
+`;
+export const Img = styled.img`
+  width: 400px;
+  height: 400px;
+  object-fit: cover;
+  max-width: 100%;
+  aspect-ratio: 1/1;
+  border-radius: 10px;
 `;

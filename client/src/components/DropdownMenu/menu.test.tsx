@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
 import Menu from "./Menu";
 import { UserContext, UserContextProvider } from "../../contexts/userContext";
-import { mockFestivalItem } from "../../test/mock";
+import { mockFestivalItem } from "../../test/mocks/mockData";
 import Wishlist from "../../pages/Wishlist";
 import Main from "../../pages/Main";
 import Account from "../../pages/Account";

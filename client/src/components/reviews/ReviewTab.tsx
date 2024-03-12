@@ -96,6 +96,8 @@ type ReviewTabProps = {
 };
 
 const ReviewTab = ({ festivalId }: ReviewTabProps) => {
+  console.log("ReviewTab의 festivalId는 ???", festivalId);
+
   const [searchParams] = useSearchParams();
 
   const [reviews, setReviews] = useState<TReviewItem[] | null>(null);
@@ -165,26 +167,26 @@ const ReviewTab = ({ festivalId }: ReviewTabProps) => {
 
   const updateReviews = (
     type: "CREATE" | "UPDATE" | "DELETE",
-    reviewItem: TReviewItem,
+    reviewItem: TReviewItem
   ) => {
     switch (type) {
       case "CREATE":
         return setReviews(
-          (prevReviews) => prevReviews && [reviewItem, ...prevReviews],
+          (prevReviews) => prevReviews && [reviewItem, ...prevReviews]
         );
       case "UPDATE":
         return setReviews(
           (prevReviews) =>
             prevReviews &&
             prevReviews.map((prevItem) =>
-              prevItem.id !== reviewItem.id ? prevItem : reviewItem,
-            ),
+              prevItem.id !== reviewItem.id ? prevItem : reviewItem
+            )
         );
       case "DELETE":
         return setReviews(
           (prevReviews) =>
             prevReviews &&
-            prevReviews.filter((prevItem) => prevItem.id !== reviewItem.id),
+            prevReviews.filter((prevItem) => prevItem.id !== reviewItem.id)
         );
       default:
         break;

@@ -16,11 +16,10 @@ import Loading from "../../components/Loading";
 import { UserContext } from "../../contexts/userContext";
 import { LoginModalDispatchContext } from "../../contexts/LoginModalContext";
 import { LoadingWrapper, Wrapper, MobileWrapper, Tab, Menu } from "./styled";
-import onErrorImage from "../../assets/noimage.png";
+import { NoImage, EmptyHeartIcon, HeartIcon } from "../../assets";
 import BackImg from "../../assets/back-mobile.png";
 import ShareImg from "../../assets/share-mobile.png";
-import HeartImg from "../../assets/heart-mobile.png";
-import EmptyHeartImg from "../../assets/empty-heart.png";
+
 import RatingImg from "../../assets/rating-mobile.png";
 import { ReactComponent as ReviewIcon } from "../../assets/review.svg";
 import { ReactComponent as RatingIcon } from "../../assets/rating.svg";
@@ -87,12 +86,12 @@ const DetailView = () => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        let result = await axios.get(
+        const { data: summary }: { data: Summary } = await axios.get(
           `${process.env.REACT_APP_SERVER_URL}/festivals/${params.festivalId}`,
           { params: { userId: authState.userId } }
         );
-        setSummary(result.data);
-        const isPicked = result.data.isPicked;
+        setSummary(summary);
+        const isPicked = summary.isPicked;
 
         setLike(isPicked);
         setIsLoading(false);
@@ -203,7 +202,7 @@ const DetailView = () => {
         <section className="figAndSummary">
           <figure>
             <img
-              src={imageUrl || onErrorImage}
+              src={imageUrl || NoImage}
               alt={`${title} : 이미지가 존재하지 않습니다.`}
             ></img>
             <figcaption>
@@ -218,7 +217,7 @@ const DetailView = () => {
                   }
                 }}
               >
-                <img alt="heart" src={like ? HeartImg : EmptyHeartImg} />
+                <img alt="heart" src={like ? HeartIcon : EmptyHeartIcon} />
                 {likes}
               </button>
 
@@ -322,12 +321,12 @@ const DetailView = () => {
                 }
               }}
             >
-              <img alt="heart" src={like ? HeartImg : EmptyHeartImg} />
+              <img alt="heart" src={like ? HeartIcon : EmptyHeartIcon} />
             </button>
           </div>
         </div>
         <img
-          src={imageUrl || onErrorImage}
+          src={imageUrl || NoImage}
           alt={`${title} : 이미지가 존재하지 않습니다.`}
         ></img>
         <h1>{title}</h1>

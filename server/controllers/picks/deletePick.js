@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
   const accessTokenData = validateToken(req);
 
   if (!accessTokenData) {
-    return res.status(404).json({ data: null, message: "User not logged in" });
+    return res.status(401).json({ data: null, message: "User not logged in" });
   }
 
   // 특정 userId의 특정 festivalId만 지우기
@@ -27,8 +27,6 @@ module.exports = async (req, res) => {
     } else {
       throw new Error("");
     }
-
-    console.log(result);
   } catch (error) {
     console.log(error);
     return res.status(503);

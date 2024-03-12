@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import React from "react";
-import { getCurrentDate } from "../components/Festival";
+import { getCurrentDate } from "../../components/Festival";
 
 export const mockAuthState = {
   login: {
@@ -46,19 +46,29 @@ export const mockFestivalItem: FestivalItem = {
   updatedAt: "",
 };
 
-/**
- *   const statusMap = {
-      scheduled: "예정",
-      completed: "종료",
-      inProgress: "진행중",
-    };
-
- */
-
 const today = getCurrentDate();
 
 export const mockFestivalItems = {
   inProgress: { ...mockFestivalItem, startDate: today - 1, endDate: today + 1 },
   scheduled: { ...mockFestivalItem, startDate: today + 1, endDate: today + 2 },
   completed: { ...mockFestivalItem, startDate: today - 2, endDate: today - 1 },
+};
+
+export const mockReviewSummary: ReviewSummary = {
+  content: "",
+  festivalId: 1,
+  id: 1,
+  nickname: "person1",
+  rating: 1,
+  updatedAt: "",
+};
+
+export const mockSummary: Summary = {
+  average: 0,
+  badReview: [mockReviewSummary],
+  festival: mockFestivalItem,
+  goodReview: [mockReviewSummary],
+  isPicked: true,
+  likes: 0,
+  reviewCount: 0,
 };

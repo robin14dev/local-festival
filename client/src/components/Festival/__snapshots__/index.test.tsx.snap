@@ -1,21 +1,80 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<Festival/> 컴포넌트가 성공적으로 렌더링 됩니다 1`] = `
+exports[`<Festival/> 비 로그인 상태시, 하트를 클릭하면 로그인 모달이 나타납니다 1`] = `
 <div>
+  <div>
+    pathname is 
+    /
+  </div>
+  logout
+  <div
+    class="sc-gYbzsP izQiId"
+  >
+    <div
+      class="sc-cCjUiG hnfQcp"
+      data-testid="LoginModal"
+    >
+      <h1>
+        Loco
+      </h1>
+      <form>
+        <input
+          name="account"
+          placeholder="email을 입력해 주세요"
+          required=""
+          type="text"
+          value=""
+        />
+        <div />
+        <input
+          name="password"
+          placeholder="비밀번호를 입력해 주세요"
+          required=""
+          type="password"
+          value=""
+        />
+        <div />
+        <button
+          type="submit"
+        >
+          로그인
+        </button>
+      </form>
+      <div
+        class="footer"
+      >
+        <span>
+          아직 계정이 없으신가요?
+        </span>
+        <button>
+          회원가입
+        </button>
+      </div>
+      <button
+        class="modalClose"
+      >
+        돌아가기
+      </button>
+    </div>
+  </div>
   <article
-    class="sc-bcXHqe bCLAuK"
+    class="sc-bcXHqe kuAQdD"
     data-testid="Festival"
   >
     <div
-      class="sc-gswNZR eQdOYC"
+      class="sc-dkrFOg bqYawA"
     >
       진행중
     </div>
     <img
       alt="축제 제목"
-      src="https://images.unsplash.com/photo-1707343843344-011332037abb?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=400&h=400&fit=crop"
+      class="sc-hLBbgP gUqOWE"
+      data-testid="thumbnail"
+      src="https://images.unsplash.com/photo-1707343843344-011332037abb?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     />
-    <section>
+    <section
+      class="sc-gswNZR dVBOQb"
+    >
       <div>
         <h1>
           축제 제목
@@ -35,7 +94,195 @@ exports[`<Festival/> 컴포넌트가 성공적으로 렌더링 됩니다 1`] = `
       <button>
         <img
           alt="heart"
-          src="empty-heart.png"
+          src="emptyHeartIcon.png"
+        />
+      </button>
+    </section>
+  </article>
+</div>
+`;
+
+exports[`<Festival/> 축제 썸네일 이미지가 없거나 유효하지 않은 url이면 기본 로고 이미지가 렌더링 됩니다. 1`] = `
+<div>
+  <article
+    class="sc-bcXHqe kuAQdD"
+    data-testid="Festival"
+  >
+    <div
+      class="sc-dkrFOg bqYawA"
+    >
+      진행중
+    </div>
+    <img
+      alt="축제 제목"
+      class="sc-hLBbgP gUqOWE"
+      data-testid="thumbnail"
+      src="noImage.png"
+    />
+    <section
+      class="sc-gswNZR dVBOQb"
+    >
+      <div>
+        <h1>
+          축제 제목
+        </h1>
+        <ul>
+          <li>
+            위치 정보
+          </li>
+          <li>
+            2024.01.01
+             ~
+             
+            2024.12.31
+          </li>
+        </ul>
+      </div>
+      <button>
+        <img
+          alt="heart"
+          src="emptyHeartIcon.png"
+        />
+      </button>
+    </section>
+  </article>
+</div>
+`;
+
+exports[`<Festival/> 축제 썸네일 이미지가 없거나 유효하지 않은 url이면 기본 로고 이미지가 렌더링 됩니다. 2`] = `
+<div>
+  <article
+    class="sc-bcXHqe kuAQdD"
+    data-testid="Festival"
+  >
+    <div
+      class="sc-dkrFOg bqYawA"
+    >
+      진행중
+    </div>
+    <img
+      alt="축제 제목"
+      class="sc-hLBbgP gUqOWE"
+      data-testid="thumbnail"
+      src="noImage.png"
+    />
+    <section
+      class="sc-gswNZR dVBOQb"
+    >
+      <div>
+        <h1>
+          축제 제목
+        </h1>
+        <ul>
+          <li>
+            위치 정보
+          </li>
+          <li>
+            2024.01.01
+             ~
+             
+            2024.12.31
+          </li>
+        </ul>
+      </div>
+      <button>
+        <img
+          alt="heart"
+          src="emptyHeartIcon.png"
+        />
+      </button>
+    </section>
+  </article>
+</div>
+`;
+
+exports[`<Festival/> 축제 썸네일 이미지가 없거나 유효하지 않은 url이면 기본 로고 이미지가 렌더링 됩니다. 3`] = `
+<div>
+  <article
+    class="sc-bcXHqe kuAQdD"
+    data-testid="Festival"
+  >
+    <div
+      class="sc-dkrFOg bqYawA"
+    >
+      진행중
+    </div>
+    <img
+      alt="축제 제목"
+      class="sc-hLBbgP gUqOWE"
+      data-testid="thumbnail"
+      src="https://images.unsplash.com/photo-1707343843344-011332037abb?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    />
+    <section
+      class="sc-gswNZR dVBOQb"
+    >
+      <div>
+        <h1>
+          축제 제목
+        </h1>
+        <ul>
+          <li>
+            위치 정보
+          </li>
+          <li>
+            2024.01.01
+             ~
+             
+            2024.12.31
+          </li>
+        </ul>
+      </div>
+      <button>
+        <img
+          alt="heart"
+          src="emptyHeartIcon.png"
+        />
+      </button>
+    </section>
+  </article>
+</div>
+`;
+
+exports[`<Festival/> 컴포넌트가 성공적으로 렌더링 됩니다 1`] = `
+<div>
+  <article
+    class="sc-bcXHqe kuAQdD"
+    data-testid="Festival"
+  >
+    <div
+      class="sc-dkrFOg bqYawA"
+    >
+      진행중
+    </div>
+    <img
+      alt="축제 제목"
+      class="sc-hLBbgP gUqOWE"
+      data-testid="thumbnail"
+      src="https://images.unsplash.com/photo-1707343843344-011332037abb?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    />
+    <section
+      class="sc-gswNZR dVBOQb"
+    >
+      <div>
+        <h1>
+          축제 제목
+        </h1>
+        <ul>
+          <li>
+            위치 정보
+          </li>
+          <li>
+            2024.01.01
+             ~
+             
+            2024.12.31
+          </li>
+        </ul>
+      </div>
+      <button>
+        <img
+          alt="heart"
+          src="emptyHeartIcon.png"
         />
       </button>
     </section>
