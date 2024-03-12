@@ -1,120 +1,22 @@
-import React from "react";
-import Hashtag from "../components/Hashtag";
-import Search from "../components/Search";
-import styled from "styled-components";
-import Festival from "../components/Festival";
-import { useRef } from "react";
-import { useEffect } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import axios from "axios";
-import { useState } from "react";
-import { useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ReactComponent as NoData } from "../assets/noData.svg";
-import Loading, { Wrapper as W } from "../components/Loading";
-const Wrapper = styled.div`
-  margin: 0 auto 5rem auto;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  @media (max-width: 475px) {
-    margin-bottom: 4rem;
-  }
-`;
+import {
+  Container,
+  SearchAndTag,
+  FestivalList,
+  ErrorMsg,
+  LoadingWrapper,
+} from "./styled";
 
-const SearchAndTag = styled.div`
-  width: 100vw;
-  height: 4rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: fixed;
-  top: 5rem;
-  z-index: 1;
-  background-color: white;
-  @media (max-width: 475px) {
-    background-color: var(--mainColor);
-    padding: 0;
-  }
-`;
-
-const FestivalList = styled.section`
-  width: 88%;
-  margin-top: 12rem;
-  padding-bottom: 5rem;
-
-  display: flex;
-  flex-wrap: wrap;
-  @media (max-width: 1210px) {
-    width: 90vw;
-  }
-
-  @media screen and (max-width: 485px) {
-    margin-top: 10rem;
-    padding-bottom: 0;
-  }
-`;
-
-const LoadingWrapper = styled(W)``;
-
-const ErrorMsg = styled.section`
-  margin: 0 auto;
-  max-width: 40rem;
-  padding-top: 92px;
-  display: flex;
-  justify-content: space-between;
-  svg {
-    width: 50%;
-    height: 100%;
-  }
-  & > div {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  h1 {
-    font-family: "Inter";
-    font-style: normal;
-    font-weight: 700;
-    font-size: 2rem;
-    line-height: 48px;
-
-    color: #6268ff;
-  }
-
-  p {
-    font-family: "Inter";
-    font-style: normal;
-    font-weight: 600;
-    font-size: 1.2rem;
-    line-height: 29px;
-
-    span {
-      color: #ff9a62;
-    }
-  }
-  @media screen and (max-width: 485px) {
-    width: 100%;
-    flex-direction: column;
-    padding: 0;
-
-    svg {
-      margin: 0 auto;
-    }
-    h1 {
-      font-size: 1.5rem;
-    }
-    p {
-      font-size: 1rem;
-    }
-  }
-`;
+import Search from "components/Search";
+import Hashtag from "components/HashTag";
+import Festival from "components/Festival";
+import Loading from "components/Loading";
 
 type MainProps = {
   filteredData: FestivalItem[];
-
   offset: React.MutableRefObject<number>;
   setFestivalData: React.Dispatch<React.SetStateAction<FestivalItem[]>>;
   setFilteredData: React.Dispatch<React.SetStateAction<FestivalItem[]>>;
@@ -122,7 +24,6 @@ type MainProps = {
 
 const Main = ({
   filteredData,
-
   offset,
   setFestivalData,
   setFilteredData,
@@ -134,7 +35,7 @@ const Main = ({
   const [hasNextPage, setHasNextPage] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [query, setQuery] = useState(searchParams.get("query"));
-  const [isTag, setIsTag] = useState(false);
+  // const [isTag, setIsTag] = useState(false);
   const navigate = useNavigate();
   const fetchData = useCallback(async () => {
     setIsLoading(true);
@@ -203,10 +104,10 @@ const Main = ({
   }, [hasNextPage, fetchData, query]);
 
   return (
-    <Wrapper data-testid="MainPage">
+    <Container data-testid="MainPage">
       <SearchAndTag>
-        <Search isTag={isTag} setIsTag={setIsTag} onSearch={onSearch} />
-        <Hashtag setIsTag={setIsTag} query={query} onSearch={onSearch} />
+        <Search onSearch={onSearch} />
+        <Hashtag query={query} onSearch={onSearch} />
       </SearchAndTag>
       <FestivalList>
         {filteredData.length > 0 &&
@@ -232,7 +133,7 @@ const Main = ({
         </LoadingWrapper>
       ) : null}
       <div style={{ height: "1rem" }} ref={observerTargetEl}></div>
-    </Wrapper>
+    </Container>
   );
 };
 
