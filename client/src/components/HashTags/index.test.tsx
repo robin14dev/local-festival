@@ -1,12 +1,18 @@
 import React from "react";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import HashTag from ".";
 
 describe("<HashTag>", () => {
-  test("🧪 컴포넌트가 성공적으로 렌더링 되는지 ", () => {
-    const tagData = [{ text: "tag1" }, { text: "tag2" }, { text: "tag3" }];
+  test(" 컴포넌트가 성공적으로 렌더링 되는지 ", () => {
+    const mockTagData = [{ text: "tag1" }, { text: "tag2" }, { text: "tag3" }];
 
-    render(<HashTag onSearch={jest.fn()} query={""} />);
+    const { container } = render(
+      <HashTag onSearch={jest.fn()} tagData={mockTagData} />
+    );
+
+    const hashTags = screen.getAllByRole("button");
+    expect(hashTags).toHaveLength(mockTagData.length);
+    // expect(hashTags).to
   });
 
   /*

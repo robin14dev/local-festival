@@ -8,7 +8,8 @@ import { UserContextProvider } from "./contexts/userContext";
 import { LoginModalContextProvider } from "./contexts/LoginModalContext";
 import { PickItemsContextProvider } from "./contexts/PickItemsContext";
 import LoginModal from "./components/account/LoginModal";
-import HashTag from "components/HashTag";
+import HashTag from "components/HashTags";
+import { hashTagData } from "assets/data/hashTags";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -26,6 +27,6 @@ root.render(
         </LoginModalContextProvider>
       </UserContextProvider>
     </BrowserRouter> */}
-    <HashTag onSearch={() => {}} query={""} />
+    <HashTag onSearch={() => {}} tagData={hashTagData} />
   </StrictMode>
 );

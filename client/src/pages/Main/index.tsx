@@ -11,9 +11,10 @@ import {
 } from "./styled";
 
 import Search from "components/Search";
-import Hashtag from "components/HashTag";
+import HashTags from "components/HashTags";
 import Festival from "components/Festival";
 import Loading from "components/Loading";
+import { hashTagData } from "assets/data/hashTags";
 
 type MainProps = {
   filteredData: FestivalItem[];
@@ -109,7 +110,7 @@ const Main = ({
     <Container data-testid="MainPage">
       <SearchAndTag>
         <Search onSearch={onSearch} />
-        <Hashtag query={query} onSearch={onSearch} />
+        <HashTags tagData={hashTagData} onSearch={onSearch} />
       </SearchAndTag>
       <FestivalList>
         {filteredData.length > 0 &&
