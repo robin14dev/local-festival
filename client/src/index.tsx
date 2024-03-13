@@ -8,6 +8,7 @@ import { UserContextProvider } from "./contexts/userContext";
 import { LoginModalContextProvider } from "./contexts/LoginModalContext";
 import { PickItemsContextProvider } from "./contexts/PickItemsContext";
 import LoginModal from "./components/account/LoginModal";
+import HashTag from "components/HashTag";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -15,7 +16,7 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <StrictMode>
-    <BrowserRouter>
+    {/* <BrowserRouter>
       <UserContextProvider>
         <LoginModalContextProvider>
           <PickItemsContextProvider>
@@ -24,6 +25,7 @@ root.render(
           </PickItemsContextProvider>
         </LoginModalContextProvider>
       </UserContextProvider>
-    </BrowserRouter>
+    </BrowserRouter> */}
+    <HashTag onSearch={() => {}} query={""} />
   </StrictMode>
 );
