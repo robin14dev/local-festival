@@ -68,6 +68,8 @@ const Main = ({
   }, [offset, query]);
 
   const onSearch: onSearchFunc = (searchText) => {
+    console.log("리얼 onSearch", searchText);
+
     try {
       offset.current = 0;
       setSearchParams({ query: "" });

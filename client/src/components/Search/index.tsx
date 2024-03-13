@@ -23,6 +23,9 @@ const Search = ({ onSearch }: onSearchProps) => {
   const onSubmitHandler = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+
+      console.log("handler !! ", searchText);
+
       onSearch(searchText);
       // setIsTag(false);
     },
@@ -38,6 +41,7 @@ const Search = ({ onSearch }: onSearchProps) => {
   return (
     <Form onSubmit={onSubmitHandler}>
       <input
+        autoFocus
         type="search"
         onChange={onChangeHandler}
         placeholder="축제를 검색해 주세요"

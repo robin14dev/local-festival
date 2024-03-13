@@ -1,5 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`<Search /> input에 입력한 대로 input value가 렌더링이 됩니다 1`] = `
+<div>
+  <form
+    class="sc-bcXHqe qTGWi"
+  >
+    <input
+      placeholder="축제를 검색해 주세요"
+      type="search"
+      value="input onChagne test"
+    />
+    <button
+      type="submit"
+    >
+      <img
+        alt="search"
+        src="searchIcon.png"
+      />
+    </button>
+  </form>
+</div>
+`;
+
 exports[`<Search /> 컴포넌트가 성공적으로 렌더링 됩니다. 1`] = `
 <div>
   <form
