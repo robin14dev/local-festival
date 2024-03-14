@@ -23,7 +23,6 @@ describe("<Search />", () => {
 
     expect(container).toMatchSnapshot();
   });
-
   test("input에 텍스트 입력 후, 검색 버튼을 클릭하면 핸들러 함수에 input value가 전달되어 호출됩니다.", async () => {
     const user = userEvent.setup();
     const mockFunc = jest.fn((x) => {

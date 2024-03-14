@@ -33,10 +33,11 @@ export const Button = styled.button<{ active: boolean }>`
   margin-left: 1rem;
   font-size: 1rem;
   transition: all 0.1s ease-in;
+  
 
-  :hover {
-    background-color: #6268ff;
+  &:hover {
     color: white;
+    background-color: #6268ff;
   }
 
   ${(props) =>
