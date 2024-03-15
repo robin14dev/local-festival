@@ -7,21 +7,21 @@ import React, {
 } from "react";
 import axios, { AxiosError } from "axios";
 import moment from "moment";
-import Withdraw from "../../components/account/Withdraw";
+import Withdraw from "../../components/account/WithdrawModal";
 import DefaultPic from "../../components/account/defaultPic/DefaultPic";
 import { Helmet } from "react-helmet";
 import EditImg from "../../assets/edit-mobile.png";
 import DeleteImg from "../../assets/delete-mobile.png";
-import { ReactComponent as Confirm } from "../../assets/confirm.svg";
+import { ConfirmIcon, InvalidIcon as CancelIcon } from "assets";
+
 import { ReactComponent as Fail } from "../../assets/server-fail.svg";
-import { ReactComponent as Cancel } from "../../assets/cancel.svg";
 import {
   userInfo,
   validate,
   rgx,
   message,
   Progress,
-} from "../../components/account/Signup";
+} from "components/account/SignupModal/validation";
 
 import Modal from "../../components/Modal";
 import { UserContext } from "../../contexts/userContext";
@@ -499,7 +499,8 @@ export default function Account() {
               <Toggle>
                 <button name="nickname" onClick={accordionHandler}>
                   {isOpen.nickname ? (
-                    <Cancel alt="취소" />
+                    <img src={CancelIcon}/>
+                   
                   ) : (
                     <img src={EditImg} alt="수정" />
                   )}
@@ -557,7 +558,7 @@ export default function Account() {
               <Toggle>
                 <button name="password" onClick={accordionHandler}>
                   {isOpen.password ? (
-                    <Cancel alt="취소" />
+                    <img src={CancelIcon}/>
                   ) : (
                     <img src={EditImg} alt="수정" />
                   )}
@@ -684,7 +685,7 @@ export default function Account() {
             },
           }}
         >
-          <Confirm />
+         <img src={ConfirmIcon}/>
           <div>
             <h1>{editType.current} 변경되었습니다</h1>
             <h2>잠시 후에 계정페이지로 돌아갑니다</h2>

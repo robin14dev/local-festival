@@ -13,19 +13,7 @@ export const Backdrop = styled.div`
 
   animation-fill-mode: forwards;
 `;
-// export const Backdrop = styled.div<{ isHide: boolean }>`
-//   z-index: 20;
-//   position: fixed;
-//   left: 0;
-//   top: 0;
-//   width: 100%;
-//   height: 100vh;
-//   background: rgba(0, 0, 0, 0.4);
 
-//   animation-duration: 0.4s;
-//   animation-name: ${(props) => (props.isHide ? "bright-soft" : "dark-soft")};
-//   animation-fill-mode: forwards;
-// `;
 export const Container = styled.div`
   z-index: 100;
   position: fixed;

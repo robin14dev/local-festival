@@ -1,25 +1,22 @@
 import axios, { AxiosError } from "axios";
 import React, { useCallback, useContext, useState } from "react";
-import Signup from "../Signup";
-import { UserContext } from "../../../contexts/userContext";
+import { UserContext } from "contexts/userContext";
 import {
   LoginModalDispatchContext,
   LoginModalStateContext,
-} from "../../../contexts/LoginModalContext";
+} from "contexts/LoginModalContext";
 import { Backdrop, Container } from "./styled";
+import { ModalDispatchContext } from "contexts/ModalContext";
 
 const LoginModal = () => {
-  const isLoginModal = useContext(LoginModalStateContext);
-  console.log("render", isLoginModal);
+  // const isLoginModal = useContext(LoginModalStateContext);
   const setIsLoginModal = useContext(LoginModalDispatchContext);
+  const setModalKey = useContext(ModalDispatchContext)
   const { setAuthState } = useContext(UserContext);
   const [userInfo, setUserInfo] = useState({ account: "", password: "" });
   const { account, password } = userInfo;
   const [errMessage, setErrMessage] = useState("");
-  /**
-   * TODO : 모달 효과 얘네를 고쳐야겠네 : isLogin,
-   */
-  // const [isHide, setIsHide] = useState(false);
+  
   const [isLogin, setIsLogin] = useState(true);
   const [isSignup, setIsSignup] = useState(false);
 
@@ -96,16 +93,24 @@ const LoginModal = () => {
       }
     }
   };
+  // const modalClose = () => {
+  //   // setIsHide(true);
+  //   setIsSignup(false);
+  //   setIsLoginModal(false);
+  //   // setTimeout(() => {
+  //   //   console.log("modalClose");
+  //   //   setIsLoginModal(false);
+  //   // }, 400);
+  // };
   const modalClose = () => {
-    // setIsHide(true);
-    setIsSignup(false);
-    setIsLoginModal(false);
-    // setTimeout(() => {
-    //   console.log("modalClose");
-    //   setIsLoginModal(false);
-    // }, 400);
+    setModalKey('')
   };
-  if (!isLoginModal) return <></>;
+  const openSignupModal = () => {
+    setModalKey('SignupModal')
+  }
+
+
+  // if (!isLoginModal) return <></>;
 
   return (
     <>
@@ -145,10 +150,7 @@ const LoginModal = () => {
           <div className="footer">
             <span>아직 계정이 없으신가요?</span>
             <button
-              onClick={() => {
-                setIsLogin(false);
-                setIsSignup(true);
-              }}
+              onClick={openSignupModal}
             >
               회원가입
             </button>

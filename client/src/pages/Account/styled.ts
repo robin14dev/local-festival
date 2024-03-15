@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { ShowValid } from "../../components/account/Signup";
+import { ShowValid } from "components/account/SignupModal/styled";
 
 const Wrapper = styled.div`
   margin: 8rem 5rem;

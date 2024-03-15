@@ -4,6 +4,7 @@ import { UserContext } from "../../contexts/userContext";
 import { LoginModalDispatchContext } from "../../contexts/LoginModalContext";
 import Menu from "./Menu";
 import { Container } from "./styled";
+import { ModalDispatchContext } from "contexts/ModalContext";
 
 const DropdownMenu = () => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -12,11 +13,17 @@ const DropdownMenu = () => {
     setAuthState,
   } = useContext(UserContext);
   const setIsLoginModal = useContext(LoginModalDispatchContext);
+  const setModalKey = useContext(ModalDispatchContext)
+  
+
+  // const showLoginModal = () => {
+  //   console.log("클릭했다!!");
+
+  //   !loginStatus && setIsLoginModal(true);
+  // };
 
   const showLoginModal = () => {
-    console.log("클릭했다!!");
-
-    !loginStatus && setIsLoginModal(true);
+    !loginStatus && setModalKey('LoginModal')
   };
   const toggleDropdownMenu = (instruction: "show" | "hide"): void => {
     if (loginStatus) {

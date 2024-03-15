@@ -1,5 +1,18 @@
 import styled from "styled-components";
 import { Wrapper as W } from "../../Loading";
+export const Backdrop = styled.div`
+  z-index: 20;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+
+  animation-duration: 0.4s;
+
+  animation-fill-mode: forwards;
+`;
 export const ModalContainer = styled.div<{ isHide: boolean }>`
   z-index: 100;
   position: fixed;

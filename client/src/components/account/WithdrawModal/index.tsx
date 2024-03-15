@@ -2,12 +2,10 @@ import React, { useState, useCallback, useRef } from "react";
 import styled from "styled-components";
 import axios, { AxiosError } from "axios";
 
-import Modal from "../utilities/Modal";
-import ServerFailModal from "../utilities/ServerFailModal";
-import { mixin } from "../../styles/theme";
-import { ReactComponent as Auth } from "../../assets/auth.svg";
-import { ReactComponent as Confirm } from "../../assets/confirm.svg";
-import { ReactComponent as Invalid } from "../../assets/cancel.svg";
+import Modal from "../../utilities/Modal";
+import ServerFailModal from "../../utilities/ServerFailModal";
+import { mixin } from "../../../styles/theme";
+import { AuthIcon, ConfirmIcon, InvalidIcon } from "assets";
 const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -244,7 +242,8 @@ const Withdraw = ({ setWithdraw }: WithdrawProps) => {
     return (
       <Modal style={successModalStyle}>
         <Wrapper>
-          <Confirm />
+          <img src={ConfirmIcon} />
+        
           <h1>계정 삭제가 완료 되었습니다</h1>
           <h2>이용해주셔서 감사합니다</h2>
 
@@ -268,7 +267,7 @@ const Withdraw = ({ setWithdraw }: WithdrawProps) => {
   return (
     <Modal style={modalStyle} hideStatus={isHide.idle}>
       <Container>
-        <Auth />
+        <img src={AuthIcon} />      
         <h1>본인 인증을 위해 비밀번호를 입력해 주세요</h1>
 
         <input
@@ -282,7 +281,7 @@ const Withdraw = ({ setWithdraw }: WithdrawProps) => {
         <div className="err-message">
           {inputVal && isInvalid && (
             <>
-              <Invalid />
+              <img src={InvalidIcon} />
               {errMessage}
             </>
           )}

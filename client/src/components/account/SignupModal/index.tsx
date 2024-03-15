@@ -1,6 +1,5 @@
 import axios, { AxiosError } from "axios";
-import React, { useState, useCallback, useEffect } from "react";
-import { ReactComponent as Confirm } from "../../../assets/confirm.svg";
+import React, { useState, useCallback, useEffect, useContext } from "react";
 import { ReactComponent as ServerFail } from "../../../assets/server-fail.svg";
 import Loading from "../../Loading";
 import {
@@ -8,13 +7,13 @@ import {
   LoadingWrapper,
   ShowValid,
   LoginSection,
+  Backdrop,
 } from "./styled";
 import { validate, rgx, message, userInfo, Progress } from "./validation";
+import { ConfirmIcon } from "assets";
+import { ModalDispatchContext } from "contexts/ModalContext";
 
-type SignupModalProps = {
-  setIsSignup: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
-};
+
 
 /**
  * TODO : 내용물만 바꾸고 싶은데
@@ -34,7 +33,10 @@ type SignupModalProps = {
  *
  */
 
-const Signup = ({ setIsSignup, setIsLogin }: SignupModalProps) => {
+const SignupModal = () => {
+  console.log('signupModal!!');
+  
+  const setModalKey = useContext(ModalDispatchContext)
   const [userInfo, setUserInfo] = useState<userInfo>({
     account: { text: "", isValid: false, isUnique: false },
     nickname: { text: "", isValid: false, isUnique: false },
@@ -214,23 +216,30 @@ const Signup = ({ setIsSignup, setIsLogin }: SignupModalProps) => {
       }
     }
   };
+  const closeModal = () => {
+    setModalKey('')
+  }
+
+  const openLoginModal = () => {
+    setModalKey('LoginModal')
+  }
 
   const Success = () => {
     const [count, setCount] = useState(3);
 
     useEffect(() => {
-      const timer = setInterval(() => {
-        setCount((prevCount) => prevCount - 1);
-      }, 1000);
+      // const timer = setInterval(() => {
+      //   setCount((prevCount) => prevCount - 1);
+      // }, 1000);
 
-      let closeModal = setTimeout(() => {
-        setIsSignup(false);
-        setIsLogin(true);
-      }, 4000);
-      return () => {
-        clearInterval(timer);
-        clearInterval(closeModal);
-      };
+      // let closeModal = setTimeout(() => {
+      //   setIsSignup(false);
+      //   setIsLogin(true);
+      // }, 4000);
+      // return () => {
+      //   clearInterval(timer);
+      //   clearInterval(closeModal);
+      // };
     }, []);
     return (
       <div className="signupSuccess">
@@ -240,7 +249,7 @@ const Signup = ({ setIsSignup, setIsLogin }: SignupModalProps) => {
             LoCo
           </span>
         </h1>
-        <Confirm />
+        <img src={ConfirmIcon}/>
         <div>
           <p>
             환영합니다 <span>{nickname.text}</span>님!
@@ -256,6 +265,8 @@ const Signup = ({ setIsSignup, setIsLogin }: SignupModalProps) => {
   };
 
   return (
+    <Backdrop onClick={closeModal}>
+
     <ModalContainer
       onClick={(e) => {
         e.stopPropagation();
@@ -357,10 +368,11 @@ const Signup = ({ setIsSignup, setIsLogin }: SignupModalProps) => {
             <button
               onClick={() => {
                 setIsHide(true);
-                setTimeout(() => {
-                  setIsSignup(false);
-                  setIsLogin(true);
-                }, 150);
+                openLoginModal()
+                // setTimeout(() => {
+                //   setIsSignup(false);
+                //   setIsLogin(true);
+                // }, 150);
               }}
             >
               로그인
@@ -369,7 +381,7 @@ const Signup = ({ setIsSignup, setIsLogin }: SignupModalProps) => {
           <button
             className="modalClose"
             onClick={() => {
-              setIsSignup(false);
+              // setIsSignup(false);
             }}
           >
             돌아가기
@@ -392,7 +404,7 @@ const Signup = ({ setIsSignup, setIsLogin }: SignupModalProps) => {
           </div>
           <button
             onClick={() => {
-              setIsSignup(false);
+              // setIsSignup(false);
             }}
           >
             메인페이지로 돌아가기
@@ -400,7 +412,9 @@ const Signup = ({ setIsSignup, setIsLogin }: SignupModalProps) => {
         </div>
       ) : null}
     </ModalContainer>
+    </Backdrop>
+   
   );
 };
 
-export default Signup;
+export default SignupModal;
