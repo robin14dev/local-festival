@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import onErrorImage from "../assets/noimage.png";
+import { NoImage, HeartIcon, EmptyHeartIcon } from "assets";
 import moment from "moment";
-import HeartImg from "../assets/heart.png";
-import EmptyHeartImg from "../assets/empty-heart.png";
+
 import { Container } from "./Festival/styled";
 
 type PickProps = {
@@ -28,7 +27,7 @@ const Pick = ({ festival, togglePick }: PickProps) => {
     togglePick(item);
   };
   const onErrorImg = (e: React.ChangeEvent<HTMLImageElement>) => {
-    e.target.src = onErrorImage;
+    e.target.src = NoImage;
   };
 
   const onClickMoveDVP = () => {
@@ -36,7 +35,7 @@ const Pick = ({ festival, togglePick }: PickProps) => {
   };
   return (
     <FestivalWrapper onClick={onClickMoveDVP}>
-      <img src={imageUrl || onErrorImage} alt={title} onError={onErrorImg} />
+      <img src={imageUrl || NoImage} alt={title} onError={onErrorImg} />
       <section>
         <div>
           <h1>{title}</h1>
@@ -53,7 +52,7 @@ const Pick = ({ festival, togglePick }: PickProps) => {
             onClickRemove(e, festival);
           }}
         >
-          <img alt="heart" src={like ? HeartImg : EmptyHeartImg} />
+          <img alt="heart" src={like ? HeartIcon : EmptyHeartIcon} />
         </button>
       </section>
     </FestivalWrapper>

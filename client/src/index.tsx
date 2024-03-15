@@ -1,15 +1,12 @@
-import React from "react";
+import React, { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
-import { StrictMode } from "react";
-import { UserContextProvider } from "./contexts/userContext";
-import { LoginModalContextProvider } from "./contexts/LoginModalContext";
-import { PickItemsContextProvider } from "./contexts/PickItemsContext";
-import LoginModal from "./components/account/LoginModal";
-import HashTag from "components/HashTags";
-import { hashTagData } from "assets/data/hashTags";
+import { UserContextProvider } from "contexts/userContext";
+import { LoginModalContextProvider } from "contexts/LoginModalContext";
+import { PickItemsContextProvider } from "contexts/PickItemsContext";
+import LoginModal from "components/account/LoginModal";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -17,7 +14,7 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <StrictMode>
-    {/* <BrowserRouter>
+    <BrowserRouter>
       <UserContextProvider>
         <LoginModalContextProvider>
           <PickItemsContextProvider>
@@ -26,7 +23,6 @@ root.render(
           </PickItemsContextProvider>
         </LoginModalContextProvider>
       </UserContextProvider>
-    </BrowserRouter> */}
-    <HashTag onSearch={() => {}} tagData={hashTagData} />
+    </BrowserRouter>
   </StrictMode>
 );

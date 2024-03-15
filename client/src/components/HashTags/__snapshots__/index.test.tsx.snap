@@ -6,19 +6,19 @@ exports[`<HashTag> 컴포넌트가 성공적으로 렌더링 됩니다. 1`] = `
     class="sc-bcXHqe ekAJIk"
   >
     <button
-      class="sc-gswNZR gbfhpD"
+      class="sc-gswNZR joWokR"
     >
       #
       tag1
     </button>
     <button
-      class="sc-gswNZR gbfhpD"
+      class="sc-gswNZR joWokR"
     >
       #
       tag2
     </button>
     <button
-      class="sc-gswNZR gbfhpD"
+      class="sc-gswNZR joWokR"
     >
       #
       tag3

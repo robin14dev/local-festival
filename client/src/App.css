@@ -1,9 +1,4 @@
-@import url(./styles/reset.css);
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+
 
 :root {
   --primaryBlue: rgb(64 82 255);
@@ -16,50 +11,11 @@
   --rem: 16;
 }
 
-button {
-  background: inherit;
-  border: none;
-  box-shadow: none;
-  border-radius: 0;
-  padding: 0;
-  overflow: visible;
-  cursor: pointer;
-}
-
-/* input 기본 스타일 초기화 */
-input {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background: none;
-  outline: none;
-  border: none;
-}
-
-textarea {
-  border: none;
-  resize: none;
-}
-
-textarea:focus,
-input:focus {
-  outline: none;
-}
-
-.container {
-  opacity: 1;
-  background-color: yellow;
-  transition: all 0.3s ease-out;
-}
-
-.container.unmount {
-  opacity: 0;
-}
 
 @font-face {
   font-family: "EarlyFontDiary";
   /* src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_220508@1.0/EarlyFontDiary.woff2') format('woff2'); */
-  src: url("./fonts/EF_Diary.ttf");
+  src: url("assets/fonts/EF_Diary.ttf");
   font-weight: normal;
   font-style: normal;
 }
@@ -67,7 +23,7 @@ input:focus {
 @font-face {
   font-family: "ulsanjunggu";
   /* src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-02@1.0/ulsanjunggu.woff2') format('woff2'); */
-  src: url("./fonts/ulsanjunggu.ttf");
+  src: url("assets/fonts/ulsanjunggu.ttf");
   font-weight: normal;
   font-style: normal;
 }

@@ -10,8 +10,9 @@ import { MemoryRouter } from "react-router-dom";
 import { UserContext, UserContextProvider } from "../../contexts/userContext";
 import LoginModal from "../account/LoginModal";
 import {
-  LoginModalContext,
   LoginModalContextProvider,
+  LoginModalDispatchContext,
+  LoginModalStateContext,
 } from "../../contexts/LoginModalContext";
 
 const mockAuthState = {
@@ -100,11 +101,12 @@ describe("DropdownMenu Component", () => {
   });
   it("로그아웃 상태시, 해당 요소를 클릭하면 로그인 모달이 렌더링 됩니다.", () => {
     const MockApp = () => {
-      const { isLoginModal } = useContext(LoginModalContext);
+      const isLoginModal = useContext(LoginModalStateContext);
+      const setIsLoginModal = useContext(LoginModalDispatchContext)
 
       return (
         <>
-          {isLoginModal && <LoginModal setIsLoginModal={jest.fn()} />}
+          {isLoginModal && <LoginModal />}
           <DropdownMenu />
         </>
       );

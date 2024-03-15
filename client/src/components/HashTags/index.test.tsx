@@ -15,9 +15,8 @@ describe("<HashTag>", () => {
     const hashTags = screen.getAllByRole("button");
     
     expect(hashTags).toHaveLength(mockTagData.length);
-    expect(hashTags[0].textContent).toMatch(/^#/)
+    expect(hashTags[0].textContent).toMatch(/^#+/)
     expect(container).toMatchSnapshot()
-    expect(hashTags).toHaveStyle
   });
   test("해시태그를 클릭시 해시태그의 텍스트가 인자로 들어간 콜백함수가 호출됩니다.", async() => {
     const mockTagData = [{ text: "tag1" }, { text: "tag2" }, { text: "tag3" }];

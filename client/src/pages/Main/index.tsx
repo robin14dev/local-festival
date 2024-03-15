@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ReactComponent as NoData } from "../assets/noData.svg";
+import { NoDataIcon } from "assets";
 import {
   Container,
   SearchAndTag,
@@ -119,7 +119,8 @@ const Main = ({
           ))}
         {isLoading === false && filteredData.length === 0 && (
           <ErrorMsg>
-            <NoData />
+            {/* <NoDataIcon /> */}
+            <img src={NoDataIcon} alt="" />
             <div>
               <h1>No Result Found</h1>
               <p>
