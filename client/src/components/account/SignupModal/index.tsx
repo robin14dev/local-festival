@@ -268,6 +268,7 @@ const SignupModal = () => {
     <Backdrop onClick={closeModal}>
 
     <ModalContainer
+      data-testid="SignupModal"
       onClick={(e) => {
         e.stopPropagation();
       }}
