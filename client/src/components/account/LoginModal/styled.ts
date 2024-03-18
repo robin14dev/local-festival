@@ -81,6 +81,14 @@ export const Container = styled.div`
       background: var(--mainColor);
       border-radius: 6px;
       cursor: pointer;
+      transition : all 0.7s;
+      &:hover {
+        filter : brightness(1.15)
+      }
+      &:disabled {
+        filter : brightness(0.8);
+       
+      }
     }
   }
 

@@ -1,12 +1,233 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<LoginModal /> <input>에 입력한 텍스트 값이 그대로 렌더링 됩니다 1`] = `
+exports[`<LoginModal /> [로그인 성공 시] 로그인 모달이 사라집니다. 1`] = `
+<div>
+  <div>
+    <h1>
+      TestComponent
+    </h1>
+    <button>
+      loginModal
+    </button>
+  </div>
+</div>
+`;
+
+exports[`<LoginModal /> [로그인 실패 시] 이메일이 존재하지 않을 때 에러 메시지를 렌더링 합니다. 1`] = `
 <div>
   <div
     class="sc-gKPRtg cxiGOt"
   >
     <div
-      class="sc-iBYQkv esXmhS"
+      class="sc-iBYQkv hHEDdX"
+      data-testid="LoginModal"
+    >
+      <h1>
+        Loco
+      </h1>
+      <form>
+        <input
+          name="account"
+          placeholder="email을 입력해 주세요"
+          required=""
+          type="text"
+          value="user1"
+        />
+        <div>
+          사용자가 존재하지 않습니다
+        </div>
+        <input
+          name="password"
+          placeholder="비밀번호를 입력해 주세요"
+          required=""
+          type="password"
+          value="password1"
+        />
+        <div />
+        <button>
+          로그인
+        </button>
+      </form>
+      <div
+        class="footer"
+      >
+        <span>
+          아직 계정이 없으신가요?
+        </span>
+        <button
+          type="button"
+        >
+          회원가입
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<LoginModal /> [로그인 실패 시] 잘못된 비밀번호 입력시, 에러메시지를 렌더링 합니다. 1`] = `
+<div>
+  <div
+    class="sc-gKPRtg cxiGOt"
+  >
+    <div
+      class="sc-iBYQkv hHEDdX"
+      data-testid="LoginModal"
+    >
+      <h1>
+        Loco
+      </h1>
+      <form>
+        <input
+          name="account"
+          placeholder="email을 입력해 주세요"
+          required=""
+          type="text"
+          value="user1"
+        />
+        <div />
+        <input
+          name="password"
+          placeholder="비밀번호를 입력해 주세요"
+          required=""
+          type="password"
+          value="password1"
+        />
+        <div>
+          비밀번호가 일치하지 않습니다
+        </div>
+        <button>
+          로그인
+        </button>
+      </form>
+      <div
+        class="footer"
+      >
+        <span>
+          아직 계정이 없으신가요?
+        </span>
+        <button
+          type="button"
+        >
+          회원가입
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<LoginModal /> 인풋 중 하나라도 비어있으면 로그인 버튼이 비활성화 됩니다. 1`] = `
+<div>
+  <div
+    class="sc-gKPRtg cxiGOt"
+  >
+    <div
+      class="sc-iBYQkv hHEDdX"
+      data-testid="LoginModal"
+    >
+      <h1>
+        Loco
+      </h1>
+      <form>
+        <input
+          name="account"
+          placeholder="email을 입력해 주세요"
+          required=""
+          type="text"
+          value="account@mail.com"
+        />
+        <div />
+        <input
+          name="password"
+          placeholder="비밀번호를 입력해 주세요"
+          required=""
+          type="password"
+          value=""
+        />
+        <div />
+        <button
+          disabled=""
+        >
+          로그인
+        </button>
+      </form>
+      <div
+        class="footer"
+      >
+        <span>
+          아직 계정이 없으신가요?
+        </span>
+        <button
+          type="button"
+        >
+          회원가입
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<LoginModal /> 인풋 중 하나라도 비어있으면 로그인 버튼이 비활성화 됩니다. 2`] = `
+<div>
+  <div
+    class="sc-gKPRtg cxiGOt"
+  >
+    <div
+      class="sc-iBYQkv hHEDdX"
+      data-testid="LoginModal"
+    >
+      <h1>
+        Loco
+      </h1>
+      <form>
+        <input
+          name="account"
+          placeholder="email을 입력해 주세요"
+          required=""
+          type="text"
+          value=""
+        />
+        <div />
+        <input
+          name="password"
+          placeholder="비밀번호를 입력해 주세요"
+          required=""
+          type="password"
+          value="1234"
+        />
+        <div />
+        <button
+          disabled=""
+        >
+          로그인
+        </button>
+      </form>
+      <div
+        class="footer"
+      >
+        <span>
+          아직 계정이 없으신가요?
+        </span>
+        <button
+          type="button"
+        >
+          회원가입
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<LoginModal /> 인풋에 입력한 텍스트 값이 그대로 렌더링 됩니다 1`] = `
+<div>
+  <div
+    class="sc-gKPRtg cxiGOt"
+  >
+    <div
+      class="sc-iBYQkv hHEDdX"
       data-testid="LoginModal"
     >
       <h1>
@@ -56,7 +277,7 @@ exports[`<LoginModal /> 컴포넌트가 성공적으로 렌더링 됩니다. 1`]
     class="sc-gKPRtg cxiGOt"
   >
     <div
-      class="sc-iBYQkv esXmhS"
+      class="sc-iBYQkv hHEDdX"
       data-testid="LoginModal"
     >
       <h1>
@@ -79,7 +300,9 @@ exports[`<LoginModal /> 컴포넌트가 성공적으로 렌더링 됩니다. 1`]
           value=""
         />
         <div />
-        <button>
+        <button
+          disabled=""
+        >
           로그인
         </button>
       </form>

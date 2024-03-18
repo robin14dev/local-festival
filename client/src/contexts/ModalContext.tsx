@@ -29,6 +29,9 @@ export const ModalContextProvider = ({children} : Props) => {
 
   
     const component = candidates.find(modal => modal.key === modalKey)?.component
+
+    console.log(modalKey, component);
+    
     const Modal = component || null
     
  
