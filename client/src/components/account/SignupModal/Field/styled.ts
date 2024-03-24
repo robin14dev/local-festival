@@ -26,11 +26,7 @@ export const FieldInfo = styled.div`
     display: flex;
 `
 
-export const Message = styled.div<{
-    checkType: string
-    isValid: boolean
-    isUnique?: boolean
-}>`
+export const Message = styled.div`
     font-size: 0.8rem;
     font-weight: bold;
     font-family: 'NanumSquareRound';
@@ -40,14 +36,29 @@ export const Message = styled.div<{
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    color: ${({ isValid, checkType }) =>
-        isValid === false
-            ? 'var(--primaryPink)'
-            : checkType === 'nickname' || checkType === 'account'
-              ? 'orange'
-              : 'var(--primaryBlue)'};
-    color: ${({ isUnique }) => isUnique && 'var(--primaryBlue)'};
 `
+// export const Message = styled.div<{
+//     checkType: string
+//     isValid: boolean
+//     isUnique?: boolean
+// }>`
+//     font-size: 0.8rem;
+//     font-weight: bold;
+//     font-family: 'NanumSquareRound';
+//     word-break: normal;
+//     padding-left: 0.5rem;
+//     flex: 1;
+//     display: flex;
+//     align-items: center;
+//     justify-content: flex-start;
+//     color: ${({ isValid, checkType }) =>
+//         isValid === false
+//             ? 'var(--primaryPink)'
+//             : checkType === 'nickname' || checkType === 'account'
+//               ? 'orange'
+//               : 'var(--primaryBlue)'};
+//     color: ${({ isUnique }) => isUnique && 'var(--primaryBlue)'};
+// `
 
 export const Input = styled.input`
     width: 100%;
